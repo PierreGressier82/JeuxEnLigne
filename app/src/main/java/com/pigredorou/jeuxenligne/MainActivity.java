@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button boutonJ2;
     private Button boutonJ3;
     private Button boutonJ4;
-    private LinearLayout boutonsJoueurs;
+    //private LinearLayout boutonsJoueurs;
     //private ArrayList<Carte> cartes = new ArrayList<Carte>();
 
     private static int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
@@ -64,9 +63,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getTag().toString().startsWith("boutonJ")) {
-            resultat.setText("Chargement");
+            resultat.setText(R.string.Chargement);
             Button boutonJoueur = findViewById(v.getId());
-            AsyncTask tache = new MyTask().execute("http://julie.et.pierre.free.fr/Commun/getDistribution.php?joueur="+boutonJoueur.getText());
+            new TacheDistribueCartes().execute("http://julie.et.pierre.free.fr/Commun/getDistribution.php?joueur="+boutonJoueur.getText());
             cacheBoutonsJoueurs(true);
         }
 
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getTag().toString().startsWith("carte_")) {
             ImageView carte = findViewById(v.getId());
             carte.setVisibility(View.GONE);
+            //Toast.makeText(this, carte.getTag().toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -102,9 +102,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 carte.setImageResource(getImageCarte(cartes.get(i).getCouleur(), cartes.get(i).getValeur()));
                 carte.setTag("carte_"+nomCarte);
+                carte.setId(setId(i));
                 carte.setOnClickListener(this);
                 tableauCartes.addView(carte);
             }
+    }
+
+    private int setId(int idCarte) {
+        int retour=0;
+        switch (idCarte) {
+            case 0 :
+                retour=R.id.carte_1;
+                break;
+            case 1 :
+                retour=R.id.carte_2;
+                break;
+            case 2 :
+                retour=R.id.carte_3;
+                break;
+            case 3 :
+                retour=R.id.carte_4;
+                break;
+            case 4 :
+                retour=R.id.carte_5;
+                break;
+            case 5 :
+                retour=R.id.carte_6;
+                break;
+            case 6 :
+                retour=R.id.carte_7;
+                break;
+            case 7 :
+                retour=R.id.carte_8;
+                break;
+            case 8 :
+                retour=R.id.carte_9;
+                break;
+            case 9 :
+                retour=R.id.carte_10;
+                break;
+            case 10 :
+                retour=R.id.carte_11;
+                break;
+            case 11 :
+                retour=R.id.carte_12;
+                break;
+            case 12 :
+                retour=R.id.carte_13;
+                break;
+            case 13 :
+                retour=R.id.carte_14;
+                break;
+            case 14 :
+                retour=R.id.carte_15;
+                break;
+            case 15 :
+                retour=R.id.carte_16;
+                break;
+            case 16 :
+                retour=R.id.carte_17;
+                break;
+            case 17 :
+                retour=R.id.carte_18;
+                break;
+            case 18 :
+                retour=R.id.carte_19;
+                break;
+            case 19 :
+                retour=R.id.carte_20;
+                break;
+        }
+
+        return retour;
     }
 
     private void cacheBoutonsJoueurs(boolean cache) {
@@ -113,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             boutonJ2.setVisibility(View.GONE);
             boutonJ3.setVisibility(View.GONE);
             boutonJ4.setVisibility(View.GONE);
-            resultat.setVisibility(View.GONE);
         }
         else {
             boutonJ1.setVisibility(View.VISIBLE);
@@ -147,12 +215,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return ressource;
     }
 
-    private class MyTask extends AsyncTask<String, Void, ArrayList<Carte>> {
+    private class TacheDistribueCartes extends AsyncTask<String, Void, ArrayList<Carte>> {
         String result;
         @Override
         protected ArrayList<Carte> doInBackground(String... strings) {
             //String myurl= "http://julie.et.pierre.free.fr/Commun/getDistribution.php";
-            ArrayList<Carte> cartes = new ArrayList();
+            ArrayList<Carte> cartes = new ArrayList<>();
             URL url;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
@@ -181,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(ArrayList<Carte> cartes) {
             resultat.setText(result);
             afficheCartes(cartes);
+            resultat.setVisibility(View.GONE);
             super.onPostExecute(cartes);
         }
     }}

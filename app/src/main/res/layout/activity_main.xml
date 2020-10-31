@@ -9,22 +9,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="THE CREW"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/resultat"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".1"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -98,7 +86,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".3"
+        android:layout_weight=".65"
         android:orientation="horizontal"
         tools:ignore="ScrollViewCount">
 
@@ -119,6 +107,7 @@
                     android:gravity="fill_horizontal">
 
                     <TextView
+                        android:id="@+id/resultat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
@@ -126,7 +115,159 @@
                         android:text="Sélectionne ta main"/>
 
                     <ImageView
-                        android:id="@+id/imageView_carte"
+                        android:id="@+id/carte_1"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_2"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_3"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_4"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_5"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_6"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_7"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_8"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_9"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_10"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_11"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_12"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_13"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_14"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_15"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_16"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_17"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_18"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_19"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/fusee_1" />
+                    <ImageView
+                        android:id="@+id/carte_20"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -138,6 +279,7 @@
             </TableLayout>
         </HorizontalScrollView>
     </LinearLayout>
+
     <Button
         android:id="@+id/boutonReset"
         android:layout_width="match_parent"
