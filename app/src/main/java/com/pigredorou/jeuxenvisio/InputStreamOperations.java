@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenligne;
+package com.pigredorou.jeuxenvisio;
 
 import java.io.IOException;
 import java.io.InputStream;

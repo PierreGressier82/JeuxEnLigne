@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenligne;
+package com.pigredorou.jeuxenvisio;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,8 +7,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.pigredorou.jeuxenligne.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,11 +30,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //private LinearLayout boutonsJoueurs;
     //private ArrayList<Carte> cartes = new ArrayList<Carte>();
 
-    private static int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
-    private static int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
-    private static int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
-    private static int[] imagesBleu = {0, R.drawable.bleu_1, R.drawable.bleu_2, R.drawable.bleu_3, R.drawable.bleu_4, R.drawable.bleu_5, R.drawable.bleu_6, R.drawable.bleu_7, R.drawable.bleu_8, R.drawable.bleu_9};
-    private static int[] imagesFusee = {0, R.drawable.fusee_1, R.drawable.fusee_2, R.drawable.fusee_3, R.drawable.fusee_4};
+    //
+    private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
+    private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
+    private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
+    private static final int[] imagesBleu = {0, R.drawable.bleu_1, R.drawable.bleu_2, R.drawable.bleu_3, R.drawable.bleu_4, R.drawable.bleu_5, R.drawable.bleu_6, R.drawable.bleu_7, R.drawable.bleu_8, R.drawable.bleu_9};
+    private static final int[] imagesFusee = {0, R.drawable.fusee_1, R.drawable.fusee_2, R.drawable.fusee_3, R.drawable.fusee_4};
+    private static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    private static final String urlDistribue = url + "getDistribution.php";
+    private static final String urlJoueCarte = url + "majTable.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getTag().toString().startsWith("boutonJ")) {
             resultat.setText(R.string.Chargement);
             Button boutonJoueur = findViewById(v.getId());
-            new TacheDistribueCartes().execute("http://julie.et.pierre.free.fr/Commun/getDistribution.php?joueur="+boutonJoueur.getText());
+            new TacheGetCartesMainJoueur().execute(urlDistribue+"?joueur="+boutonJoueur.getText());
             cacheBoutonsJoueurs(true);
         }
 
@@ -77,8 +84,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v.getTag().toString().startsWith("carte_")) {
             ImageView carte = findViewById(v.getId());
+            String[] chaine = carte.getTag().toString().split("_"); // carte_bleu_2
+            String couleurCarte = chaine[1];
+            String valeurCarte = chaine[2];
+
+            Toast.makeText(this, "Carte " + valeurCarte + " " + couleurCarte + " jouée", Toast.LENGTH_SHORT).show();
+            new TacheURLSansRetour().execute(urlJoueCarte+"?couleur_carte="+couleurCarte+"&valeur_carte="+valeurCarte);
+            // Masque la carte
             carte.setVisibility(View.GONE);
-            //Toast.makeText(this, carte.getTag().toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -215,7 +228,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return ressource;
     }
 
-    private class TacheDistribueCartes extends AsyncTask<String, Void, ArrayList<Carte>> {
+    /**
+     * Classe qui permet de récupérer en base la main d'un joueur
+     * -> Retourne la liste des cartes du joueur demandé
+     */
+    private class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
         String result;
         @Override
         protected ArrayList<Carte> doInBackground(String... strings) {
@@ -252,4 +269,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             resultat.setVisibility(View.GONE);
             super.onPostExecute(cartes);
         }
-    }}
+    }
+
+    /**
+     * Classe qui permet de mettre à jour en base la main d'un joueur (update main + ajout carte sur la table)
+     * -> Retourne la liste des cartes du joueur demandé
+     */
+    private class TacheURLSansRetour extends AsyncTask<String, Void, Void> {
+        String result;
+        @Override
+        protected Void doInBackground(String... strings) {
+            //ArrayList<Carte> cartes = new ArrayList<>();
+            URL url;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null){
+                    string = String.format("%s%s", string, stringBuffer);
+
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e){
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            return null;
+        }
+    }
+}

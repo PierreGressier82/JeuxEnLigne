@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenligne;
+package com.pigredorou.jeuxenvisio;
 
 public class Carte {
     private String mCouleur;

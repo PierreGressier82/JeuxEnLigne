@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="m"
         tools:ignore="UnusedAttribute">
-        <activity android:name=".MainActivity" >
+        <activity android:name="com.pigredorou.jeuxenvisio.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
