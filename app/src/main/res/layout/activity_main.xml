@@ -71,4 +71,21 @@
             android:text="Roger" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/RAZ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:padding="5dp"
+        android:textSize="20sp"
+        android:textColor="@color/colorAccent"
+        android:text="RAZ" />
+    <Button
+        android:id="@+id/Distribue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="20sp"
+        android:textColor="@color/colorAccent"
+        android:text="Distribue" />
 </LinearLayout>

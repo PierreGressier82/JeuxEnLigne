@@ -20,7 +20,10 @@ import java.util.Objects;
 
 public class MainJoueurActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView resultat;
+    private TextView mTextResultat;
+    private TextView mTextPseudo;
+    private ImageView mBoutonRetour;
+    private String mPseudo;
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
@@ -38,17 +41,27 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Affiche la vue
         setContentView(R.layout.activity_main_joueur);
 
-        resultat = findViewById(R.id.resultat);
-        resultat.setText(R.string.Chargement);
-        // Recuperer le pseudo du joueur
-        final Intent intent = getIntent();
-        String pseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
+        // Bouton retour
+        mBoutonRetour = findViewById(R.id.bouton_retour);
+        mBoutonRetour.setTag("boutonRetour");
+        mBoutonRetour.setOnClickListener(this);
+        mBoutonRetour.setImageResource(R.drawable.bouton_quitter);
 
-        if (pseudo != null)
-            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlDistribue + "?joueur=" + pseudo);
+        mTextResultat = findViewById(R.id.resultat);
+        mTextResultat.setText(R.string.Chargement);
+
+        // Recupère et affiche le pseudo du joueur
+        mTextPseudo = findViewById(R.id.pseudo);
+        final Intent intent = getIntent();
+        mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
+        mTextPseudo.setText(mPseudo);
+
+        // Recupère les cartes du joueur
+        if (mPseudo != null)
+            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlDistribue + "?joueur=" + mPseudo);
         else {
             Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
-            resultat.setText(R.string.chargement_impossible);
+            mTextResultat.setText(R.string.chargement_impossible);
         }
     }
 
@@ -56,14 +69,18 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         if (v.getTag().toString().startsWith("carte_")) {
             ImageView carte = findViewById(v.getId());
-            String[] chaine = carte.getTag().toString().split("_"); // carte_bleu_2
+            String[] chaine = carte.getTag().toString().split("_"); // ex : carte_bleu_2
             String couleurCarte = chaine[1];
             String valeurCarte = chaine[2];
 
             Toast.makeText(this, "Carte " + valeurCarte + " " + couleurCarte + " jouée", Toast.LENGTH_SHORT).show();
-            new MainJoueurActivity.TacheURLSansRetour().execute(urlJoueCarte + "?couleur_carte=" + couleurCarte + "&valeur_carte=" + valeurCarte);
+            new MainJoueurActivity.TacheURLSansRetour().execute(urlJoueCarte + "?couleur_carte=" + couleurCarte + "&valeur_carte=" + valeurCarte +"&joueur=" + mPseudo);
             // Masque la carte
             carte.setVisibility(View.GONE);
+        }
+
+        if(v.getTag().toString().equals("boutonRetour")) {
+            finish();
         }
     }
 
@@ -221,9 +238,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(ArrayList<Carte> cartes) {
-            resultat.setText(result);
+            mTextResultat.setText(result);
             afficheCartes(cartes);
-            resultat.setVisibility(View.GONE);
+            mTextResultat.setVisibility(View.GONE);
             super.onPostExecute(cartes);
         }
     }
