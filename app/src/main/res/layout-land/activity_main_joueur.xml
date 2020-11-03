@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="@color/cardview_dark_background"
     tools:context="com.pigredorou.jeuxenvisio.MainActivity">
 
     <LinearLayout
@@ -284,7 +285,7 @@
             android:padding="5dp"
             android:text="@string/taches"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
             android:textSize="20sp" />
 
         <TextView
@@ -293,7 +294,7 @@
             android:padding="5dp"
             android:text="2"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
             android:textSize="20sp" />
 
         <TextView
@@ -302,7 +303,7 @@
             android:padding="5dp"
             android:text="3"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
             android:textSize="20sp" />
     </LinearLayout>
 </LinearLayout>

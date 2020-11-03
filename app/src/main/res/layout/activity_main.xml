@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="@color/cardview_dark_background"
     tools:context="com.pigredorou.jeuxenvisio.MainActivity">
 
     <TextView
@@ -41,51 +42,62 @@
             android:id="@+id/boutonJ1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
+            android:background="@color/black_overlay"
             android:text="Pigre" />
         <Button
             android:id="@+id/boutonJ2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
+            android:background="@color/black_overlay"
             android:text="Fievel" />
         <Button
             android:id="@+id/boutonJ3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
+            android:background="@color/black_overlay"
             android:text="Nono" />
         <Button
             android:id="@+id/boutonJ4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/blanc"
+            android:background="@color/black_overlay"
             android:text="Roger" />
     </LinearLayout>
 
     <Button
-        android:id="@+id/RAZ"
+        android:id="@+id/boutonRAZ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="250dp"
         android:padding="5dp"
         android:textSize="20sp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/blanc"
+        android:background="@color/black_overlay"
         android:text="RAZ" />
     <Button
-        android:id="@+id/Distribue"
+        android:id="@+id/boutonDistribue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:padding="5dp"
         android:textSize="20sp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/blanc"
+        android:background="@color/black_overlay"
         android:text="Distribue" />
 </LinearLayout>

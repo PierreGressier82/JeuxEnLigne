@@ -21,16 +21,17 @@ import java.util.Objects;
 public class MainJoueurActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView mTextResultat;
-    private TextView mTextPseudo;
-    private ImageView mBoutonRetour;
     private String mPseudo;
+    private ImageView mCarteActive;
+    private String mValeurCarteActive;
+    private String mCouleurCarteActive;
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
     private static final int[] imagesBleu = {0, R.drawable.bleu_1, R.drawable.bleu_2, R.drawable.bleu_3, R.drawable.bleu_4, R.drawable.bleu_5, R.drawable.bleu_6, R.drawable.bleu_7, R.drawable.bleu_8, R.drawable.bleu_9};
     private static final int[] imagesFusee = {0, R.drawable.fusee_1, R.drawable.fusee_2, R.drawable.fusee_3, R.drawable.fusee_4};
     private static final String url = "http://julie.et.pierre.free.fr/Salon/";
-    private static final String urlDistribue = url + "getDistribution.php";
+    private static final String urlGetDistribue = url + "getDistribution.php";
     private static final String urlJoueCarte = url + "majTable.php";
 
     @Override
@@ -42,23 +43,23 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_main_joueur);
 
         // Bouton retour
-        mBoutonRetour = findViewById(R.id.bouton_retour);
-        mBoutonRetour.setTag("boutonRetour");
-        mBoutonRetour.setOnClickListener(this);
-        mBoutonRetour.setImageResource(R.drawable.bouton_quitter);
+        ImageView boutonRetour = findViewById(R.id.bouton_retour);
+        boutonRetour.setTag("boutonRetour");
+        boutonRetour.setOnClickListener(this);
+        boutonRetour.setImageResource(R.drawable.bouton_quitter);
 
         mTextResultat = findViewById(R.id.resultat);
         mTextResultat.setText(R.string.Chargement);
 
         // Recupère et affiche le pseudo du joueur
-        mTextPseudo = findViewById(R.id.pseudo);
+        TextView textPseudo = findViewById(R.id.pseudo);
         final Intent intent = getIntent();
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
-        mTextPseudo.setText(mPseudo);
+        textPseudo.setText(mPseudo);
 
         // Recupère les cartes du joueur
         if (mPseudo != null)
-            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlDistribue + "?joueur=" + mPseudo);
+            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo);
         else {
             Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
             mTextResultat.setText(R.string.chargement_impossible);
@@ -68,15 +69,12 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if (v.getTag().toString().startsWith("carte_")) {
-            ImageView carte = findViewById(v.getId());
-            String[] chaine = carte.getTag().toString().split("_"); // ex : carte_bleu_2
-            String couleurCarte = chaine[1];
-            String valeurCarte = chaine[2];
+            mCarteActive = findViewById(v.getId());
+            String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
+            mCouleurCarteActive = chaine[1];
+            mValeurCarteActive = chaine[2];
 
-            Toast.makeText(this, "Carte " + valeurCarte + " " + couleurCarte + " jouée", Toast.LENGTH_SHORT).show();
-            new MainJoueurActivity.TacheURLSansRetour().execute(urlJoueCarte + "?couleur_carte=" + couleurCarte + "&valeur_carte=" + valeurCarte +"&joueur=" + mPseudo);
-            // Masque la carte
-            carte.setVisibility(View.GONE);
+            new TacheJoueCarte().execute(urlJoueCarte + "?salon=1&couleur_carte=" + mCouleurCarteActive + "&valeur_carte=" + mValeurCarteActive +"&joueur=" + mPseudo);
         }
 
         if(v.getTag().toString().equals("boutonRetour")) {
@@ -246,14 +244,14 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
-    * Classe qui permet de mettre à jour en base la main d'un joueur (update main + ajout carte sur la table)
-    * -> Retourne la liste des cartes du joueur demandé
-    */
-    private class TacheURLSansRetour extends AsyncTask<String, Void, Void> {
+     * Classe qui permet de mettre à jour en base la main d'un joueur (update main + ajout carte sur la table)
+     * -> Retourne la liste des cartes du joueur demandé
+     */
+    class TacheJoueCarte extends AsyncTask<String, Void, Integer> {
         String result;
 
         @Override
-        protected Void doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
             //ArrayList<Carte> cartes = new ArrayList<>();
             URL url;
             try {
@@ -273,7 +271,20 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 result = e.toString();
             }
 
-            return null;
+            return result.length();
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+                if (integer > 0) {
+                    Toast.makeText(getBaseContext(), "Ce n'est pas ton tour !!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    //Toast.makeText(getBaseContext(), "Carte " + mValeurCarteActive + " " + mCouleurCarteActive + " jouée", Toast.LENGTH_SHORT).show();
+                    // Masque la carte
+                    mCarteActive.setVisibility(View.GONE);
+                }
+            super.onPostExecute(integer);
         }
     }
 }
