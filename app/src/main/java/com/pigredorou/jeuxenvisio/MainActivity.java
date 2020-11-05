@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +24,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String urlRAZDistribution = url + "RAZDistribution.php";
     public static final int MAIN_JOUEUR_ACTIVITY_REQUEST_CODE=14;
     public static final String VALEUR_PSEUDO = "Pseudo";
-    private Button boutonJ1;
-    private Button boutonJ2;
-    private Button boutonJ3;
-    private Button boutonJ4;
-    private Button boutonRAZ;
-    private Button boutonDistribue;
+    private Button mBoutonJ1;
+    private Button mBoutonJ2;
+    private Button mBoutonJ3;
+    private Button mBoutonJ4;
+    private LinearLayout mLayoutBoutonsJoueurs;
     private SharedPreferences mPreferences;
 
     @Override
@@ -39,22 +39,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Charge le layout
         setContentView(R.layout.activity_main);
-        boutonJ1 = findViewById(R.id.boutonJ1);
-        boutonJ2 = findViewById(R.id.boutonJ2);
-        boutonJ3 = findViewById(R.id.boutonJ3);
-        boutonJ4 = findViewById(R.id.boutonJ4);
-        boutonRAZ = findViewById(R.id.boutonRAZ);
-        boutonDistribue = findViewById(R.id.boutonDistribue);
-        boutonJ1.setTag("boutonJ1");
-        boutonJ2.setTag("boutonJ2");
-        boutonJ3.setTag("boutonJ3");
-        boutonJ4.setTag("boutonJ4");
+        mLayoutBoutonsJoueurs = findViewById(R.id.layout_boutons_joueurs);
+
+        // TODO : Créer les boutons en dynamique selon les joueurs présents dans le salon
+        mBoutonJ1 = findViewById(R.id.boutonJ1);
+        mBoutonJ2 = findViewById(R.id.boutonJ2);
+        mBoutonJ3 = findViewById(R.id.boutonJ3);
+        mBoutonJ4 = findViewById(R.id.boutonJ4);
+        Button boutonRAZ = findViewById(R.id.boutonRAZ);
+        Button boutonDistribue = findViewById(R.id.boutonDistribue);
+        mBoutonJ1.setTag("boutonJ1");
+        mBoutonJ2.setTag("boutonJ2");
+        mBoutonJ3.setTag("boutonJ3");
+        mBoutonJ4.setTag("boutonJ4");
         boutonRAZ.setTag("RAZ");
         boutonDistribue.setTag("Distribue");
-        boutonJ1.setOnClickListener(this);
-        boutonJ2.setOnClickListener(this);
-        boutonJ3.setOnClickListener(this);
-        boutonJ4.setOnClickListener(this);
+        mBoutonJ1.setOnClickListener(this);
+        mBoutonJ2.setOnClickListener(this);
+        mBoutonJ3.setOnClickListener(this);
+        mBoutonJ4.setOnClickListener(this);
         boutonRAZ.setOnClickListener(this);
         boutonDistribue.setOnClickListener(this);
 
@@ -87,16 +90,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void cacheBoutonsJoueurs(boolean cache) {
         if (cache) {
-            boutonJ1.setVisibility(View.GONE);
-            boutonJ2.setVisibility(View.GONE);
-            boutonJ3.setVisibility(View.GONE);
-            boutonJ4.setVisibility(View.GONE);
+            mBoutonJ1.setVisibility(View.GONE);
+            mBoutonJ2.setVisibility(View.GONE);
+            mBoutonJ3.setVisibility(View.GONE);
+            mBoutonJ4.setVisibility(View.GONE);
         }
         else {
-            boutonJ1.setVisibility(View.VISIBLE);
-            boutonJ2.setVisibility(View.VISIBLE);
-            boutonJ3.setVisibility(View.VISIBLE);
-            boutonJ4.setVisibility(View.VISIBLE);
+            mBoutonJ1.setVisibility(View.VISIBLE);
+            mBoutonJ2.setVisibility(View.VISIBLE);
+            mBoutonJ3.setVisibility(View.VISIBLE);
+            mBoutonJ4.setVisibility(View.VISIBLE);
         }
     }
 

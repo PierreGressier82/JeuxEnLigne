@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +24,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private TextView mTextResultat;
     private String mPseudo;
     private ImageView mCarteActive;
-    private String mValeurCarteActive;
-    private String mCouleurCarteActive;
+    private ImageView mBoutonTable;
+    private ScrollView mTable;
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
@@ -64,6 +65,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
             mTextResultat.setText(R.string.chargement_impossible);
         }
+
+        // Table
+        mBoutonTable = findViewById(R.id.bouton_table);
+        mBoutonTable.setOnClickListener(this);
+        mBoutonTable.setTag("table");
     }
 
     @Override
@@ -71,15 +77,25 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         if (v.getTag().toString().startsWith("carte_")) {
             mCarteActive = findViewById(v.getId());
             String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
-            mCouleurCarteActive = chaine[1];
-            mValeurCarteActive = chaine[2];
+            String couleurCarteActive = chaine[1];
+            String valeurCarteActive = chaine[2];
 
-            new TacheJoueCarte().execute(urlJoueCarte + "?salon=1&couleur_carte=" + mCouleurCarteActive + "&valeur_carte=" + mValeurCarteActive +"&joueur=" + mPseudo);
+            new TacheJoueCarte().execute(urlJoueCarte + "?salon=1&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive +"&joueur=" + mPseudo);
         }
 
         if(v.getTag().toString().equals("boutonRetour")) {
             finish();
         }
+
+        if(v.getTag().toString().equals("table")) {
+            mTable = findViewById(R.id.table);
+            if (mTable.getVisibility() == View.GONE)
+                mTable.setVisibility(View.VISIBLE);
+            else
+                mTable.setVisibility(View.GONE);
+        }
+
+        // TODO : Mettre à jour le contenu de la table
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
