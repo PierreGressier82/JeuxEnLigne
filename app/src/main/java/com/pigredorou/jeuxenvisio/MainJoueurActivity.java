@@ -95,7 +95,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 mTable.setVisibility(View.GONE);
         }
 
-        // TODO : Mettre à jour le contenu de la table
+        // TODO : Mettre à jour le contenu de la table en dynamique  -> getTable.php
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
