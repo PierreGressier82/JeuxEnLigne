@@ -22,13 +22,13 @@
         android:id="@+id/liste_salons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_marginTop="10dp"/>
 
     <Spinner
         android:id="@+id/liste_joueurs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_marginTop="10dp"/>
 
 
     <LinearLayout
@@ -47,7 +47,7 @@
             android:textSize="20sp"
             android:textColor="@color/blanc"
             android:background="@color/black_overlay"
-            android:text="Pigre" />
+            android:text="Valider" />
         <Button
             android:id="@+id/boutonJ2"
             android:layout_width="match_parent"
@@ -57,6 +57,7 @@
             android:textSize="20sp"
             android:textColor="@color/blanc"
             android:background="@color/black_overlay"
+            android:visibility="gone"
             android:text="Fievel" />
         <Button
             android:id="@+id/boutonJ3"
@@ -67,6 +68,7 @@
             android:textSize="20sp"
             android:textColor="@color/blanc"
             android:background="@color/black_overlay"
+            android:visibility="gone"
             android:text="Nono" />
         <Button
             android:id="@+id/boutonJ4"
@@ -77,6 +79,7 @@
             android:textSize="20sp"
             android:textColor="@color/blanc"
             android:background="@color/black_overlay"
+            android:visibility="gone"
             android:text="Roger" />
     </LinearLayout>
 
@@ -84,12 +87,12 @@
         android:id="@+id/boutonRAZ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="25dp"
         android:padding="5dp"
         android:textSize="20sp"
         android:textColor="@color/blanc"
         android:background="@color/black_overlay"
-        android:text="RAZ" />
+        android:text="@string/raz_distribution" />
     <Button
         android:id="@+id/boutonDistribue"
         android:layout_width="match_parent"
@@ -99,5 +102,5 @@
         android:textSize="20sp"
         android:textColor="@color/blanc"
         android:background="@color/black_overlay"
-        android:text="Distribue" />
+        android:text="@string/distribue" />
 </LinearLayout>

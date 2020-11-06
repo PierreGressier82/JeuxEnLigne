@@ -8,8 +8,7 @@ public class Carte {
         super();
     }
 
-    public Carte(String couleur, int valeur) {
-        super();
+    Carte(String couleur, int valeur) {
         this.mValeur=valeur;
         this.mCouleur=couleur;
     }
@@ -22,11 +21,11 @@ public class Carte {
         this.mCouleur=couleur;
     }
 
-    public int getValeur() {
+    int getValeur() {
         return this.mValeur;
     }
 
-    public String getCouleur() {
+    String getCouleur() {
         return this.mCouleur;
     }
 }

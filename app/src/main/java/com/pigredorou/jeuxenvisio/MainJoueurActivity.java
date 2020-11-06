@@ -34,6 +34,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetDistribue = url + "getDistribution.php";
     private static final String urlJoueCarte = url + "majTable.php";
+    private static final String urlAfficheTable = url + "getTable.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Table
         mBoutonTable = findViewById(R.id.bouton_table);
         mBoutonTable.setOnClickListener(this);
-        mBoutonTable.setTag("table");
     }
 
     @Override
@@ -83,19 +83,21 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             new TacheJoueCarte().execute(urlJoueCarte + "?salon=1&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive +"&joueur=" + mPseudo);
         }
 
-        if(v.getTag().toString().equals("boutonRetour")) {
-            finish();
-        }
-
-        if(v.getTag().toString().equals("table")) {
-            mTable = findViewById(R.id.table);
-            if (mTable.getVisibility() == View.GONE)
-                mTable.setVisibility(View.VISIBLE);
-            else
-                mTable.setVisibility(View.GONE);
+        switch(v.getId()) {
+            case R.id.bouton_retour :
+                finish();
+                break;
+            case R.id.table :
+                mTable = findViewById(R.id.table);
+                if (mTable.getVisibility() == View.GONE)
+                    mTable.setVisibility(View.VISIBLE);
+                else
+                    mTable.setVisibility(View.GONE);
+                break;
         }
 
         // TODO : Mettre à jour le contenu de la table en dynamique  -> getTable.php
+        new TacheJoueCarte().execute(urlAfficheTable);
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -214,6 +216,46 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
 
         return retour;
+    }
+
+    /**
+     * Classe qui permet de récupère le pli en cours
+     * -> Retourne le pli
+     */
+    class TacheAfficheTable extends AsyncTask<String, Void, ArrayList<Pli>> {
+        String result;
+
+        @Override
+        protected ArrayList<Pli> doInBackground(String... strings) {
+            ArrayList<Pli> plis = new ArrayList<>();
+            URL url;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null) {
+                    String[] chaine = stringBuffer.split("_");
+                    Pli pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
+                    plis.add(pli);
+                    string = String.format("%s%s", string, stringBuffer);
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            return plis;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Pli> plis) {
+            // TODO : Afficher la table
+            super.onPostExecute(plis);
+        }
     }
 
     /**

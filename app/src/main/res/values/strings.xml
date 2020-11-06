@@ -16,4 +16,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="voir_les_cartes_de_la_table">Voir les cartes de la table</string>
     <string name="pseudo">Pseudo</string>
+    <string name="raz_distribution">RAZ distribution</string>
+    <string name="distribue">Distribue</string>
 </resources>
