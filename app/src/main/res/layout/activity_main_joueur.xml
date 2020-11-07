@@ -249,6 +249,7 @@
         </TableLayout>
     </HorizontalScrollView>
 
+
     <ScrollView
         android:id="@+id/table"
         android:layout_width="wrap_content"
@@ -265,40 +266,71 @@
             android:layout_height="wrap_content"
             android:scrollbars="horizontal">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/noir"
+                android:text="@string/pli_en_cours"
+                android:textAlignment="center"/>
+
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="fill_horizontal">
 
                 <TextView
-                    android:id="@+id/pseudo_joueur1"
+                    android:id="@+id/table_pseudo_joueur1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="Fievel"
-                    android:textColor="@color/blanc"
-                    android:textSize="20sp" />
-                <TextView
-                    android:id="@+id/pseudo_joueur2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:textAlignment="center"
-                    android:text="Nono"
+                    android:text="@string/pseudo"
                     android:textColor="@color/blanc"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/pseudo_joueur3"
+                    android:id="@+id/table_pseudo_joueur2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:textAlignment="center"
-                    android:text="Roger"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/table_pseudo_joueur3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:textAlignment="center"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/table_pseudo_joueur4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:textAlignment="center"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/table_pseudo_joueur5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:textAlignment="center"
+                    android:text="@string/pseudo"
                     android:textColor="@color/blanc"
                     android:textSize="20sp" />
             </TableRow>
@@ -308,7 +340,7 @@
                 android:gravity="fill_horizontal">
 
                 <TextView
-                    android:id="@+id/carte_joueur1"
+                    android:id="@+id/table_carte_joueur1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="50sp"
@@ -317,7 +349,7 @@
                     android:textColor="@color/vert"
                     android:contentDescription="@string/carte" />
                 <TextView
-                    android:id="@+id/carte_joueur2"
+                    android:id="@+id/table_carte_joueur2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="50sp"
@@ -327,11 +359,31 @@
                     android:contentDescription="@string/carte" />
 
                 <TextView
-                    android:id="@+id/carte_joueur3"
+                    android:id="@+id/table_carte_joueur3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="50sp"
                     android:text="6"
+                    android:textAlignment="center"
+                    android:textColor="@color/rose"
+                    android:contentDescription="@string/carte" />
+
+                <TextView
+                    android:id="@+id/table_carte_joueur4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="50sp"
+                    android:text="2"
+                    android:textAlignment="center"
+                    android:textColor="@color/rose"
+                    android:contentDescription="@string/carte" />
+
+                <TextView
+                    android:id="@+id/table_carte_joueur5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="50sp"
+                    android:text="7"
                     android:textAlignment="center"
                     android:textColor="@color/rose"
                     android:contentDescription="@string/carte" />

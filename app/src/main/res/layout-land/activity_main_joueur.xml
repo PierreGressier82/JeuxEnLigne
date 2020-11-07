@@ -266,7 +266,6 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal"
-            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/scrollView_cartes"
             app:layout_constraintEnd_toEndOf="parent">
@@ -277,18 +276,28 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="horizontal">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/noir"
+                    android:text="@string/pli_en_cours"
+                    android:textAlignment="center"/>
+
                 <TableRow
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="fill_horizontal">
 
                     <TextView
+                        android:id="@+id/table_pseudo_joueur1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        android:text="Fievel"
+                        android:text="@string/pseudo"
                         android:textColor="@color/blanc"
                         android:textSize="20sp" />
                 </TableRow>
@@ -297,11 +306,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="fill_horizontal">
                     <TextView
-                        android:id="@+id/carte_joueur1"
+                        android:id="@+id/table_carte_joueur1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="50sp"
-                        android:text="2"
                         android:textAlignment="center"
                         android:textColor="@color/vert"
                         android:contentDescription="@string/carte" />
@@ -312,12 +320,13 @@
                     android:gravity="fill_horizontal">
 
                     <TextView
+                        android:id="@+id/table_pseudo_joueur2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
+                        android:text="@string/pseudo"
                         android:textAlignment="center"
-                        android:text="Nono"
                         android:textColor="@color/blanc"
                         android:textSize="20sp" />
                 </TableRow>
@@ -326,11 +335,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="fill_horizontal">
                     <TextView
-                        android:id="@+id/carte_joueur2"
+                        android:id="@+id/table_carte_joueur2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="50sp"
-                        android:text="9"
                         android:textAlignment="center"
                         android:textColor="@color/rose"
                         android:contentDescription="@string/carte" />
@@ -341,12 +349,13 @@
                     android:gravity="fill_horizontal">
 
                     <TextView
+                        android:id="@+id/table_pseudo_joueur3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
+                        android:text="@string/pseudo"
                         android:textAlignment="center"
-                        android:text="Roger"
                         android:textColor="@color/blanc"
                         android:textSize="20sp" />
                 </TableRow>
@@ -355,11 +364,68 @@
                     android:layout_height="wrap_content"
                     android:gravity="fill_horizontal">
                     <TextView
-                        android:id="@+id/carte_joueur3"
+                        android:id="@+id/table_carte_joueur3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="50sp"
-                        android:text="6"
+                        android:textAlignment="center"
+                        android:textColor="@color/rose"
+                        android:contentDescription="@string/carte" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="fill_horizontal">
+
+                    <TextView
+                        android:id="@+id/table_pseudo_joueur4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/pseudo"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="fill_horizontal">
+                    <TextView
+                        android:id="@+id/table_carte_joueur4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="50sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/rose"
+                        android:contentDescription="@string/carte" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="fill_horizontal">
+
+                    <TextView
+                        android:id="@+id/table_pseudo_joueur5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:textAlignment="center"
+                        android:text="@string/pseudo"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="fill_horizontal">
+                    <TextView
+                        android:id="@+id/table_carte_joueur5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="50sp"
                         android:textAlignment="center"
                         android:textColor="@color/rose"
                         android:contentDescription="@string/carte" />

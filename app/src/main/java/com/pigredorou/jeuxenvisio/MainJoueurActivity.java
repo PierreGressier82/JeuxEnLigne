@@ -23,14 +23,18 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
     private TextView mTextResultat;
     private String mPseudo;
+    private int mIdSalon;
     private ImageView mCarteActive;
     private ImageView mBoutonTable;
     private ScrollView mTable;
+    private TextView mTitre;
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
     private static final int[] imagesBleu = {0, R.drawable.bleu_1, R.drawable.bleu_2, R.drawable.bleu_3, R.drawable.bleu_4, R.drawable.bleu_5, R.drawable.bleu_6, R.drawable.bleu_7, R.drawable.bleu_8, R.drawable.bleu_9};
     private static final int[] imagesFusee = {0, R.drawable.fusee_1, R.drawable.fusee_2, R.drawable.fusee_3, R.drawable.fusee_4};
+    private static final int[] tableIdPseudo = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4, R.id.table_pseudo_joueur5};
+    private static final int[] tableIdCarte = {R.id.table_carte_joueur1, R.id.table_carte_joueur2, R.id.table_carte_joueur3, R.id.table_carte_joueur4, R.id.table_carte_joueur5};
     private static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetDistribue = url + "getDistribution.php";
     private static final String urlJoueCarte = url + "majTable.php";
@@ -57,6 +61,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         TextView textPseudo = findViewById(R.id.pseudo);
         final Intent intent = getIntent();
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
+        mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         textPseudo.setText(mPseudo);
 
         // Recupère les cartes du joueur
@@ -68,36 +73,43 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
 
         // Table
+        mTable = findViewById(R.id.table);
         mBoutonTable = findViewById(R.id.bouton_table);
         mBoutonTable.setOnClickListener(this);
+        new TacheAfficheTable().execute(urlAfficheTable);
+
+        // Entete
+        mTitre = findViewById(R.id.titre_jeu);
+        mTitre.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getTag().toString().startsWith("carte_")) {
-            mCarteActive = findViewById(v.getId());
-            String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
-            String couleurCarteActive = chaine[1];
-            String valeurCarteActive = chaine[2];
-
-            new TacheJoueCarte().execute(urlJoueCarte + "?salon=1&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive +"&joueur=" + mPseudo);
-        }
-
         switch(v.getId()) {
             case R.id.bouton_retour :
                 finish();
                 break;
-            case R.id.table :
-                mTable = findViewById(R.id.table);
+            case R.id.bouton_table :
                 if (mTable.getVisibility() == View.GONE)
                     mTable.setVisibility(View.VISIBLE);
                 else
                     mTable.setVisibility(View.GONE);
                 break;
+            default:
+                if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
+                    mCarteActive = findViewById(v.getId());
+                    String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
+                    String couleurCarteActive = chaine[1];
+                    String valeurCarteActive = chaine[2];
+
+                    new TacheJoueCarte().execute(urlJoueCarte + "?salon="+mIdSalon+"&couleur_carte="+couleurCarteActive+"&valeur_carte="+valeurCarteActive+"&joueur="+mPseudo);
+                }
+                break;
         }
 
-        // TODO : Mettre à jour le contenu de la table en dynamique  -> getTable.php
-        new TacheJoueCarte().execute(urlAfficheTable);
+        // Mise à jour de la table si elle est affichée
+        if (mTable.getVisibility() == View.VISIBLE)
+            new TacheAfficheTable().execute(urlAfficheTable);
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -218,6 +230,48 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         return retour;
     }
 
+    private void afficheTable(ArrayList<Pli> plis) {
+        TextView pseudo;
+        TextView carte;
+        for (int i=0; i<tableIdPseudo.length; i++) {
+            pseudo = findViewById(tableIdPseudo[i]);
+            carte = findViewById(tableIdCarte[i]);
+            if (i < plis.size()) {
+                pseudo.setText(plis.get(i).getJoueur());
+                pseudo.setVisibility(View.VISIBLE);
+                carte.setText(String.valueOf(plis.get(i).getCarte().getValeur()));
+                carte.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
+                carte.setVisibility(View.VISIBLE);
+            } else {
+                pseudo.setVisibility(View.GONE);
+                carte.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private int getCouleurCarte(String couleur) {
+        int idCouleur;
+        switch (couleur) {
+            case "bleu" :
+                idCouleur=R.color.bleu;
+                break;
+            case "jaune" :
+                idCouleur=R.color.jaune;
+                break;
+            case "rose" :
+                idCouleur=R.color.rose;
+                break;
+            case "vert" :
+                idCouleur=R.color.vert;
+                break;
+            case "fusee" :
+            default:
+                idCouleur=R.color.noir;
+                break;
+        }
+        return idCouleur;
+    }
+
     /**
      * Classe qui permet de récupère le pli en cours
      * -> Retourne le pli
@@ -254,6 +308,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected void onPostExecute(ArrayList<Pli> plis) {
             // TODO : Afficher la table
+            afficheTable(plis);
             super.onPostExecute(plis);
         }
     }

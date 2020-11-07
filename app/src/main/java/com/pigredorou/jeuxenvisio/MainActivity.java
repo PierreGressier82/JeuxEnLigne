@@ -1,7 +1,6 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -30,10 +29,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String urlGetSalons = url + "getSalons.php";
     public static final int MAIN_JOUEUR_ACTIVITY_REQUEST_CODE=14;
     public static final String VALEUR_PSEUDO = "Pseudo";
+    public static final String VALEUR_ID_SALON = "Salon";
     private Button mBoutonJ1;
     private Button mBoutonRAZ;
     private Button mBoutonDistribue;
-    private SharedPreferences mPreferences;
     private Spinner mListeDeroulanteSalons;
     private Spinner mListeDeroulanteJoueurs;
     private ArrayList<Joueur> mListeJoueurs = new ArrayList<>();
@@ -77,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBoutonDistribue.setOnClickListener(this);
         mBoutonRAZ.setVisibility(View.GONE);
         mBoutonDistribue.setVisibility(View.GONE);
-
-        mPreferences = getPreferences(MODE_PRIVATE);
     }
 
     @Override
@@ -91,10 +88,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent MainJoueurActivity = new Intent(MainActivity.this, MainJoueurActivity.class);
                 // Sauvegarde le pseudo
                 Button bouton = v.findViewById(v.getId());
-                // Sauvegarde des préférences
-                mPreferences.edit().putString(VALEUR_PSEUDO, bouton.getText().toString()).apply();
-                // Lance l'activité "Main joueur" avec le pseudo en paramètre
+                // Lance l'activité "Main joueur" avec le pseudo et l'id du salon en paramètre
                 MainJoueurActivity.putExtra(VALEUR_PSEUDO, bouton.getText().toString());
+                MainJoueurActivity.putExtra(VALEUR_ID_SALON, mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
                 startActivityForResult(MainJoueurActivity, MAIN_JOUEUR_ACTIVITY_REQUEST_CODE);
                 break;
 
