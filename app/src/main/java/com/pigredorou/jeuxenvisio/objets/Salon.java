@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenvisio;
+package com.pigredorou.jeuxenvisio.objets;
 
 public class Salon {
     private int id;

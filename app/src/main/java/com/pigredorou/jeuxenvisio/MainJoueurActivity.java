@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pigredorou.jeuxenvisio.objets.Carte;
+import com.pigredorou.jeuxenvisio.objets.Pli;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +41,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetDistribue = url + "getDistribution.php";
     private static final String urlJoueCarte = url + "majTable.php";
-    private static final String urlAfficheTable = url + "getTable.php";
+    private static final String urlAfficheTable = url + "getTable.php?salon=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         // Recupère les cartes du joueur
         if (mPseudo != null)
-            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo);
+            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo + "&salon=" + mIdSalon);
         else {
             Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
             mTextResultat.setText(R.string.chargement_impossible);
@@ -76,7 +79,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTable = findViewById(R.id.table);
         mBoutonTable = findViewById(R.id.bouton_table);
         mBoutonTable.setOnClickListener(this);
-        new TacheAfficheTable().execute(urlAfficheTable);
+        new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
 
         // Entete
         mTitre = findViewById(R.id.titre_jeu);
@@ -109,7 +112,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         // Mise à jour de la table si elle est affichée
         if (mTable.getVisibility() == View.VISIBLE)
-            new TacheAfficheTable().execute(urlAfficheTable);
+            new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {

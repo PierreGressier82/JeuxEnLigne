@@ -1,17 +1,20 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.pigredorou.jeuxenvisio.objets.Joueur;
+import com.pigredorou.jeuxenvisio.objets.Salon;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,17 +27,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlDistribue = url + "distribueCartes.php";
-    private static final String urlRAZDistribution = url + "RAZDistribution.php";
+    private static final String urlRAZDistribution = url + "RAZDistribution.php?salon=";
     private static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     private static final String urlGetSalons = url + "getSalons.php";
     public static final int MAIN_JOUEUR_ACTIVITY_REQUEST_CODE=14;
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "Salon";
+    private int mSalon;
+    private String mPseudo;
     private Button mBoutonJ1;
     private Button mBoutonRAZ;
     private Button mBoutonDistribue;
+    private SharedPreferences mPreferences;
     private Spinner mListeDeroulanteSalons;
-    private Spinner mListeDeroulanteJoueurs;
     private ArrayList<Joueur> mListeJoueurs = new ArrayList<>();
     private ArrayList<Salon> mListeSalons = new ArrayList<>();
     private ArrayAdapter<String> mArrayAdapterSalons;
@@ -48,23 +53,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Charge le layout
         setContentView(R.layout.activity_main);
-        LinearLayout layoutBoutonsJoueurs = findViewById(R.id.layout_boutons_joueurs);
+
+        // On recupère les préférences du joueur
+        mPreferences = getPreferences(MODE_PRIVATE);
+        mSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
+        mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
 
         // Liste des salons de jeu
         mListeDeroulanteSalons = findViewById(R.id.liste_salons);
         mListeDeroulanteSalons.setOnItemSelectedListener(this);
         mListeDeroulanteSalons.setTag("salons");
+        mListeDeroulanteSalons.setSelection(mSalon-1);
         mArrayAdapterSalons = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<String>());
         mArrayAdapterSalons.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mListeDeroulanteSalons.setAdapter(mArrayAdapterSalons);
         new TacheGetSalons().execute(urlGetSalons);
 
         // Liste des joueurs
-        mListeDeroulanteJoueurs = findViewById(R.id.liste_joueurs);
-        mListeDeroulanteJoueurs.setOnItemSelectedListener(this);
+        Spinner listeDeroulanteJoueurs = findViewById(R.id.liste_joueurs);
+        listeDeroulanteJoueurs.setOnItemSelectedListener(this);
         mArrayAdapterJoueurs = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<String>());
         mArrayAdapterJoueurs.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mListeDeroulanteJoueurs.setAdapter(mArrayAdapterJoueurs);
+        listeDeroulanteJoueurs.setAdapter(mArrayAdapterJoueurs);
 
         mBoutonJ1 = findViewById(R.id.boutonJ1);
         mBoutonJ1.setOnClickListener(this);
@@ -76,18 +86,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBoutonDistribue.setOnClickListener(this);
         mBoutonRAZ.setVisibility(View.GONE);
         mBoutonDistribue.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.boutonJ1:
-            case R.id.boutonJ2:
-            case R.id.boutonJ3:
-            case R.id.boutonJ4:
                 Intent MainJoueurActivity = new Intent(MainActivity.this, MainJoueurActivity.class);
                 // Sauvegarde le pseudo
                 Button bouton = v.findViewById(v.getId());
+                // Sauvegarde des préférences
+                mPreferences.edit().putString(VALEUR_PSEUDO, bouton.getText().toString()).apply();
+                mPreferences.edit().putInt(VALEUR_ID_SALON, mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId()).apply();
                 // Lance l'activité "Main joueur" avec le pseudo et l'id du salon en paramètre
                 MainJoueurActivity.putExtra(VALEUR_PSEUDO, bouton.getText().toString());
                 MainJoueurActivity.putExtra(VALEUR_ID_SALON, mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
@@ -95,12 +106,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.boutonDistribue :
-                new TacheURLSansRetour().execute(urlDistribue + "?salon="+ mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
+                new TacheURLSansRetour().execute(urlDistribue + "?typeCarte=1&salon="+ mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.boutonRAZ :
-                new TacheURLSansRetour().execute(urlRAZDistribution);
+                new TacheURLSansRetour().execute(urlRAZDistribution+mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
                 Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
                 break;
         }

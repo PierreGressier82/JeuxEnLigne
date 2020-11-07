@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenvisio;
+package com.pigredorou.jeuxenvisio.objets;
 
 public class Carte {
     private String mCouleur;
@@ -8,7 +8,7 @@ public class Carte {
         super();
     }
 
-    Carte(String couleur, int valeur) {
+    public Carte(String couleur, int valeur) {
         this.mValeur=valeur;
         this.mCouleur=couleur;
     }
@@ -21,11 +21,11 @@ public class Carte {
         this.mCouleur=couleur;
     }
 
-    int getValeur() {
+    public int getValeur() {
         return this.mValeur;
     }
 
-    String getCouleur() {
+    public String getCouleur() {
         return this.mCouleur;
     }
 }

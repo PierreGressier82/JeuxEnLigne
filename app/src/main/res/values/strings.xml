@@ -3,7 +3,7 @@
     <string name="Chargement">Chargement</string>
     <string name="retour_l_accueil">Retour à l\'accueil</string>
     <string name="carte">carte</string>
-    <string name="taches">Mes tâches :</string>
+    <string name="taches">Tâches :</string>
     <string name="chargement_impossible">Chargement impossible</string>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>

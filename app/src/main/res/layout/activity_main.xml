@@ -37,57 +37,16 @@
         android:layout_marginTop="10dp"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_boutons_joueurs"
+    <Button
+        android:id="@+id/boutonJ1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:ignore="ScrollViewCount">
-
-        <Button
-            android:id="@+id/boutonJ1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:textSize="20sp"
-            android:textColor="@color/blanc"
-            android:background="@color/black_overlay"
-            android:text="Valider" />
-        <Button
-            android:id="@+id/boutonJ2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:textSize="20sp"
-            android:textColor="@color/blanc"
-            android:background="@color/black_overlay"
-            android:visibility="gone"
-            android:text="Fievel" />
-        <Button
-            android:id="@+id/boutonJ3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:textSize="20sp"
-            android:textColor="@color/blanc"
-            android:background="@color/black_overlay"
-            android:visibility="gone"
-            android:text="Nono" />
-        <Button
-            android:id="@+id/boutonJ4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:textSize="20sp"
-            android:textColor="@color/blanc"
-            android:background="@color/black_overlay"
-            android:visibility="gone"
-            android:text="Roger" />
-    </LinearLayout>
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:textSize="20sp"
+        android:textColor="@color/blanc"
+        android:background="@color/black_overlay"
+        android:text="Valider" />
 
     <Button
         android:id="@+id/boutonRAZ"
