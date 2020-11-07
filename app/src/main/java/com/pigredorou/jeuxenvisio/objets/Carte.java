@@ -3,6 +3,7 @@ package com.pigredorou.jeuxenvisio.objets;
 public class Carte {
     private String mCouleur;
     private int mValeur;
+    private String mOption;
 
     public Carte() {
         super();
@@ -13,6 +14,12 @@ public class Carte {
         this.mCouleur=couleur;
     }
 
+    public Carte(String couleur, int valeur, String option) {
+        mCouleur = couleur;
+        mValeur = valeur;
+        mOption = option;
+    }
+
     public void setValeur(int valeur) {
         this.mValeur=valeur;
     }
@@ -21,11 +28,19 @@ public class Carte {
         this.mCouleur=couleur;
     }
 
+    public void setOption(String option) {
+        mOption = option;
+    }
+
     public int getValeur() {
         return this.mValeur;
     }
 
     public String getCouleur() {
         return this.mCouleur;
+    }
+
+    public String getOption() {
+        return mOption;
     }
 }

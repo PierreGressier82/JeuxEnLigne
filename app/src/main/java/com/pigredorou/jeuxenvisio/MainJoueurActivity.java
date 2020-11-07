@@ -1,9 +1,11 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TableRow;
@@ -28,9 +30,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private String mPseudo;
     private int mIdSalon;
     private ImageView mCarteActive;
-    private ImageView mBoutonTable;
     private ScrollView mTable;
-    private TextView mTitre;
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
@@ -42,12 +42,15 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final String urlGetDistribue = url + "getDistribution.php";
     private static final String urlJoueCarte = url + "majTable.php";
     private static final String urlAfficheTable = url + "getTable.php?salon=";
+    private static final String urlAfficheTache = url + "getTaches.php?salon=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Masque le bar de titre de l'activité
         Objects.requireNonNull(getSupportActionBar()).hide();
+        // Bloque la mise en veille
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
         setContentView(R.layout.activity_main_joueur);
 
@@ -77,13 +80,16 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         // Table
         mTable = findViewById(R.id.table);
-        mBoutonTable = findViewById(R.id.bouton_table);
-        mBoutonTable.setOnClickListener(this);
+        ImageView boutonTable = findViewById(R.id.bouton_table);
+        boutonTable.setOnClickListener(this);
         new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
 
         // Entete
-        mTitre = findViewById(R.id.titre_jeu);
-        mTitre.setOnClickListener(this);
+        TextView titre = findViewById(R.id.titre_jeu);
+        titre.setOnClickListener(this);
+
+        // Taches
+        new TacheAfficheTaches().execute(urlAfficheTache+mIdSalon);
     }
 
     @Override
@@ -111,8 +117,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
 
         // Mise à jour de la table si elle est affichée
-        if (mTable.getVisibility() == View.VISIBLE)
-            new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
+        if (mTable.getVisibility() == View.VISIBLE) {
+            new TacheAfficheTable().execute(urlAfficheTable + mIdSalon);
+        }
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -252,6 +259,62 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void afficheTaches(ArrayList<Pli> plis) {
+        String pseudoPrec="";
+        TableRow ligneTaches = findViewById(R.id.tableau_taches);
+        ligneTaches.removeAllViewsInLayout();
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+        params.setMargins(5, 5, 5, 5);
+        ligneTaches.setLayoutParams(params);
+
+        TableRow.LayoutParams paramsTV = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TextView tvTache = new TextView(this);
+        paramsTV.setMargins(5, 0, 20, 0);
+        tvTache.setLayoutParams(paramsTV);
+        tvTache.setTextColor(getResources().getColor(R.color.noir));
+        tvTache.setText(R.string.taches);
+        tvTache.setTextSize(20);
+        tvTache.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        ligneTaches.addView(tvTache);
+
+        // Affiche les taches
+        for (int i=0; i<plis.size(); i++) {
+            if (!pseudoPrec.equals(plis.get(i).getJoueur())) {
+                if (pseudoPrec!="") {
+                    // Affiche une case de séparation
+                    TextView tvVide = new TextView(this);
+                    paramsTV.setMargins(50, 0, 5, 0);
+                    tvVide.setLayoutParams(paramsTV);
+                    tvVide.setTextColor(getResources().getColor(R.color.noir));
+                    tvVide.setText("  |  ");
+                    tvVide.setTextSize(20);
+                    ligneTaches.addView(tvVide);
+                }
+
+                String texte = plis.get(i).getJoueur() + " : ";
+                TextView tvPseudo = new TextView(this);
+                paramsTV.setMargins(15, 0, 5, 0);
+                tvPseudo.setLayoutParams(paramsTV);
+                tvPseudo.setText(texte);
+                tvPseudo.setTextColor(getResources().getColor(R.color.blanc));
+                tvPseudo.setGravity(View.TEXT_ALIGNMENT_CENTER);
+                tvPseudo.setTextSize(20);
+                ligneTaches.addView(tvPseudo);
+                pseudoPrec=plis.get(i).getJoueur();
+            }
+            String texte = plis.get(i).getCarte().getValeur() + " " + plis.get(i).getCarte().getOption();
+            TextView tvValeurTache = new TextView(this);
+            paramsTV.setMargins(5, 0, 5, 0);
+            tvValeurTache.setLayoutParams(paramsTV);
+            tvValeurTache.setText(texte);
+            tvValeurTache.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
+            tvValeurTache.setGravity(View.TEXT_ALIGNMENT_CENTER);
+            tvValeurTache.setTextSize(20);
+            tvValeurTache.setTypeface(tvTache.getTypeface(), Typeface.BOLD);
+            ligneTaches.addView(tvValeurTache);
+        }
+    }
+
     private int getCouleurCarte(String couleur) {
         int idCouleur;
         switch (couleur) {
@@ -277,7 +340,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Classe qui permet de récupère le pli en cours
-     * -> Retourne le pli
+     * -> Retourne le pli et l'affiche
      */
     class TacheAfficheTable extends AsyncTask<String, Void, ArrayList<Pli>> {
         String result;
@@ -294,7 +357,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 String string = "";
                 while ((stringBuffer = bufferedReader.readLine()) != null) {
                     String[] chaine = stringBuffer.split("_");
-                    Pli pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
+                    Pli pli;
+                    pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
                     plis.add(pli);
                     string = String.format("%s%s", string, stringBuffer);
                 }
@@ -310,8 +374,51 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(ArrayList<Pli> plis) {
-            // TODO : Afficher la table
             afficheTable(plis);
+            super.onPostExecute(plis);
+        }
+    }
+
+    /**
+     * Classe qui permet de récupère les taches
+     * -> Retourne les taches et les affiche
+     */
+    class TacheAfficheTaches extends AsyncTask<String, Void, ArrayList<Pli>> {
+        String result;
+
+        @Override
+        protected ArrayList<Pli> doInBackground(String... strings) {
+            ArrayList<Pli> plis = new ArrayList<>();
+            URL url;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null) {
+                    String[] chaine = stringBuffer.split("_");
+                    Pli pli;
+                    if(chaine[3]!=null)
+                        pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2]),chaine[3]));
+                    else
+                        pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
+                    plis.add(pli);
+                    string = String.format("%s%s", string, stringBuffer);
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            return plis;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Pli> plis) {
+            afficheTaches(plis);
             super.onPostExecute(plis);
         }
     }

@@ -457,40 +457,46 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp">
 
-        <TableRow
-            android:id="@+id/tableau_taches"
+        <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="fill_horizontal">
+            android:scrollbars="horizontal">
 
-            <TextView
+            <TableRow
+                android:id="@+id/tableau_taches"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/taches"
-                android:textAlignment="center"
-                android:textColor="@color/blanc"
-                android:textSize="20sp" />
+                android:gravity="fill_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="2"
-                android:textAlignment="center"
-                android:textColor="@color/jaune"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/taches"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="7"
-                android:textAlignment="center"
-                android:textColor="@color/bleu"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="2"
+                    android:textAlignment="center"
+                    android:textColor="@color/jaune"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="7"
+                    android:textAlignment="center"
+                    android:textColor="@color/bleu"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
     </HorizontalScrollView>
 </LinearLayout>

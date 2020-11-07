@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Button bouton = v.findViewById(v.getId());
                 // Sauvegarde des préférences
                 mPreferences.edit().putString(VALEUR_PSEUDO, bouton.getText().toString()).apply();
-                mPreferences.edit().putInt(VALEUR_ID_SALON, mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId()).apply();
+                //mPreferences.edit().putInt(VALEUR_ID_SALON, mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId()).apply();
                 // Lance l'activité "Main joueur" avec le pseudo et l'id du salon en paramètre
                 MainJoueurActivity.putExtra(VALEUR_PSEUDO, bouton.getText().toString());
                 MainJoueurActivity.putExtra(VALEUR_ID_SALON, mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
