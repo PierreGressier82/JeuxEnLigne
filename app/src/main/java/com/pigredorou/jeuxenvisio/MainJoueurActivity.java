@@ -120,6 +120,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         if (mTable.getVisibility() == View.VISIBLE) {
             new TacheAfficheTable().execute(urlAfficheTable + mIdSalon);
         }
+        // Mise à jour des tâches
+        new TacheAfficheTaches().execute(urlAfficheTache + mIdSalon);
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -302,7 +304,12 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 ligneTaches.addView(tvPseudo);
                 pseudoPrec=plis.get(i).getJoueur();
             }
-            String texte = plis.get(i).getCarte().getValeur() + " " + plis.get(i).getCarte().getOption();
+            String texte = String.valueOf(plis.get(i).getCarte().getValeur());
+            String option = plis.get(i).getCarte().getOption();
+            if (!option.startsWith(" "))
+                texte += "(" + option + ") ";
+            else
+                texte += "";
             TextView tvValeurTache = new TextView(this);
             paramsTV.setMargins(5, 0, 5, 0);
             tvValeurTache.setLayoutParams(paramsTV);
