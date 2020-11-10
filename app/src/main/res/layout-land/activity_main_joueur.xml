@@ -66,14 +66,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cartes_main_table"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.8"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <HorizontalScrollView
             android:id="@+id/scrollView_cartes"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="0.8"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -470,6 +469,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="fill_horizontal">
 
+                <Button
+                    android:id="@+id/bouton_refresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/noir"
+                    android:textColorHint="@color/blanc"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -501,4 +508,11 @@
             </TableRow>
         </TableLayout>
     </HorizontalScrollView>
+    <ImageView
+        android:id="@+id/bouton_communication"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/jeton_communication_off"/>
+
 </LinearLayout>

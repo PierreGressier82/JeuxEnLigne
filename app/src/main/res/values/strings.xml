@@ -3,7 +3,7 @@
     <string name="Chargement">Chargement</string>
     <string name="retour_l_accueil">Retour à l\'accueil</string>
     <string name="carte">carte</string>
-    <string name="taches">Tâches :</string>
+    <string name="taches">Objectifs</string>
     <string name="chargement_impossible">Chargement impossible</string>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
@@ -18,5 +18,6 @@
     <string name="pseudo">Pseudo</string>
     <string name="raz_distribution">RAZ distribution</string>
     <string name="distribue">Distribue</string>
-    <string name="pli_en_cours">Pli en cours</string>
+    <string name="pli_en_cours">Pli en cours (3/10)</string>
+    <string name="tachesAAtribuer">Tâches à attributer :</string>
 </resources>

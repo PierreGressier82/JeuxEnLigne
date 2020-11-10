@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TableRow;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Pli;
@@ -22,15 +26,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
-public class MainJoueurActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainJoueurActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
     private TextView mTextResultat;
     private String mPseudo;
     private int mIdSalon;
     private ImageView mCarteActive;
+    private ImageView mBoutonCommunication;
     private ScrollView mTable;
+    private Button mBoutonRefreshAuto;
+    private Boolean mRefreshAuto;
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
@@ -43,6 +51,20 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final String urlJoueCarte = url + "majTable.php";
     private static final String urlAfficheTable = url + "getTable.php?salon=";
     private static final String urlAfficheTache = url + "getTaches.php?salon=";
+    private GestureDetectorCompat mDetector;
+    java.util.Date noteTS;
+    String time, date;
+    TextView titre;
+    Thread t;
+    //variable for counting two successive up-down events
+    int clickCount = 0;
+    //variable for storing the time of first click
+    long startTime;
+    //variable for calculating the total time
+    long duration;
+    //constant for defining the time duration between the click that can be considered as double-tap
+    static final int MAX_DURATION_CLICK = 200;
+    static final int MAX_DURATION_DOUBLE_CLICK = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +107,112 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
 
         // Entete
-        TextView titre = findViewById(R.id.titre_jeu);
-        titre.setOnClickListener(this);
+        titre = findViewById(R.id.titre_jeu);
+        //titre.setOnClickListener(this);
 
         // Taches
         new TacheAfficheTaches().execute(urlAfficheTache+mIdSalon);
+
+        // Bouton communication
+        mBoutonCommunication = findViewById(R.id.bouton_communication);
+        mBoutonCommunication.setOnTouchListener(this);
+
+        // Refresh auto
+        startRefreshAuto();
+
+        mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
+        mBoutonRefreshAuto.setOnClickListener(this);
+    }
+
+    private void startRefreshAuto() {
+        t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(5000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateTextView();
+                                new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
+                            }
+                        });
+                    }
+                } catch (InterruptedException ignored) {
+                }
+            }
+        };
+
+        t.start();
+        mRefreshAuto = true;
+    }
+
+    private void stopRefreshAuto() {
+        if(t.isAlive())
+            t.interrupt();
+        mRefreshAuto = false;
+    }
+
+    @Override
+    protected void onPause() {
+        // Stop refresh auto
+        stopRefreshAuto();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        // Restart refresh
+        startRefreshAuto();
+        super.onResume();
+    }
+
+    private void updateTextView() {
+        noteTS = Calendar.getInstance().getTime();
+
+        String time = "hh:mm:ss"; // 12:00:00
+        titre.setText(DateFormat.format(time, noteTS));
+
+        //String date = "dd MMMMM yyyy"; // 01 January 2013
+        //titre.setText(DateFormat.format(date, noteTS));
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
+            case R.id.bouton_refresh :
+                if (mRefreshAuto) {
+                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.blanc));
+                    t.interrupt();
+                    mRefreshAuto = false;
+                }
+                else {
+                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.noir));
+                    t = new Thread() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                while (!isInterrupted()) {
+                                    Thread.sleep(1000);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            updateTextView();
+                                        }
+                                    });
+                                }
+                            } catch (InterruptedException e) {
+                            }
+                        }
+                    };
+
+                    t.start();
+                    mRefreshAuto = true;
+                }
+                break;
             case R.id.bouton_retour :
                 finish();
                 break;
@@ -156,7 +274,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         //private void afficheCartes() {
         TableRow tableauCartes = findViewById(R.id.tableau_cartes);
         tableauCartes.removeAllViewsInLayout();
-        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
         params.setMargins(5, 0, 5, 0);
         tableauCartes.setLayoutParams(params);
 
@@ -165,7 +283,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             for (int i = 0; i < cartes.size(); i++) {
                 ImageView carte = new ImageView(this);
                 String nomCarte = cartes.get(i).getCouleur() + "_" + cartes.get(i).getValeur();
-
+                params = new TableRow.LayoutParams(250, 450, 0);
+                params.setMargins(5, 0, 0, 0);
+                carte.setLayoutParams(params);
                 carte.setImageResource(getImageCarte(cartes.get(i).getCouleur(), cartes.get(i).getValeur()));
                 carte.setTag("carte_" + nomCarte);
                 carte.setId(setId(i));
@@ -274,7 +394,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         paramsTV.setMargins(5, 0, 20, 0);
         tvTache.setLayoutParams(paramsTV);
         tvTache.setTextColor(getResources().getColor(R.color.noir));
-        tvTache.setText(R.string.taches);
+        tvTache.setText(R.string.tachesAAtribuer);
         tvTache.setTextSize(20);
         tvTache.setGravity(View.TEXT_ALIGNMENT_CENTER);
         ligneTaches.addView(tvTache);
@@ -343,6 +463,44 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
         return idCouleur;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        long time;
+        switch(event.getAction() & MotionEvent.ACTION_MASK)
+        {
+            case MotionEvent.ACTION_DOWN:
+                if (clickCount == 1) {
+                    time = System.currentTimeMillis();
+
+                    // Si temps entre 2 clicks trop long, on retourne à 0
+                    if ( (time-startTime)>MAX_DURATION_DOUBLE_CLICK)
+                        clickCount=0;
+                }
+                startTime = System.currentTimeMillis();
+                clickCount++;
+
+                break;
+            case MotionEvent.ACTION_UP:
+                // Temps en appuie et relache
+                time = System.currentTimeMillis() - startTime;
+                duration=  duration + time;
+                if(clickCount == 2)
+                {
+                    if(duration<= MAX_DURATION_CLICK)
+                    {
+                        if (v.getId() == R.id.bouton_communication)
+                            Toast.makeText(this, "double clic on comm",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(this, "double clic",Toast.LENGTH_LONG).show();
+                    }
+                    clickCount = 0;
+                    duration = 0;
+                    break;
+                }
+        }
+        return true;
     }
 
     /**
@@ -425,7 +583,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(ArrayList<Pli> plis) {
-            afficheTaches(plis);
+            //afficheTaches(plis);
             super.onPostExecute(plis);
         }
     }
