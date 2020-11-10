@@ -7,9 +7,10 @@
     <color name="noir">#000000</color>
     <color name="jaune">#C18C46</color>
     <color name="bleu">#1F7AAF</color>
+    <color name="bleu_fonce">#1F41AF</color>
     <color name="vert">#768A33</color>
     <color name="rose">#C75378</color>
-    <color name="orange">#FF4500</color>
+    <color name="orange">#C34415</color>
     <color name="rouge">#B40404</color>
     <color name="violet">#990099</color>
     <color name="black_overlay">#66000000</color>
