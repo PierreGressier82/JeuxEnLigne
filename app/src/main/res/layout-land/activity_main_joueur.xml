@@ -563,6 +563,129 @@
                     android:textStyle="bold" />
             </TableRow>
         </TableLayout>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal">
+
+            <TextView
+                android:id="@+id/tache_joueur1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="5(1)"
+                android:textAlignment="center"
+                android:textColor="@color/rose"
+                android:background="@color/blanc"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache_joueur2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="9"
+                android:textAlignment="center"
+                android:textColor="@color/rose"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache_joueur3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="5"
+                android:textAlignment="center"
+                android:textColor="@color/jaune"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache_joueur4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="2"
+                android:textAlignment="center"
+                android:textColor="@color/vert"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache_joueur5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="7"
+                android:textAlignment="center"
+                android:textColor="@color/rose"
+                android:background="@color/blanc"
+                android:textSize="20sp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal">
+
+            <TextView
+                android:id="@+id/tache2_joueur1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="1"
+                android:textAlignment="center"
+                android:textColor="@color/rose"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache2_joueur2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="3"
+                android:textAlignment="center"
+                android:textColor="@color/bleu"
+                android:background="@color/blanc"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache2_joueur3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="6(2)"
+                android:textAlignment="center"
+                android:textColor="@color/rose"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache2_joueur4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="4(3)"
+                android:textAlignment="center"
+                android:textColor="@color/bleu"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tache2_joueur5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/carte"
+                android:text="9"
+                android:textAlignment="center"
+                android:textColor="@color/jaune"
+                android:textSize="20sp" />
+        </TableRow>
     </HorizontalScrollView>
     <ImageView
         android:id="@+id/bouton_communication"

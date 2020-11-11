@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBoutonDistribue.setOnClickListener(this);
         mBoutonRAZ.setVisibility(View.GONE);
         mBoutonDistribue.setVisibility(View.GONE);
+        // TODO boutons pour distribuer les taches
 
     }
 

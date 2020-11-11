@@ -45,6 +45,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final String urlAfficheTable = MainActivity.url + "getTable.php?salon=";
     private static final String urlAfficheTache = MainActivity.url + "getTaches.php?salon=";
     private static final String urlGetCommandant = MainActivity.url + "getCommandant.php?salon=";
+    private static final String urlGetOjectifCommun = MainActivity.url + "getObjectif.php?salon=";
 
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -54,8 +55,21 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private ImageView mCarteActive;
     private ImageView mBoutonCommunication;
     private TextView mTextResultat;
-    private TextView titre;
+    private TextView mTitre;
+    private TextView mHeureRefresh;
+    private TextView mObjectifCommun;
     private java.util.Date noteTS;
+    // Tâches
+    private TextView mTaches1Joueur1;
+    private TextView mTaches1Joueur2;
+    private TextView mTaches1Joueur3;
+    private TextView mTaches1Joueur4;
+    private TextView mTaches1Joueur5;
+    private TextView mTaches2Joueur1;
+    private TextView mTaches2Joueur2;
+    private TextView mTaches2Joueur3;
+    private TextView mTaches2Joueur4;
+    private TextView mTaches2Joueur5;
     // Auto resfresh
     private Button mBoutonRefreshAuto;
     private Boolean mRefreshAuto;
@@ -78,15 +92,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Affiche la vue
         setContentView(R.layout.activity_main_joueur);
 
-        // Bouton retour
-        ImageView boutonRetour = findViewById(R.id.bouton_retour);
-        boutonRetour.setTag("boutonRetour");
-        boutonRetour.setOnClickListener(this);
-        boutonRetour.setImageResource(R.drawable.bouton_quitter);
-
-        mTextResultat = findViewById(R.id.resultat);
-        mTextResultat.setText(R.string.Chargement);
-
+        // ENTETE
+        mTitre = findViewById(R.id.titre_jeu);
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
         TextView tvNomSalon = findViewById(R.id.nom_salon);
@@ -96,9 +103,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
-
-        // Entete
-        titre = findViewById(R.id.titre_jeu);
+        // Bouton retour
+        ImageView boutonRetour = findViewById(R.id.bouton_retour);
+        boutonRetour.setTag("boutonRetour");
+        boutonRetour.setOnClickListener(this);
+        boutonRetour.setImageResource(R.drawable.bouton_quitter);
 
         // Liste des pseudos dans l'ordre de jeu
         new MainJoueurActivity.TacheGetJoueurs().execute(MainActivity.urlGetJoueurs+mIdSalon);
@@ -106,6 +115,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Nom du commandant pour la partie
         new MainJoueurActivity.TacheGetCommandant().execute(urlGetCommandant+mIdSalon);
 
+        // Affiche un message chargement le temps de récupérer les informations en base
+        mTextResultat = findViewById(R.id.resultat);
+        mTextResultat.setText(R.string.Chargement);
         // Recupère les cartes du joueur
         if (mPseudo != null)
             new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo + "&salon=" + mIdSalon);
@@ -120,17 +132,79 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         boutonTable.setOnClickListener(this);
         new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
 
+        // Communications
+
+        // Objectifs commun
+        mObjectifCommun = findViewById(R.id.objectif_commun);
+        new TacheGetDescription().execute(urlGetOjectifCommun+mIdSalon);
+        
         // Taches
         new TacheAfficheTaches().execute(urlAfficheTache+mIdSalon);
+        mTaches1Joueur1 = findViewById(R.id.tache_joueur1);
+        mTaches1Joueur2 = findViewById(R.id.tache_joueur2);
+        mTaches1Joueur3 = findViewById(R.id.tache_joueur3);
+        mTaches1Joueur4 = findViewById(R.id.tache_joueur4);
+        mTaches1Joueur5 = findViewById(R.id.tache_joueur5);
+        mTaches2Joueur1 = findViewById(R.id.tache2_joueur1);
+        mTaches2Joueur2 = findViewById(R.id.tache2_joueur2);
+        mTaches2Joueur3 = findViewById(R.id.tache2_joueur3);
+        mTaches2Joueur4 = findViewById(R.id.tache2_joueur4);
+        mTaches2Joueur5 = findViewById(R.id.tache2_joueur5);
+        mTaches1Joueur1.setOnClickListener(this);
+        mTaches1Joueur2.setOnClickListener(this);
+        mTaches1Joueur3.setOnClickListener(this);
+        mTaches1Joueur4.setOnClickListener(this);
+        mTaches1Joueur5.setOnClickListener(this);
+        mTaches2Joueur1.setOnClickListener(this);
+        mTaches2Joueur2.setOnClickListener(this);
+        mTaches2Joueur3.setOnClickListener(this);
+        mTaches2Joueur4.setOnClickListener(this);
+        mTaches2Joueur5.setOnClickListener(this);
+        mTaches1Joueur1.setTag("Todo");
+        mTaches1Joueur2.setTag("Todo");
+        mTaches1Joueur3.setTag("Todo");
+        mTaches1Joueur4.setTag("Todo");
+        mTaches1Joueur5.setTag("Todo");
+        mTaches2Joueur1.setTag("Todo");
+        mTaches2Joueur2.setTag("Todo");
+        mTaches2Joueur3.setTag("Todo");
+        mTaches2Joueur4.setTag("Todo");
+        mTaches2Joueur5.setTag("Todo");
+        // TODO : affichage et affectation des taches
+        // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
+        // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
+        // TODO : Si plus aucune carte dans la main du joueur, faire un refresh complet toutes les 5 secondes
 
         // Bouton communication
         mBoutonCommunication = findViewById(R.id.bouton_communication);
         mBoutonCommunication.setOnTouchListener(this);
+        // TODO : Si click sur bouton + double clic sur carte du jeu, affectation automatique de la communication
+        // TODO : Si 1 seule carte '=", sinon + forte ou + faible carte
+        // TODO : Répondre choix impossible si pas un de ces cas
 
         // Refresh auto
         startRefreshAuto();
         mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
         mBoutonRefreshAuto.setOnClickListener(this);
+        mHeureRefresh = findViewById(R.id.heure_refresh);
+    }
+
+    private String getPseudoQuiDoitJouer() {
+        String pseudoQuiDoitJoueur="";
+        ImageView iv;
+        TextView tv;
+        // Parcourt les images pour savoir si c'est mon tour
+        for(int i=0;i<tableIdImageCarte.length;i++) {
+            iv = findViewById(tableIdImageCarte[i]);
+            tv = findViewById(tableIdPseudo[i]);
+            // On prends le pseudo de la première image invisible
+            if(iv.getVisibility()==View.INVISIBLE) {
+                pseudoQuiDoitJoueur=tv.getText().toString();
+                debug("pseudoQuiDoitJoueur :"+pseudoQuiDoitJoueur);
+                break;
+            }
+        }
+        return pseudoQuiDoitJoueur;
     }
 
     private void startRefreshAuto() {
@@ -146,6 +220,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                             public void run() {
                                 updateTextView();
                                 majable();
+                                // TODO : Ajouter la MAJ des taches
                             }
                         });
                     }
@@ -168,7 +243,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         noteTS = Calendar.getInstance().getTime();
 
         String time = "hh:mm:ss"; // 12:00:00
-        titre.setText(DateFormat.format(time, noteTS));
+        mHeureRefresh.setText(DateFormat.format(time, noteTS));
 
         //String date = "dd MMMMM yyyy"; // 01 January 2013
         //titre.setText(DateFormat.format(date, noteTS));
@@ -194,6 +269,12 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
+    protected void onResume() {
+        startRefreshAuto();
+        super.onResume();
+    }
+
+    @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.bouton_refresh :
@@ -214,6 +295,27 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     mTable.setVisibility(View.VISIBLE);
                 else
                     mTable.setVisibility(View.GONE);
+                break;
+            case R.id.tache_joueur1 :
+            case R.id.tache_joueur2 :
+            case R.id.tache_joueur3 :
+            case R.id.tache_joueur4 :
+            case R.id.tache_joueur5 :
+            case R.id.tache2_joueur1 :
+            case R.id.tache2_joueur2 :
+            case R.id.tache2_joueur3 :
+            case R.id.tache2_joueur4 :
+            case R.id.tache2_joueur5 :
+                TextView tache = findViewById(v.getId());
+                if (tache.getTag().toString().equals("Todo")) {
+                    tache.setTag("Done");
+                    tache.setBackgroundColor(getResources().getColor(R.color.blanc));
+                }
+                else {
+                    tache.setTag("Todo");
+                    tache.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                }
+                // TODO : MAJ en base de la réalisation de la tache
                 break;
             default:
                 break;
@@ -271,14 +373,19 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
      */
     private void doublicClic(View v) {
         if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-            mCarteActive = findViewById(v.getId());
-            String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
-            String couleurCarteActive = chaine[1];
-            String valeurCarteActive = chaine[2];
+            String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
+            if (pseudoQuiDoitJouer.equals(mPseudo) || pseudoQuiDoitJouer.equals("")) {
+                mCarteActive = findViewById(v.getId());
+                String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
+                String couleurCarteActive = chaine[1];
+                String valeurCarteActive = chaine[2];
 
-            new TacheJoueCarte().execute(urlJoueCarte + "?salon="+mIdSalon+"&couleur_carte="+couleurCarteActive+"&valeur_carte="+valeurCarteActive+"&joueur="+mPseudo);
-            // Mise à jour de la table
-            majable();
+                new TacheJoueCarte().execute(urlJoueCarte + "?salon="+mIdSalon+"&couleur_carte="+couleurCarteActive+"&valeur_carte="+valeurCarteActive+"&joueur="+mPseudo);
+                // Mise à jour de la table
+                majable();
+            }
+            else
+                Toast.makeText(getBaseContext(), "C'est à "+pseudoQuiDoitJouer+" de jouer", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -470,10 +577,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void afficheJoueurTable(ArrayList<String> joueurs) {
-
-    }
-
     private void afficheTaches(ArrayList<Pli> plis) {
         String pseudoPrec="";
         TableRow ligneTaches = findViewById(R.id.tableau_taches);
@@ -563,8 +666,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
-     * Classe qui permet de récupère le pli en cours
-     * -> Retourne le pli et l'affiche
+     * Classe qui permet de récupère la liste des joueurs dans l'ordre de jeu
+     * -> Retourne la liste
      */
     class TacheGetJoueurs extends AsyncTask<String, Void, ArrayList<String>> {
         String result;
@@ -638,6 +741,42 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         protected void onPostExecute(String commandant) {
             mCommandant = commandant;
             super.onPostExecute(commandant);
+        }
+    }
+
+    /**
+     * Classe qui récupère la description de la mission
+     * -> Affiche la description à l'écran
+     */
+    class TacheGetDescription extends AsyncTask<String, Void, String> {
+        String result;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null) {
+                    string = String.format("%s%s", string, stringBuffer);
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String objectif) {
+            mObjectifCommun.setText(objectif);
+            super.onPostExecute(objectif);
         }
     }
 

@@ -71,6 +71,14 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mes_cartes"
+        android:textAlignment="center"
+        android:textColor="@color/noir"
+        android:textStyle="bold"/>
+
     <HorizontalScrollView
         android:id="@+id/scrollView_cartes"
         android:layout_width="match_parent"
@@ -795,8 +803,8 @@
 
     <ImageView
         android:id="@+id/bouton_communication"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/jeton_communication_off"/>
 
@@ -808,4 +816,9 @@
         android:text="REFRESH"
         android:textColor="@color/noir"
         android:textColorHint="@color/blanc"/>
+    <TextView
+        android:id="@+id/heure_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
