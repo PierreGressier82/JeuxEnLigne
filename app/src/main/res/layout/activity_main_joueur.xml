@@ -106,80 +106,80 @@
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_2"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_3"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_4"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_5"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_6"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_7"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_8"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_9"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_10"
                     android:layout_width="80dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/fusee_1"
-                    android:contentDescription="@string/carte"/>
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"/>
 
                 <ImageView
                     android:id="@+id/carte_11"
@@ -299,8 +299,8 @@
                     android:id="@+id/table_pseudo_joueur1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -310,8 +310,8 @@
                     android:id="@+id/table_pseudo_joueur2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -321,8 +321,8 @@
                     android:id="@+id/table_pseudo_joueur3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -332,8 +332,8 @@
                     android:id="@+id/table_pseudo_joueur4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -343,8 +343,8 @@
                     android:id="@+id/table_pseudo_joueur5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -354,8 +354,8 @@
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:gravity="fill_horizontal">
+                android:gravity="fill_horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/table_carte_joueur1"
@@ -421,59 +421,67 @@
                     android:id="@+id/table_carte_image_joueur1"
                     android:layout_width="0dp"
                     android:layout_height="110dp"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="5dp"
-                    android:src="@drawable/rose_2"
-                    android:contentDescription="@string/carte"/>
+                    android:layout_weight="0.2"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/rose_2"/>
 
                 <ImageView
                     android:id="@+id/table_carte_image_joueur2"
                     android:layout_width="0dp"
                     android:layout_height="110dp"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="5dp"
-                    android:src="@drawable/rose_9"
-                    android:contentDescription="@string/carte"/>
+                    android:layout_weight="0.2"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/rose_9"/>
 
                 <ImageView
                     android:id="@+id/table_carte_image_joueur3"
                     android:layout_width="0dp"
                     android:layout_height="110dp"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="5dp"
-                    android:src="@drawable/rose_6"
-                    android:contentDescription="@string/carte"/>
+                    android:layout_weight="0.2"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/rose_6"/>
 
                 <ImageView
                     android:id="@+id/table_carte_image_joueur4"
                     android:layout_width="0dp"
                     android:layout_height="110dp"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="5dp"
-                    android:src="@drawable/vert_2"
-                    android:contentDescription="@string/carte"/>
+                    android:layout_weight="0.2"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/vert_2"/>
 
                 <ImageView
                     android:id="@+id/table_carte_image_joueur5"
                     android:layout_width="0dp"
                     android:layout_height="110dp"
-                    android:layout_weight="0.2"
                     android:layout_marginStart="5dp"
-                    android:src="@drawable/rose_7"
-                    android:contentDescription="@string/carte"/>
+                    android:layout_weight="0.2"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/rose_7"/>
             </TableRow>
         </TableLayout>
 
     </ScrollView>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/bouton_communication"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/jeton_communication_off"/>
 
         <TableLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
@@ -490,9 +498,10 @@
 
                 <TextView
                     android:id="@+id/comm_pseudo_joueur1"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -500,9 +509,10 @@
 
                 <TextView
                     android:id="@+id/comm_pseudo_joueur2"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -510,9 +520,10 @@
 
                 <TextView
                     android:id="@+id/comm_pseudo_joueur3"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -520,26 +531,35 @@
 
                 <TextView
                     android:id="@+id/comm_pseudo_joueur4"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/comm_pseudo_joueur5"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
             </TableRow>
 
-            <TableRow
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TableRow
                 android:id="@+id/communication"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -547,58 +567,55 @@
 
                 <TextView
                     android:id="@+id/communication_joueur1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="1-"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/communication_joueur2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="3-"
                     android:textAlignment="center"
-                    android:textColor="@color/bleu"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/communication_joueur3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="6+"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/communication_joueur4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="4-"
                     android:textAlignment="center"
-                    android:textColor="@color/bleu"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/communication_joueur5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="9="
                     android:textAlignment="center"
-                    android:textColor="@color/jaune"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
             </TableRow>
 
             <TextView
@@ -621,14 +638,16 @@
                 android:textStyle="bold" />
 
             <TableRow
+                android:id="@+id/tableau_taches"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tache_pseudo_joueur1"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -636,9 +655,10 @@
 
                 <TextView
                     android:id="@+id/tache_pseudo_joueur2"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -646,9 +666,10 @@
 
                 <TextView
                     android:id="@+id/tache_pseudo_joueur3"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
@@ -656,157 +677,145 @@
 
                 <TextView
                     android:id="@+id/tache_pseudo_joueur4"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache_pseudo_joueur5"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:text="@string/pseudo"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
             </TableRow>
             <TableRow
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="fill_horizontal">
 
                 <TextView
                     android:id="@+id/tache_joueur1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="5(1)"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
-                    android:background="@color/blanc"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tache_joueur2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="9"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tache_joueur3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="5"
                     android:textAlignment="center"
-                    android:textColor="@color/jaune"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tache_joueur4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="2"
                     android:textAlignment="center"
-                    android:textColor="@color/vert"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache_joueur5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="7"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
-                    android:background="@color/blanc"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
             </TableRow>
             <TableRow
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="fill_horizontal">
 
                 <TextView
                     android:id="@+id/tache2_joueur1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="1"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tache2_joueur2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="3"
                     android:textAlignment="center"
-                    android:textColor="@color/bleu"
-                    android:background="@color/blanc"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tache2_joueur3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="6(2)"
                     android:textAlignment="center"
-                    android:textColor="@color/rose"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tache2_joueur4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="4(3)"
                     android:textAlignment="center"
-                    android:textColor="@color/bleu"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache2_joueur5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
-                    android:text="9"
                     android:textAlignment="center"
-                    android:textColor="@color/jaune"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
             </TableRow>
 
         </TableLayout>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/bouton_communication"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/jeton_communication_off"/>
 
     <Button
         android:id="@+id/bouton_refresh"

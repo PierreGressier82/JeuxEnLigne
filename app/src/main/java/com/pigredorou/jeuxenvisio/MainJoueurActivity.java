@@ -41,25 +41,44 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final int[] tableIdCarte = {R.id.table_carte_joueur1, R.id.table_carte_joueur2, R.id.table_carte_joueur3, R.id.table_carte_joueur4, R.id.table_carte_joueur5};
     private static final int[] tableIdImageCarte = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
     private static final String urlGetDistribue = MainActivity.url + "getDistribution.php";
-    private static final String urlJoueCarte = MainActivity.url + "majTable.php";
+    private static final String urlJoueCarte = MainActivity.url + "majTable.php?salon=";
     private static final String urlAfficheTable = MainActivity.url + "getTable.php?salon=";
     private static final String urlAfficheTache = MainActivity.url + "getTaches.php?salon=";
     private static final String urlGetCommandant = MainActivity.url + "getCommandant.php?salon=";
     private static final String urlGetOjectifCommun = MainActivity.url + "getObjectif.php?salon=";
-
+    private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?salon=";
+    // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
     private int mIdSalon;
+    private boolean mCommunicationFaite = false;
+    private boolean mCommunicationAChoisir = false;
+    // Elements de la vue
     private ScrollView mTable;
     private ImageView mCarteActive;
-    private ImageView mBoutonCommunication;
     private TextView mTextResultat;
     private TextView mTitre;
     private TextView mHeureRefresh;
     private TextView mObjectifCommun;
-    private java.util.Date noteTS;
+    // Communication
+    private TextView mCommPseudoJoueur1;
+    private TextView mCommPseudoJoueur2;
+    private TextView mCommPseudoJoueur3;
+    private TextView mCommPseudoJoueur4;
+    private TextView mCommPseudoJoueur5;
+    private TextView mCommJoueur1;
+    private TextView mCommJoueur2;
+    private TextView mCommJoueur3;
+    private TextView mCommJoueur4;
+    private TextView mCommJoueur5;
+    private ImageView mBoutonComm;
     // Tâches
+    private TextView mTachePseudoJoueur1;
+    private TextView mTachePseudoJoueur2;
+    private TextView mTachePseudoJoueur3;
+    private TextView mTachePseudoJoueur4;
+    private TextView mTachePseudoJoueur5;
     private TextView mTaches1Joueur1;
     private TextView mTaches1Joueur2;
     private TextView mTaches1Joueur3;
@@ -133,6 +152,10 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         new TacheAfficheTable().execute(urlAfficheTable+mIdSalon);
 
         // Communications
+        chargeVuesCommunication();
+        // TODO : Si click sur bouton + double clic sur carte du jeu, affectation automatique de la communication
+        // TODO : Si 1 seule carte '=", sinon + forte ou + faible carte
+        // TODO : Répondre choix impossible si pas un de ces cas
 
         // Objectifs commun
         mObjectifCommun = findViewById(R.id.objectif_commun);
@@ -140,6 +163,40 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         
         // Taches
         new TacheAfficheTaches().execute(urlAfficheTache+mIdSalon);
+        chargeVuesTaches();
+        // TODO : affichage et affectation des taches
+        // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
+        // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
+        // TODO : Si plus aucune carte dans la main du joueur, faire un refresh complet toutes les 5 secondes
+
+        // Refresh auto
+        startRefreshAuto();
+        mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
+        mBoutonRefreshAuto.setOnClickListener(this);
+        mHeureRefresh = findViewById(R.id.heure_refresh);
+    }
+
+    private void chargeVuesCommunication() {
+        mCommPseudoJoueur1 = findViewById(R.id.comm_pseudo_joueur1);
+        mCommPseudoJoueur2 = findViewById(R.id.comm_pseudo_joueur2);
+        mCommPseudoJoueur3 = findViewById(R.id.comm_pseudo_joueur3);
+        mCommPseudoJoueur4 = findViewById(R.id.comm_pseudo_joueur4);
+        mCommPseudoJoueur5 = findViewById(R.id.comm_pseudo_joueur5);
+        mCommJoueur1 = findViewById(R.id.communication_joueur1);
+        mCommJoueur2 = findViewById(R.id.communication_joueur2);
+        mCommJoueur3 = findViewById(R.id.communication_joueur3);
+        mCommJoueur4 = findViewById(R.id.communication_joueur4);
+        mCommJoueur5 = findViewById(R.id.communication_joueur5);
+        mBoutonComm = findViewById(R.id.bouton_communication);
+        mBoutonComm.setOnClickListener(this);
+    }
+
+    private void chargeVuesTaches() {
+        mTachePseudoJoueur1 = findViewById(R.id.tache_pseudo_joueur1);
+        mTachePseudoJoueur2 = findViewById(R.id.tache_pseudo_joueur2);
+        mTachePseudoJoueur3 = findViewById(R.id.tache_pseudo_joueur3);
+        mTachePseudoJoueur4 = findViewById(R.id.tache_pseudo_joueur4);
+        mTachePseudoJoueur5 = findViewById(R.id.tache_pseudo_joueur5);
         mTaches1Joueur1 = findViewById(R.id.tache_joueur1);
         mTaches1Joueur2 = findViewById(R.id.tache_joueur2);
         mTaches1Joueur3 = findViewById(R.id.tache_joueur3);
@@ -170,24 +227,37 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTaches2Joueur3.setTag("Todo");
         mTaches2Joueur4.setTag("Todo");
         mTaches2Joueur5.setTag("Todo");
-        // TODO : affichage et affectation des taches
-        // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
-        // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
-        // TODO : Si plus aucune carte dans la main du joueur, faire un refresh complet toutes les 5 secondes
-
-        // Bouton communication
-        mBoutonCommunication = findViewById(R.id.bouton_communication);
-        mBoutonCommunication.setOnTouchListener(this);
-        // TODO : Si click sur bouton + double clic sur carte du jeu, affectation automatique de la communication
-        // TODO : Si 1 seule carte '=", sinon + forte ou + faible carte
-        // TODO : Répondre choix impossible si pas un de ces cas
-
-        // Refresh auto
-        startRefreshAuto();
-        mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
-        mBoutonRefreshAuto.setOnClickListener(this);
-        mHeureRefresh = findViewById(R.id.heure_refresh);
     }
+
+    private void affichePseudos() {
+        switch (mListePseudo.length) {
+            case 5:
+                mCommPseudoJoueur5.setText(mListePseudo[4]);
+                mCommPseudoJoueur5.setVisibility(View.VISIBLE);
+                mCommJoueur5.setVisibility(View.VISIBLE);
+                mTachePseudoJoueur5.setText(mListePseudo[4]);
+                mTachePseudoJoueur5.setVisibility(View.VISIBLE);
+                mTaches1Joueur5.setVisibility(View.VISIBLE);
+                mTaches2Joueur5.setVisibility(View.VISIBLE);
+            case 4:
+                mCommPseudoJoueur4.setText(mListePseudo[3]);
+                mCommPseudoJoueur4.setVisibility(View.VISIBLE);
+                mCommJoueur4.setVisibility(View.VISIBLE);
+                mTachePseudoJoueur4.setText(mListePseudo[3]);
+                mTachePseudoJoueur4.setVisibility(View.VISIBLE);
+                mTaches1Joueur4.setVisibility(View.VISIBLE);
+                mTaches2Joueur4.setVisibility(View.VISIBLE);
+            default:
+                mCommPseudoJoueur3.setText(mListePseudo[2]);
+                mTachePseudoJoueur3.setText(mListePseudo[2]);
+                mCommPseudoJoueur2.setText(mListePseudo[1]);
+                mTachePseudoJoueur2.setText(mListePseudo[1]);
+                mCommPseudoJoueur1.setText(mListePseudo[0]);
+                mTachePseudoJoueur1.setText(mListePseudo[0]);
+                break;
+        }
+    }
+
 
     private String getPseudoQuiDoitJouer() {
         String pseudoQuiDoitJoueur="";
@@ -240,7 +310,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void updateTextView() {
-        noteTS = Calendar.getInstance().getTime();
+        java.util.Date noteTS = Calendar.getInstance().getTime();
 
         String time = "hh:mm:ss"; // 12:00:00
         mHeureRefresh.setText(DateFormat.format(time, noteTS));
@@ -289,6 +359,13 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.bouton_retour :
                 finish();
+                break;
+            case R.id.bouton_communication :
+                if (!mCommunicationFaite) {
+                    mBoutonComm.setBackgroundColor(getResources().getColor(R.color.blanc));
+                    Toast.makeText(getBaseContext(),"Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
+                    mCommunicationAChoisir=true;
+                }
                 break;
             case R.id.bouton_table :
                 if (mTable.getVisibility() == View.GONE)
@@ -373,19 +450,31 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
      */
     private void doublicClic(View v) {
         if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-            String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
-            if (pseudoQuiDoitJouer.equals(mPseudo) || pseudoQuiDoitJouer.equals("")) {
-                mCarteActive = findViewById(v.getId());
-                String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
-                String couleurCarteActive = chaine[1];
-                String valeurCarteActive = chaine[2];
+            mCarteActive = findViewById(v.getId());
+            String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
+            String couleurCarteActive = chaine[1];
+            String valeurCarteActive = chaine[2];
 
-                new TacheJoueCarte().execute(urlJoueCarte + "?salon="+mIdSalon+"&couleur_carte="+couleurCarteActive+"&valeur_carte="+valeurCarteActive+"&joueur="+mPseudo);
-                // Mise à jour de la table
-                majable();
+            // Si c'est pour communiquer
+            if (mCommunicationAChoisir) {
+                Toast.makeText(getBaseContext(), "En cours de dev", Toast.LENGTH_SHORT).show();
+                // Todo : valeur communication ? => +, =, - ?
+                new TacheCommuniqueCarte().execute(urlCommuniqueCarte+mIdSalon+"&couleur_carte="+couleurCarteActive+"&valeur_carte="+valeurCarteActive+"&joueur="+mPseudo);
+                mCommunicationAChoisir=false;
             }
-            else
-                Toast.makeText(getBaseContext(), "C'est à "+pseudoQuiDoitJouer+" de jouer", Toast.LENGTH_SHORT).show();
+            // Joue la carte si c'est mon tour
+            else {
+                String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
+                // Si c'est mon tour ou si tout le monde a joué le pli
+                if (pseudoQuiDoitJouer.equals(mPseudo) || pseudoQuiDoitJouer.equals("")) {
+
+                    new TacheJoueCarte().execute(urlJoueCarte+mIdSalon+"&couleur_carte="+couleurCarteActive+"&valeur_carte="+valeurCarteActive+"&joueur="+mPseudo);
+                    // Mise à jour de la table
+                    majable();
+                }
+                else
+                    Toast.makeText(getBaseContext(), "C'est à "+pseudoQuiDoitJouer+" de jouer", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -704,6 +793,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 mListePseudo[i] = joueurs.get(i);
                 debug(joueurs.get(i));
             }
+            affichePseudos();
             super.onPostExecute(joueurs);
         }
     }
@@ -869,7 +959,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     * Classe qui permet de récupérer en base la main d'un joueur
     * -> Retourne la liste des cartes du joueur demandé
     */
-    private class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
+    class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
         String result;
         @Override
         protected ArrayList<Carte> doInBackground(String... strings) {
@@ -949,6 +1039,39 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     mCarteActive.setVisibility(View.GONE);
                 }
             super.onPostExecute(integer);
+        }
+    }
+
+    /**
+     * Classe qui permet de communiquer en base la carte d'un joueur
+     */
+    class TacheCommuniqueCarte extends AsyncTask<String, Void, Void> {
+        String result;
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            URL url;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null) {
+                    string = String.format("%s%s", string, stringBuffer);
+
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            // TODO : changer icone communication
+            mCommunicationFaite=true;
+
+            return null;
         }
     }
 }
