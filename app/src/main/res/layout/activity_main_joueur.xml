@@ -107,7 +107,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_2"
@@ -115,7 +116,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_3"
@@ -123,7 +125,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_4"
@@ -131,7 +134,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_5"
@@ -139,7 +143,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_6"
@@ -147,7 +152,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_7"
@@ -155,7 +161,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_8"
@@ -163,7 +170,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_9"
@@ -171,7 +179,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_10"
@@ -179,7 +188,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
-                    android:src="@drawable/fusee_1"/>
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/carte_11"
@@ -632,7 +642,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Objectif commun : 1 joueur ne doit remporter aucun pli"
                 android:textAlignment="center"
                 android:textColor="@color/blanc"
                 android:textStyle="bold" />
@@ -640,7 +649,8 @@
             <TableRow
                 android:id="@+id/tableau_taches"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tache_pseudo_joueur1"
@@ -712,7 +722,8 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache_joueur2"
@@ -722,7 +733,8 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache_joueur3"
@@ -732,7 +744,8 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache_joueur4"
@@ -769,7 +782,8 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache2_joueur2"
@@ -779,7 +793,8 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache2_joueur3"
@@ -789,7 +804,8 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tache2_joueur4"

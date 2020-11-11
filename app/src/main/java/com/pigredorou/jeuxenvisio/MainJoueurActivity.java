@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Pli;
+import com.pigredorou.jeuxenvisio.objets.Tache;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -162,7 +163,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         new TacheGetDescription().execute(urlGetOjectifCommun+mIdSalon);
         
         // Taches
-        new TacheAfficheTaches().execute(urlAfficheTache+mIdSalon);
+        new TacheGetTaches().execute(urlAfficheTache+mIdSalon);
         chargeVuesTaches();
         // TODO : affichage et affectation des taches
         // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
@@ -207,16 +208,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTaches2Joueur3 = findViewById(R.id.tache2_joueur3);
         mTaches2Joueur4 = findViewById(R.id.tache2_joueur4);
         mTaches2Joueur5 = findViewById(R.id.tache2_joueur5);
-        mTaches1Joueur1.setOnClickListener(this);
-        mTaches1Joueur2.setOnClickListener(this);
-        mTaches1Joueur3.setOnClickListener(this);
-        mTaches1Joueur4.setOnClickListener(this);
-        mTaches1Joueur5.setOnClickListener(this);
-        mTaches2Joueur1.setOnClickListener(this);
-        mTaches2Joueur2.setOnClickListener(this);
-        mTaches2Joueur3.setOnClickListener(this);
-        mTaches2Joueur4.setOnClickListener(this);
-        mTaches2Joueur5.setOnClickListener(this);
         mTaches1Joueur1.setTag("Todo");
         mTaches1Joueur2.setTag("Todo");
         mTaches1Joueur3.setTag("Todo");
@@ -278,29 +269,31 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void startRefreshAuto() {
-        t = new Thread() {
+        if (t == null || !t.isAlive()) {
+            t = new Thread() {
 
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(5000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateTextView();
-                                majable();
-                                // TODO : Ajouter la MAJ des taches
-                            }
-                        });
+                @Override
+                public void run() {
+                    try {
+                        while (!isInterrupted()) {
+                            Thread.sleep(5000);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateTextView();
+                                    majable();
+                                    // TODO : Ajouter la MAJ des taches
+                                }
+                            });
+                        }
+                    } catch (InterruptedException ignored) {
                     }
-                } catch (InterruptedException ignored) {
                 }
-            }
-        };
+            };
 
-        t.start();
-        Toast.makeText(getBaseContext(), "start refresh", Toast.LENGTH_SHORT).show();
+            t.start();
+            debug("start refresh");
+        }
         mRefreshAuto = true;
     }
 
@@ -401,7 +394,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Mise à jour de la table
         majable();
         // Mise à jour des tâches
-        new TacheAfficheTaches().execute(urlAfficheTache + mIdSalon);
+        new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
     }
 
     @Override
@@ -666,7 +659,13 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void afficheTaches(ArrayList<Pli> plis) {
+    private void afficheTaches(ArrayList<Tache> taches) {
+        // TODO : Affiche une ligne avec les taches non attribuées
+        // TODO : Afficher les tâches par joueur
+    }
+
+    // Ancienne fonction utilisée avant refonte
+    private void afficheTaches2(ArrayList<Pli> plis) {
         String pseudoPrec="";
         TableRow ligneTaches = findViewById(R.id.tableau_taches);
         ligneTaches.removeAllViewsInLayout();
@@ -710,7 +709,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 pseudoPrec=plis.get(i).getJoueur();
             }
             String texte = String.valueOf(plis.get(i).getCarte().getValeur());
-            String option = plis.get(i).getCarte().getOption();
+            String option = ""; //plis.get(i).getCarte().getOption();
             if (!option.startsWith(" "))
                 texte += "(" + option + ") ";
             else
@@ -915,12 +914,12 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
      * Classe qui permet de récupère les taches
      * -> Retourne les taches et les affiche
      */
-    class TacheAfficheTaches extends AsyncTask<String, Void, ArrayList<Pli>> {
+    class TacheGetTaches extends AsyncTask<String, Void, ArrayList<Tache>> {
         String result;
 
         @Override
-        protected ArrayList<Pli> doInBackground(String... strings) {
-            ArrayList<Pli> plis = new ArrayList<>();
+        protected ArrayList<Tache> doInBackground(String... strings) {
+            ArrayList<Tache> taches = new ArrayList<>();
             URL url;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
@@ -930,12 +929,13 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 String string = "";
                 while ((stringBuffer = bufferedReader.readLine()) != null) {
                     String[] chaine = stringBuffer.split("_");
-                    Pli pli;
-                    if(chaine[3]!=null)
-                        pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2]),chaine[3]));
-                    else
-                        pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
-                    plis.add(pli);
+                    Tache tache;
+                    // TODO : recupérer les taches
+                    //if(chaine[3]!=null)
+                    //    tache = new Tache(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2]), chaine[3]));
+                    //else
+                        tache = new Tache(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
+                    taches.add(tache);
                     string = String.format("%s%s", string, stringBuffer);
                 }
                 bufferedReader.close();
@@ -945,13 +945,13 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 result = e.toString();
             }
 
-            return plis;
+            return taches;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Pli> plis) {
-            //afficheTaches(plis);
-            super.onPostExecute(plis);
+        protected void onPostExecute(ArrayList<Tache> taches) {
+            afficheTaches(taches);
+            super.onPostExecute(taches);
         }
     }
 
@@ -1068,10 +1068,15 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 result = e.toString();
             }
 
-            // TODO : changer icone communication
-            mCommunicationFaite=true;
-
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mCommunicationFaite=true;
+            mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
+            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            super.onPostExecute(aVoid);
         }
     }
 }
