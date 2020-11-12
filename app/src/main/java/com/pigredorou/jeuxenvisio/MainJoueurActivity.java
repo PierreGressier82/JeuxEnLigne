@@ -1233,6 +1233,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
             } else {
                 mCommunicationFaite = true;
+                mCommunicationAChoisir = false;
                 mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
                 mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             }
