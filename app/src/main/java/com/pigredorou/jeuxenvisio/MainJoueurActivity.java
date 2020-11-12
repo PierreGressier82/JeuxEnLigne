@@ -40,10 +40,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final int[] imagesBleu = {0, R.drawable.bleu_1, R.drawable.bleu_2, R.drawable.bleu_3, R.drawable.bleu_4, R.drawable.bleu_5, R.drawable.bleu_6, R.drawable.bleu_7, R.drawable.bleu_8, R.drawable.bleu_9};
     private static final int[] imagesFusee = {0, R.drawable.fusee_1, R.drawable.fusee_2, R.drawable.fusee_3, R.drawable.fusee_4};
     private static final int[] tableIdPseudo = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4, R.id.table_pseudo_joueur5};
-    private static final int[] tableIdCarte = {R.id.table_carte_joueur1, R.id.table_carte_joueur2, R.id.table_carte_joueur3, R.id.table_carte_joueur4, R.id.table_carte_joueur5};
     private static final int[] tableIdImageCarte = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
     private static final int[] tableTaches1 = {R.id.tache_joueur1, R.id.tache_joueur2, R.id.tache_joueur3, R.id.tache_joueur4, R.id.tache_joueur5};
     private static final int[] tableTaches2 = {R.id.tache2_joueur1, R.id.tache2_joueur2, R.id.tache2_joueur3, R.id.tache2_joueur4, R.id.tache2_joueur5};
+    private static final int[] tableTaches3 = {R.id.tache3_joueur1, R.id.tache3_joueur2, R.id.tache3_joueur3, R.id.tache3_joueur4, R.id.tache3_joueur5};
+    private static final int[] tableCommunication = {R.id.communication_joueur1, R.id.communication_joueur2, R.id.communication_joueur3, R.id.communication_joueur4, R.id.communication_joueur5};
     private static final String urlGetDistribue = MainActivity.url + "getDistribution.php";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?salon=";
     private static final String urlAfficheTable = MainActivity.url + "getTable.php?salon=";
@@ -51,6 +52,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final String urlGetCommandant = MainActivity.url + "getCommandant.php?salon=";
     private static final String urlGetOjectifCommun = MainActivity.url + "getObjectif.php?salon=";
     private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?salon=";
+    private static final String urlGetCommunications = MainActivity.url + "getCommunications.php?salon=";
+    private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?salon=";
+    private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?salon=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -58,11 +62,13 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private int mIdSalon;
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
+    private int mNbTacheAAtribuer=0;
     // Elements de la vue
     private ScrollView mTable;
     private ImageView mCarteActive;
     private TextView mTextResultat;
     private TextView mTitre;
+    private TextView mTitrePli;
     private TextView mHeureRefresh;
     private TextView mObjectifCommun;
     // Communication
@@ -97,6 +103,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private TextView mTaches2Joueur3;
     private TextView mTaches2Joueur4;
     private TextView mTaches2Joueur5;
+    private TextView mTaches3Joueur1;
+    private TextView mTaches3Joueur2;
+    private TextView mTaches3Joueur3;
+    private TextView mTaches3Joueur4;
+    private TextView mTaches3Joueur5;
     // Auto resfresh
     private Button mBoutonRefreshAuto;
     private Boolean mRefreshAuto;
@@ -154,6 +165,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
 
         // Table
+        mTitrePli = findViewById(R.id.titre_pli);
+        // TODO : mise à jour du numero de plis en cours
         mTable = findViewById(R.id.table);
         ImageView boutonTable = findViewById(R.id.bouton_table);
         boutonTable.setOnClickListener(this);
@@ -172,7 +185,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Taches
         new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
         chargeVuesTaches();
-        // TODO : affichage et affectation des taches
         // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
         // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
         // TODO : Si plus aucune carte dans la main du joueur, faire un refresh complet toutes les 5 secondes
@@ -221,6 +233,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTaches2Joueur3 = findViewById(R.id.tache2_joueur3);
         mTaches2Joueur4 = findViewById(R.id.tache2_joueur4);
         mTaches2Joueur5 = findViewById(R.id.tache2_joueur5);
+        mTaches3Joueur1 = findViewById(R.id.tache3_joueur1);
+        mTaches3Joueur2 = findViewById(R.id.tache3_joueur2);
+        mTaches3Joueur3 = findViewById(R.id.tache3_joueur3);
+        mTaches3Joueur4 = findViewById(R.id.tache3_joueur4);
+        mTaches3Joueur5 = findViewById(R.id.tache3_joueur5);
         mTaches1Joueur1.setTag("Todo");
         mTaches1Joueur2.setTag("Todo");
         mTaches1Joueur3.setTag("Todo");
@@ -231,6 +248,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTaches2Joueur3.setTag("Todo");
         mTaches2Joueur4.setTag("Todo");
         mTaches2Joueur5.setTag("Todo");
+        mTaches3Joueur1.setTag("Todo");
+        mTaches3Joueur2.setTag("Todo");
+        mTaches3Joueur3.setTag("Todo");
+        mTaches3Joueur4.setTag("Todo");
+        mTaches3Joueur5.setTag("Todo");
     }
 
     private void affichePseudos() {
@@ -295,7 +317,10 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                                 public void run() {
                                     updateTextView();
                                     majable();
-                                    // TODO : Ajouter la MAJ des taches
+                                    // Mise à jour des tâches
+                                    new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
+                                    // Mise à jour des communications des joueurs
+                                    new TacheGetCommunications().execute(urlGetCommunications+mIdSalon);
                                 }
                             });
                         }
@@ -352,6 +377,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        TextView tache;
+        String[] chaine;
+        String couleurTacheActive;
+        String valeurTacheActive;
+        String url;
         switch (v.getId()) {
             case R.id.bouton_refresh:
                 if (mRefreshAuto) {
@@ -375,7 +405,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                         Toast.makeText(getBaseContext(), "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
                         mCommunicationAChoisir = true;
                     }
-                } else {
                 }
                 break;
             case R.id.bouton_table:
@@ -406,18 +435,39 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             case R.id.tache2_joueur3:
             case R.id.tache2_joueur4:
             case R.id.tache2_joueur5:
-                TextView tache = findViewById(v.getId());
-                if (tache.getTag().toString().equals("Todo")) {
-                    tache.setTag("Done");
-                    tache.setBackgroundColor(getResources().getColor(R.color.blanc));
-                } else {
-                    tache.setTag("Todo");
-                    tache.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                }
-                // TODO : MAJ en base de la réalisation de la tache
+            case R.id.tache3_joueur1:
+            case R.id.tache3_joueur2:
+            case R.id.tache3_joueur3:
+            case R.id.tache3_joueur4:
+            case R.id.tache3_joueur5:
+                tache = findViewById(v.getId());
+                chaine = tache.getTag().toString().split("_"); // ex : tache_bleu_2_0
+                couleurTacheActive = chaine[1];
+                valeurTacheActive = chaine[2];
+                int realise=Integer.parseInt(chaine[3]);
+                if (realise == 0)
+                    realise = 1;
+                else
+                    realise = 0;
+                tache.setTag("tache_"+couleurTacheActive+"_"+valeurTacheActive+"_"+realise);
+                url = urlRealiseTache+mIdSalon+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
+                debug(url);
+                new MainActivity.TacheURLSansRetour().execute(url);
                 break;
             default:
-                if (v.getTag().toString().startsWith("tacheAAttribuer"))
+                if (v.getTag().toString().startsWith("tacheAAttribuer")) {
+                    chaine = v.getTag().toString().split("_"); // ex : tacheAAttribuer_bleu_2
+                    couleurTacheActive = chaine[1];
+                    valeurTacheActive = chaine[2];
+                    url = urlAttribueTache+mIdSalon+"&pseudo="+mPseudo+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive;
+                    debug(url);
+                    new MainActivity.TacheURLSansRetour().execute(url);
+                    if(--mNbTacheAAtribuer == 0) {
+                        TableRow tv = findViewById(R.id.taches_a_attribuer);
+                        tv.setVisibility(View.GONE);
+                    }
+
+                }
                 break;
         }
 
@@ -478,10 +528,15 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
             // Si c'est pour communiquer
             if (mCommunicationAChoisir) {
-                Toast.makeText(getBaseContext(), "En cours de dev", Toast.LENGTH_SHORT).show();
-                // Todo : valeur communication ? => +, =, - ?
-                new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdSalon + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
-                mCommunicationAChoisir = false;
+                boolean autorise=true;
+                // Est-ce que la communication de cette carte est autorisée ?
+                if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
+                    autorise=false;
+                if(autorise) {
+                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdSalon + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo="+mPseudo);
+                }
+                else
+                    Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
             }
             // Joue la carte si c'est mon tour
             else {
@@ -627,7 +682,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
     private void afficheTable(ArrayList<Pli> plis) {
         TextView pseudo;
-        TextView carte;
         ImageView imageCarte;
         int nbJoueur = mListePseudo.length;
         int positionPremierJoueur = 0;
@@ -651,12 +705,10 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // On parcours les id des pseudo
         for (int i = 0; i < tableIdPseudo.length; i++) {
             pseudo = findViewById(tableIdPseudo[i]);
-            carte = findViewById(tableIdCarte[i]);
             imageCarte = findViewById(tableIdImageCarte[i]);
             // Si moins de 5 joueurs, on retire de l'écran
             if (i >= nbJoueur) {
                 pseudo.setVisibility(View.GONE);
-                carte.setVisibility(View.GONE);
                 imageCarte.setVisibility(View.GONE);
             }
             // Affichage de tous les pseudo dans l'ordre de jeu, même si le joueur n'a pas encore joué
@@ -674,9 +726,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 if (i < plis.size()) {
                     imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
                     imageCarte.setVisibility(View.VISIBLE);
-                    carte.setText(String.valueOf(plis.get(i).getCarte().getValeur()));
-                    carte.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
-                    carte.setVisibility(View.VISIBLE);
                 } else {
                     imageCarte.setVisibility(View.INVISIBLE);
                 }
@@ -687,16 +736,22 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
     private void afficheTaches(ArrayList<Tache> taches) {
         boolean tacheAffectees=false;
-        int nbTacheAffectees=0;
+        int nbTacheAffectees=1;
         TableRow tr = findViewById(R.id.taches_a_attribuer);
         tr.removeAllViewsInLayout();
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
         params.setMargins(5, 0, 5, 0);
         tr.setLayoutParams(params);
         for(int i=0;i<taches.size();i++) {
+            String texte = String.valueOf(taches.get(i).getCarte().getValeur());
+            String option = taches.get(i).getOption();
+            if (!option.startsWith(" "))
+                texte += "(" + option + ") ";
+            else
+                texte += "";
             // Si la tache n'est pas attribuée, on l'affiche sur la ligne dédiée
             if(taches.get(i).getJoueur().equals("")) {
-                TextView tv = new TextView(this);
+                mNbTacheAAtribuer++;
                 if(i == 0) {
                     TextView tvTitre = new TextView(this);
                     tvTitre.setText(getResources().getString(R.string.tachesAAtribuer));
@@ -705,24 +760,44 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     tvTitre.setLayoutParams(params);
                     tr.addView(tvTitre);
                 }
-                tv.setText(String.valueOf(taches.get(i).getCarte().getValeur()));
+                TextView tv = new TextView(this);
+                tv.setText(texte);
                 tv.setTextSize(Dimension.SP, 40);
                 tv.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
                 params.setMargins(50, 0, 0, 0);
                 tv.setLayoutParams(params);
-                tv.setTag("tacheAAttribuer_"+"_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur());
+                tv.setTag("tacheAAttribuer_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur());
                 tv.setOnClickListener(this);
                 tr.addView(tv);
 
             }
             // Si la tache est attribuée, on l'affiche dans la bonne colonne
             else {
-                // TODO : Gérer si 2 tâches pour 1 joueur
                 tacheAffectees=true;
-                TextView tva = findViewById(tableTaches1[getIndexPseudo(taches.get(i).getJoueur())]);
-                tva.setText(String.valueOf(taches.get(i).getCarte().getValeur()));
+                TextView tva;
+                switch(nbTacheAffectees++/(mListePseudo.length+1)) {
+                    case 0 :
+                        tva = findViewById(tableTaches1[getIndexPseudo(taches.get(i).getJoueur())]);
+                        break;
+                    case 1 :
+                        tva = findViewById(tableTaches2[getIndexPseudo(taches.get(i).getJoueur())]);
+                        break;
+                    default:
+                        tva = findViewById(tableTaches3[getIndexPseudo(taches.get(i).getJoueur())]);
+                        break;
+                }
+                tva.setText(texte);
                 tva.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
-                tva.setVisibility(View.VISIBLE);
+                String tag="tache_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur();
+                if (taches.get(i).isRealise()) {
+                    tva.setBackgroundColor(getResources().getColor(R.color.blanc));
+                    tag+="_1";
+                }
+                else {
+                    tva.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    tag+="_0";
+                }
+                tva.setTag(tag);
                 tva.setOnClickListener(this);
             }
         }
@@ -731,8 +806,30 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             TableRow mLigneTacheLigne1 = findViewById(R.id.ligne_tache1);
             mLigneTachePseudo.setVisibility(View.VISIBLE);
             mLigneTacheLigne1.setVisibility(View.VISIBLE);
-
+            switch(nbTacheAffectees/mListePseudo.length) {
+                case 3 :
+                    TableRow mLigneTacheLigne3 = findViewById(R.id.ligne_tache3);
+                    mLigneTacheLigne3.setVisibility(View.VISIBLE);
+                case 2 :
+                    TableRow mLigneTacheLigne2 = findViewById(R.id.ligne_tache2);
+                    mLigneTacheLigne2.setVisibility(View.VISIBLE);
+                    break;
+            }
         }
+    }
+
+    private void afficheCommunications(ArrayList<Pli> plis) {
+        for(int i=0;i<plis.size();i++) {
+            if(plis.get(i).getNomJoueur().equals(mPseudo)) {
+                mCommunicationFaite=true;
+                mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
+            }
+            String texte = plis.get(i).getCarte().getValeur() + " " + plis.get(i).getCommunication();
+            TextView tva = findViewById(tableCommunication[getIndexPseudo(plis.get(i).getJoueur())]);
+            tva.setText(texte);
+            tva.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
+        }
+        mTableauCommunication.setVisibility(View.VISIBLE);
     }
 
     private int getIndexPseudo(String pseudo) {
@@ -850,6 +947,46 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         protected void onPostExecute(String commandant) {
             mCommandant = commandant;
             super.onPostExecute(commandant);
+        }
+    }
+
+    /**
+     * Classe qui récupère les communications des joueurs
+     * -> Affiche les communications
+     */
+    class TacheGetCommunications extends AsyncTask<String, Void, ArrayList<Pli>> {
+        String result;
+
+        @Override
+        protected ArrayList<Pli> doInBackground(String... strings) {
+            ArrayList<Pli> plis = new ArrayList<>();
+            URL url;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null) {
+                    String[] chaine = stringBuffer.split("_");
+                    if(chaine.length==4)
+                        plis.add(new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])),chaine[3]));
+                    string = String.format("%s%s", string, stringBuffer);
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e) {
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            return plis;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Pli> plis) {
+            afficheCommunications(plis);
+            super.onPostExecute(plis);
         }
     }
 
@@ -1064,11 +1201,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     /**
      * Classe qui permet de communiquer en base la carte d'un joueur
      */
-    class TacheCommuniqueCarte extends AsyncTask<String, Void, Void> {
+    class TacheCommuniqueCarte extends AsyncTask<String, Void, Integer> {
         String result;
 
         @Override
-        protected Void doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
             URL url;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
@@ -1087,15 +1224,19 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 result = e.toString();
             }
 
-            return null;
+            return result.length();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            mCommunicationFaite = true;
-            mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
-            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer integer) {
+            if (integer > 0) {
+                Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
+            } else {
+                mCommunicationFaite = true;
+                mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
+                mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+            super.onPostExecute(integer);
         }
     }
 }

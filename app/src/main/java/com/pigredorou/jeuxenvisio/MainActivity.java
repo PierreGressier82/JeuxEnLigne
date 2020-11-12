@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Classe qui permet d'appeler une URL sans traitement d'information en retour
      */
-    class TacheURLSansRetour extends AsyncTask<String, Void, Void> {
+    static class TacheURLSansRetour extends AsyncTask<String, Void, Void> {
         String result;
 
         @Override
