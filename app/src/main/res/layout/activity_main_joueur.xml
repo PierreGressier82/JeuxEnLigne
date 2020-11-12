@@ -490,17 +490,19 @@
             android:layout_marginBottom="10dp"
             android:src="@drawable/jeton_communication_off"/>
 
+        <TextView
+            android:id="@+id/titre_communication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Communications"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textStyle="bold" />
+
         <TableLayout
+            android:id="@+id/tableau_communication"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Communications"
-                android:textAlignment="center"
-                android:textColor="@color/noir"
-                android:textStyle="bold" />
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -563,17 +565,9 @@
                     android:textSize="20sp"
                     android:visibility="gone" />
             </TableRow>
-
-        </TableLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <TableRow
-                android:id="@+id/communication"
+            <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="fill_horizontal">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/communication_joueur1"
@@ -628,14 +622,21 @@
                     android:visibility="gone" />
             </TableRow>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/taches"
-                android:textAlignment="center"
-                android:textColor="@color/noir"
-                android:textStyle="bold" />
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/titre_objectif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/taches"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textStyle="bold" />
+        <TableLayout
+            android:id="@+id/tableau_taches"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/objectif_commun"
@@ -647,7 +648,11 @@
                 android:textStyle="bold" />
 
             <TableRow
-                android:id="@+id/tableau_taches"
+                android:id="@+id/taches_a_attribuer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TableRow
+                android:id="@+id/ligne_tache_pseudo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone">
@@ -710,9 +715,10 @@
                     android:visibility="gone" />
             </TableRow>
             <TableRow
+                android:id="@+id/ligne_tache1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="fill_horizontal">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tache_joueur1"
@@ -722,8 +728,7 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tache_joueur2"
@@ -733,8 +738,7 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tache_joueur3"
@@ -744,8 +748,7 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tache_joueur4"
@@ -756,7 +759,7 @@
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tache_joueur5"
@@ -767,12 +770,13 @@
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </TableRow>
             <TableRow
+                android:id="@+id/ligne_tache2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="fill_horizontal">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tache2_joueur1"
@@ -782,8 +786,7 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tache2_joueur2"
@@ -793,8 +796,7 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tache2_joueur3"
@@ -804,8 +806,7 @@
                     android:layout_weight="0.2"
                     android:contentDescription="@string/carte"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tache2_joueur4"
