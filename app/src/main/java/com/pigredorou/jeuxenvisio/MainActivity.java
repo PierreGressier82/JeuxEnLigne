@@ -158,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String[] listePseudoJoueurs = new String[listeJoueurs.size()];
             for (int i = 0; i < listeJoueurs.size(); i++) {
                 listePseudoJoueurs[i] = listeJoueurs.get(i).getNomJoueur();
+                //if (listeJoueurs.get(i).getNomJoueur().equals(mPseudo))
+
                 mArrayAdapterJoueurs.add(listePseudoJoueurs[i]);
                 mArrayAdapterJoueurs.notifyDataSetChanged();
             }

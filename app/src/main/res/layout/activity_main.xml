@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
     tools:context="com.pigredorou.jeuxenvisio.MainActivity">
 
     <TextView
@@ -22,19 +22,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
-    <Spinner
-        android:id="@+id/liste_salons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp" />
 
-    <Spinner
-        android:id="@+id/liste_joueurs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"/>
+        <Spinner
+            android:id="@+id/liste_salons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp" />
+
+        <Spinner
+            android:id="@+id/liste_joueurs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
     <Button
@@ -42,42 +43,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:padding="5dp"
-        android:textSize="20sp"
-        android:textColor="@color/blanc"
         android:background="@color/black_overlay"
-        android:text="@string/jouer" />
+        android:padding="5dp"
+        android:text="@string/jouer"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
 
-    <CheckBox
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TEST"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:text="Joueurs :"
+            android:textSize="20sp"/>
 
-    <CheckedTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:checkMark="@drawable/icone_check"
-        android:text="@string/app_name"/>
-
+        <CheckedTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkMark="@drawable/icone_check"
+            android:text="Pigre   "
+            android:textAlignment="textStart" />
+        <CheckedTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:checked="true"
+            android:checkMark="@drawable/icone_check"
+            android:checkMarkTint="@color/blanc"
+            android:text="Fievel  "
+            android:textAlignment="textStart" />
+    </LinearLayout>
     <Button
         android:id="@+id/boutonRAZ"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:padding="5dp"
-        android:textSize="20sp"
-        android:textColor="@color/blanc"
         android:background="@color/black_overlay"
-        android:text="@string/raz_distribution" />
+        android:padding="5dp"
+        android:text="@string/raz_distribution"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
+
     <Button
         android:id="@+id/boutonDistribue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:padding="5dp"
-        android:textSize="20sp"
-        android:textColor="@color/blanc"
         android:background="@color/black_overlay"
-        android:text="@string/distribue" />
+        android:padding="5dp"
+        android:text="@string/distribue"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
 </LinearLayout>

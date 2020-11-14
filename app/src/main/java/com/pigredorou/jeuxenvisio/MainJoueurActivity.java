@@ -170,7 +170,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTable = findViewById(R.id.table);
         ImageView boutonTable = findViewById(R.id.bouton_table);
         boutonTable.setOnClickListener(this);
-        new TacheAfficheTable().execute(urlAfficheTable + mIdSalon);
+        //new TacheAfficheTable().execute(urlAfficheTable + mIdSalon);
 
         // Communications
         chargeVuesCommunication();
@@ -183,7 +183,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         new TacheGetDescription().execute(urlGetOjectifCommun + mIdSalon);
 
         // Taches
-        new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
+        //new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
         chargeVuesTaches();
         // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
         // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
@@ -311,7 +311,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 public void run() {
                     try {
                         while (!isInterrupted()) {
-                            Thread.sleep(5000);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -323,6 +322,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                                     new TacheGetCommunications().execute(urlGetCommunications+mIdSalon);
                                 }
                             });
+                            Thread.sleep(5000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -716,11 +716,14 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 positionJoueur = (positionPremierJoueur + i) % nbJoueur;
                 debug("posJoueurNonJoué " + i + " positionPremierJoueur " + positionPremierJoueur + " nbJoueur " + nbJoueur + " positionJoueur" + positionJoueur);
                 // Si le joueur est le commmandant, on affiche le nom en noir
-                if (mListePseudo[positionJoueur].equals(mCommandant))
+                String pseudoTexte=mListePseudo[positionJoueur];
+                if (mListePseudo[positionJoueur].equals(mCommandant)) {
                     pseudo.setTextColor(getResources().getColor(R.color.noir));
+                    //pseudoTexte="^"+mCommandant+"^";
+                }
                 else
                     pseudo.setTextColor(getResources().getColor(R.color.blanc));
-                pseudo.setText(mListePseudo[positionJoueur]);
+                pseudo.setText(pseudoTexte);
                 pseudo.setVisibility(View.VISIBLE);
 
                 if (i < plis.size()) {
@@ -735,14 +738,16 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void afficheTaches(ArrayList<Tache> taches) {
-        boolean tacheAffectees=false;
-        int nbTacheAffectees=1;
+        int nbTacheAffectees=0;
+        int ligneTache=0;
+        String pseudoPrec="";
         TableRow tr = findViewById(R.id.taches_a_attribuer);
         tr.removeAllViewsInLayout();
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
         params.setMargins(5, 0, 5, 0);
         tr.setLayoutParams(params);
         for(int i=0;i<taches.size();i++) {
+            String pseudoTache = taches.get(i).getJoueur();
             String texte = String.valueOf(taches.get(i).getCarte().getValeur());
             String option = taches.get(i).getOption();
             if (!option.startsWith(" "))
@@ -750,8 +755,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             else
                 texte += "";
             // Si la tache n'est pas attribuée, on l'affiche sur la ligne dédiée
-            if(taches.get(i).getJoueur().equals("")) {
-                mNbTacheAAtribuer++;
+            if(pseudoTache.equals("")) {
+                mNbTacheAAtribuer++; // Masque la ligne si plus de tache non attribuée
                 if(i == 0) {
                     TextView tvTitre = new TextView(this);
                     tvTitre.setText(getResources().getString(R.string.tachesAAtribuer));
@@ -773,17 +778,21 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             }
             // Si la tache est attribuée, on l'affiche dans la bonne colonne
             else {
-                tacheAffectees=true;
+                nbTacheAffectees++;
                 TextView tva;
-                switch(nbTacheAffectees++/(mListePseudo.length+1)) {
-                    case 0 :
-                        tva = findViewById(tableTaches1[getIndexPseudo(taches.get(i).getJoueur())]);
-                        break;
+                if(pseudoTache.equals(pseudoPrec))
+                    ligneTache++;
+                else
+                    ligneTache = 1;
+                switch(ligneTache) {
                     case 1 :
-                        tva = findViewById(tableTaches2[getIndexPseudo(taches.get(i).getJoueur())]);
+                        tva = findViewById(tableTaches1[getIndexPseudo(pseudoTache)]);
+                        break;
+                    case 2 :
+                        tva = findViewById(tableTaches2[getIndexPseudo(pseudoTache)]);
                         break;
                     default:
-                        tva = findViewById(tableTaches3[getIndexPseudo(taches.get(i).getJoueur())]);
+                        tva = findViewById(tableTaches3[getIndexPseudo(pseudoTache)]);
                         break;
                 }
                 tva.setText(texte);
@@ -800,17 +809,18 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 tva.setTag(tag);
                 tva.setOnClickListener(this);
             }
+            pseudoPrec=pseudoTache;
         }
-        if (tacheAffectees) {
+        if (nbTacheAffectees>0) {
             TableRow mLigneTachePseudo = findViewById(R.id.ligne_tache_pseudo);
             TableRow mLigneTacheLigne1 = findViewById(R.id.ligne_tache1);
             mLigneTachePseudo.setVisibility(View.VISIBLE);
             mLigneTacheLigne1.setVisibility(View.VISIBLE);
             switch(nbTacheAffectees/mListePseudo.length) {
-                case 3 :
+                case 2 :
                     TableRow mLigneTacheLigne3 = findViewById(R.id.ligne_tache3);
                     mLigneTacheLigne3.setVisibility(View.VISIBLE);
-                case 2 :
+                case 1 :
                     TableRow mLigneTacheLigne2 = findViewById(R.id.ligne_tache2);
                     mLigneTacheLigne2.setVisibility(View.VISIBLE);
                     break;
@@ -819,7 +829,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void afficheCommunications(ArrayList<Pli> plis) {
-        for(int i=0;i<plis.size();i++) {
+        int nbPlis=plis.size();
+        for(int i=0;i<nbPlis;i++) {
             if(plis.get(i).getNomJoueur().equals(mPseudo)) {
                 mCommunicationFaite=true;
                 mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
@@ -829,7 +840,10 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             tva.setText(texte);
             tva.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
         }
-        mTableauCommunication.setVisibility(View.VISIBLE);
+        if (nbPlis > 0)
+            mTableauCommunication.setVisibility(View.VISIBLE);
+        else
+            mTableauCommunication.setVisibility(View.GONE);
     }
 
     private int getIndexPseudo(String pseudo) {
