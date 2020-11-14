@@ -8,9 +8,15 @@
     <string name="voir_les_cartes_de_la_table">Voir les cartes de la table</string>
     <string name="pseudo">Pseudo</string>
     <string name="raz_distribution">RAZ distribution</string>
-    <string name="distribue">Distribue</string>
+    <string name="distribue">Distribue cartes</string>
+    <string name="distribue_taches">Distribue tâches</string>
     <string name="pli_en_cours">Pli en cours</string>
-    <string name="tachesAAtribuer">Tâches à attributer :</string>
+    <string name="tachesAAtribuer">A attributer :</string>
     <string name="jouer">Jouer</string>
     <string name="mes_cartes">Mes cartes</string>
+    <string name="the_crew">THE CREW</string>
+    <string name="joueurs">Joueurs :</string>
+    <string name="moins">-</string>
+    <string name="plus">+</string>
+    <string name="_1">1</string>
 </resources>

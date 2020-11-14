@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
-    private static final String urlDistribue = url + "distribueCartes.php";
+    private static final String urlDistribueCartes = url + "distribueCartes.php";
+    private static final String urlDistribueTaches = url + "distribueTaches.php";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?salon=";
     private static final String urlGetSalons = url + "getSalons.php";
     public static final int MAIN_JOUEUR_ACTIVITY_REQUEST_CODE=14;
@@ -38,7 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String mPseudo;
     private Button mBoutonValider;
     private Button mBoutonRAZ;
-    private Button mBoutonDistribue;
+    private Button mBoutonDistribueCartes;
+    private Button mBoutonTachesMoins;
+    private Button mBoutonTachesPlus;
+    private Button mBoutonDistribueTache;
+    private TextView mNbTaches;
     private SharedPreferences mPreferences;
     private Spinner mListeDeroulanteSalons;
     private Spinner mListeDeroulanteJoueurs;
@@ -85,13 +91,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Gestion de la distribution des cartes
         mBoutonRAZ = findViewById(R.id.boutonRAZ);
-        mBoutonDistribue = findViewById(R.id.boutonDistribue);
+        mBoutonDistribueCartes = findViewById(R.id.boutonDistribue);
         mBoutonRAZ.setOnClickListener(this);
-        mBoutonDistribue.setOnClickListener(this);
+        mBoutonDistribueCartes.setOnClickListener(this);
         mBoutonRAZ.setVisibility(View.GONE);
-        mBoutonDistribue.setVisibility(View.GONE);
-        // TODO boutons pour distribuer les taches
+        mBoutonDistribueCartes.setVisibility(View.GONE);
 
+        // Distributions des tâces
+        mBoutonDistribueTache = findViewById(R.id.boutonDistribueTache);
+        mBoutonTachesMoins = findViewById(R.id.boutonNbTacheMoins);
+        mBoutonTachesPlus = findViewById(R.id.boutonNbTachePlus);
+        mNbTaches = findViewById(R.id.nbTache);
+        mBoutonDistribueTache.setOnClickListener(this);
+        mBoutonTachesMoins.setOnClickListener(this);
+        mBoutonTachesPlus.setOnClickListener(this);
+        mBoutonDistribueTache.setVisibility(View.GONE);
+        mBoutonTachesMoins.setVisibility(View.GONE);
+        mBoutonTachesPlus.setVisibility(View.GONE);
+        mNbTaches.setVisibility(View.GONE);
     }
 
     @Override
@@ -115,13 +132,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.boutonDistribue :
-                new TacheURLSansRetour().execute(urlDistribue + "?typeCarte=1&salon="+ mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
+                new TacheURLSansRetour().execute(urlDistribueCartes + "?typeCarte=1&salon="+ mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.boutonRAZ :
                 new TacheURLSansRetour().execute(urlRAZDistribution+mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId());
                 Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.boutonDistribueTache :
+                new TacheURLSansRetour().execute(urlDistribueTaches + "?salon="+ mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId()+"&nbTache="+mNbTaches.getText());
+                Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.boutonNbTacheMoins :
+                if (!mNbTaches.getText().toString().equals("0"))
+                    mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString())-1));
+                break;
+
+            case R.id.boutonNbTachePlus :
+                mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString())+1));
                 break;
         }
     }
@@ -135,10 +166,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.liste_joueurs:
                 if (mListeJoueurs.get(position).getAdmin() == 1) {
                     mBoutonRAZ.setVisibility(View.VISIBLE);
-                    mBoutonDistribue.setVisibility(View.VISIBLE);
+                    mBoutonDistribueCartes.setVisibility(View.VISIBLE);
+                    mBoutonDistribueTache.setVisibility(View.VISIBLE);
+                    mBoutonTachesMoins.setVisibility(View.VISIBLE);
+                    mBoutonTachesPlus.setVisibility(View.VISIBLE);
+                    mNbTaches.setVisibility(View.VISIBLE);
                 } else {
                     mBoutonRAZ.setVisibility(View.GONE);
-                    mBoutonDistribue.setVisibility(View.GONE);
+                    mBoutonDistribueCartes.setVisibility(View.GONE);
+                    mBoutonDistribueTache.setVisibility(View.GONE);
+                    mBoutonTachesMoins.setVisibility(View.GONE);
+                    mBoutonTachesPlus.setVisibility(View.GONE);
+                    mNbTaches.setVisibility(View.GONE);
                 }
                 break;
         }

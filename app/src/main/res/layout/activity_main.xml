@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="THE CREW"
+        android:text="@string/the_crew"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -61,7 +61,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:textStyle="bold"
-            android:text="Joueurs :"
+            android:text="@string/joueurs"
             android:textSize="20sp"/>
 
         <CheckedTextView
@@ -99,6 +99,65 @@
         android:background="@color/black_overlay"
         android:padding="5dp"
         android:text="@string/distribue"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"/>
+        <Button
+            android:id="@+id/boutonNbTacheMoins"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:layout_marginTop="10dp"
+            android:background="@color/black_overlay"
+            android:text="@string/moins"
+            android:textColor="@color/blanc"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/nbTache"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/blanc"
+            android:text="@string/_1"
+            android:textSize="20sp"
+            android:textAlignment="center"/>
+        <Button
+            android:id="@+id/boutonNbTachePlus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"
+            android:layout_marginTop="10dp"
+            android:background="@color/black_overlay"
+            android:text="@string/plus"
+            android:textColor="@color/blanc"
+            android:textSize="20sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/boutonDistribueTache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@color/black_overlay"
+        android:padding="5dp"
+        android:text="@string/distribue_taches"
         android:textColor="@color/blanc"
         android:textSize="20sp" />
 </LinearLayout>

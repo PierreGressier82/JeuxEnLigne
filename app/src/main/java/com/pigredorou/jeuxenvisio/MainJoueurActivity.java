@@ -284,7 +284,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-
     private String getPseudoQuiDoitJouer() {
         String pseudoQuiDoitJoueur = "";
         ImageView iv;
