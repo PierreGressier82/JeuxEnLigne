@@ -435,7 +435,7 @@
                 android:layout_weight=".1"
                 android:background="@color/black_overlay"
                 android:tag="NO"
-                android:text="LAST"
+                android:text="D"
                 android:textColor="@color/noir"
                 android:textSize="15sp" />
         </TableRow>

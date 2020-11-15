@@ -41,7 +41,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final int[] imagesBleu = {0, R.drawable.bleu_1, R.drawable.bleu_2, R.drawable.bleu_3, R.drawable.bleu_4, R.drawable.bleu_5, R.drawable.bleu_6, R.drawable.bleu_7, R.drawable.bleu_8, R.drawable.bleu_9};
     private static final int[] imagesFusee = {0, R.drawable.fusee_1, R.drawable.fusee_2, R.drawable.fusee_3, R.drawable.fusee_4};
     private static final int[] tableIdPseudo = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4, R.id.table_pseudo_joueur5};
-    private static final int[] tableIdImageCarte = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
+    private static final int[] tableIdImageCarteMain = {R.id.carte_1, R.id.carte_2, R.id.carte_3, R.id.carte_4, R.id.carte_5, R.id.carte_6, R.id.carte_7, R.id.carte_8, R.id.carte_9, R.id.carte_10, R.id.carte_11, R.id.carte_12, R.id.carte_13, R.id.carte_14, R.id.carte_15, R.id.carte_16, R.id.carte_17, R.id.carte_18, R.id.carte_19, R.id.carte_20};
+    private static final int[] tableIdImageCartePli = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
     private static final int[] tableTaches1 = {R.id.tache_joueur1, R.id.tache_joueur2, R.id.tache_joueur3, R.id.tache_joueur4, R.id.tache_joueur5};
     private static final int[] tableTaches2 = {R.id.tache2_joueur1, R.id.tache2_joueur2, R.id.tache2_joueur3, R.id.tache2_joueur4, R.id.tache2_joueur5};
     private static final int[] tableTaches3 = {R.id.tache3_joueur1, R.id.tache3_joueur2, R.id.tache3_joueur3, R.id.tache3_joueur4, R.id.tache3_joueur5};
@@ -88,6 +89,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private ImageView mBoutonComm;
     // Tâches
     private TextView mTitreTaches;
+    private TextView mTitreTachesAAtribuer;
     private TableLayout mTableauTaches;
     private TextView mTachePseudoJoueur1;
     private TextView mTachePseudoJoueur2;
@@ -175,9 +177,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
         // Communications
         chargeVuesCommunication();
-        // TODO : Si click sur bouton + double clic sur carte du jeu, affectation automatique de la communication
-        // TODO : Si 1 seule carte '=", sinon + forte ou + faible carte
-        // TODO : Répondre choix impossible si pas un de ces cas
 
         // Objectifs commun
         mObjectifCommun = findViewById(R.id.objectif_commun);
@@ -218,6 +217,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private void chargeVuesTaches() {
         mTitreTaches = findViewById(R.id.titre_objectif);
         mTitreTaches.setOnClickListener(this);
+        mTitreTachesAAtribuer = findViewById(R.id.titre_tache_aatribuer);
         mTableauTaches = findViewById(R.id.tableau_taches);
         mTachePseudoJoueur1 = findViewById(R.id.tache_pseudo_joueur1);
         mTachePseudoJoueur2 = findViewById(R.id.tache_pseudo_joueur2);
@@ -254,6 +254,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         mTaches3Joueur3.setTag("Todo");
         mTaches3Joueur4.setTag("Todo");
         mTaches3Joueur5.setTag("Todo");
+        mTitreTachesAAtribuer.setVisibility(View.GONE);
     }
 
     private void affichePseudos() {
@@ -290,8 +291,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         ImageView iv;
         TextView tv;
         // Parcourt les images pour savoir si c'est mon tour
-        for (int i = 0; i < tableIdImageCarte.length; i++) {
-            iv = findViewById(tableIdImageCarte[i]);
+        for (int i = 0; i < tableIdImageCartePli.length; i++) {
+            iv = findViewById(tableIdImageCartePli[i]);
             tv = findViewById(tableIdPseudo[i]);
             // On prends le pseudo de la première image invisible
             if (iv.getVisibility() == View.INVISIBLE) {
@@ -396,7 +397,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.bouton_communication:
-                if (!mCommunicationFaite && mNbTacheAAtribuer==0) {
+                if (!mCommunicationFaite) {
                     if (mCommunicationAChoisir) {
                         mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         mCommunicationAChoisir = false;
@@ -464,9 +465,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     new MainActivity.TacheURLSansRetour().execute(url);
                     if(--mNbTacheAAtribuer == 0) {
                         HorizontalScrollView hs = findViewById(R.id.HS_taches_a_attribuer);
-                        TextView tv = findViewById(R.id.titre_tache_aatribuer);
                         hs.setVisibility(View.GONE);
-                        tv.setVisibility(View.GONE);
+                        mTitreTachesAAtribuer.setVisibility(View.GONE);
                     }
 
                 }
@@ -491,6 +491,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     // Si temps entre 2 clicks trop long, on retourne à 0
                     if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
                         mClickCount = 0;
+                    // Si le précédent click n'est pas sur la même vue, on retourne à 0
                     if (mLastViewID != v.getId())
                         mClickCount = 0;
                 }
@@ -518,7 +519,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
 
     /**
      * Gestion des actions liées à un double clic
-     *
      * @param v : la vue sur laquelle le double clic a été réalisé
      */
     private void doublicClic(View v) {
@@ -529,6 +529,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             String valeurCarteActive = chaine[2];
 
             // Si c'est pour communiquer
+            // -------------------------
             if (mCommunicationAChoisir) {
                 boolean autorise=true;
                 // Est-ce que la communication de cette carte est autorisée ?
@@ -541,16 +542,46 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
             }
             // Joue la carte si c'est mon tour
+            // -------------------------------
             else {
+                boolean estCeQueJeJoueUneCarteAutorisee = false;
+                // A qui est-ce le tour ?
                 String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
-                // Si c'est mon tour ou si tout le monde a joué le pli
-                if (pseudoQuiDoitJouer.equals(mPseudo) || pseudoQuiDoitJouer.equals("")) {
-
+                String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
+                // Quelle est la couleur de la première carte jouée dans ce pli ?
+                if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
+                    ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
+                    String couleurDemandee="";
+                    if (iv!=null && iv.getVisibility()==View.VISIBLE)
+                         couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
+                    // Si je joue la couleur demandée => OK
+                    if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
+                        estCeQueJeJoueUneCarteAutorisee = true;
+                    else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
+                        boolean couleurTrouvee = false;
+                        // On regarde toutes les cartes de la main du joueur
+                        for (int value : tableIdImageCarteMain) {
+                            ImageView iv2 = findViewById(value);
+                            estCeQueJeJoueUneCarteAutorisee = true;
+                            if (iv2 == null)
+                                break;
+                            // Si une carte visible est de la couleur demandée
+                            if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
+                                // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
+                                estCeQueJeJoueUneCarteAutorisee = false;
+                                messageErreur = "Tu dois jouer la bonne couleur : " + couleurDemandee;
+                                break;
+                            }
+                        }
+                    }
+                }
+                // Si je peux jouer la couleur ou si tout le monde a joué le pli
+                if (estCeQueJeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
                     new TacheJoueCarte().execute(urlJoueCarte + mIdSalon + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
                     // Mise à jour de la table
                     majable();
                 } else
-                    Toast.makeText(getBaseContext(), "C'est à " + pseudoQuiDoitJouer + " de jouer", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -608,78 +639,10 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 carte.setLayoutParams(params);
                 carte.setImageResource(getImageCarte(cartes.get(i).getCouleur(), cartes.get(i).getValeur()));
                 carte.setTag("carte_" + nomCarte);
-                carte.setId(setId(i));
+                carte.setId(tableIdImageCarteMain[i]);
                 carte.setOnTouchListener(this);
                 tableauCartes.addView(carte);
             }
-    }
-
-    private int setId(int idCarte) {
-        int retour = 0;
-        switch (idCarte) {
-            case 0:
-                retour = R.id.carte_1;
-                break;
-            case 1:
-                retour = R.id.carte_2;
-                break;
-            case 2:
-                retour = R.id.carte_3;
-                break;
-            case 3:
-                retour = R.id.carte_4;
-                break;
-            case 4:
-                retour = R.id.carte_5;
-                break;
-            case 5:
-                retour = R.id.carte_6;
-                break;
-            case 6:
-                retour = R.id.carte_7;
-                break;
-            case 7:
-                retour = R.id.carte_8;
-                break;
-            case 8:
-                retour = R.id.carte_9;
-                break;
-            case 9:
-                retour = R.id.carte_10;
-                break;
-            case 10:
-                retour = R.id.carte_11;
-                break;
-            case 11:
-                retour = R.id.carte_12;
-                break;
-            case 12:
-                retour = R.id.carte_13;
-                break;
-            case 13:
-                retour = R.id.carte_14;
-                break;
-            case 14:
-                retour = R.id.carte_15;
-                break;
-            case 15:
-                retour = R.id.carte_16;
-                break;
-            case 16:
-                retour = R.id.carte_17;
-                break;
-            case 17:
-                retour = R.id.carte_18;
-                break;
-            case 18:
-                retour = R.id.carte_19;
-                break;
-            case 19:
-                retour = R.id.carte_20;
-                break;
-        }
-
-        return retour;
     }
 
     private void afficheTable(ArrayList<Pli> plis) {
@@ -707,7 +670,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // On parcours les id des pseudo
         for (int i = 0; i < tableIdPseudo.length; i++) {
             pseudo = findViewById(tableIdPseudo[i]);
-            imageCarte = findViewById(tableIdImageCarte[i]);
+            imageCarte = findViewById(tableIdImageCartePli[i]);
             // Si moins de 5 joueurs, on retire de l'écran
             if (i >= nbJoueur) {
                 pseudo.setVisibility(View.GONE);
@@ -728,8 +691,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 pseudo.setText(pseudoTexte);
                 pseudo.setVisibility(View.VISIBLE);
 
-                if (i < plis.size()) {
+                if (plis!=null && i < plis.size()) {
                     imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
+                    imageCarte.setTag("carte_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
                     imageCarte.setVisibility(View.VISIBLE);
                 } else {
                     imageCarte.setVisibility(View.INVISIBLE);
@@ -759,14 +723,15 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             // Si la tache n'est pas attribuée, on l'affiche sur la ligne dédiée
             if(pseudoTache.equals("")) {
                 mNbTacheAAtribuer++; // Masque la ligne si aucune tache non attribuée
-                //if(i == 0) {
+                if(i == 0) {
+                    mTitreTachesAAtribuer.setVisibility(View.VISIBLE);
                 //    TextView tvTitre = new TextView(this);
                 //    tvTitre.setText(getResources().getString(R.string.tachesAAtribuer));
                 //    tvTitre.setTextSize(Dimension.SP, 20);
                 //    params.setMargins(5, 0, 0, 0);
                 //    tvTitre.setLayoutParams(params);
                 //    tr.addView(tvTitre);
-                //}
+                }
                 TextView tv = new TextView(this);
                 tv.setText(texte);
                 tv.setTextSize(Dimension.SP, 30);
