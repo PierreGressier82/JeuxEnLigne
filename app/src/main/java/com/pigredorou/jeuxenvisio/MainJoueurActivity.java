@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -395,7 +396,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.bouton_communication:
-                if (!mCommunicationFaite) {
+                if (!mCommunicationFaite && mNbTacheAAtribuer==0) {
                     if (mCommunicationAChoisir) {
                         mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         mCommunicationAChoisir = false;
@@ -462,7 +463,9 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     debug(url);
                     new MainActivity.TacheURLSansRetour().execute(url);
                     if(--mNbTacheAAtribuer == 0) {
-                        TableRow tv = findViewById(R.id.taches_a_attribuer);
+                        HorizontalScrollView hs = findViewById(R.id.HS_taches_a_attribuer);
+                        TextView tv = findViewById(R.id.titre_tache_aatribuer);
+                        hs.setVisibility(View.GONE);
                         tv.setVisibility(View.GONE);
                     }
 
@@ -684,7 +687,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         ImageView imageCarte;
         int nbJoueur = mListePseudo.length;
         int positionPremierJoueur = 0;
-        int positionJoueur = 0;
+        int positionJoueur;
         // On récupère la place du premier joueur
         if (plis != null && plis.size() > 0) {
             for (int j = 0; j < nbJoueur; j++) {
@@ -755,18 +758,18 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 texte += "";
             // Si la tache n'est pas attribuée, on l'affiche sur la ligne dédiée
             if(pseudoTache.equals("")) {
-                mNbTacheAAtribuer++; // Masque la ligne si plus de tache non attribuée
-                if(i == 0) {
-                    TextView tvTitre = new TextView(this);
-                    tvTitre.setText(getResources().getString(R.string.tachesAAtribuer));
-                    tvTitre.setTextSize(Dimension.SP, 20);
-                    params.setMargins(5, 0, 0, 0);
-                    tvTitre.setLayoutParams(params);
-                    tr.addView(tvTitre);
-                }
+                mNbTacheAAtribuer++; // Masque la ligne si aucune tache non attribuée
+                //if(i == 0) {
+                //    TextView tvTitre = new TextView(this);
+                //    tvTitre.setText(getResources().getString(R.string.tachesAAtribuer));
+                //    tvTitre.setTextSize(Dimension.SP, 20);
+                //    params.setMargins(5, 0, 0, 0);
+                //    tvTitre.setLayoutParams(params);
+                //    tr.addView(tvTitre);
+                //}
                 TextView tv = new TextView(this);
                 tv.setText(texte);
-                tv.setTextSize(Dimension.SP, 40);
+                tv.setTextSize(Dimension.SP, 30);
                 tv.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
                 params.setMargins(50, 0, 0, 0);
                 tv.setLayoutParams(params);
