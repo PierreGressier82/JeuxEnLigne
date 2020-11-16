@@ -393,9 +393,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     startRefreshAuto();
                 }
                 break;
+
             case R.id.bouton_retour:
                 finish();
                 break;
+
             case R.id.bouton_communication:
                 if (!mCommunicationFaite) {
                     if (mCommunicationAChoisir) {
@@ -408,24 +410,28 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     }
                 }
                 break;
+
             case R.id.bouton_table:
                 if (mTable.getVisibility() == View.GONE)
                     mTable.setVisibility(View.VISIBLE);
                 else
                     mTable.setVisibility(View.GONE);
                 break;
+
             case R.id.titre_communication:
                 if (mTableauCommunication.getVisibility() == View.GONE)
                     mTableauCommunication.setVisibility(View.VISIBLE);
                 else
                     mTableauCommunication.setVisibility(View.GONE);
                 break;
+
             case R.id.titre_objectif:
                 if (mTableauTaches.getVisibility() == View.GONE)
                     mTableauTaches.setVisibility(View.VISIBLE);
                 else
                     mTableauTaches.setVisibility(View.GONE);
                 break;
+
             case R.id.tache_joueur1:
             case R.id.tache_joueur2:
             case R.id.tache_joueur3:

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String urlDistribueTaches = url + "distribueTaches.php";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?salon=";
     private static final String urlGetSalons = url + "getSalons.php";
+    private static final String urlMAJNumMission = url + "majNumeroMission.php?salon=";
     public static final int MAIN_JOUEUR_ACTIVITY_REQUEST_CODE=14;
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "idSalon";
@@ -253,11 +254,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString())+1));
                 break;
 
+            // Incrémente le numéro de mission
             case R.id.boutonValiderNumMission :
-                mNumMission.setText(String.valueOf(Integer.parseInt(mNumMission.getText().toString())+1));
-                // TODO : MAJ en base du numéro de mission
-                //new TacheURLSansRetour().execute(urlDistribueTaches + "?salon="+ mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId()+"&nbTache="+mNbTaches.getText());
-                Toast.makeText(this, "En cours de dev", Toast.LENGTH_SHORT).show();
+                int numMission = Integer.parseInt(mNumMission.getText().toString())+1;
+                mNumMission.setText(String.valueOf(numMission));
+                new TacheURLSansRetour().execute(urlMAJNumMission+mListeSalons.get(mListeDeroulanteSalons.getSelectedItemPosition()).getId()+"&numMission="+numMission);
+                Toast.makeText(this, "Mission mise à jour", Toast.LENGTH_SHORT).show();
                 break;
 
             // Sélection d'un joueur
