@@ -745,6 +745,8 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             }
             // Si la tache est attribuée, on l'affiche dans la bonne colonne
             else {
+                if(i == 0) // Aucune tache a attribuee, on masque le titre
+                    mTitreTachesAAtribuer.setVisibility(View.GONE);
                 nbTacheAffectees++;
                 TextView tva;
                 if(pseudoTache.equals(pseudoPrec))
