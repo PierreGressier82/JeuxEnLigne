@@ -453,7 +453,11 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                 tache.setTag("tache_"+couleurTacheActive+"_"+valeurTacheActive+"_"+realise);
                 url = urlRealiseTache+mIdSalon+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
                 debug(url);
+                // Mise à jour de la tache en base
                 new MainActivity.TacheURLSansRetour().execute(url);
+                // TODO : Si au moins une tache et toutes sont realisees => feu d'artifice
+                //ImageView iv = findViewById(R.id.feu_artifice);
+                //iv.setVisibility(View.VISIBLE);
                 break;
             default:
                 if (v.getTag().toString().startsWith("tacheAAttribuer")) {
@@ -716,7 +720,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
             String pseudoTache = taches.get(i).getJoueur();
             String texte = String.valueOf(taches.get(i).getCarte().getValeur());
             String option = taches.get(i).getOption();
-            if (!option.startsWith(" "))
+            if (!(option.equals(" ") || option.equals("")))
                 texte += "(" + option + ") ";
             else
                 texte += "";

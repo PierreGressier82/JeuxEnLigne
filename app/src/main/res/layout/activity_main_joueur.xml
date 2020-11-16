@@ -71,6 +71,13 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/feu_artifice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/feu_artifice"
+        android:visibility="gone"/>
+
     <HorizontalScrollView
         android:id="@+id/scrollView_cartes"
         android:layout_width="match_parent"
