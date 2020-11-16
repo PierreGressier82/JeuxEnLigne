@@ -516,6 +516,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheSalons(ArrayList<Salon> listeSalons) {
+        TableLayout tl = findViewById(R.id.liste_salons_TL);
+        TableRow.LayoutParams paramsRow;
+        TableRow.LayoutParams paramsIV;
+        TableRow.LayoutParams paramsTV;
+        tl.removeAllViewsInLayout();
+        TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 0);
+        params.setMargins(0, 0, 0, 0);
+        tl.setLayoutParams(params);
+        tl.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
         // Affiche les salons dans la liste
         if (listeSalons != null) {
             String[] listeNomSalons = new String[listeSalons.size()];
@@ -523,6 +533,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 listeNomSalons[i] = listeSalons.get(i).getNom();
                 mArrayAdapterSalons.add(listeNomSalons[i]);
                 mArrayAdapterSalons.notifyDataSetChanged();
+
+                // Création dynamique des joueurs dans des lignes du tableau
+                TableRow tr = new TableRow(this);
+                TextView tv = new CheckedTextView(this);
+                ImageView iv = new ImageView(this);
+                paramsRow = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+                paramsIV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+                paramsTV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+                // Ligne
+                paramsRow.setMargins(30, 10, 0, 0);
+                tr.setLayoutParams(paramsRow);
+                tr.setOnClickListener(this);
+                // Image
+                paramsIV.setMargins(30, 30, 30, 0);
+                iv.setLayoutParams(paramsIV);
+                iv.setImageResource(R.drawable.icone_check);
+                switch (i) {
+                    case 0 :
+                        tr.setId(R.id.ligne_salon1);
+                        iv.setId(R.id.image_salon1);
+                        tv.setId(R.id.salon_text_1);
+                        break;
+                    case 1 :
+                        tr.setId(R.id.ligne_salon2);
+                        iv.setId(R.id.image_salon2);
+                        tv.setId(R.id.salon_text_2);
+                        break;
+                    case 2 :
+                        tr.setId(R.id.ligne_salon3);
+                        iv.setId(R.id.image_salon3);
+                        tv.setId(R.id.salon_text_3);
+                        break;
+                }
+                iv.setTag(listeNomSalons[i]);
+                tr.addView(iv);
+                // Texte
+                paramsTV.setMargins(0, 30, 0, 0);
+                tv.setLayoutParams(paramsTV);
+                tv.setText(listeNomSalons[i]);
+                tv.setTag(listeNomSalons[i]);
+                tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                tr.addView(tv);
+                // Ajout de la ligne dans la vue table
+                tl.addView(tr);
+
             }
         }
     }
