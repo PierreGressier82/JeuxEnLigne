@@ -31,6 +31,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
+    private static final String mNumVersion = "1.01";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     private static final String urlDistribueCartes = url + "distribueCartes.php";
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String mPseudo;
     private boolean mJoueurChoisi = false;
     private Button mBoutonValider;
+    // Entête
+    private ImageView mBoutonQuitter;
+    private TextView mVersion;
     // Cartes
     private Button mBoutonRAZ;
     private Button mBoutonDistribueCartes;
@@ -95,6 +99,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
         // TODO : prendre en compte les préférences récupérées
+
+        // Entete
+        mVersion = findViewById(R.id.version);
+        String version = mVersion.getText()+" "+mNumVersion;
+        mVersion.setText(version);
+        mBoutonQuitter = findViewById(R.id.bouton_quitter);
+        mBoutonQuitter.setOnClickListener(this);
+        // TODO : implementer le bouton quitter
 
         // Liste des salons de jeu
         mListeDeroulanteSalons = findViewById(R.id.liste_salons);
@@ -233,42 +245,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_pseudo_j4 :
             case R.id.ligne_pseudo_j5 :
                 ImageView iv;
+                TextView tv;
                 switch(mListeJoueurs.size()) {
                     case 5 :
                         iv = findViewById(R.id.pseudo_joueur5);
+                        tv = findViewById(R.id.pseudo_text_joueur5);
                         iv.setImageResource(R.drawable.icone_check);
+                        tv.setTextColor(getResources().getColor(R.color.noir));
                     case 4 :
                         iv = findViewById(R.id.pseudo_joueur4);
+                        tv = findViewById(R.id.pseudo_text_joueur4);
                         iv.setImageResource(R.drawable.icone_check);
+                        tv.setTextColor(getResources().getColor(R.color.noir));
                     case 3 :
                         iv = findViewById(R.id.pseudo_joueur3);
+                        tv = findViewById(R.id.pseudo_text_joueur3);
                         iv.setImageResource(R.drawable.icone_check);
+                        tv.setTextColor(getResources().getColor(R.color.noir));
                     default :
                         iv = findViewById(R.id.pseudo_joueur2);
+                        tv = findViewById(R.id.pseudo_text_joueur2);
                         iv.setImageResource(R.drawable.icone_check);
+                        tv.setTextColor(getResources().getColor(R.color.noir));
                         iv = findViewById(R.id.pseudo_joueur1);
+                        tv = findViewById(R.id.pseudo_text_joueur1);
                         iv.setImageResource(R.drawable.icone_check);
+                        tv.setTextColor(getResources().getColor(R.color.noir));
                 }
 
                 switch (v.getId()) {
                     case R.id.ligne_pseudo_j1 :
                         iv = findViewById(R.id.pseudo_joueur1);
+                        tv = findViewById(R.id.pseudo_text_joueur1);
                         break;
                     case R.id.ligne_pseudo_j2 :
                         iv = findViewById(R.id.pseudo_joueur2);
+                        tv = findViewById(R.id.pseudo_text_joueur2);
                         break;
                     case R.id.ligne_pseudo_j3 :
                         iv = findViewById(R.id.pseudo_joueur3);
+                        tv = findViewById(R.id.pseudo_text_joueur3);
                         break;
                     case R.id.ligne_pseudo_j4 :
                         iv = findViewById(R.id.pseudo_joueur4);
+                        tv = findViewById(R.id.pseudo_text_joueur4);
                         break;
                     case R.id.ligne_pseudo_j5 :
                     default :
                         iv = findViewById(R.id.pseudo_joueur5);
+                        tv = findViewById(R.id.pseudo_text_joueur5);
                         break;
                 }
                 iv.setImageResource(R.drawable.icone_check_blanc);
+                tv.setTextColor(getResources().getColor(R.color.blanc));
                 mPseudo = iv.getTag().toString();
                 mJoueurChoisi = true;
                 break;

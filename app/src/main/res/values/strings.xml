@@ -14,7 +14,6 @@
     <string name="tachesAAtribuer">Tâches à attributer :</string>
     <string name="jouer">Jouer</string>
     <string name="mes_cartes">Mes cartes</string>
-    <string name="the_crew">THE CREW</string>
     <string name="joueurs">Joueurs :</string>
     <string name="moins">-</string>
     <string name="plus">+</string>
@@ -25,4 +24,6 @@
     <string name="echange_carte">Echange carte</string>
     <string name="echange_jeu">Echange jeu</string>
     <string name="salons">Salons :</string>
+    <string name="the_crew">THE CREW</string>
+    <string name="version">Version </string>
 </resources>
