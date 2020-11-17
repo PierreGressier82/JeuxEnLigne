@@ -53,28 +53,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <Spinner
-            android:id="@+id/liste_salons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone"/>
-
-        <Spinner
-            android:id="@+id/liste_joueurs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -199,7 +177,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/pseudo_joueur1"
+                        android:id="@+id/image_pseudo_joueur1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
@@ -209,7 +187,6 @@
                         android:id="@+id/pseudo_text_joueur1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pigre"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -219,7 +196,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/pseudo_joueur2"
+                        android:id="@+id/image_pseudo_joueur2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
@@ -229,7 +206,7 @@
                         android:id="@+id/pseudo_text_joueur2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pigre"
+                        android:text="@string/pseudo"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -239,7 +216,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/pseudo_joueur3"
+                        android:id="@+id/image_pseudo_joueur3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
@@ -249,7 +226,7 @@
                         android:id="@+id/pseudo_text_joueur3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pigre"
+                        android:text="@string/pseudo"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -259,7 +236,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/pseudo_joueur4"
+                        android:id="@+id/image_pseudo_joueur4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
@@ -269,7 +246,7 @@
                         android:id="@+id/pseudo_text_joueur4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pigre"
+                        android:text="@string/pseudo"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -279,7 +256,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/pseudo_joueur5"
+                        android:id="@+id/image_pseudo_joueur5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
@@ -289,7 +266,65 @@
                         android:id="@+id/pseudo_text_joueur5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pigre"
+                        android:text="@string/pseudo"
+                        android:textAlignment="textStart" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ligne_pseudo_j6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_pseudo_joueur6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/pseudo_text_joueur6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pseudo"
+                        android:textAlignment="textStart" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/ligne_pseudo_j7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_pseudo_joueur7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/pseudo_text_joueur7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pseudo"
+                        android:textAlignment="textStart" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/ligne_pseudo_j8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_pseudo_joueur8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/pseudo_text_joueur8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pseudo"
                         android:textAlignment="textStart" />
                 </TableRow>
             </TableLayout>
