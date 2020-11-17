@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
     private int mIndexSalon; // Index du salon (numéro de la liste)
+    private String mNomSalon;
     private String mPseudo;
     private boolean mJoueurChoisi = false;
     // Cartes
@@ -98,8 +99,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // On recupère les préférences du joueur
         mPreferences = getPreferences(MODE_PRIVATE);
         mIdSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
+        mNomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
-        // TODO : prendre en compte les préférences récupérées
 
         // Entete
         TextView version1 = findViewById(R.id.version);
@@ -113,12 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mArrayAdapterSalons = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<String>());
         mArrayAdapterSalons.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         new TacheGetSalons().execute(urlGetSalons);
-        //afficheSalonEnBlanc(0);
 
         // Liste des joueurs
         mArrayAdapterJoueurs = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<String>());
         mArrayAdapterJoueurs.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //affichePseudoEnBlanc(mPseudo);
+        new TacheGetJoueursSalon().execute(urlGetJoueurs+mIdSalon);
 
         // Bouton valider
         Button boutonValider = findViewById(R.id.boutonValider);
@@ -203,6 +203,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
 
+            // Sélection d'un salon
+            case R.id.ligne_salon1 :
+            case R.id.ligne_salon2 :
+            case R.id.ligne_salon3 :
+                afficheSalonEnBlanc(v.getId());
+                // Chargement des joueurs de ce salon
+                new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
+                // Mise à jour du numéro de mission
+                TextView tv = findViewById(R.id.numMission);
+                tv.setText(String.valueOf(mListeSalons.get(mIndexSalon).getNumeroMission()));
+                mJoueurChoisi=false;
+                afficheOptionAdmin();
+                break;
+
+            // Sélection d'un joueur
+            case R.id.ligne_pseudo_j1 :
+            case R.id.ligne_pseudo_j2 :
+            case R.id.ligne_pseudo_j3 :
+            case R.id.ligne_pseudo_j4 :
+            case R.id.ligne_pseudo_j5 :
+            case R.id.ligne_pseudo_j6 :
+            case R.id.ligne_pseudo_j7 :
+            case R.id.ligne_pseudo_j8 :
+                affichePseudoEnBlanc(v.getId());
+                afficheOptionAdmin();
+                break;
+
             // Lancer le jeu dans le salon pour le joueur demandé
             case R.id.boutonValider:
                 if (!mJoueurChoisi) {
@@ -216,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Sauvegarde des préférences
                 mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
                 mPreferences.edit().putInt(VALEUR_ID_SALON, mIdSalon).apply();
+                mPreferences.edit().putString(VALEUR_NOM_SALON, nom_salon).apply();
                 // Lance l'activité "Main joueur" avec le pseudo et l'id du salon en paramètre
                 MainJoueurActivity.putExtra(VALEUR_PSEUDO, mPseudo);
                 MainJoueurActivity.putExtra(VALEUR_ID_SALON, mIdSalon);
@@ -259,33 +287,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mNumMission.setText(String.valueOf(numMission));
                 new TacheURLSansRetour().execute(urlMAJNumMission+mIdSalon+"&numMission="+numMission);
                 Toast.makeText(this, "Mission mise à jour", Toast.LENGTH_SHORT).show();
-                break;
-
-            // Sélection d'un salon
-            case R.id.ligne_salon1 :
-            case R.id.ligne_salon2 :
-            case R.id.ligne_salon3 :
-                afficheSalonEnBlanc(v.getId());
-                // Chargement des joueurs de ce salon
-                new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
-                // Mise à jour du numéro de mission
-                TextView tv = findViewById(R.id.numMission);
-                tv.setText(String.valueOf(mListeSalons.get(mIndexSalon).getNumeroMission()));
-                mJoueurChoisi=false;
-                afficheOptionAdmin();
-                break;
-
-            // Sélection d'un joueur
-            case R.id.ligne_pseudo_j1 :
-            case R.id.ligne_pseudo_j2 :
-            case R.id.ligne_pseudo_j3 :
-            case R.id.ligne_pseudo_j4 :
-            case R.id.ligne_pseudo_j5 :
-            case R.id.ligne_pseudo_j6 :
-            case R.id.ligne_pseudo_j7 :
-            case R.id.ligne_pseudo_j8 :
-                affichePseudoEnBlanc(v.getId());
-                afficheOptionAdmin();
                 break;
 
             // Sélection d'une option d'une tâche
@@ -341,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mBoutonOptionTache9.getTag().equals("YES") && nbOption<=5)
             optionsDemandees[nbOption++]=mBoutonOptionTache9.getText().toString();
         if (mBoutonOptionTache10.getTag().equals("YES") && nbOption<=5)
-            optionsDemandees[nbOption++]=mBoutonOptionTache10.getText().toString();
+            optionsDemandees[nbOption]=mBoutonOptionTache10.getText().toString();
 
         return optionsDemandees;
     }
@@ -368,8 +369,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv.setTextColor(getResources().getColor(R.color.noir));
             }
         }
-
-        mPseudo = "";
     }
 
     /**
@@ -576,6 +575,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ArrayList<Salon> listeSalons) {
             afficheSalons(listeSalons);
+            for(int i=0;i<mListeSalons.size();i++) {
+                if (mListeSalons.get(i).getNom().equals(mNomSalon)) {
+                    mIndexSalon=i;
+                    break;
+                }
+            }
+            afficheSalonEnBlanc(tableIdLigneSalon[mIndexSalon]);
             super.onPostExecute(listeSalons);
         }
     }
@@ -615,6 +621,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(ArrayList<Joueur> listeJoueurs) {
             afficheJoueurs(listeJoueurs);
+            for(int i=0;i<mListeJoueurs.size();i++) {
+                if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
+                    affichePseudoEnBlanc(tableIdLignePseudo[i]);
+                    break;
+                }
+            }
             super.onPostExecute(listeJoueurs);
         }
     }

@@ -17,7 +17,6 @@
     <string name="joueurs">Joueurs :</string>
     <string name="moins">-</string>
     <string name="plus">+</string>
-    <string name="_1">1</string>
     <string name="communications">Communications</string>
     <string name="refresh">REFRESH</string>
     <string name="maj_num_ro_mission">Mission suivante</string>
@@ -26,4 +25,14 @@
     <string name="salons">Salons :</string>
     <string name="the_crew">THE CREW</string>
     <string name="version">Version </string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="sup1"><![CDATA[>]]></string>
+    <string name="sup2"><![CDATA[>>]]></string>
+    <string name="sup3"><![CDATA[>>>]]></string>
+    <string name="sup4"><![CDATA[>>>>]]></string>
+    <string name="d">D</string>
 </resources>
