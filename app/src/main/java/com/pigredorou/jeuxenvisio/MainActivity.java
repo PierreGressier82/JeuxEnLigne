@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pigredorou.jeuxenvisio.objets.Jeu;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Salon;
 
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String mNumVersion = "1.02";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
+    protected static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlDistribueCartes = url + "distribueCartes.php";
     private static final String urlDistribueTaches = url + "distribueTaches.php";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?salon=";
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3};
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3};
+    private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
+    private static final String[] tableNomJeux = {"The Crew", "Fiesta de los muertos", "Le roi des nains", "Manchots barjots", "", ""};
 
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
@@ -55,7 +58,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String mNomSalon;
     private String mPseudo;
     private boolean mJoueurChoisi = false;
-    // Cartes
+    // Jeux
+    private ImageView mJeu1;
+    private ImageView mJeu2;
+    private ImageView mJeu3;
+    private ImageView mJeu4;
+    private ImageView mJeu5;
+    // Administration
     private Button mBoutonRAZ;
     private Button mBoutonDistribueCartes;
     private Button mBoutonDistribueTache;
@@ -82,10 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Listes
     private SharedPreferences mPreferences;
-    private ArrayList<Joueur> mListeJoueurs = new ArrayList<>();
     private ArrayList<Salon> mListeSalons = new ArrayList<>();
-    private ArrayAdapter<String> mArrayAdapterSalons;
-    private ArrayAdapter<String> mArrayAdapterJoueurs;
+    private ArrayList<Joueur> mListeJoueurs = new ArrayList<>();
+    private ArrayList<Jeu> mListeJeux = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,14 +119,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boutonQuitter.setOnClickListener(this);
 
         // Liste des salons de jeu
-        mArrayAdapterSalons = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<String>());
-        mArrayAdapterSalons.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         new TacheGetSalons().execute(urlGetSalons);
 
-        // Liste des joueurs
-        mArrayAdapterJoueurs = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<String>());
-        mArrayAdapterJoueurs.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Liste des joueurs du salon
         new TacheGetJoueursSalon().execute(urlGetJoueurs+mIdSalon);
+
+        // Liste des jeux du salon
+        new TacheGetJeuxSalon().execute(urlGetJeux+mIdSalon);
+        mJeu1 = findViewById(R.id.jeu_1);
+        mJeu2 = findViewById(R.id.jeu_2);
+        mJeu3 = findViewById(R.id.jeu_3);
+        mJeu4 = findViewById(R.id.jeu_4);
+        mJeu5 = findViewById(R.id.jeu_5);
+        mJeu1.setOnClickListener(this);
+        mJeu2.setOnClickListener(this);
+        mJeu3.setOnClickListener(this);
+        mJeu4.setOnClickListener(this);
+        mJeu5.setOnClickListener(this);
+        mJeu1.setTag("NO");
+        mJeu2.setTag("NO");
+        mJeu3.setTag("NO");
+        mJeu4.setTag("NO");
+        mJeu5.setTag("NO");
 
         // Bouton valider
         Button boutonValider = findViewById(R.id.boutonValider);
@@ -210,9 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 afficheSalonEnBlanc(v.getId());
                 // Chargement des joueurs de ce salon
                 new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
-                // Mise à jour du numéro de mission
-                TextView tv = findViewById(R.id.numMission);
-                tv.setText(String.valueOf(mListeSalons.get(mIndexSalon).getNumeroMission()));
                 mJoueurChoisi=false;
                 afficheOptionAdmin();
                 break;
@@ -230,6 +249,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 afficheOptionAdmin();
                 break;
 
+            // Jeux
+            case R.id.jeu_1 :
+            case R.id.jeu_2 :
+            case R.id.jeu_3 :
+            case R.id.jeu_4 :
+            case R.id.jeu_5 :
+                ImageView iv = findViewById(v.getId());
+                if (iv.getTag().toString().equals("NO")) {
+                    iv.setBackgroundColor(getResources().getColor(R.color.blanc));
+                    iv.setTag("YES");
+                }
+                else {
+                    iv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    iv.setTag("NO");
+                }
+                // Mise à jour du titre du jeu
+                TextView titre = findViewById(R.id.titre_jeu);
+                // Mise à jour du numéro de mission
+                TextView tv = findViewById(R.id.numMission);
+                switch (iv.getId()) {
+                    case R.id.jeu_1 :
+                        titre.setText(mListeJeux.get(0).getNom());
+                        tv.setText(String.valueOf(mListeJeux.get(0).getNumMission()));
+                        break;
+                    case R.id.jeu_2 :
+                        titre.setText(mListeJeux.get(1).getNom());
+                        tv.setText(String.valueOf(mListeJeux.get(1).getNumMission()));
+                        break;
+                    case R.id.jeu_3 :
+                        titre.setText(mListeJeux.get(2).getNom());
+                        tv.setText(String.valueOf(mListeJeux.get(2).getNumMission()));
+                        break;
+                    case R.id.jeu_4 :
+                        titre.setText(mListeJeux.get(3).getNom());
+                        tv.setText(String.valueOf(mListeJeux.get(3).getNumMission()));
+                        break;
+                    case R.id.jeu_5 :
+                        titre.setText(mListeJeux.get(4).getNom());
+                        tv.setText(String.valueOf(mListeJeux.get(4).getNumMission()));
+                        break;
+                }
+
+                break;
+
             // Lancer le jeu dans le salon pour le joueur demandé
             case R.id.boutonValider:
                 if (!mJoueurChoisi) {
@@ -237,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 }
 
-                Intent MainJoueurActivity = new Intent(MainActivity.this, MainJoueurActivity.class);
+                Intent MainJoueurActivity = new Intent(MainActivity.this, TheCrewActivity.class);
                 // Sauvegarde le pseudo
                 String nom_salon = mListeSalons.get(mIndexSalon).getNom();
                 // Sauvegarde des préférences
@@ -442,18 +505,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tl.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tl.setVisibility(View.VISIBLE);
 
-        for(int i=0; i<mArrayAdapterJoueurs.getCount();)
-            mArrayAdapterJoueurs.remove(mArrayAdapterJoueurs.getItem(0));
-        mArrayAdapterJoueurs.notifyDataSetChanged();
         // Affiche les joueurs dans la liste
         if (listeJoueurs != null) {
             String[] listePseudoJoueurs = new String[listeJoueurs.size()];
             for (int i=0; i<listeJoueurs.size(); i++) {
                 listePseudoJoueurs[i] = listeJoueurs.get(i).getNomJoueur();
-
-                // Ajout du pseudo dans la liste pour le spinner
-                mArrayAdapterJoueurs.add(listePseudoJoueurs[i]);
-                mArrayAdapterJoueurs.notifyDataSetChanged();
 
                 // Création dynamique des joueurs dans des lignes du tableau
                 TableRow tr = new TableRow(this);
@@ -488,6 +544,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void afficheJeux(ArrayList<Jeu> listeJeux) {
+        // TODO : afficher les jeux en dynamique
+    }
+
     private void afficheSalons(ArrayList<Salon> listeSalons) {
         TableLayout tl = findViewById(R.id.liste_salons_TL);
         TableRow.LayoutParams paramsRow;
@@ -504,8 +564,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String[] listeNomSalons = new String[listeSalons.size()];
             for (int i = 0; i < listeSalons.size(); i++) {
                 listeNomSalons[i] = listeSalons.get(i).getNom();
-                mArrayAdapterSalons.add(listeNomSalons[i]);
-                mArrayAdapterSalons.notifyDataSetChanged();
 
                 // Création dynamique des joueurs dans des lignes du tableau
                 TableRow tr = new TableRow(this);
@@ -558,7 +616,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 while ((stringBuffer = bufferedReader.readLine()) != null){
                     String[] chaine = stringBuffer.split("_");
                     // Salon : id, nom, numero de mission
-                    Salon salon = new Salon(Integer.parseInt(chaine[0]), chaine[1], Integer.parseInt(chaine[2]));
+                    //Salon salon = new Salon(Integer.parseInt(chaine[0]), chaine[1], Integer.parseInt(chaine[2]));
+                    Salon salon = new Salon(Integer.parseInt(chaine[0]), chaine[1]);
                     mListeSalons.add(salon);
                     string = String.format("%s%s", string, stringBuffer);
                 }
@@ -587,8 +646,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Classe qui permet de récupérer la liste des joueurs du salon et de l'afficher dans une liste déroulante
-     * -> Retourne la liste des joeurs du salon
+     * Classe qui permet de récupérer la liste des joueurs du salon et de l'afficher
+     * -> Retourne la liste des joueurs du salon
      */
     private class TacheGetJoueursSalon extends AsyncTask<String, Void, ArrayList<Joueur>> {
         String result;
@@ -628,6 +687,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             super.onPostExecute(listeJoueurs);
+        }
+    }
+
+    /**
+     * Classe qui permet de récupérer la liste des jeux du salon et de l'afficher
+     * -> Retourne la liste des jeux du salon (ayant une partie)
+     */
+    private class TacheGetJeuxSalon extends AsyncTask<String, Void, ArrayList<Jeu>> {
+        String result;
+        @Override
+        protected ArrayList<Jeu> doInBackground(String... strings) {
+            URL url;
+            mListeJeux.clear();
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String stringBuffer;
+                String string = "";
+                while ((stringBuffer = bufferedReader.readLine()) != null){
+                    String[] chaine = stringBuffer.split("_");
+                    /**
+                     * TODO : pour la création en dynamique, ne pas prendre l'id BDD pour les ressources
+                     * TODO : il faut l'attribuer en fonction de l'ordre alphabétique à l'affiche à l'écran
+                      */
+                    Jeu jeu = new Jeu(chaine[1], tableIdImageJeux[Integer.parseInt(chaine[0])], Integer.parseInt(chaine[2]));
+                    mListeJeux.add(jeu);
+                    string = String.format("%s%s", string, stringBuffer);
+                }
+                bufferedReader.close();
+                result = string;
+            } catch (IOException e){
+                e.printStackTrace();
+                result = e.toString();
+            }
+
+            return mListeJeux;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Jeu> listeJeux) {
+            afficheJeux(listeJeux);
+            super.onPostExecute(listeJeux);
         }
     }
 

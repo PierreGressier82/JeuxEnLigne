@@ -15,10 +15,12 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute"
         tools:targetApi="m">
-        <activity android:name=".MainJoueurActivity" />
+        <activity android:name=".FiestaDeLosMuertosActivity"></activity>
+        <activity android:name=".TheCrewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

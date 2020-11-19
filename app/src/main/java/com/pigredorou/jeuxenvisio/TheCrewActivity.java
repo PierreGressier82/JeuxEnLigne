@@ -32,9 +32,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class MainJoueurActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
     // Constantes
+    // Tableaux des resssources
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
     private static final int[] imagesRose = {0, R.drawable.rose_1, R.drawable.rose_2, R.drawable.rose_3, R.drawable.rose_4, R.drawable.rose_5, R.drawable.rose_6, R.drawable.rose_7, R.drawable.rose_8, R.drawable.rose_9};
     private static final int[] imagesVert = {0, R.drawable.vert_1, R.drawable.vert_2, R.drawable.vert_3, R.drawable.vert_4, R.drawable.vert_5, R.drawable.vert_6, R.drawable.vert_7, R.drawable.vert_8, R.drawable.vert_9};
@@ -47,6 +48,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
     private static final int[] tableTaches2 = {R.id.tache2_joueur1, R.id.tache2_joueur2, R.id.tache2_joueur3, R.id.tache2_joueur4, R.id.tache2_joueur5};
     private static final int[] tableTaches3 = {R.id.tache3_joueur1, R.id.tache3_joueur2, R.id.tache3_joueur3, R.id.tache3_joueur4, R.id.tache3_joueur5};
     private static final int[] tableCommunication = {R.id.communication_joueur1, R.id.communication_joueur2, R.id.communication_joueur3, R.id.communication_joueur4, R.id.communication_joueur5};
+    // URLs des actions en base
     private static final String urlGetDistribue = MainActivity.url + "getDistribution.php";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?salon=";
     private static final String urlAfficheTable = MainActivity.url + "getTable.php?salon=";
@@ -131,7 +133,7 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         // Bloque la mise en veille
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
-        setContentView(R.layout.activity_main_joueur);
+        setContentView(R.layout.activity_the_crew);
 
         // ENTETE
         mTitre = findViewById(R.id.titre_jeu);
@@ -146,22 +148,21 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
         tvNomSalon.setText(nomSalon);
         // Bouton retour
         ImageView boutonRetour = findViewById(R.id.bouton_retour);
-        boutonRetour.setTag("boutonRetour");
         boutonRetour.setOnClickListener(this);
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
 
         // Liste des pseudos dans l'ordre de jeu
-        new MainJoueurActivity.TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
+        new TheCrewActivity.TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
 
         // Nom du commandant pour la partie
-        new MainJoueurActivity.TacheGetCommandant().execute(urlGetCommandant + mIdSalon);
+        new TheCrewActivity.TacheGetCommandant().execute(urlGetCommandant + mIdSalon);
 
         // Affiche un message chargement le temps de récupérer les informations en base
         mTextResultat = findViewById(R.id.resultat);
         mTextResultat.setText(R.string.Chargement);
         // Recupère les cartes du joueur
         if (mPseudo != null)
-            new MainJoueurActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo + "&salon=" + mIdSalon);
+            new TheCrewActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo + "&salon=" + mIdSalon);
         else {
             Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
             mTextResultat.setText(R.string.chargement_impossible);
@@ -568,7 +569,6 @@ public class MainJoueurActivity extends AppCompatActivity implements View.OnClic
                     if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
                         estCeQueJeJoueUneCarteAutorisee = true;
                     else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
-                        boolean couleurTrouvee = false;
                         // On regarde toutes les cartes de la main du joueur
                         for (int value : tableIdImageCarteMain) {
                             ImageView iv2 = findViewById(value);

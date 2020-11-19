@@ -42,7 +42,7 @@
             android:id="@+id/titre_jeu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="THE CREW"
+            android:text="@string/the_crew"
             android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -76,7 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/feu_artifice"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="@string/the_crew" />
 
     <HorizontalScrollView
         android:id="@+id/scrollView_cartes"
@@ -425,7 +426,8 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/jeton_communication_off"/>
+            android:src="@drawable/jeton_communication_off"
+            android:contentDescription="@string/the_crew" />
 
         <TextView
             android:id="@+id/titre_communication"
