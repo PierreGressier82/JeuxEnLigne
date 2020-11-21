@@ -1,42 +1,37 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Jeu {
-    String nom;
-    int idRessource;
-    int numMission;
+    int mId;
+    String mNom;
+    int mNumMission;
 
-    public Jeu(String nom, int idRessource) {
-        this.nom = nom;
-        this.idRessource = idRessource;
-    }
-
-    public Jeu(String nom, int idRessource, int numMission) {
-        this.nom = nom;
-        this.idRessource = idRessource;
-        this.numMission = numMission;
+    public Jeu(int mId, String nom, int numMission) {
+        this.mNom = nom;
+        this.mId = mId;
+        this.mNumMission = numMission;
     }
 
     public int getNumMission() {
-        return numMission;
+        return mNumMission;
     }
 
     public void setNumMission(int numMission) {
-        this.numMission = numMission;
+        this.mNumMission = numMission;
     }
 
     public String getNom() {
-        return nom;
+        return mNom;
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
+        this.mNom = nom;
     }
 
-    public int getIdRessource() {
-        return idRessource;
+    public int getId() {
+        return mId;
     }
 
-    public void setIdRessource(int idRessource) {
-        this.idRessource = idRessource;
+    public void setId(int id) {
+        this.mId = id;
     }
 }

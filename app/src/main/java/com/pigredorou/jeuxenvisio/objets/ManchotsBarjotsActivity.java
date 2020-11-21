@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenvisio;
+package com.pigredorou.jeuxenvisio.objets;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,9 +7,11 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pigredorou.jeuxenvisio.R;
+
 import java.util.Objects;
 
-public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnClickListener {
+public class ManchotsBarjotsActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +21,7 @@ public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnC
         // Bloque la mise en veille
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
-        setContentView(R.layout.activity_le_roi_des_nains);
+        setContentView(R.layout.activity_manchots_barjots);
 
         // Bouton retour
         ImageView boutonRetour = findViewById(R.id.bouton_retour);

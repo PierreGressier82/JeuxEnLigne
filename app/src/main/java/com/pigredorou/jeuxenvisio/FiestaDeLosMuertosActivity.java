@@ -2,15 +2,23 @@ package com.pigredorou.jeuxenvisio;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Objects;
 
 public class FiestaDeLosMuertosActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Masque le bar de titre de l'activité
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        // Bloque la mise en veille
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // Affiche la vue
         setContentView(R.layout.activity_fiesta_de_los_muertos);
 
         // Bouton retour

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnClickListener {
+public class BeloteActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnC
         // Bloque la mise en veille
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
-        setContentView(R.layout.activity_le_roi_des_nains);
+        setContentView(R.layout.activity_belote);
 
         // Bouton retour
         ImageView boutonRetour = findViewById(R.id.bouton_retour);

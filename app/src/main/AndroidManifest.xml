@@ -15,7 +15,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute"
         tools:targetApi="m">
-        <activity android:name=".FiestaDeLosMuertosActivity"></activity>
+        <activity android:name=".BeloteActivity"></activity>
+        <activity android:name=".objets.ManchotsBarjotsActivity" />
+        <activity android:name=".LeRoiDesNainsActivity" />
+        <activity android:name=".FiestaDeLosMuertosActivity" />
         <activity android:name=".TheCrewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
