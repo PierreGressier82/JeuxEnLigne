@@ -1,14 +1,24 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Jeu {
-    int mId;
-    String mNom;
-    int mNumMission;
+    private int mId; // Id du jeu en BDD
+    private int mIdPartie; // Id de la partie de ce jeu en BDD
+    private String mNom;
+    private int mNumMission;
 
-    public Jeu(int mId, String nom, int numMission) {
-        this.mNom = nom;
-        this.mId = mId;
-        this.mNumMission = numMission;
+    public Jeu(int id, int idPartie, String nom, int numMission) {
+        mId = id;
+        mIdPartie = idPartie;
+        mNom = nom;
+        mNumMission = numMission;
+    }
+
+    public int getIdPartie() {
+        return mIdPartie;
+    }
+
+    public void setIdPartie(int idPartie) {
+        mIdPartie = idPartie;
     }
 
     public int getNumMission() {

@@ -49,21 +49,22 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final int[] tableTaches3 = {R.id.tache3_joueur1, R.id.tache3_joueur2, R.id.tache3_joueur3, R.id.tache3_joueur4, R.id.tache3_joueur5};
     private static final int[] tableCommunication = {R.id.communication_joueur1, R.id.communication_joueur2, R.id.communication_joueur3, R.id.communication_joueur4, R.id.communication_joueur5};
     // URLs des actions en base
-    private static final String urlGetDistribue = MainActivity.url + "getDistribution.php";
-    private static final String urlJoueCarte = MainActivity.url + "majTable.php?salon=";
-    private static final String urlAfficheTable = MainActivity.url + "getTable.php?salon=";
-    private static final String urlAfficheTache = MainActivity.url + "getTaches.php?salon=";
-    private static final String urlGetCommandant = MainActivity.url + "getCommandant.php?salon=";
-    private static final String urlGetOjectifCommun = MainActivity.url + "getObjectif.php?salon=";
-    private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?salon=";
-    private static final String urlGetCommunications = MainActivity.url + "getCommunications.php?salon=";
-    private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?salon=";
-    private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?salon=";
+    private static final String urlGetDistribue = MainActivity.url + "getDistribution.php?partie=";
+    private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
+    private static final String urlAfficheTable = MainActivity.url + "getTable.php?partie=";
+    private static final String urlAfficheTache = MainActivity.url + "getTaches.php?partie=";
+    private static final String urlGetCommandant = MainActivity.url + "getCommandant.php?partie=";
+    private static final String urlGetOjectifCommun = MainActivity.url + "getObjectif.php?partie=";
+    private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?partie=";
+    private static final String urlGetCommunications = MainActivity.url + "getCommunications.php?partie=";
+    private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
+    private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
     private int mIdSalon;
+    private int mIdPartie;
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
     private int mNbTacheAAtribuer=0;
@@ -144,6 +145,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
         mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
+        mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
         // Bouton retour
@@ -155,14 +157,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         new TheCrewActivity.TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
 
         // Nom du commandant pour la partie
-        new TheCrewActivity.TacheGetCommandant().execute(urlGetCommandant + mIdSalon);
+        new TheCrewActivity.TacheGetCommandant().execute(urlGetCommandant + mIdPartie);
 
         // Affiche un message chargement le temps de récupérer les informations en base
         mTextResultat = findViewById(R.id.resultat);
         mTextResultat.setText(R.string.Chargement);
         // Recupère les cartes du joueur
         if (mPseudo != null)
-            new TheCrewActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue + "?joueur=" + mPseudo + "&salon=" + mIdSalon);
+            new TheCrewActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue+mIdPartie+"&joueur="+mPseudo);
         else {
             Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
             mTextResultat.setText(R.string.chargement_impossible);
@@ -181,7 +183,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Objectifs commun
         mObjectifCommun = findViewById(R.id.objectif_commun);
-        new TacheGetDescription().execute(urlGetOjectifCommun + mIdSalon);
+        new TacheGetDescription().execute(urlGetOjectifCommun + mIdPartie);
 
         // Taches
         //new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
@@ -319,9 +321,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                     updateTextView();
                                     majable();
                                     // Mise à jour des tâches
-                                    new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
+                                    new TacheGetTaches().execute(urlAfficheTache + mIdPartie);
                                     // Mise à jour des communications des joueurs
-                                    new TacheGetCommunications().execute(urlGetCommunications+mIdSalon);
+                                    new TacheGetCommunications().execute(urlGetCommunications+mIdPartie);
                                 }
                             });
                             Thread.sleep(5000);
@@ -458,7 +460,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 else
                     realise = 0;
                 tache.setTag("tache_"+couleurTacheActive+"_"+valeurTacheActive+"_"+realise);
-                url = urlRealiseTache+mIdSalon+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
+                url = urlRealiseTache+mIdPartie+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
                 debug(url);
                 // Mise à jour de la tache en base
                 new MainActivity.TacheURLSansRetour().execute(url);
@@ -471,7 +473,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     chaine = v.getTag().toString().split("_"); // ex : tacheAAttribuer_bleu_2
                     couleurTacheActive = chaine[1];
                     valeurTacheActive = chaine[2];
-                    url = urlAttribueTache+mIdSalon+"&pseudo="+mPseudo+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive;
+                    url = urlAttribueTache+mIdPartie+"&pseudo="+mPseudo+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive;
                     debug(url);
                     new MainActivity.TacheURLSansRetour().execute(url);
                     if(--mNbTacheAAtribuer == 0) {
@@ -487,7 +489,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Mise à jour de la table
         majable();
         // Mise à jour des tâches
-        new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
+        new TacheGetTaches().execute(urlAfficheTache + mIdPartie);
     }
 
     @Override
@@ -547,7 +549,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
                     autorise=false;
                 if(autorise) {
-                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdSalon + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo="+mPseudo);
+                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo="+mPseudo);
                 }
                 else
                     Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
@@ -587,7 +589,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 // Si je peux jouer la couleur ou si tout le monde a joué le pli
                 if (estCeQueJeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
-                    new TacheJoueCarte().execute(urlJoueCarte + mIdSalon + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
+                    new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
                     // Mise à jour de la table
                     majable();
                 } else
@@ -599,7 +601,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private void majable() {
         // Mise à jour de la table si elle est affichée
         if (mTable.getVisibility() == View.VISIBLE) {
-            new TacheAfficheTable().execute(urlAfficheTable + mIdSalon);
+            new TacheAfficheTable().execute(urlAfficheTable + mIdPartie);
         }
     }
 

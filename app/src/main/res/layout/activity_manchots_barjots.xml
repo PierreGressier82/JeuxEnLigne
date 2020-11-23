@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/couleurManchotsBarjots"
-    tools:context="com.pigredorou.jeuxenvisio.objets.ManchotsBarjotsActivity">
+    tools:context="com.pigredorou.jeuxenvisio.ManchotsBarjotsActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/entete"

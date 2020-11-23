@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Jeu;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
-import com.pigredorou.jeuxenvisio.objets.ManchotsBarjotsActivity;
 import com.pigredorou.jeuxenvisio.objets.Salon;
 
 import java.io.BufferedReader;
@@ -33,19 +32,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
+     * 1.11 : Gestion de plusieurs jeux en // avec la notion de partie
      */
     // Variables statiques
-    private static final String mNumVersion = "1.10";
+    private static final String mNumVersion = "1.11";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    private static final String urlGetSalons = url + "getSalons.php";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     protected static final String urlGetJeux = url + "getJeux.php?salon=";
-    private static final String urlDistribueCartes = url + "distribueCartes.php";
-    private static final String urlDistribueTaches = url + "distribueTaches.php";
-    private static final String urlRAZDistribution = url + "RAZDistribution.php?salon=";
-    private static final String urlGetSalons = url + "getSalons.php";
-    private static final String urlMAJNumMission = url + "majNumeroMission.php?salon=";
+    private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
+    private static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
+    private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
+    private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "idSalon";
+    public static final String VALEUR_ID_PARTIE = "idPartie";
     public static final String VALEUR_NOM_SALON = "NomSalon";
     public static final int THE_CREW_ACTIVITY_REQUEST_CODE=11;
     public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE=12;
@@ -63,18 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
+    private int mIdPartie; // Id de la partie (en BDD)
     private int mIdJeu; // Id du jeu (en BDD)
     private int mIndexSalon; // Index du salon (numéro de la liste)
     private String mNomSalon;
     private String mPseudo;
     private boolean mJoueurChoisi = false;
     private boolean mJeuChoisi = false;
-    // Jeux
-    private ImageView mJeu1;
-    private ImageView mJeu2;
-    private ImageView mJeu3;
-    private ImageView mJeu4;
-    private ImageView mJeu5;
     // Administration
     private Button mBoutonRAZ;
     private Button mBoutonDistribueCartes;
@@ -137,21 +133,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Liste des jeux du salon
         new TacheGetJeuxSalon().execute(urlGetJeux+mIdSalon);
-        mJeu1 = findViewById(R.id.jeu_1);
-        mJeu2 = findViewById(R.id.jeu_2);
-        mJeu3 = findViewById(R.id.jeu_3);
-        mJeu4 = findViewById(R.id.jeu_4);
-        mJeu5 = findViewById(R.id.jeu_5);
-        mJeu1.setOnClickListener(this);
-        mJeu2.setOnClickListener(this);
-        mJeu3.setOnClickListener(this);
-        mJeu4.setOnClickListener(this);
-        mJeu5.setOnClickListener(this);
-        mJeu1.setTag("NO");
-        mJeu2.setTag("NO");
-        mJeu3.setTag("NO");
-        mJeu4.setTag("NO");
-        mJeu5.setTag("NO");
+        // Jeux
+        ImageView jeu1 = findViewById(R.id.jeu_1);
+        ImageView jeu2 = findViewById(R.id.jeu_2);
+        ImageView jeu3 = findViewById(R.id.jeu_3);
+        ImageView jeu4 = findViewById(R.id.jeu_4);
+        ImageView jeu5 = findViewById(R.id.jeu_5);
+        jeu1.setOnClickListener(this);
+        jeu2.setOnClickListener(this);
+        jeu3.setOnClickListener(this);
+        jeu4.setOnClickListener(this);
+        jeu5.setOnClickListener(this);
+        jeu1.setTag("NO");
+        jeu2.setTag("NO");
+        jeu3.setTag("NO");
+        jeu4.setTag("NO");
+        jeu5.setTag("NO");
 
         // Bouton valider
         Button boutonValider = findViewById(R.id.boutonValider);
@@ -275,33 +272,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (iv.getTag().toString().equals("NO")) {
                     iv.setBackgroundColor(getResources().getColor(R.color.blanc));
                     iv.setTag("YES");
-                    mJeuChoisi=true;
+                    int index=0;
+                    for (int i=0;i<tableIdImageJeux.length;i++) {
+                        if (tableIdImageJeux[i]==iv.getId()) {
+                            index=i;
+                            break;
+                        }
+                    }
                     // Mise à jour du numéro de mission
                     TextView tv = findViewById(R.id.numMission);
-                    int index;
-                    switch (iv.getId()) {
-                        default:
-                        case R.id.jeu_1 :
-                            index=0;
-                            break;
-                        case R.id.jeu_2 :
-                            index=1;
-                            break;
-                        case R.id.jeu_3 :
-                            index=2;
-                            break;
-                        case R.id.jeu_4 :
-                            index=3;
-                            break;
-                        case R.id.jeu_5 :
-                            index=4;
-                            break;
-                    }
                     tv.setText(String.valueOf(mListeJeux.get(index).getNumMission()));
                     // Titre
                     titre.setText(mListeJeux.get(index).getNom());
                     // Id du jeu en BDD
                     mIdJeu = mListeJeux.get(index).getId();
+                    mIdPartie = mListeJeux.get(index).getIdPartie();
+                    mJeuChoisi=true;
                 }
                 else {
                     titre.setText("");
@@ -317,10 +303,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "Il faut choisir un joueur", Toast.LENGTH_SHORT).show();
                     break;
                 }
-                if (!mJeuChoisi) {
-                    // TODO : Si un seul jeu, le choisir automatiquement
-                    Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
-                    break;
+                else {
+                    // Si 1 seul jeu, on le sélectionne automatiquement
+                    if (mListeJeux.size() == 1) {
+                        mIdJeu=mListeJeux.get(0).getId();
+                        mIdPartie=mListeJeux.get(0).getIdPartie();
+                        mJeuChoisi=true;
+                    }
+                    if (!mJeuChoisi) {
+                        Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                 }
 
                 // Sauvegarde le pseudo
@@ -356,29 +349,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         REQUEST_CODE = BELOTE_ACTIVITY_REQUEST_CODE;
                         break;
                 }
-                // Lance l'activité "Main joueur" avec le pseudo et l'id du salon en paramètre
+                // Lance l'activité du jeu demandé avec les paramètres
                 JeuActivity.putExtra(VALEUR_PSEUDO, mPseudo);
                 JeuActivity.putExtra(VALEUR_ID_SALON, mIdSalon);
+                JeuActivity.putExtra(VALEUR_ID_PARTIE, mIdPartie);
                 JeuActivity.putExtra(VALEUR_NOM_SALON, nom_salon);
                 startActivityForResult(JeuActivity, REQUEST_CODE);
                 break;
 
             // Distribue les cartes dans le salon sélectionné
             case R.id.boutonDistribue :
-                new TacheURLSansRetour().execute(urlDistribueCartes + "?typeCarte=1&salon="+ mIdSalon);
+                new TacheURLSansRetour().execute(urlDistribueCartes + mIdPartie + "&typeCarte=1");
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
                 break;
 
             // Remise à zéro de la dernière distribution
             case R.id.boutonRAZ :
-                new TacheURLSansRetour().execute(urlRAZDistribution+mIdSalon);
+                new TacheURLSansRetour().execute(urlRAZDistribution+mIdPartie);
                 Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
                 break;
 
             // Distribue les n tâches dans la salon sélectionné
             case R.id.boutonDistribueTache :
                 String[] optionDemandees = checkOptionsTaches();
-                String url = urlDistribueTaches + "?salon="+mIdSalon+"&nbTache="+mNbTaches.getText();
+                String url = urlDistribueTaches+mIdPartie+"&nbTache="+mNbTaches.getText();
                 url+= "&option1="+optionDemandees[0]+"&option2="+optionDemandees[1]+"&option3="+optionDemandees[2]+"&option4="+optionDemandees[3]+"&option5="+optionDemandees[4];
                 new TacheURLSansRetour().execute(url);
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
@@ -397,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.boutonValiderNumMission :
                 int numMission = Integer.parseInt(mNumMission.getText().toString())+1;
                 mNumMission.setText(String.valueOf(numMission));
-                new TacheURLSansRetour().execute(urlMAJNumMission+mIdSalon+"&numMission="+numMission);
+                new TacheURLSansRetour().execute(urlMAJNumMission+mIdPartie+"&numMission="+numMission);
                 Toast.makeText(this, "Mission mise à jour", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -608,6 +602,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
+        // Masque les ImageView non utilisées
         for(int i=index;i<tableIdImageJeux.length;i++) {
             ImageView iv = findViewById(tableIdImageJeux[i]);
             // Image
@@ -777,8 +772,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String string = "";
                 while ((stringBuffer = bufferedReader.readLine()) != null){
                     String[] chaine = stringBuffer.split("_");
-                    // Id BDD, nom du jeu, numéro de mission
-                    Jeu jeu = new Jeu(Integer.parseInt(chaine[0]), chaine[1], Integer.parseInt(chaine[2]));
+                    // Id BDD, id partie, nom du jeu, numéro de mission
+                    Jeu jeu = new Jeu(Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], Integer.parseInt(chaine[3]));
                     mListeJeux.add(jeu);
                     string = String.format("%s%s", string, stringBuffer);
                 }

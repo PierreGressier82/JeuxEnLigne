@@ -1,4 +1,4 @@
-package com.pigredorou.jeuxenvisio.objets;
+package com.pigredorou.jeuxenvisio;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,8 +6,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.pigredorou.jeuxenvisio.R;
 
 import java.util.Objects;
 
