@@ -78,13 +78,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="fill_horizontal">
 
-                <TextView
-                    android:id="@+id/resultat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
                 <ImageView
                     android:id="@+id/carte_1"
                     android:layout_width="80dp"
@@ -259,11 +252,20 @@
         </TableLayout>
     </HorizontalScrollView>
 
+    <TextView
+        android:id="@+id/titre_pli"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/pli_en_cours"
+        android:textAlignment="center"
+        android:textColor="@color/noir"
+        android:textStyle="bold" />
+
     <ScrollView
         android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/scrollView_cartes"
@@ -274,15 +276,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal">
-
-            <TextView
-                android:id="@+id/titre_pli"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/pli_en_cours"
-                android:textAlignment="center"
-                android:textColor="@color/noir"
-                android:textStyle="bold" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -398,6 +391,21 @@
         </TableLayout>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/titre_atout_a_choisr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/atout"
+        android:textAlignment="center"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
+    <ImageView
+        android:id="@+id/table_carte_image_atout"
+        android:layout_width="80dp"
+        android:layout_height="110dp"
+        android:contentDescription="@string/carte"
+        android:src="@drawable/trefle_7" />
 
     <Button
         android:id="@+id/bouton_refresh"

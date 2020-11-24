@@ -11,7 +11,7 @@
     <string name="distribue">Distribue cartes</string>
     <string name="distribue_taches">Distribue tâches</string>
     <string name="pli_en_cours">Pli en cours</string>
-    <string name="tachesAAtribuer">Tâches à attributer :</string>
+    <string name="tachesAAtribuer">Tâches à attributer</string>
     <string name="jouer">Jouer</string>
     <string name="mes_cartes">Mes cartes</string>
     <string name="joueurs">Joueurs :</string>
@@ -39,4 +39,5 @@
     <string name="Le_roi_des_nains">Le roi des nains</string>
     <string name="belote">Belote</string>
     <string name="Manchots_barjots">Manchots Barjots</string>
+    <string name="atout">Atout</string>
 </resources>

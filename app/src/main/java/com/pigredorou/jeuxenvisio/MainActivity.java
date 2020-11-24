@@ -33,9 +33,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
      * 1.11 : Gestion de plusieurs jeux en // avec la notion de partie
+     * 1.12 : The Crew : amélioration ergonomie - Belote : début implémentation
      */
     // Variables statiques
-    private static final String mNumVersion = "1.11";
+    private static final String mNumVersion = "1.12";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
@@ -359,7 +360,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // Distribue les cartes dans le salon sélectionné
             case R.id.boutonDistribue :
-                new TacheURLSansRetour().execute(urlDistribueCartes + mIdPartie + "&typeCarte=1");
+                int typeCarte;
+                String nbCarteParJoueur;
+                String belote;
+                switch(mIdJeu) {
+                    case 1 :
+                    case 2 :
+                    case 3 :
+                    case 4 :
+                    default:
+                        typeCarte=1;
+                        nbCarteParJoueur="";
+                        belote="";
+                        break;
+                    case 5 :
+                        typeCarte=4;
+                        nbCarteParJoueur="5";
+                        belote="Table";
+                        break;
+                }
+                new TacheURLSansRetour().execute(urlDistribueCartes+mIdPartie+"&typeCarte="+typeCarte+"&nbCarteParJoueur="+nbCarteParJoueur+"&belote="+belote);
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -504,6 +524,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void afficheOptionAdmin () {
         int indexJoueur= -1;
 
+        // Todo : afficher les éléments correspondant au jeu sélectionné
         // Récupère l'index du joueur
         for(int i=0;i<mListeJoueurs.size();i++) {
             if(mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {

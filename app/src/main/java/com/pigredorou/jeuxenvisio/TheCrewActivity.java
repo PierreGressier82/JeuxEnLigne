@@ -172,21 +172,17 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Table
         mTitrePli = findViewById(R.id.titre_pli);
+        mTitrePli.setOnClickListener(this);
         // TODO : mise à jour du numero de plis en cours
         mTable = findViewById(R.id.table);
-        ImageView boutonTable = findViewById(R.id.bouton_table);
-        boutonTable.setOnClickListener(this);
-        //new TacheAfficheTable().execute(urlAfficheTable + mIdSalon);
 
         // Communications
         chargeVuesCommunication();
 
         // Objectifs commun
         mObjectifCommun = findViewById(R.id.objectif_commun);
-        new TacheGetDescription().execute(urlGetOjectifCommun + mIdPartie);
 
         // Taches
-        //new TacheGetTaches().execute(urlAfficheTache + mIdSalon);
         chargeVuesTaches();
         // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
         // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
@@ -324,9 +320,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                     new TacheGetTaches().execute(urlAfficheTache + mIdPartie);
                                     // Mise à jour des communications des joueurs
                                     new TacheGetCommunications().execute(urlGetCommunications+mIdPartie);
+                                    // Mise à jour de la main du joueur
+                                    new TheCrewActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue+mIdPartie+"&joueur="+mPseudo);
+                                    // Objectif de la mission
+                                    new TacheGetDescription().execute(urlGetOjectifCommun + mIdPartie);
                                 }
                             });
-                            Thread.sleep(5000);
+                            Thread.sleep(2000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -414,7 +414,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
 
-            case R.id.bouton_table:
+            case R.id.titre_pli:
                 if (mTable.getVisibility() == View.GONE)
                     mTable.setVisibility(View.VISIBLE);
                 else
@@ -633,7 +633,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      *
      * @param cartes : Liste des cartes à afficher
      */
-    private void afficheCartes(ArrayList<Carte> cartes) {
+    void afficheCartes(ArrayList<Carte> cartes) {
         //private void afficheCartes() {
         TableRow tableauCartes = findViewById(R.id.tableau_cartes);
         tableauCartes.removeAllViewsInLayout();
@@ -869,7 +869,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui permet de récupère la liste des joueurs dans l'ordre de jeu
      * -> Retourne la liste
      */
-    class TacheGetJoueurs extends AsyncTask<String, Void, ArrayList<String>> {
+    private class TacheGetJoueurs extends AsyncTask<String, Void, ArrayList<String>> {
         String result;
 
         @Override
@@ -913,7 +913,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui récupère le pseudo du commandant
      * -> Retourne le pseudo du commandant
      */
-    class TacheGetCommandant extends AsyncTask<String, Void, String> {
+    private class TacheGetCommandant extends AsyncTask<String, Void, String> {
         String result;
 
         @Override
@@ -949,7 +949,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui récupère les communications des joueurs
      * -> Affiche les communications
      */
-    class TacheGetCommunications extends AsyncTask<String, Void, ArrayList<Pli>> {
+    private class TacheGetCommunications extends AsyncTask<String, Void, ArrayList<Pli>> {
         String result;
 
         @Override
@@ -989,7 +989,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui récupère la description de la mission
      * -> Affiche la description à l'écran
      */
-    class TacheGetDescription extends AsyncTask<String, Void, String> {
+    private class TacheGetDescription extends AsyncTask<String, Void, String> {
         String result;
 
         @Override
@@ -1016,7 +1016,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(String objectif) {
-            mObjectifCommun.setText(objectif);
+            String[] chaine = objectif.split("_");
+            String titreObjectif = "Mission "+chaine[0];
+            mTitreTaches.setText(titreObjectif);
+            mObjectifCommun.setText(chaine[1]);
             super.onPostExecute(objectif);
         }
     }
@@ -1025,7 +1028,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui permet de récupère le pli en cours
      * -> Retourne le pli et l'affiche
      */
-    class TacheAfficheTable extends AsyncTask<String, Void, ArrayList<Pli>> {
+    private class TacheAfficheTable extends AsyncTask<String, Void, ArrayList<Pli>> {
         String result;
 
         @Override
@@ -1066,7 +1069,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui permet de récupère les taches
      * -> Retourne les taches et les affiche
      */
-    class TacheGetTaches extends AsyncTask<String, Void, ArrayList<Tache>> {
+    private class TacheGetTaches extends AsyncTask<String, Void, ArrayList<Tache>> {
         String result;
 
         @Override
@@ -1110,12 +1113,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui permet de récupérer en base la main d'un joueur
      * -> Retourne la liste des cartes du joueur demandé
      */
-    class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
+    private class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
         String result;
 
         @Override
         protected ArrayList<Carte> doInBackground(String... strings) {
-            //String myurl= "http://julie.et.pierre.free.fr/Commun/getDistribution.php";
             ArrayList<Carte> cartes = new ArrayList<>();
             URL url;
             try {
@@ -1154,7 +1156,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * Classe qui permet de mettre à jour en base la main d'un joueur (update main + ajout carte sur la table)
      * -> Retourne la liste des cartes du joueur demandé
      */
-    class TacheJoueCarte extends AsyncTask<String, Void, Integer> {
+    private class TacheJoueCarte extends AsyncTask<String, Void, Integer> {
         String result;
 
         @Override
@@ -1196,7 +1198,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Classe qui permet de communiquer en base la carte d'un joueur
      */
-    class TacheCommuniqueCarte extends AsyncTask<String, Void, Integer> {
+    private class TacheCommuniqueCarte extends AsyncTask<String, Void, Integer> {
         String result;
 
         @Override
