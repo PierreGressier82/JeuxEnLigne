@@ -34,9 +34,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
      * 1.11 : Gestion de plusieurs jeux en // avec la notion de partie
      * 1.12 : The Crew : amélioration ergonomie - Belote : début implémentation
+     * 1.13 : The Crew : correction bug double clic + ajout double clic pour sélection tache
      */
     // Variables statiques
-    private static final String mNumVersion = "1.12";
+    private static final String mNumVersion = "1.13";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
