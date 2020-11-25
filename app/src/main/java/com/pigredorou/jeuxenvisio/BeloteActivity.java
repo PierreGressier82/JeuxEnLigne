@@ -287,7 +287,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             String couleurCarteActive = chaine[1];
             String valeurCarteActive = chaine[2];
 
-            boolean estCeQueJeJoueUneCarteAutorisee = false;
+            boolean JeJoueUneCarteAutorisee = false;
             // A qui est-ce le tour ?
             String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
             String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
@@ -299,26 +299,26 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                     couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
                 // Si je joue la couleur demandée => OK
                 if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
-                    estCeQueJeJoueUneCarteAutorisee = true;
+                    JeJoueUneCarteAutorisee = true;
                 else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
                     // On regarde toutes les cartes de la main du joueur
                     for (int value : tableIdImageCarteMain) {
                         ImageView iv2 = findViewById(value);
-                        estCeQueJeJoueUneCarteAutorisee = true;
+                        JeJoueUneCarteAutorisee = true;
                         if (iv2 == null)
                             break;
                         // Si une carte visible est de la couleur demandée
                         if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
                             // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
-                            estCeQueJeJoueUneCarteAutorisee = false;
-                            messageErreur = "Tu dois jouer la bonne couleur : " + couleurDemandee;
+                            JeJoueUneCarteAutorisee = false;
+                            messageErreur = "C'est " + couleurDemandee + " demandé !";
                             break;
                         }
                     }
                 }
             }
             // Si je peux jouer la couleur ou si tout le monde a joué le pli
-            if (estCeQueJeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
+            if (JeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
                 new BeloteActivity.TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
                 // Mise à jour de la table
                 majable();
@@ -465,29 +465,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         return index;
-    }
-
-    private int getCouleurCarte(String couleur) {
-        int idCouleur;
-        switch (couleur) {
-            case "bleu":
-                idCouleur = R.color.bleu;
-                break;
-            case "jaune":
-                idCouleur = R.color.jaune;
-                break;
-            case "rose":
-                idCouleur = R.color.rose;
-                break;
-            case "vert":
-                idCouleur = R.color.vert;
-                break;
-            case "fusee":
-            default:
-                idCouleur = R.color.noir;
-                break;
-        }
-        return idCouleur;
     }
 
     private void debug(String message) {

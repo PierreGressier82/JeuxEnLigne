@@ -123,8 +123,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     int mLastViewID = 0;
     long mStartTimeClick;
     long mDurationClick;
-    static final int MAX_DURATION_CLICK = 200;
-    static final int MAX_DURATION_DOUBLE_CLICK = 1000;
+    static final int MAX_DURATION_CLICK = 500;
+    static final int MAX_DURATION_DOUBLE_CLICK = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -381,11 +381,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        TextView tache;
-        String[] chaine;
-        String couleurTacheActive;
-        String valeurTacheActive;
-        String url;
         switch (v.getId()) {
             case R.id.bouton_refresh:
                 if (mRefreshAuto) {
@@ -450,38 +445,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.tache3_joueur3:
             case R.id.tache3_joueur4:
             case R.id.tache3_joueur5:
-                tache = findViewById(v.getId());
-                chaine = tache.getTag().toString().split("_"); // ex : tache_bleu_2_0
-                couleurTacheActive = chaine[1];
-                valeurTacheActive = chaine[2];
-                int realise=Integer.parseInt(chaine[3]);
-                if (realise == 0)
-                    realise = 1;
-                else
-                    realise = 0;
-                tache.setTag("tache_"+couleurTacheActive+"_"+valeurTacheActive+"_"+realise);
-                url = urlRealiseTache+mIdPartie+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
-                debug(url);
-                // Mise à jour de la tache en base
-                new MainActivity.TacheURLSansRetour().execute(url);
-                // TODO : Si au moins une tache et toutes sont realisees => feu d'artifice
-                //ImageView iv = findViewById(R.id.feu_artifice);
-                //iv.setVisibility(View.VISIBLE);
+                    clicTache(v);
                 break;
             default:
                 if (v.getTag().toString().startsWith("tacheAAttribuer")) {
-                    chaine = v.getTag().toString().split("_"); // ex : tacheAAttribuer_bleu_2
-                    couleurTacheActive = chaine[1];
-                    valeurTacheActive = chaine[2];
-                    url = urlAttribueTache+mIdPartie+"&pseudo="+mPseudo+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive;
-                    debug(url);
-                    new MainActivity.TacheURLSansRetour().execute(url);
-                    if(--mNbTacheAAtribuer == 0) {
-                        HorizontalScrollView hs = findViewById(R.id.HS_taches_a_attribuer);
-                        hs.setVisibility(View.GONE);
-                        mTitreTachesAAtribuer.setVisibility(View.GONE);
-                    }
-
+                    clickTacheAAttribuer(v);
                 }
                 break;
         }
@@ -492,26 +460,62 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         new TacheGetTaches().execute(urlAfficheTache + mIdPartie);
     }
 
+    private void clicTache(View v) {
+        TextView tache = findViewById(v.getId());
+        String[] chaine = tache.getTag().toString().split("_"); // ex : tache_bleu_2_0
+        String couleurTacheActive = chaine[1];
+        String valeurTacheActive = chaine[2];
+        int realise=Integer.parseInt(chaine[3]);
+        if (realise == 0)
+            realise = 1;
+        else
+            realise = 0;
+        String url = urlRealiseTache+mIdPartie+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
+        tache.setTag("tache_"+couleurTacheActive+"_"+valeurTacheActive+"_"+realise);
+        debug(url);
+        // Mise à jour de la tache en base
+        new MainActivity.TacheURLSansRetour().execute(url);
+        // TODO : Si au moins une tache et toutes sont realisees => feu d'artifice
+        //ImageView iv = findViewById(R.id.feu_artifice);
+        //iv.setVisibility(View.VISIBLE);
+    }
+
+    private void clickTacheAAttribuer (View v) {
+        String[] chaine = v.getTag().toString().split("_"); // ex : tacheAAttribuer_bleu_2
+        String couleurTacheActive = chaine[1];
+        String valeurTacheActive = chaine[2];
+        String url = urlAttribueTache+mIdPartie+"&pseudo="+mPseudo+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive;
+        debug(url);
+        new MainActivity.TacheURLSansRetour().execute(url);
+        if(--mNbTacheAAtribuer == 0) {
+            HorizontalScrollView hs = findViewById(R.id.HS_taches_a_attribuer);
+            hs.setVisibility(View.GONE);
+            mTitreTachesAAtribuer.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         long time;
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
             // Appuie sur l'écran
             case MotionEvent.ACTION_DOWN:
-                if (mClickCount == 1) {
-                    time = System.currentTimeMillis();
+                time = System.currentTimeMillis();
 
-                    // Si temps entre 2 clicks trop long, on retourne à 0
-                    if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
-                        mClickCount = 0;
-                    // Si le précédent click n'est pas sur la même vue, on retourne à 0
-                    if (mLastViewID != v.getId())
-                        mClickCount = 0;
-                }
+                // Si temps entre 2 clicks trop long, on retourne à 0
+                if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
+                    mClickCount = 0;
+                // Si le précédent click n'est pas sur la même vue, on retourne à 0
+                if (mLastViewID != v.getId())
+                    mClickCount = 0;
+
                 mStartTimeClick = System.currentTimeMillis();
                 mClickCount++;
                 mLastViewID = v.getId();
+                Log.d("PGR-onTouch", "ACTION_DOWN " + mClickCount + " " + v.getId() + " ");
                 break;
+
             // Relanche l'écran
             case MotionEvent.ACTION_UP:
                 // Temps en appuie et relache
@@ -521,11 +525,23 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     if (mDurationClick <= MAX_DURATION_CLICK) {
                         // On a un double clic !
                         doublicClic(v);
+                        Log.d("PGR-onTouch", "ACTION_UP -> Double clic");
                     }
                     mClickCount = 0;
                     mDurationClick = 0;
                     break;
                 }
+                Log.d("PGR-onTouch", "ACTION_UP " + mClickCount + " " + v.getId() + " ");
+                break;
+            case MotionEvent.ACTION_SCROLL :
+                Log.d("PGR-onTouch", "ACTION_SCROLL");
+            case MotionEvent.ACTION_CANCEL :
+                Log.d("PGR-onTouch", "ACTION_CANCEL");
+            default:
+                Log.d("PGR-onTouch", "AUTRE ACTION " + mClickCount + " " + v.getId() + " evt "+event.getAction());
+                mClickCount = 0;
+                mDurationClick = 0;
+                break;
         }
         return true;
     }
@@ -535,6 +551,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      * @param v : la vue sur laquelle le double clic a été réalisé
      */
     private void doublicClic(View v) {
+        // Cartes de la main du joueur
         if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
             mCarteActive = findViewById(v.getId());
             String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
@@ -557,7 +574,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             // Joue la carte si c'est mon tour
             // -------------------------------
             else {
-                boolean estCeQueJeJoueUneCarteAutorisee = false;
+                boolean jeJoueUneCarteAutorisee = false;
                 // A qui est-ce le tour ?
                 String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
                 String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
@@ -569,31 +586,55 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                          couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
                     // Si je joue la couleur demandée => OK
                     if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
-                        estCeQueJeJoueUneCarteAutorisee = true;
+                        jeJoueUneCarteAutorisee = true;
                     else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
                         // On regarde toutes les cartes de la main du joueur
                         for (int value : tableIdImageCarteMain) {
                             ImageView iv2 = findViewById(value);
-                            estCeQueJeJoueUneCarteAutorisee = true;
+                            jeJoueUneCarteAutorisee = true;
                             if (iv2 == null)
                                 break;
                             // Si une carte visible est de la couleur demandée
                             if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
                                 // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
-                                estCeQueJeJoueUneCarteAutorisee = false;
-                                messageErreur = "Tu dois jouer la bonne couleur : " + couleurDemandee;
+                                jeJoueUneCarteAutorisee = false;
+                                messageErreur = "C'est " + couleurDemandee + " demandé !";
                                 break;
                             }
                         }
                     }
                 }
                 // Si je peux jouer la couleur ou si tout le monde a joué le pli
-                if (estCeQueJeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
+                if (jeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
                     new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
                     // Mise à jour de la table
                     majable();
                 } else
                     Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
+            clickTacheAAttribuer(v);
+        }
+        else {
+            switch (v.getId()) {
+                case R.id.tache_joueur1:
+                case R.id.tache_joueur2:
+                case R.id.tache_joueur3:
+                case R.id.tache_joueur4:
+                case R.id.tache_joueur5:
+                case R.id.tache2_joueur1:
+                case R.id.tache2_joueur2:
+                case R.id.tache2_joueur3:
+                case R.id.tache2_joueur4:
+                case R.id.tache2_joueur5:
+                case R.id.tache3_joueur1:
+                case R.id.tache3_joueur2:
+                case R.id.tache3_joueur3:
+                case R.id.tache3_joueur4:
+                case R.id.tache3_joueur5:
+                    clicTache(v);
+                    break;
             }
         }
     }
@@ -735,15 +776,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             // Si la tache n'est pas attribuée, on l'affiche sur la ligne dédiée
             if(pseudoTache.equals("")) {
                 mNbTacheAAtribuer++; // Masque la ligne si aucune tache non attribuée
-                if(i == 0) {
+                if(i == 0) // Affiche le titre si au moins une tache à attribuer
                     mTitreTachesAAtribuer.setVisibility(View.VISIBLE);
-                //    TextView tvTitre = new TextView(this);
-                //    tvTitre.setText(getResources().getString(R.string.tachesAAtribuer));
-                //    tvTitre.setTextSize(Dimension.SP, 20);
-                //    params.setMargins(5, 0, 0, 0);
-                //    tvTitre.setLayoutParams(params);
-                //    tr.addView(tvTitre);
-                }
                 TextView tv = new TextView(this);
                 tv.setText(texte);
                 tv.setTextSize(Dimension.SP, 30);
@@ -751,7 +785,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 params.setMargins(50, 0, 0, 0);
                 tv.setLayoutParams(params);
                 tv.setTag("tacheAAttribuer_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur());
-                tv.setOnClickListener(this);
+                tv.setOnTouchListener(this);
                 tr.addView(tv);
 
             }
