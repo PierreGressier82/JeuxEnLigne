@@ -394,6 +394,7 @@
             </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_couleur_2eme_tour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -402,41 +403,57 @@
             android:baselineAligned="false">
 
         <LinearLayout
+            android:id="@+id/layout_2eme_tour_coeur"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.33"
+            android:layout_weight="0.25"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/image_couleur1_2eme_tour"
+                android:id="@+id/image_2eme_tour_coeur"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/coeur"/>
         </LinearLayout>
             <LinearLayout
+                android:id="@+id/layout_2eme_tour_pique"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageView
-                    android:id="@+id/image_couleur2_2eme_tour"
+                    android:id="@+id/image_2eme_tour_pique"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:src="@drawable/pique"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/layout_2eme_tour_carreau"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
                 <ImageView
-                    android:id="@+id/image_couleur3_2eme_tour"
+                    android:id="@+id/image_2eme_tour_carreau"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:src="@drawable/carreau"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_2eme_tour_trefle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/image_2eme_tour_trefle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/trefle"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -522,7 +539,8 @@
                         android:text="@string/pseudo"
                         android:textAlignment="center"
                         android:textColor="@color/blanc"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 
