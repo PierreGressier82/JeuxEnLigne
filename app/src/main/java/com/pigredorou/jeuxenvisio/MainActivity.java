@@ -35,9 +35,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.11 : Gestion de plusieurs jeux en // avec la notion de partie
      * 1.12 : The Crew : amélioration ergonomie - Belote : début implémentation
      * 1.13 : The Crew : correction bug double clic + ajout double clic pour sélection tache
+     * 1.14 : Implémentation échange jeu ou 1 carte + Belote : affichage carte atout à choisir
      */
     // Variables statiques
-    private static final String mNumVersion = "1.13";
+    private static final String mNumVersion = "1.14";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
     private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
+    private static final String urlEchangeCarte = url + "echangeCarte.php?partie=";
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
@@ -168,6 +170,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Autre option
         mBoutonEchangeCarte = findViewById(R.id.boutonEchangeCarte);
         mBoutonEchangeJeu = findViewById(R.id.boutonEchangeJeu);
+        mBoutonEchangeCarte.setOnClickListener(this);
+        mBoutonEchangeJeu.setOnClickListener(this);
         mBoutonEchangeCarte.setVisibility(View.GONE);
         mBoutonEchangeJeu.setVisibility(View.GONE);
 
@@ -229,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        String nbCarte="";
         switch (v.getId()) {
             // Quitte l'application
             case R.id.bouton_quitter:
@@ -436,6 +441,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     b.setTextColor(getResources().getColor(R.color.noir));
                     b.setTag("NO");
                 }
+                break;
+
+            case R.id.boutonEchangeCarte :
+                nbCarte="1";
+            case R.id.boutonEchangeJeu :
+                new TacheURLSansRetour().execute(urlEchangeCarte+mIdPartie+"&nbCarte="+nbCarte);
+                Toast.makeText(this, "Action terminée", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

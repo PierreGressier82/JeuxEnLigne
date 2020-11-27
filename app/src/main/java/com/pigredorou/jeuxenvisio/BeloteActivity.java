@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +51,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private int mIdSalon;
     private int mIdPartie;
     // Elements de la vue
-    private ScrollView mTable;
+    private LinearLayout mTable;
     private ImageView mCarteActive;
     private TextView mTitrePli;
     private TextView mHeureRefresh;
@@ -389,7 +389,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void afficheCarteAtout(ArrayList<Carte> cartes) {
         // Affiche la carte
-        if (cartes != null) {
+        if (cartes != null && cartes.size()>0) {
             ImageView carte = findViewById(R.id.table_carte_image_atout);
             String nomCarte = cartes.get(0).getCouleur() + "_" + cartes.get(0).getValeur();
             carte.setImageResource(getImageCarte(cartes.get(0).getCouleur(), cartes.get(0).getValeur()));
