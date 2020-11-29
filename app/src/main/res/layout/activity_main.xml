@@ -144,6 +144,116 @@
                         android:text="Soirée jeu"
                         android:textAlignment="textStart" />
                 </TableRow>
+
+                <TableRow
+                    android:id="@+id/ligne_salon4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/image_salon4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/salon_text_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Soirée jeu"
+                        android:textAlignment="textStart" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ligne_salon5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/image_salon5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/salon_text_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Soirée jeu"
+                        android:textAlignment="textStart" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ligne_salon6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/image_salon6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/salon_text_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Soirée jeu"
+                        android:textAlignment="textStart" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ligne_salon7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/image_salon7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/salon_text_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Soirée jeu"
+                        android:textAlignment="textStart" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ligne_salon8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/image_salon8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/salon_text_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Soirée jeu"
+                        android:textAlignment="textStart" />
+                </TableRow>
             </TableLayout>
 
         </LinearLayout>
@@ -343,6 +453,7 @@
             android:id="@+id/tableau_jeux"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="fill_horizontal">
 
             <ImageView

@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -68,8 +68,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
     private int mNbTacheAAtribuer=0;
+    private int mZoneSilence=0;
     // Elements de la vue
-    private ScrollView mTable;
+    private LinearLayout mTable;
     private ImageView mCarteActive;
     private TextView mTextResultat;
     private TextView mTitre;
@@ -503,6 +504,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case MotionEvent.ACTION_DOWN:
                 time = System.currentTimeMillis();
 
+                if (mClickCount > 2 )
+                    mClickCount=0;
                 // Si temps entre 2 clicks trop long, on retourne à 0
                 if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
                     mClickCount = 0;
@@ -533,14 +536,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 Log.d("PGR-onTouch", "ACTION_UP " + mClickCount + " " + v.getId() + " ");
                 break;
-            case MotionEvent.ACTION_SCROLL :
-                Log.d("PGR-onTouch", "ACTION_SCROLL");
-            case MotionEvent.ACTION_CANCEL :
-                Log.d("PGR-onTouch", "ACTION_CANCEL");
             default:
+                if (mClickCount > 2 )
+                    mClickCount=0;
                 Log.d("PGR-onTouch", "AUTRE ACTION " + mClickCount + " " + v.getId() + " evt "+event.getAction());
-                mClickCount = 0;
-                mDurationClick = 0;
                 break;
         }
         return true;
@@ -566,7 +565,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
                     autorise=false;
                 if(autorise) {
-                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo="+mPseudo);
+                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo="+mPseudo+"&silence="+mZoneSilence);
                 }
                 else
                     Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
@@ -1054,6 +1053,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             String titreObjectif = "Mission "+chaine[0];
             mTitreTaches.setText(titreObjectif);
             mObjectifCommun.setText(chaine[1]);
+            mZoneSilence=Integer.parseInt(chaine[2]);
             super.onPostExecute(objectif);
         }
     }

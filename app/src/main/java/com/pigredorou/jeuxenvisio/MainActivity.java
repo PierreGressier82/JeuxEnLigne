@@ -36,9 +36,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.12 : The Crew : amélioration ergonomie - Belote : début implémentation
      * 1.13 : The Crew : correction bug double clic + ajout double clic pour sélection tache
      * 1.14 : Implémentation échange jeu ou 1 carte + Belote : affichage carte atout à choisir
+     * 1.15 : Correction double clic
+     * 1.16 : Correction distribution si nombre de carte pas équitable + ajout de plus de salons + correction double clic + The Crew : implémentation Zone de silence
      */
     // Variables statiques
-    private static final String mNumVersion = "1.14";
+    private static final String mNumVersion = "1.16";
     protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
@@ -60,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdLignePseudo = {R.id.ligne_pseudo_j1, R.id.ligne_pseudo_j2, R.id.ligne_pseudo_j3, R.id.ligne_pseudo_j4, R.id.ligne_pseudo_j5, R.id.ligne_pseudo_j6, R.id.ligne_pseudo_j7, R.id.ligne_pseudo_j8};
     private static final int[] tableIdImagePseudo = {R.id.image_pseudo_joueur1, R.id.image_pseudo_joueur2, R.id.image_pseudo_joueur3, R.id.image_pseudo_joueur4, R.id.image_pseudo_joueur5, R.id.image_pseudo_joueur6, R.id.image_pseudo_joueur7, R.id.image_pseudo_joueur8};
     private static final int[] tableIdPseudo = {R.id.pseudo_text_joueur1, R.id.pseudo_text_joueur2, R.id.pseudo_text_joueur3, R.id.pseudo_text_joueur4, R.id.pseudo_text_joueur5, R.id.pseudo_text_joueur6, R.id.pseudo_text_joueur7, R.id.pseudo_text_joueur8};
-    private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3};
-    private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3};
-    private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3};
+    private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3, R.id.ligne_salon4, R.id.ligne_salon5, R.id.ligne_salon6, R.id.ligne_salon7, R.id.ligne_salon8};
+    private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
+    private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
     private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.manchots_barjots, R.drawable.belote};
 
@@ -244,6 +246,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_salon1 :
             case R.id.ligne_salon2 :
             case R.id.ligne_salon3 :
+            case R.id.ligne_salon4 :
+            case R.id.ligne_salon5 :
+            case R.id.ligne_salon6 :
+            case R.id.ligne_salon7 :
+            case R.id.ligne_salon8 :
                 afficheSalonEnBlanc(v.getId());
                 // Chargement des joueurs de ce salon
                 new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
