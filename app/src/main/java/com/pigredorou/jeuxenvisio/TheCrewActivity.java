@@ -24,13 +24,24 @@ import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Pli;
 import com.pigredorou.jeuxenvisio.objets.Tache;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
@@ -59,6 +70,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final String urlGetCommunications = MainActivity.url + "getCommunications.php?partie=";
     private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
     private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
+    private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -154,8 +166,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         boutonRetour.setOnClickListener(this);
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
 
+        // TEST XML
+        new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&joueur="+mPseudo);
+
         // Liste des pseudos dans l'ordre de jeu
-        new TheCrewActivity.TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
+        new TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
 
         // Nom du commandant pour la partie
         new TheCrewActivity.TacheGetCommandant().execute(urlGetCommandant + mIdPartie);
@@ -898,6 +913,93 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         Log.d("PGR", message);
     }
 
+    private void parseXML(Document doc) {
+
+        Element element=doc.getDocumentElement();
+        element.normalize();
+
+        // Cartes que le joueur a en main
+        NodeList listeNoeudsMainJoueur = doc.getElementsByTagName("MainJoueur");
+        if (listeNoeudsMainJoueur.getLength() > 0) {
+            Node noeudMainJoueur = listeNoeudsMainJoueur.item(0);
+            for (int i=0; i<noeudMainJoueur.getChildNodes().getLength(); i++) { // Parcours toutes les cartes du joueurs
+                Node noeudCarte = noeudMainJoueur.getChildNodes().item(i);
+                Log.d("PGR-XML",noeudCarte.getNodeName());
+                for(int j=0;j<noeudCarte.getAttributes().getLength();j++) { // Parcours tous les attributs de la carte
+                    Log.d("PGR-XML",noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                }
+            }
+        }
+
+        // Pli en cours
+        NodeList listeNoeudsPli = doc.getElementsByTagName("Pli");
+        if (listeNoeudsPli.getLength() > 0) {
+            Node noeudPli = listeNoeudsPli.item(0);
+            Log.d("PGR-XML",noeudPli.getAttributes().item(0).getNodeName() + "_" + noeudPli.getAttributes().item(0).getNodeValue()); // Numéro du pli == Tour de jeu
+            String titrePli = mTitrePli.getText().toString() + " - numéro " + noeudPli.getAttributes().item(0).getNodeValue();
+            mTitrePli.setText(titrePli);
+            // joueur + couleur + valeur
+            afficheElements(noeudPli);
+        }
+
+        // Joueurs
+        NodeList listeNoeudsJoueurs = doc.getElementsByTagName("Joueurs");
+        if (listeNoeudsJoueurs.getLength() > 0) {
+            Node noeudJoueurs = listeNoeudsJoueurs.item(0);
+            Log.d("PGR-XML",noeudJoueurs.getAttributes().item(0).getNodeName() + "_" + noeudJoueurs.getAttributes().item(0).getNodeValue()); // Pseudo du commandant
+            // pseudo + admin
+            afficheElements(noeudJoueurs);
+        }
+
+        // Communications
+        NodeList listeNoeudsCommunications = doc.getElementsByTagName("Communications");
+        if (listeNoeudsCommunications.getLength() > 0) {
+            Node noeudJoueurs = listeNoeudsCommunications.item(0);
+            // pseudo + couleur + valeur + com
+            afficheElements(noeudJoueurs);
+        }
+
+        // mission
+        NodeList listeNoeudsMission  = doc.getElementsByTagName("Mission");
+        if (listeNoeudsMission.getLength() > 0) {
+            Node noeudMission = listeNoeudsMission.item(0);
+            // num + description + zone_silence
+            for (int j = 0; j < noeudMission.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud
+                Log.d("PGR-XML", noeudMission.getAttributes().item(j).getNodeName() + "_" + noeudMission.getAttributes().item(j).getNodeValue());
+                switch (noeudMission.getAttributes().item(j).getNodeName()) {
+                    case "num" :
+                        String titreMission = "Mission "+ noeudMission.getAttributes().item(j).getNodeValue();
+                        mTitreTaches.setText(titreMission);
+                        break;
+                    case "description" :
+                        mObjectifCommun.setText(noeudMission.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "zone_silence" :
+                        mZoneSilence = Integer.parseInt(noeudMission.getAttributes().item(j).getNodeValue());
+                        break;
+                }
+            }
+        }
+
+        // Taches
+        NodeList listeNoeudsTaches  = doc.getElementsByTagName("Taches");
+        if (listeNoeudsTaches.getLength() > 0) {
+            Node noeudTaches = listeNoeudsTaches.item(0);
+            // joueur + couleur_carte + valeur_carte + option_tache + realise
+            afficheElements(noeudTaches);
+        }
+    }
+
+    private void afficheElements (Node noeud) {
+        for (int i=0; i<noeud.getChildNodes().getLength(); i++) { // Parcours tous les noeuds
+            Node noeudFils = noeud.getChildNodes().item(i);
+            Log.d("PGR-XML", noeudFils.getNodeName());
+            for (int j = 0; j < noeudFils.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud
+                Log.d("PGR-XML", noeudFils.getAttributes().item(j).getNodeName() + "_" + noeudFils.getAttributes().item(j).getNodeValue());
+            }
+        }
+    }
+
     /**
      * Classe qui permet de récupère la liste des joueurs dans l'ordre de jeu
      * -> Retourne la liste
@@ -1051,9 +1153,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(String objectif) {
             String[] chaine = objectif.split("_");
             String titreObjectif = "Mission "+chaine[0];
-            mTitreTaches.setText(titreObjectif);
-            mObjectifCommun.setText(chaine[1]);
-            mZoneSilence=Integer.parseInt(chaine[2]);
+            //mTitreTaches.setText(titreObjectif);
+            //mObjectifCommun.setText(chaine[1]);
+            //mZoneSilence=Integer.parseInt(chaine[2]);
             super.onPostExecute(objectif);
         }
     }
@@ -1271,5 +1373,45 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             super.onPostExecute(integer);
         }
     }
+
+    /**
+     * Classe qui permet de récupérer en base toutes les informations du jeu The Crew d'un joueur
+     * -> Retourne l'ensemble des informations à afficher au joueurs sous forme XML
+     * * - Cartes de la main du joueur
+     * * - Liste des joueurs
+     * * - Cartes du pli en cours
+     * * - Nom du commandant
+     * * - Communications des joueurs
+     * * - Numéro et descriptions de la mission
+     * * - Liste des tâches et status (réalisé ou non)
+     */
+    private class TacheGetInfoTheCrew extends AsyncTask<String, Void, Document> {
+
+        @Override
+        protected Document doInBackground(String... strings) {
+            URL url;
+            Document doc=null;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                // Lecture du flux
+                InputStream is = url.openStream();
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                doc = dBuilder.parse(is);
+            } catch (IOException | ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+            }
+
+            return doc;
+        }
+
+        @Override
+        protected void onPostExecute(Document doc) {
+            parseXML(doc);
+            super.onPostExecute(doc);
+        }
+    }
+
 }
 

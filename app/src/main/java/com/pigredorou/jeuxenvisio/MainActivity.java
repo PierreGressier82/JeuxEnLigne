@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     // Variables statiques
     private static final String mNumVersion = "1.16";
-    protected static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
-    protected static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
-    protected static final String urlGetJeux = url + "getJeux.php?salon=";
+    public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
+    private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
     private static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
@@ -836,7 +836,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Classe qui permet d'appeler une URL sans traitement d'information en retour
      */
-    static class TacheURLSansRetour extends AsyncTask<String, Void, Void> {
+    public static class TacheURLSansRetour extends AsyncTask<String, Void, Void> {
         String result;
 
         @Override
