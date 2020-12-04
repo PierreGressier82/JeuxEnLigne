@@ -329,7 +329,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                 public void run() {
                                     updateTextView();
                                     // Mise à jour complète
-                                    new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&psueod="+mPseudo);
+                                    new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&joueur="+mPseudo);
                                 }
                             });
                             Thread.sleep(1000);
@@ -835,20 +835,33 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void afficheCommunications(ArrayList<Pli> plis) {
         int nbPlis=plis.size();
+        boolean pseudoTrouve=false;
+        // Supprime toutes les com
+        for (int value : tableCommunication) {
+            TextView tva = findViewById(value);
+            tva.setText("");
+        }
+
+        // Affiche les nouvelles com
         for(int i=0;i<nbPlis;i++) {
             if(plis.get(i).getNomJoueur().equals(mPseudo)) {
                 mCommunicationFaite=true;
                 mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
+                pseudoTrouve=true;
             }
             String texte = plis.get(i).getCarte().getValeur() + " " + plis.get(i).getCommunication();
             TextView tva = findViewById(tableCommunication[getIndexPseudo(plis.get(i).getJoueur())]);
             tva.setText(texte);
             tva.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
         }
+        if (!pseudoTrouve && !mCommunicationAChoisir) {
+            mCommunicationFaite = false;
+            mBoutonComm.setImageResource(R.drawable.jeton_communication_off);
+            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            mTableauCommunication.setVisibility(View.GONE);
+        }
         if (nbPlis > 0)
             mTableauCommunication.setVisibility(View.VISIBLE);
-        else
-            mTableauCommunication.setVisibility(View.GONE);
     }
 
     private int getIndexPseudo(String pseudo) {

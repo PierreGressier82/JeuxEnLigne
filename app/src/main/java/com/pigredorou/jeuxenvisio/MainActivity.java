@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.14 : Implémentation échange jeu ou 1 carte + Belote : affichage carte atout à choisir
      * 1.15 : Correction double clic
      * 1.16 : Correction distribution si nombre de carte pas équitable + ajout de plus de salons + correction double clic + The Crew : implémentation Zone de silence
-     * 2.00 : Implementation XML
+     * 2.00 : The Crew - Implementation XML + refresh complet toutes les secondes
      */
     // Variables statiques
-    private static final String mNumVersion = "2.00 B1";
+    private static final String mNumVersion = "2.00";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
