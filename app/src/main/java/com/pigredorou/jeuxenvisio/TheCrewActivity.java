@@ -21,6 +21,7 @@ import androidx.annotation.Dimension;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
+import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Pli;
 import com.pigredorou.jeuxenvisio.objets.Tache;
 
@@ -81,6 +82,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private boolean mCommunicationAChoisir = false;
     private int mNbTacheAAtribuer=0;
     private int mZoneSilence=0;
+    private ArrayList<Carte> mListeCartesMainJoueur;
+    private ArrayList<Pli> mListeCartesPliEnCours;
+    private ArrayList<Joueur> mListeJoueurs;
+    private ArrayList<Pli> mListeCommunications;
+    private ArrayList<Tache> mListeTaches;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
@@ -169,27 +175,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // TEST XML
         new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&joueur="+mPseudo);
 
-        // Liste des pseudos dans l'ordre de jeu
-        new TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
-
-        // Nom du commandant pour la partie
-        new TheCrewActivity.TacheGetCommandant().execute(urlGetCommandant + mIdPartie);
-
         // Affiche un message chargement le temps de récupérer les informations en base
         mTextResultat = findViewById(R.id.resultat);
         mTextResultat.setText(R.string.Chargement);
-        // Recupère les cartes du joueur
-        if (mPseudo != null)
-            new TheCrewActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue+mIdPartie+"&joueur="+mPseudo);
-        else {
-            Toast.makeText(this, "Impossible de trouver les cartes du joueur", Toast.LENGTH_SHORT).show();
-            mTextResultat.setText(R.string.chargement_impossible);
-        }
 
         // Table
         mTitrePli = findViewById(R.id.titre_pli);
         mTitrePli.setOnClickListener(this);
-        // TODO : mise à jour du numero de plis en cours
         mTable = findViewById(R.id.table);
 
         // Communications
@@ -202,7 +194,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         chargeVuesTaches();
         // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
         // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
-        // TODO : Si plus aucune carte dans la main du joueur, faire un refresh complet toutes les 5 secondes
 
         // Refresh auto
         startRefreshAuto();
@@ -272,7 +263,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mTitreTachesAAtribuer.setVisibility(View.GONE);
     }
 
-    private void affichePseudos() {
+    private void affichePseudos(ArrayList<Joueur> listeJoueurs) {
+        mListePseudo = new String[listeJoueurs.size()];
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            mListePseudo[i] = listeJoueurs.get(i).getNomJoueur();
+            debug(listeJoueurs.get(i).getNomJoueur());
+        }
+
         switch (mListePseudo.length) {
             case 5:
                 mCommPseudoJoueur5.setText(mListePseudo[4]);
@@ -331,18 +328,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                 @Override
                                 public void run() {
                                     updateTextView();
-                                    majable();
-                                    // Mise à jour des tâches
-                                    new TacheGetTaches().execute(urlAfficheTache + mIdPartie);
-                                    // Mise à jour des communications des joueurs
-                                    new TacheGetCommunications().execute(urlGetCommunications+mIdPartie);
-                                    // Mise à jour de la main du joueur
-                                    new TheCrewActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue+mIdPartie+"&joueur="+mPseudo);
-                                    // Objectif de la mission
-                                    new TacheGetDescription().execute(urlGetOjectifCommun + mIdPartie);
+                                    // Mise à jour complète
+                                    new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&psueod="+mPseudo);
                                 }
                             });
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -469,11 +459,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
         }
-
-        // Mise à jour de la table
-        majable();
-        // Mise à jour des tâches
-        new TacheGetTaches().execute(urlAfficheTache + mIdPartie);
     }
 
     private void clicTache(View v) {
@@ -621,8 +606,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 // Si je peux jouer la couleur ou si tout le monde a joué le pli
                 if (jeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
                     new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
-                    // Mise à jour de la table
-                    majable();
                 } else
                     Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
             }
@@ -650,13 +633,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     clicTache(v);
                     break;
             }
-        }
-    }
-
-    private void majable() {
-        // Mise à jour de la table si elle est affichée
-        if (mTable.getVisibility() == View.VISIBLE) {
-            new TacheAfficheTable().execute(urlAfficheTable + mIdPartie);
         }
     }
 
@@ -919,372 +895,197 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         element.normalize();
 
         // Cartes que le joueur a en main
-        NodeList listeNoeudsMainJoueur = doc.getElementsByTagName("MainJoueur");
-        if (listeNoeudsMainJoueur.getLength() > 0) {
-            Node noeudMainJoueur = listeNoeudsMainJoueur.item(0);
-            for (int i=0; i<noeudMainJoueur.getChildNodes().getLength(); i++) { // Parcours toutes les cartes du joueurs
-                Node noeudCarte = noeudMainJoueur.getChildNodes().item(i);
-                Log.d("PGR-XML",noeudCarte.getNodeName());
-                for(int j=0;j<noeudCarte.getAttributes().getLength();j++) { // Parcours tous les attributs de la carte
-                    Log.d("PGR-XML",noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
-                }
-            }
-        }
-
-        // Pli en cours
-        NodeList listeNoeudsPli = doc.getElementsByTagName("Pli");
-        if (listeNoeudsPli.getLength() > 0) {
-            Node noeudPli = listeNoeudsPli.item(0);
-            Log.d("PGR-XML",noeudPli.getAttributes().item(0).getNodeName() + "_" + noeudPli.getAttributes().item(0).getNodeValue()); // Numéro du pli == Tour de jeu
-            String titrePli = mTitrePli.getText().toString() + " - numéro " + noeudPli.getAttributes().item(0).getNodeValue();
-            mTitrePli.setText(titrePli);
-            // joueur + couleur + valeur
-            afficheElements(noeudPli);
-        }
+        mListeCartesMainJoueur = parseNoeudsCarte(doc);
+        afficheCartes(mListeCartesMainJoueur);
 
         // Joueurs
-        NodeList listeNoeudsJoueurs = doc.getElementsByTagName("Joueurs");
-        if (listeNoeudsJoueurs.getLength() > 0) {
-            Node noeudJoueurs = listeNoeudsJoueurs.item(0);
-            Log.d("PGR-XML",noeudJoueurs.getAttributes().item(0).getNodeName() + "_" + noeudJoueurs.getAttributes().item(0).getNodeValue()); // Pseudo du commandant
-            // pseudo + admin
-            afficheElements(noeudJoueurs);
-        }
+        mListeJoueurs = parseNoeudsJoueur(doc);
+        affichePseudos(mListeJoueurs);
+
+        // Pli en cours
+        mListeCartesPliEnCours = parseNoeudsPli(doc, "Pli");
+        afficheTable(mListeCartesPliEnCours);
 
         // Communications
-        NodeList listeNoeudsCommunications = doc.getElementsByTagName("Communications");
-        if (listeNoeudsCommunications.getLength() > 0) {
-            Node noeudJoueurs = listeNoeudsCommunications.item(0);
-            // pseudo + couleur + valeur + com
-            afficheElements(noeudJoueurs);
-        }
+        mListeCommunications = parseNoeudsPli(doc, "Communications");
+        afficheCommunications(mListeCommunications);
 
-        // mission
-        NodeList listeNoeudsMission  = doc.getElementsByTagName("Mission");
-        if (listeNoeudsMission.getLength() > 0) {
-            Node noeudMission = listeNoeudsMission.item(0);
-            // num + description + zone_silence
-            for (int j = 0; j < noeudMission.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud
-                Log.d("PGR-XML", noeudMission.getAttributes().item(j).getNodeName() + "_" + noeudMission.getAttributes().item(j).getNodeValue());
-                switch (noeudMission.getAttributes().item(j).getNodeName()) {
-                    case "num" :
-                        String titreMission = "Mission "+ noeudMission.getAttributes().item(j).getNodeValue();
-                        mTitreTaches.setText(titreMission);
-                        break;
-                    case "description" :
-                        mObjectifCommun.setText(noeudMission.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "zone_silence" :
-                        mZoneSilence = Integer.parseInt(noeudMission.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-        }
+        // Mission
+        parseMission(doc);
 
         // Taches
-        NodeList listeNoeudsTaches  = doc.getElementsByTagName("Taches");
-        if (listeNoeudsTaches.getLength() > 0) {
-            Node noeudTaches = listeNoeudsTaches.item(0);
-            // joueur + couleur_carte + valeur_carte + option_tache + realise
-            afficheElements(noeudTaches);
-        }
+        mListeTaches = parseNoeudsTache(doc);
+        afficheTaches(mListeTaches);
     }
 
-    private void afficheElements (Node noeud) {
-        for (int i=0; i<noeud.getChildNodes().getLength(); i++) { // Parcours tous les noeuds
-            Node noeudFils = noeud.getChildNodes().item(i);
-            Log.d("PGR-XML", noeudFils.getNodeName());
-            for (int j = 0; j < noeudFils.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud
-                Log.d("PGR-XML", noeudFils.getAttributes().item(j).getNodeName() + "_" + noeudFils.getAttributes().item(j).getNodeValue());
-            }
-        }
-    }
+    private ArrayList<Carte> parseNoeudsCarte(Document doc) {
+        Node NoeudCartes = getNoeudUnique(doc, "Cartes");
 
-    /**
-     * Classe qui permet de récupère la liste des joueurs dans l'ordre de jeu
-     * -> Retourne la liste
-     */
-    private class TacheGetJoueurs extends AsyncTask<String, Void, ArrayList<String>> {
-        String result;
+        String couleur="";
+        int valeur=0;
+        ArrayList<Carte> listeCartes = new ArrayList<>();
 
-        @Override
-        protected ArrayList<String> doInBackground(String... strings) {
-            ArrayList<String> pseudoJoueurs = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    pseudoJoueurs.add(chaine[1]);
-                    string = String.format("%s%s", string, stringBuffer);
+        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
+            Log.d("PGR-XML-Carte",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Carte", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "couleur" :
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur" :
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                 }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
             }
-
-            return pseudoJoueurs;
+            Carte carte = new Carte(couleur, valeur);
+            listeCartes.add(carte);
         }
 
-        @Override
-        protected void onPostExecute(ArrayList<String> joueurs) {
-            mListePseudo = new String[joueurs.size()];
-            for (int i = 0; i < joueurs.size(); i++) {
-                mListePseudo[i] = joueurs.get(i);
-                debug(joueurs.get(i));
-            }
-            affichePseudos();
-            super.onPostExecute(joueurs);
-        }
+        return listeCartes;
     }
 
-    /**
-     * Classe qui récupère le pseudo du commandant
-     * -> Retourne le pseudo du commandant
-     */
-    private class TacheGetCommandant extends AsyncTask<String, Void, String> {
-        String result;
+    private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
+        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
-        @Override
-        protected String doInBackground(String... strings) {
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    string = String.format("%s%s", string, stringBuffer);
+        String pseudo="";
+        int admin=0;
+        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
+
+        if (NoeudJoueurs.getAttributes().item(0).getNodeName().equals("commandant"))
+            mCommandant = NoeudJoueurs.getAttributes().item(0).getNodeValue();
+
+        for (int i=0; i<NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
+            Log.d("PGR-XML-Joueur",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "pseudo" :
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "admin" :
+                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                 }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
             }
-
-            return result;
+            Joueur joueur = new Joueur(pseudo, admin);
+            listeJoueurs.add(joueur);
         }
 
-        @Override
-        protected void onPostExecute(String commandant) {
-            mCommandant = commandant;
-            super.onPostExecute(commandant);
-        }
+        return listeJoueurs;
     }
 
-    /**
-     * Classe qui récupère les communications des joueurs
-     * -> Affiche les communications
-     */
-    private class TacheGetCommunications extends AsyncTask<String, Void, ArrayList<Pli>> {
-        String result;
+    private ArrayList<Pli> parseNoeudsPli(Document doc, String nomDuNoeud) {
+        Node NoeudCartes = getNoeudUnique(doc, nomDuNoeud);
 
-        @Override
-        protected ArrayList<Pli> doInBackground(String... strings) {
-            ArrayList<Pli> plis = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    if(chaine.length==4)
-                        plis.add(new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])),chaine[3]));
-                    string = String.format("%s%s", string, stringBuffer);
+        String pseudo="";
+        String couleur="";
+        int valeur=0;
+        String com="";
+        ArrayList<Pli> listePli = new ArrayList<>();
+
+        if(nomDuNoeud.equals("Pli")) {
+            String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + NoeudCartes.getAttributes().item(0).getNodeValue();
+            mTitrePli.setText(titrePli);
+        }
+
+        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
+            Log.d("PGR-XML-Pli",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Pli", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "joueur" :
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "couleur" :
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur" :
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "com" :
+                        com = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
                 }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
             }
-
-            return plis;
+            Pli pli = new Pli(pseudo,new Carte(couleur, valeur), com);
+            listePli.add(pli);
         }
 
-        @Override
-        protected void onPostExecute(ArrayList<Pli> plis) {
-            afficheCommunications(plis);
-            super.onPostExecute(plis);
-        }
+        return listePli;
     }
 
-    /**
-     * Classe qui récupère la description de la mission
-     * -> Affiche la description à l'écran
-     */
-    private class TacheGetDescription extends AsyncTask<String, Void, String> {
-        String result;
+    private ArrayList<Tache> parseNoeudsTache(Document doc) {
+        Node NoeudTaches = getNoeudUnique(doc, "Taches");
 
-        @Override
-        protected String doInBackground(String... strings) {
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    string = String.format("%s%s", string, stringBuffer);
+        String pseudo="";
+        String couleur="";
+        int valeur=0;
+        String option="";
+        boolean realise=false;
+        ArrayList<Tache> listeTaches = new ArrayList<>();
+
+        for (int i=0; i<NoeudTaches.getChildNodes().getLength(); i++) { // Parcours toutes les taches
+            Node noeudCarte = NoeudTaches.getChildNodes().item(i);
+            Log.d("PGR-XML-Tache",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud tache
+                Log.d("PGR-XML-Tache", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "joueur" :
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "couleur" :
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur" :
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "option_tache" :
+                        option = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "realise" :
+                        if (Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue()) == 1)
+                            realise=true;
+                        break;
                 }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
             }
-
-            return result;
+            Tache tache = new Tache(pseudo,new Carte(couleur, valeur), option, realise);
+            listeTaches.add(tache);
         }
 
-        @Override
-        protected void onPostExecute(String objectif) {
-            String[] chaine = objectif.split("_");
-            String titreObjectif = "Mission "+chaine[0];
-            //mTitreTaches.setText(titreObjectif);
-            //mObjectifCommun.setText(chaine[1]);
-            //mZoneSilence=Integer.parseInt(chaine[2]);
-            super.onPostExecute(objectif);
-        }
+        return listeTaches;
     }
 
-    /**
-     * Classe qui permet de récupère le pli en cours
-     * -> Retourne le pli et l'affiche
-     */
-    private class TacheAfficheTable extends AsyncTask<String, Void, ArrayList<Pli>> {
-        String result;
-
-        @Override
-        protected ArrayList<Pli> doInBackground(String... strings) {
-            ArrayList<Pli> plis = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    Pli pli;
-                    pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
-                    plis.add(pli);
-                    string = String.format("%s%s", string, stringBuffer);
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
-            }
-
-            return plis;
+    private Node getNoeudUnique(Document doc, String nomDuNoeud) {
+        NodeList listeNoeudsMission  = doc.getElementsByTagName(nomDuNoeud);
+        Node noeud = null;
+        if (listeNoeudsMission.getLength() > 0) {
+            noeud = listeNoeudsMission.item(0);
         }
 
-        @Override
-        protected void onPostExecute(ArrayList<Pli> plis) {
-            afficheTable(plis);
-            super.onPostExecute(plis);
-        }
+        return noeud;
     }
 
-    /**
-     * Classe qui permet de récupère les taches
-     * -> Retourne les taches et les affiche
-     */
-    private class TacheGetTaches extends AsyncTask<String, Void, ArrayList<Tache>> {
-        String result;
-
-        @Override
-        protected ArrayList<Tache> doInBackground(String... strings) {
-            ArrayList<Tache> taches = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    Tache tache;
-                    boolean realise=false;
-                    if(chaine[4].equals("1"))
-                        realise=true;
-                    tache = new Tache(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])),chaine[3],realise);
-                    taches.add(tache);
-                    string = String.format("%s%s", string, stringBuffer);
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
+    private void parseMission(Document doc) {
+        Node noeudMission = getNoeudUnique(doc, "Mission");
+        // num + description + zone_silence
+        for (int j = 0; j < noeudMission.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud
+            Log.d("PGR-XML-Mission", noeudMission.getAttributes().item(j).getNodeName() + "_" + noeudMission.getAttributes().item(j).getNodeValue());
+            switch (noeudMission.getAttributes().item(j).getNodeName()) {
+                case "num" :
+                    String titreMission = "Mission "+ noeudMission.getAttributes().item(j).getNodeValue();
+                    mTitreTaches.setText(titreMission);
+                    break;
+                case "description" :
+                    mObjectifCommun.setText(noeudMission.getAttributes().item(j).getNodeValue());
+                    break;
+                case "zone_silence" :
+                    mZoneSilence = Integer.parseInt(noeudMission.getAttributes().item(j).getNodeValue());
+                    break;
             }
-
-            return taches;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Tache> taches) {
-            afficheTaches(taches);
-            super.onPostExecute(taches);
-        }
-    }
-
-    /**
-     * Classe qui permet de récupérer en base la main d'un joueur
-     * -> Retourne la liste des cartes du joueur demandé
-     */
-    private class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
-        String result;
-
-        @Override
-        protected ArrayList<Carte> doInBackground(String... strings) {
-            ArrayList<Carte> cartes = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    Carte carte = new Carte(chaine[0], Integer.parseInt(chaine[1]));
-                    cartes.add(carte);
-                    string = String.format("%s%s", string, stringBuffer);
-
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
-            }
-
-            return cartes;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Carte> cartes) {
-            mTextResultat.setText(result);
-            afficheCartes(cartes);
-            mTextResultat.setVisibility(View.GONE);
-            super.onPostExecute(cartes);
         }
     }
 

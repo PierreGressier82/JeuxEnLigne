@@ -5,10 +5,6 @@ public class Carte {
     private int mValeur;
     private String mNom;
 
-    public Carte() {
-        super();
-    }
-
     public Carte(String couleur, int valeur) {
         this.mValeur=valeur;
         this.mCouleur=couleur;
