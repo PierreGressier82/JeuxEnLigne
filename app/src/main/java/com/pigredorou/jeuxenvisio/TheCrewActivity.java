@@ -56,19 +56,15 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final int[] tableIdPseudo = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4, R.id.table_pseudo_joueur5};
     private static final int[] tableIdImageCarteMain = {R.id.carte_1, R.id.carte_2, R.id.carte_3, R.id.carte_4, R.id.carte_5, R.id.carte_6, R.id.carte_7, R.id.carte_8, R.id.carte_9, R.id.carte_10, R.id.carte_11, R.id.carte_12, R.id.carte_13, R.id.carte_14, R.id.carte_15, R.id.carte_16, R.id.carte_17, R.id.carte_18, R.id.carte_19, R.id.carte_20};
     private static final int[] tableIdImageCartePli = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
+    private static final int[] tableLignesTaches = {R.id.ligne_tache1, R.id.ligne_tache2, R.id.ligne_tache3, R.id.ligne_tache4};
     private static final int[] tableTaches1 = {R.id.tache_joueur1, R.id.tache_joueur2, R.id.tache_joueur3, R.id.tache_joueur4, R.id.tache_joueur5};
     private static final int[] tableTaches2 = {R.id.tache2_joueur1, R.id.tache2_joueur2, R.id.tache2_joueur3, R.id.tache2_joueur4, R.id.tache2_joueur5};
     private static final int[] tableTaches3 = {R.id.tache3_joueur1, R.id.tache3_joueur2, R.id.tache3_joueur3, R.id.tache3_joueur4, R.id.tache3_joueur5};
+    private static final int[] tableTaches4 = {R.id.tache4_joueur1, R.id.tache4_joueur2, R.id.tache4_joueur3, R.id.tache4_joueur4, R.id.tache4_joueur5};
     private static final int[] tableCommunication = {R.id.communication_joueur1, R.id.communication_joueur2, R.id.communication_joueur3, R.id.communication_joueur4, R.id.communication_joueur5};
     // URLs des actions en base
-    private static final String urlGetDistribue = MainActivity.url + "getDistribution.php?partie=";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
-    private static final String urlAfficheTable = MainActivity.url + "getTable.php?partie=";
-    private static final String urlAfficheTache = MainActivity.url + "getTaches.php?partie=";
-    private static final String urlGetCommandant = MainActivity.url + "getCommandant.php?partie=";
-    private static final String urlGetOjectifCommun = MainActivity.url + "getObjectif.php?partie=";
     private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?partie=";
-    private static final String urlGetCommunications = MainActivity.url + "getCommunications.php?partie=";
     private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
     private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
     private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
@@ -133,6 +129,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private TextView mTaches3Joueur3;
     private TextView mTaches3Joueur4;
     private TextView mTaches3Joueur5;
+    private TextView mTaches4Joueur1;
+    private TextView mTaches4Joueur2;
+    private TextView mTaches4Joueur3;
+    private TextView mTaches4Joueur4;
+    private TextView mTaches4Joueur5;
     // Auto resfresh
     private Button mBoutonRefreshAuto;
     private Boolean mRefreshAuto;
@@ -245,21 +246,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mTaches3Joueur3 = findViewById(R.id.tache3_joueur3);
         mTaches3Joueur4 = findViewById(R.id.tache3_joueur4);
         mTaches3Joueur5 = findViewById(R.id.tache3_joueur5);
-        mTaches1Joueur1.setTag("Todo");
-        mTaches1Joueur2.setTag("Todo");
-        mTaches1Joueur3.setTag("Todo");
-        mTaches1Joueur4.setTag("Todo");
-        mTaches1Joueur5.setTag("Todo");
-        mTaches2Joueur1.setTag("Todo");
-        mTaches2Joueur2.setTag("Todo");
-        mTaches2Joueur3.setTag("Todo");
-        mTaches2Joueur4.setTag("Todo");
-        mTaches2Joueur5.setTag("Todo");
-        mTaches3Joueur1.setTag("Todo");
-        mTaches3Joueur2.setTag("Todo");
-        mTaches3Joueur3.setTag("Todo");
-        mTaches3Joueur4.setTag("Todo");
-        mTaches3Joueur5.setTag("Todo");
+        mTaches4Joueur1 = findViewById(R.id.tache4_joueur1);
+        mTaches4Joueur2 = findViewById(R.id.tache4_joueur2);
+        mTaches4Joueur3 = findViewById(R.id.tache4_joueur3);
+        mTaches4Joueur4 = findViewById(R.id.tache4_joueur4);
+        mTaches4Joueur5 = findViewById(R.id.tache4_joueur5);
         mTitreTachesAAtribuer.setVisibility(View.GONE);
     }
 
@@ -279,6 +270,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 mTachePseudoJoueur5.setVisibility(View.VISIBLE);
                 mTaches1Joueur5.setVisibility(View.VISIBLE);
                 mTaches2Joueur5.setVisibility(View.VISIBLE);
+                mTaches3Joueur5.setVisibility(View.VISIBLE);
+                mTaches4Joueur5.setVisibility(View.VISIBLE);
             case 4:
                 mCommPseudoJoueur4.setText(mListePseudo[3]);
                 mCommPseudoJoueur4.setVisibility(View.VISIBLE);
@@ -287,6 +280,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 mTachePseudoJoueur4.setVisibility(View.VISIBLE);
                 mTaches1Joueur4.setVisibility(View.VISIBLE);
                 mTaches2Joueur4.setVisibility(View.VISIBLE);
+                mTaches3Joueur4.setVisibility(View.VISIBLE);
+                mTaches4Joueur4.setVisibility(View.VISIBLE);
             default:
                 mCommPseudoJoueur3.setText(mListePseudo[2]);
                 mTachePseudoJoueur3.setText(mListePseudo[2]);
@@ -451,6 +446,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.tache3_joueur3:
             case R.id.tache3_joueur4:
             case R.id.tache3_joueur5:
+            case R.id.tache4_joueur1:
+            case R.id.tache4_joueur2:
+            case R.id.tache4_joueur3:
+            case R.id.tache4_joueur4:
+            case R.id.tache4_joueur5:
                     clicTache(v);
                 break;
             default:
@@ -664,7 +664,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      *
      * @param cartes : Liste des cartes à afficher
      */
-    void afficheCartes(ArrayList<Carte> cartes) {
+    private void afficheCartes(ArrayList<Carte> cartes) {
         //private void afficheCartes() {
         TableRow tableauCartes = findViewById(R.id.tableau_cartes);
         tableauCartes.removeAllViewsInLayout();
@@ -688,7 +688,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             }
     }
 
-    private void afficheTable(ArrayList<Pli> plis) {
+    private void affichePliEnCours(ArrayList<Pli> plis) {
         TextView pseudo;
         ImageView imageCarte;
         int nbJoueur = mListePseudo.length;
@@ -749,12 +749,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private void afficheTaches(ArrayList<Tache> taches) {
         int nbTacheAffectees=0;
         int ligneTache=0;
-        String pseudoPrec="";
-        TableRow tr = findViewById(R.id.taches_a_attribuer);
-        tr.removeAllViewsInLayout();
+        int[] nbTacheParJoueur= new int[mListePseudo.length];
+        TableRow trTacheAAttribuer = findViewById(R.id.taches_a_attribuer);
+        trTacheAAttribuer.removeAllViewsInLayout();
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
         params.setMargins(5, 0, 5, 0);
-        tr.setLayoutParams(params);
+        trTacheAAttribuer.setLayoutParams(params);
+
         for(int i=0;i<taches.size();i++) {
             String pseudoTache = taches.get(i).getJoueur();
             String texte = String.valueOf(taches.get(i).getCarte().getValeur());
@@ -763,7 +764,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 texte += "(" + option + ") ";
             else
                 texte += "";
-            // Si la tache n'est pas attribuée, on l'affiche sur la ligne dédiée
+            // TACHE NON ATTRIBUEES
             if(pseudoTache.equals("")) {
                 mNbTacheAAtribuer++; // Masque la ligne si aucune tache non attribuée
                 if(i == 0) // Affiche le titre si au moins une tache à attribuer
@@ -776,28 +777,37 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 tv.setLayoutParams(params);
                 tv.setTag("tacheAAttribuer_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur());
                 tv.setOnTouchListener(this);
-                tr.addView(tv);
+                trTacheAAttribuer.addView(tv);
 
             }
-            // Si la tache est attribuée, on l'affiche dans la bonne colonne
+            // TACHE ATTRIBUEES A UN JOUEUR
             else {
                 if(i == 0) // Aucune tache a attribuee, on masque le titre
                     mTitreTachesAAtribuer.setVisibility(View.GONE);
                 nbTacheAffectees++;
-                TextView tva;
-                if(pseudoTache.equals(pseudoPrec))
+                int indexPseudo = getIndexPseudo(pseudoTache);
+
+                // Affichage ligne
+                if (ligneTache < ++nbTacheParJoueur[indexPseudo] && ligneTache < tableLignesTaches.length) {
+                    TableRow tr = findViewById(tableLignesTaches[ligneTache]);
+                    tr.setVisibility(View.VISIBLE);
                     ligneTache++;
-                else
-                    ligneTache = 1;
+                }
+
+                TextView tva;
                 switch(ligneTache) {
                     case 1 :
+                    default:
                         tva = findViewById(tableTaches1[getIndexPseudo(pseudoTache)]);
                         break;
                     case 2 :
                         tva = findViewById(tableTaches2[getIndexPseudo(pseudoTache)]);
                         break;
-                    default:
+                    case 3 :
                         tva = findViewById(tableTaches3[getIndexPseudo(pseudoTache)]);
+                        break;
+                    case 4 :
+                        tva = findViewById(tableTaches4[getIndexPseudo(pseudoTache)]);
                         break;
                 }
                 tva.setText(texte);
@@ -814,22 +824,21 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 tva.setTag(tag);
                 tva.setOnClickListener(this);
             }
-            pseudoPrec=pseudoTache;
         }
-        if (nbTacheAffectees>0) {
-            TableRow mLigneTachePseudo = findViewById(R.id.ligne_tache_pseudo);
-            TableRow mLigneTacheLigne1 = findViewById(R.id.ligne_tache1);
-            mLigneTachePseudo.setVisibility(View.VISIBLE);
-            mLigneTacheLigne1.setVisibility(View.VISIBLE);
-            switch(nbTacheAffectees/mListePseudo.length) {
-                case 2 :
-                    TableRow mLigneTacheLigne3 = findViewById(R.id.ligne_tache3);
-                    mLigneTacheLigne3.setVisibility(View.VISIBLE);
-                case 1 :
-                    TableRow mLigneTacheLigne2 = findViewById(R.id.ligne_tache2);
-                    mLigneTacheLigne2.setVisibility(View.VISIBLE);
-                    break;
-            }
+
+        // Liste des pseudos
+        if (ligneTache == 0) {
+            TableRow tr = findViewById(R.id.ligne_tache_pseudo);
+            tr.setVisibility(View.GONE);
+        }
+        else {
+            TableRow tr = findViewById(R.id.ligne_tache_pseudo);
+            tr.setVisibility(View.VISIBLE);
+        }
+        // Masque les lignes vides
+        for(int i=ligneTache;i<4;i++) {
+            TableRow tr = findViewById(tableLignesTaches[ligneTache]);
+            tr.setVisibility(View.GONE);
         }
     }
 
@@ -917,7 +926,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Pli en cours
         mListeCartesPliEnCours = parseNoeudsPli(doc, "Pli");
-        afficheTable(mListeCartesPliEnCours);
+        affichePliEnCours(mListeCartesPliEnCours);
 
         // Communications
         mListeCommunications = parseNoeudsPli(doc, "Communications");
