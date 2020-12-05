@@ -792,10 +792,31 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     TableRow tr = findViewById(tableLignesTaches[ligneTache]);
                     tr.setVisibility(View.VISIBLE);
                     ligneTache++;
+
+                    // On vide toutes cases de la ligne
+                    for(int j=0;j<mListePseudo.length;j++) {
+                        TextView tv;
+                        switch(ligneTache) {
+                            case 1:
+                            default:
+                                tv = findViewById(tableTaches1[j]);
+                                break;
+                            case 2:
+                                tv = findViewById(tableTaches2[j]);
+                                break;
+                            case 3:
+                                tv = findViewById(tableTaches3[j]);
+                                break;
+                            case 4:
+                                tv = findViewById(tableTaches4[j]);
+                                break;
+                        }
+                        tv.setText("");
+                    }
                 }
 
                 TextView tva;
-                switch(ligneTache) {
+                switch(nbTacheParJoueur[indexPseudo]) {
                     case 1 :
                     default:
                         tva = findViewById(tableTaches1[getIndexPseudo(pseudoTache)]);
@@ -836,8 +857,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             tr.setVisibility(View.VISIBLE);
         }
         // Masque les lignes vides
-        for(int i=ligneTache;i<4;i++) {
-            TableRow tr = findViewById(tableLignesTaches[ligneTache]);
+        for(int i=ligneTache;i<tableLignesTaches.length;i++) {
+            TableRow tr = findViewById(tableLignesTaches[i]);
             tr.setVisibility(View.GONE);
         }
     }
