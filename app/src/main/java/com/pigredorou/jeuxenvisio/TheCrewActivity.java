@@ -78,6 +78,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private boolean mCommunicationAChoisir = false;
     private int mNbTacheAAtribuer=0;
     private int mZoneSilence=0;
+    private int mNumeroPli=0;
     private ArrayList<Carte> mListeCartesMainJoueur;
     private ArrayList<Pli> mListeCartesPliEnCours;
     private ArrayList<Joueur> mListeJoueurs;
@@ -173,9 +174,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         boutonRetour.setOnClickListener(this);
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
 
-        // TEST XML
-        new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&joueur="+mPseudo);
-
         // Affiche un message chargement le temps de récupérer les informations en base
         mTextResultat = findViewById(R.id.resultat);
         mTextResultat.setText(R.string.Chargement);
@@ -193,14 +191,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Taches
         chargeVuesTaches();
-        // TODO : si toutes les taches sont réalisés => Feu d'artifice !!
-        // TODO : proposer de passer à la mission suivante : numMission+1, distribue les cartes, distribue taches, reset communications
 
         // Refresh auto
         startRefreshAuto();
         mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
         mBoutonRefreshAuto.setOnClickListener(this);
         mHeureRefresh = findViewById(R.id.heure_refresh);
+         // TODO : Signal de détresse : Choix d'une carte pour la passer à son voisin (change le pseudo du joueur avec un tag pour retirer du joueur mais mettre en attente la carte
     }
 
     private void chargeVuesCommunication() {
@@ -398,16 +395,23 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.bouton_communication:
-                if (!mCommunicationFaite) {
-                    if (mCommunicationAChoisir) {
-                        mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                        mCommunicationAChoisir = false;
-                    } else {
-                        mBoutonComm.setBackgroundColor(getResources().getColor(R.color.blanc));
-                        Toast.makeText(getBaseContext(), "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
-                        mCommunicationAChoisir = true;
+                if (mNbTacheAAtribuer == 0 && (mZoneSilence < 2 || mNumeroPli >= mZoneSilence)) {
+                    if (!mCommunicationFaite) {
+                        if (mCommunicationAChoisir) {
+                            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                            mCommunicationAChoisir = false;
+                        } else {
+                            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.blanc));
+                            Toast.makeText(this, "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
+                            mCommunicationAChoisir = true;
+                        }
                     }
                 }
+                else
+                    if (mNbTacheAAtribuer > 0)
+                        Toast.makeText(this, "Communication après attribution des tâches", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Communication possible à partir du pli " + mZoneSilence, Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.titre_pli:
@@ -755,6 +759,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
         params.setMargins(5, 0, 5, 0);
         trTacheAAttribuer.setLayoutParams(params);
+        mNbTacheAAtribuer=0;
 
         for(int i=0;i<taches.size();i++) {
             String pseudoTache = taches.get(i).getJoueur();
@@ -1030,7 +1035,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         ArrayList<Pli> listePli = new ArrayList<>();
 
         if(nomDuNoeud.equals("Pli")) {
-            String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + NoeudCartes.getAttributes().item(0).getNodeValue();
+            mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(0).getNodeValue());
+            String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
             mTitrePli.setText(titrePli);
         }
 
@@ -1092,6 +1098,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     case "realise" :
                         if (Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue()) == 1)
                             realise=true;
+                        else
+                            realise=false;
                         break;
                 }
             }

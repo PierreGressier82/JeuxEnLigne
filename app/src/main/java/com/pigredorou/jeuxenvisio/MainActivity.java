@@ -39,9 +39,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.15 : Correction double clic
      * 1.16 : Correction distribution si nombre de carte pas équitable + ajout de plus de salons + correction double clic + The Crew : implémentation Zone de silence
      * 2.00 : The Crew - Implementation XML + refresh complet toutes les secondes
+     * 2.01 : The Crew - Correction affichage tâches réalisées + blocage communication avant le pli autorisé
      */
     // Variables statiques
-    private static final String mNumVersion = "2.00";
+    private static final String mNumVersion = "2.01";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
