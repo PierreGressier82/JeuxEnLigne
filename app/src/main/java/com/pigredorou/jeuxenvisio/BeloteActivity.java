@@ -18,15 +18,27 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
+import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Pli;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class BeloteActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
@@ -40,9 +52,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private static final int[] tableIdImageCarteMain = {R.id.carte_1, R.id.carte_2, R.id.carte_3, R.id.carte_4, R.id.carte_5, R.id.carte_6, R.id.carte_7, R.id.carte_8, R.id.carte_9, R.id.carte_10, R.id.carte_11, R.id.carte_12, R.id.carte_13, R.id.carte_14, R.id.carte_15, R.id.carte_16, R.id.carte_17, R.id.carte_18, R.id.carte_19, R.id.carte_20};
     private static final int[] tableIdImageCartePli = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
     // URLs des actions en base
-    private static final String urlGetDistribue = MainActivity.url + "getDistribution.php?partie=";
+    private static final String urlBelote = MainActivity.url + "belote.php?partie=";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
-    private static final String urlAfficheTable = MainActivity.url + "getTable.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -50,6 +61,10 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private String mAtoutChoisi; // Atout de la partie
     private int mIdSalon;
     private int mIdPartie;
+    private int mNumeroPli=0;
+    private ArrayList<Carte> mListeCartesMainJoueur;
+    private ArrayList<Pli> mListeCartesPliEnCours;
+    private ArrayList<Joueur> mListeJoueurs;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
@@ -64,8 +79,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     int mLastViewID = 0;
     long mStartTimeClick;
     long mDurationClick;
-    static final int MAX_DURATION_CLICK = 200;
-    static final int MAX_DURATION_DOUBLE_CLICK = 1000;
+    static final int MAX_DURATION_CLICK = 500;
+    static final int MAX_DURATION_DOUBLE_CLICK = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +106,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         ImageView boutonRetour = findViewById(R.id.bouton_retour);
         boutonRetour.setOnClickListener(this);
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
-
-        // Liste des pseudos dans l'ordre de jeu
-        new BeloteActivity.TacheGetJoueurs().execute(MainActivity.urlGetJoueurs + mIdSalon);
-
-        // Recupère la carte pour choisir l'atout
-        new BeloteActivity.TacheGetCarteAtout().execute(urlGetDistribue+mIdPartie+"&joueur=Table&tri=desc");
 
         // Table
         mTitrePli = findViewById(R.id.titre_pli);
@@ -141,12 +150,11 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                                 @Override
                                 public void run() {
                                     updateTextView();
-                                    majable();
-                                    // Mise à jour de la main du joueur
-                                    new BeloteActivity.TacheGetCartesMainJoueur().execute(urlGetDistribue+mIdPartie+"&joueur="+mPseudo+"&tri=desc");
+                                    // Mise à jour complète
+                                    new TacheGetInfoBelote().execute(urlBelote+mIdPartie+"&joueur="+mPseudo);
                                 }
                             });
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -233,31 +241,32 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
         }
-
-        // Mise à jour de la table
-        majable();
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         long time;
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
             // Appuie sur l'écran
             case MotionEvent.ACTION_DOWN:
-                if (mClickCount == 1) {
-                    time = System.currentTimeMillis();
+                time = System.currentTimeMillis();
 
-                    // Si temps entre 2 clicks trop long, on retourne à 0
-                    if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
-                        mClickCount = 0;
-                    // Si le précédent click n'est pas sur la même vue, on retourne à 0
-                    if (mLastViewID != v.getId())
-                        mClickCount = 0;
-                }
+                if (mClickCount > 2 )
+                    mClickCount=0;
+                // Si temps entre 2 clicks trop long, on retourne à 0
+                if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
+                    mClickCount = 0;
+                // Si le précédent click n'est pas sur la même vue, on retourne à 0
+                if (mLastViewID != v.getId())
+                    mClickCount = 0;
+
                 mStartTimeClick = System.currentTimeMillis();
                 mClickCount++;
                 mLastViewID = v.getId();
+                Log.d("PGR-onTouch", "ACTION_DOWN " + mClickCount + " " + v.getId() + " ");
                 break;
+
             // Relanche l'écran
             case MotionEvent.ACTION_UP:
                 // Temps en appuie et relache
@@ -267,11 +276,19 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                     if (mDurationClick <= MAX_DURATION_CLICK) {
                         // On a un double clic !
                         doublicClic(v);
+                        Log.d("PGR-onTouch", "ACTION_UP -> Double clic");
                     }
                     mClickCount = 0;
                     mDurationClick = 0;
                     break;
                 }
+                Log.d("PGR-onTouch", "ACTION_UP " + mClickCount + " " + v.getId() + " ");
+                break;
+            default:
+                if (mClickCount > 2 )
+                    mClickCount=0;
+                Log.d("PGR-onTouch", "AUTRE ACTION " + mClickCount + " " + v.getId() + " evt "+event.getAction());
+                break;
         }
         return true;
     }
@@ -320,17 +337,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             // Si je peux jouer la couleur ou si tout le monde a joué le pli
             if (JeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
                 new BeloteActivity.TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
-                // Mise à jour de la table
-                majable();
             } else
                 Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void majable() {
-        // Mise à jour de la table si elle est affichée
-        if (mTable.getVisibility() == View.VISIBLE) {
-            new BeloteActivity.TacheAfficheTable().execute(urlAfficheTable + mIdPartie);
         }
     }
 
@@ -456,6 +464,103 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void affichePseudos(ArrayList<Joueur> listeJoueurs) {
+        mListePseudo = new String[listeJoueurs.size()];
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            mListePseudo[i] = listeJoueurs.get(i).getNomJoueur();
+            debug(listeJoueurs.get(i).getNomJoueur());
+        }
+
+        //switch (mListePseudo.length) {
+        //    case 5:
+        //        mCommPseudoJoueur5.setText(mListePseudo[4]);
+        //        mCommPseudoJoueur5.setVisibility(View.VISIBLE);
+        //        mCommJoueur5.setVisibility(View.VISIBLE);
+        //        mTachePseudoJoueur5.setText(mListePseudo[4]);
+        //        mTachePseudoJoueur5.setVisibility(View.VISIBLE);
+        //        mTaches1Joueur5.setVisibility(View.VISIBLE);
+        //        mTaches2Joueur5.setVisibility(View.VISIBLE);
+        //        mTaches3Joueur5.setVisibility(View.VISIBLE);
+        //        mTaches4Joueur5.setVisibility(View.VISIBLE);
+        //    case 4:
+        //        mCommPseudoJoueur4.setText(mListePseudo[3]);
+        //        mCommPseudoJoueur4.setVisibility(View.VISIBLE);
+        //        mCommJoueur4.setVisibility(View.VISIBLE);
+        //        mTachePseudoJoueur4.setText(mListePseudo[3]);
+        //        mTachePseudoJoueur4.setVisibility(View.VISIBLE);
+        //        mTaches1Joueur4.setVisibility(View.VISIBLE);
+        //        mTaches2Joueur4.setVisibility(View.VISIBLE);
+        //        mTaches3Joueur4.setVisibility(View.VISIBLE);
+        //        mTaches4Joueur4.setVisibility(View.VISIBLE);
+        //    default:
+        //        mCommPseudoJoueur3.setText(mListePseudo[2]);
+        //        mTachePseudoJoueur3.setText(mListePseudo[2]);
+        //        mCommPseudoJoueur2.setText(mListePseudo[1]);
+        //        mTachePseudoJoueur2.setText(mListePseudo[1]);
+        //        mCommPseudoJoueur1.setText(mListePseudo[0]);
+        //        mTachePseudoJoueur1.setText(mListePseudo[0]);
+        //        break;
+        //}
+    }
+
+    private void affichePliEnCours(ArrayList<Pli> plis) {
+        TextView pseudo;
+        ImageView imageCarte;
+        int nbJoueur = mListePseudo.length;
+        int positionPremierJoueur = 0;
+        int positionJoueur;
+        // On récupère la place du premier joueur
+        if (plis != null && plis.size() > 0) {
+            for (int j = 0; j < nbJoueur; j++) {
+                if (mListePseudo[j].equals(plis.get(0).getJoueur())) {
+                    positionPremierJoueur = j;
+                    debug("posPremJoueur " + positionPremierJoueur);
+                }
+            }
+        } else {
+            // Si on a pas encore joué, on positionne le commandant comme premier joueur
+            //for (int i = 0; i < nbJoueur; i++)
+            //    if (mListePseudo[i].equals(mCommandant)) {
+            //        positionPremierJoueur = i;
+            //        break;
+            //    }
+        }
+        // On parcours les id des pseudo
+        for (int i = 0; i < tableIdPseudo.length; i++) {
+            pseudo = findViewById(tableIdPseudo[i]);
+            imageCarte = findViewById(tableIdImageCartePli[i]);
+            // Si moins de 5 joueurs, on retire de l'écran
+            if (i >= nbJoueur) {
+                pseudo.setVisibility(View.GONE);
+                imageCarte.setVisibility(View.GONE);
+            }
+            // Affichage de tous les pseudo dans l'ordre de jeu, même si le joueur n'a pas encore joué
+            else {
+                positionJoueur = (positionPremierJoueur + i) % nbJoueur;
+                debug("posJoueurNonJoué " + i + " positionPremierJoueur " + positionPremierJoueur + " nbJoueur " + nbJoueur + " positionJoueur" + positionJoueur);
+                // Si le joueur est le commmandant, on affiche le nom en noir
+                String pseudoTexte=mListePseudo[positionJoueur];
+                //if (mListePseudo[positionJoueur].equals(mCommandant)) {
+                //    pseudo.setTextColor(getResources().getColor(R.color.noir));
+                //    //pseudoTexte="^"+mCommandant+"^";
+                //}
+                //else
+                    pseudo.setTextColor(getResources().getColor(R.color.blanc));
+                pseudo.setText(pseudoTexte);
+                pseudo.setVisibility(View.VISIBLE);
+
+                if (plis!=null && i < plis.size()) {
+                    imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
+                    imageCarte.setTag("carte_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
+                    imageCarte.setVisibility(View.VISIBLE);
+                } else {
+                    imageCarte.setVisibility(View.INVISIBLE);
+                }
+            }
+
+        }
+    }
+
     private int getIndexPseudo(String pseudo) {
         int index=0;
         for (int i=0;i<mListePseudo.length;i++) {
@@ -471,130 +576,134 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         Log.d("PGR", message);
     }
 
-    /**
-     * Classe qui permet de récupère la liste des joueurs dans l'ordre de jeu
-     * -> Retourne la liste
-     */
-    private class TacheGetJoueurs extends AsyncTask<String, Void, ArrayList<String>> {
-        String result;
+    private void parseXML(Document doc) {
 
-        @Override
-        protected ArrayList<String> doInBackground(String... strings) {
-            ArrayList<String> pseudoJoueurs = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    pseudoJoueurs.add(chaine[1]);
-                    string = String.format("%s%s", string, stringBuffer);
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
-            }
+        Element element=doc.getDocumentElement();
+        element.normalize();
 
-            return pseudoJoueurs;
-        }
+        // Cartes que le joueur a en main
+        mListeCartesMainJoueur = parseNoeudsCarte(doc, "Cartes");
+        afficheCartes(mListeCartesMainJoueur);
 
-        @Override
-        protected void onPostExecute(ArrayList<String> joueurs) {
-            mListePseudo = new String[joueurs.size()];
-            for (int i = 0; i < joueurs.size(); i++) {
-                mListePseudo[i] = joueurs.get(i);
-                debug(joueurs.get(i));
-            }
-            //affichePseudos();
-            super.onPostExecute(joueurs);
-        }
+        // Joueurs
+        mListeJoueurs = parseNoeudsJoueur(doc);
+        affichePseudos(mListeJoueurs);
+
+        // Pli en cours
+        mListeCartesPliEnCours = parseNoeudsPli(doc, "Pli");
+        affichePliEnCours(mListeCartesPliEnCours);
+
+        // Atout
+        ArrayList<Carte> mListeCarteAtout = parseNoeudsCarte(doc, "Atout");
+        afficheCarteAtout(mListeCarteAtout);
     }
 
-    /**
-     * Classe qui permet de récupère le pli en cours
-     * -> Retourne le pli et l'affiche
-     */
-    private class TacheAfficheTable extends AsyncTask<String, Void, ArrayList<Pli>> {
-        String result;
+    private ArrayList<Carte> parseNoeudsCarte(Document doc, String nomNoeud) {
+        Node NoeudCartes = getNoeudUnique(doc, nomNoeud);
 
-        @Override
-        protected ArrayList<Pli> doInBackground(String... strings) {
-            ArrayList<Pli> plis = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    Pli pli;
-                    pli = new Pli(chaine[0], new Carte(chaine[1], Integer.parseInt(chaine[2])));
-                    plis.add(pli);
-                    string = String.format("%s%s", string, stringBuffer);
+        String couleur="";
+        int valeur=0;
+        ArrayList<Carte> listeCartes = new ArrayList<>();
+
+        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
+            Log.d("PGR-XML-Carte",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Carte", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "couleur" :
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur" :
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                 }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
             }
-
-            return plis;
+            Carte carte = new Carte(couleur, valeur);
+            listeCartes.add(carte);
         }
 
-        @Override
-        protected void onPostExecute(ArrayList<Pli> plis) {
-            afficheTable(plis);
-            super.onPostExecute(plis);
-        }
+        return listeCartes;
     }
 
-    /**
-     * Classe qui permet de récupérer en base la main d'un joueur
-     * -> Retourne la liste des cartes du joueur demandé
-     */
-    private class TacheGetCartesMainJoueur extends AsyncTask<String, Void, ArrayList<Carte>> {
-        String result;
+    private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
+        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
-        @Override
-        protected ArrayList<Carte> doInBackground(String... strings) {
-            ArrayList<Carte> cartes = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    Carte carte = new Carte(chaine[0], Integer.parseInt(chaine[1]));
-                    cartes.add(carte);
-                    string = String.format("%s%s", string, stringBuffer);
+        String pseudo="";
+        int admin=0;
+        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
+        for (int i=0; i<NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
+            Log.d("PGR-XML-Joueur",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "pseudo" :
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "admin" :
+                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                 }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
             }
-
-            return cartes;
+            Joueur joueur = new Joueur(pseudo, admin);
+            listeJoueurs.add(joueur);
         }
 
-        @Override
-        protected void onPostExecute(ArrayList<Carte> cartes) {
-            afficheCartes(cartes);
-            super.onPostExecute(cartes);
+        return listeJoueurs;
+    }
+
+    private ArrayList<Pli> parseNoeudsPli(Document doc, String nomDuNoeud) {
+        Node NoeudCartes = getNoeudUnique(doc, nomDuNoeud);
+
+        String pseudo="";
+        String couleur="";
+        int valeur=0;
+        String com="";
+        ArrayList<Pli> listePli = new ArrayList<>();
+
+        if(nomDuNoeud.equals("Pli")) {
+            mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(0).getNodeValue());
+            String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
+            mTitrePli.setText(titrePli);
         }
+
+        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
+            Log.d("PGR-XML-Pli",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Pli", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "joueur" :
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "couleur" :
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur" :
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "com" :
+                        com = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                }
+            }
+            Pli pli = new Pli(pseudo,new Carte(couleur, valeur), com);
+            listePli.add(pli);
+        }
+
+        return listePli;
+    }
+
+    private Node getNoeudUnique(Document doc, String nomDuNoeud) {
+        NodeList listeNoeudsMission  = doc.getElementsByTagName(nomDuNoeud);
+        Node noeud = null;
+        if (listeNoeudsMission.getLength() > 0) {
+            noeud = listeNoeudsMission.item(0);
+        }
+
+        return noeud;
     }
 
     /**
@@ -635,6 +744,43 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(ArrayList<Carte> cartes) {
             afficheCarteAtout(cartes);
             super.onPostExecute(cartes);
+        }
+    }
+
+    /**
+     * Classe qui permet de récupérer en base toutes les informations du jeu Belote d'un joueur
+     * -> Retourne l'ensemble des informations à afficher au joueurs sous forme XML
+     * * - Cartes de la main du joueur
+     * * - Cartes Atout sur la table
+     * * - Liste des joueurs
+     * * - Cartes du pli en cours
+     * * - Historique des plis joués
+     */
+    private class TacheGetInfoBelote extends AsyncTask<String, Void, Document> {
+
+        @Override
+        protected Document doInBackground(String... strings) {
+            URL url;
+            Document doc=null;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                // Lecture du flux
+                InputStream is = url.openStream();
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                doc = dBuilder.parse(is);
+            } catch (IOException | ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+            }
+
+            return doc;
+        }
+
+        @Override
+        protected void onPostExecute(Document doc) {
+            parseXML(doc);
+            super.onPostExecute(doc);
         }
     }
 

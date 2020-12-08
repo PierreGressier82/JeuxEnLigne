@@ -294,7 +294,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         String pseudoQuiDoitJoueur = "";
         ImageView iv;
         TextView tv;
-        // Parcourt les images pour savoir si c'est mon tour
+        // Parcours les images pour savoir si c'est mon tour
         for (int i = 0; i < tableIdImageCartePli.length; i++) {
             iv = findViewById(tableIdImageCartePli[i]);
             tv = findViewById(tableIdPseudo[i]);
