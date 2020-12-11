@@ -268,10 +268,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/scrollView_cartes"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TableLayout
                     android:id="@+id/tableau_table"
@@ -394,76 +394,50 @@
                 </TableLayout>
             </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_couleur_2eme_tour"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-
-        <LinearLayout
-            android:id="@+id/layout_2eme_tour_coeur"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/image_2eme_tour_coeur"
+            <LinearLayout
+                android:id="@+id/layout_couleur_2eme_tour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/coeur"/>
-        </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_2eme_tour_pique"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_marginTop="10dp"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/image_2eme_tour_coeur"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:src="@drawable/coeur" />
+
                 <ImageView
                     android:id="@+id/image_2eme_tour_pique"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/pique"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_2eme_tour_carreau"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                    android:layout_weight="0.25"
+                    android:src="@drawable/pique" />
+
                 <ImageView
                     android:id="@+id/image_2eme_tour_carreau"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/carreau"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_2eme_tour_trefle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                    android:layout_weight="0.25"
+                    android:src="@drawable/carreau" />
+
                 <ImageView
                     android:id="@+id/image_2eme_tour_trefle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/trefle"/>
+                    android:layout_weight="0.25"
+                    android:src="@drawable/trefle" />
             </LinearLayout>
-        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -541,7 +515,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/blanc"
                         android:textSize="20sp"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -593,9 +567,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"

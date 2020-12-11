@@ -237,9 +237,22 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 Toast.makeText(this, "Atout choisi :"+chaine[1], Toast.LENGTH_SHORT).show();
                 // Todo : distribuer les cartes en fonction de l'atout choisi par le joueur
                 ImageView iv = findViewById(v.getId());
-                iv.setVisibility(View.GONE);
+                switch (chaine[1]) {
+                    default:
+                    case "coeur" :
+                        iv.setImageResource(R.drawable.coeur);
+                        break;
+                    case "pique" :
+                        iv.setImageResource(R.drawable.pique);
+                        break;
+                    case "trefle" :
+                        iv.setImageResource(R.drawable.trefle);
+                        break;
+                    case "carreau" :
+                        iv.setImageResource(R.drawable.carreau);
+                        break;
+                }
                 break;
-
         }
     }
 
@@ -399,10 +412,30 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         // Affiche la carte
         if (cartes != null && cartes.size()>0) {
             ImageView carte = findViewById(R.id.table_carte_image_atout);
-            String nomCarte = cartes.get(0).getCouleur() + "_" + cartes.get(0).getValeur();
-            carte.setImageResource(getImageCarte(cartes.get(0).getCouleur(), cartes.get(0).getValeur()));
+            String couleur = cartes.get(0).getCouleur();
+            String nomCarte = couleur + "_" + cartes.get(0).getValeur();
+            carte.setImageResource(getImageCarte(couleur, cartes.get(0).getValeur()));
             carte.setTag("carte_" + nomCarte);
             carte.setOnClickListener(this);
+
+            // Masque la couleur pour le 2ème tour (affiche tout en premier)
+            ImageView iv;
+            switch (couleur) {
+                default:
+                case "coeur" :
+                    iv = findViewById(R.id.image_2eme_tour_coeur);
+                    break;
+                case "pique" :
+                    iv = findViewById(R.id.image_2eme_tour_pique);
+                    break;
+                case "trefle" :
+                    iv = findViewById(R.id.image_2eme_tour_trefle);
+                    break;
+                case "carreau" :
+                    iv = findViewById(R.id.image_2eme_tour_carreau);
+                    break;
+            }
+            iv.setVisibility(View.GONE);
         }
     }
 
