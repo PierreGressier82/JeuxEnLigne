@@ -235,8 +235,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.table_carte_image_atout :
                 String tag = v.getTag().toString();
                 String[] chaine = tag.split("_");
-                Toast.makeText(this, "Atout choisi :"+chaine[1], Toast.LENGTH_SHORT).show();
-                // Todo : distribuer les cartes en fonction de l'atout choisi par le joueur
                 ImageView iv = findViewById(v.getId());
                 switch (chaine[1]) {
                     default:
