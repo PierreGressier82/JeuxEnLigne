@@ -54,6 +54,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     // URLs des actions en base
     private static final String urlBelote = MainActivity.url + "belote.php?partie=";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
+    private static final String urlDistribueBelote = MainActivity.url + "distribueBelote.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -252,6 +253,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                         iv.setImageResource(R.drawable.carreau);
                         break;
                 }
+                new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+chaine[1]);
+                // TODO : masquer les choix des couleurs et afficher les pseudos
                 break;
         }
     }
@@ -663,6 +666,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
         String pseudo="";
+        String equipe="";
         int admin=0;
         ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
@@ -678,9 +682,21 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                     case "admin" :
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
+                    case "equipe" :
+                        equipe = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "contrat" :
+                        String contrat = noeudCarte.getAttributes().item(j).getNodeValue();
+                        if (!contrat.equals("") && !contrat.equals("non"))
+                            mAtoutChoisi = contrat;
+                        break;
+                    case "annonce1" :
+                        break;
+                    case "annonce2" :
+                        break;
                 }
             }
-            Joueur joueur = new Joueur(pseudo, admin);
+            Joueur joueur = new Joueur(pseudo, equipe, admin);
             listeJoueurs.add(joueur);
         }
 

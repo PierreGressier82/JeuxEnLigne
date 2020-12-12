@@ -4,11 +4,19 @@ public class Joueur {
 
     private String mNomJoueur;
     private String mNomSalon;
+    private String mNomEquipe;
     private int mAdmin;
 
-    public Joueur(String nomJoueur, String nomSalon, int admin) {
+    public Joueur(String nomJoueur, String nomSalon, String nomEquipe, int admin) {
+        mNomJoueur = nomJoueur;
+        mNomSalon = nomSalon;
+        mNomEquipe = nomEquipe;
+        mAdmin = admin;
+    }
+
+    public Joueur(String nomJoueur, String nomEquipe, int admin) {
         this.mNomJoueur=nomJoueur;
-        this.mNomSalon=nomSalon;
+        this.mNomEquipe=nomEquipe;
         this.mAdmin=admin;
     }
 
@@ -18,6 +26,14 @@ public class Joueur {
     }
 
     public Joueur() {
+    }
+
+    public String getNomEquipe() {
+        return mNomEquipe;
+    }
+
+    public void setNomEquipe(String nomEquipe) {
+        mNomEquipe = nomEquipe;
     }
 
     public String getNomJoueur() {
