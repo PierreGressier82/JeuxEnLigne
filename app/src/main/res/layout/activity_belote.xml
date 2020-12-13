@@ -440,12 +440,12 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/equipe1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.33"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="invisible">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/pseudo_joueur1_equipe1"
@@ -461,8 +461,7 @@
                         android:id="@+id/carte_joueur1_equipe1"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte"
-                        android:src="@drawable/trefle_7" />
+                        android:contentDescription="@string/carte"/>
 
                     <TextView
                         android:id="@+id/pseudo_joueur2_equipe1"
@@ -478,8 +477,7 @@
                         android:id="@+id/carte_joueur2_equipe1"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte"
-                        android:src="@drawable/trefle_7" />
+                        android:contentDescription="@string/carte"/>
 
                 </LinearLayout>
 
@@ -520,12 +518,12 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/equipe2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.33"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="invisible">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/pseudo_joueur1_equipe2"
@@ -541,8 +539,7 @@
                         android:id="@+id/carte_joueur1_equipe2"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte"
-                        android:src="@drawable/trefle_7" />
+                        android:contentDescription="@string/carte" />
 
                     <TextView
                         android:id="@+id/pseudo_joueur2_equipe2"
@@ -558,8 +555,7 @@
                         android:id="@+id/carte_joueur2_equipe2"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte"
-                        android:src="@drawable/trefle_7" />
+                        android:contentDescription="@string/carte" />
 
                 </LinearLayout>
             </LinearLayout>

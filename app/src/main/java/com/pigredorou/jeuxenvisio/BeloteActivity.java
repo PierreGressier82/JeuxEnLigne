@@ -51,6 +51,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private static final int[] tableIdPseudo = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4, R.id.table_pseudo_joueur5};
     private static final int[] tableIdImageCarteMain = {R.id.carte_1, R.id.carte_2, R.id.carte_3, R.id.carte_4, R.id.carte_5, R.id.carte_6, R.id.carte_7, R.id.carte_8, R.id.carte_9, R.id.carte_10, R.id.carte_11, R.id.carte_12, R.id.carte_13, R.id.carte_14, R.id.carte_15, R.id.carte_16, R.id.carte_17, R.id.carte_18, R.id.carte_19, R.id.carte_20};
     private static final int[] tableIdImageCartePli = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
+    private static final int[] getTableIdPseudo = {R.id.pseudo_joueur1_equipe1, R.id.pseudo_joueur1_equipe2, R.id.pseudo_joueur2_equipe1, R.id.pseudo_joueur2_equipe2};
     // URLs des actions en base
     private static final String urlBelote = MainActivity.url + "belote.php?partie=";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
@@ -235,26 +236,38 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.table_carte_image_atout :
                 String tag = v.getTag().toString();
                 String[] chaine = tag.split("_");
-                ImageView iv = findViewById(v.getId());
-                switch (chaine[1]) {
-                    default:
-                    case "coeur" :
-                        iv.setImageResource(R.drawable.coeur);
-                        break;
-                    case "pique" :
-                        iv.setImageResource(R.drawable.pique);
-                        break;
-                    case "trefle" :
-                        iv.setImageResource(R.drawable.trefle);
-                        break;
-                    case "carreau" :
-                        iv.setImageResource(R.drawable.carreau);
-                        break;
-                }
+                afficheCouleurAtout(v.getId(), chaine[1]);
                 new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+chaine[1]);
                 // TODO : masquer les choix des couleurs et afficher les pseudos
+                choixAtout();
                 break;
         }
+    }
+
+    private void afficheCouleurAtout(int id, String couleur) {
+        ImageView iv = findViewById(id);
+        switch (couleur) {
+            default:
+            case "coeur" :
+                iv.setImageResource(R.drawable.coeur);
+                break;
+            case "pique" :
+                iv.setImageResource(R.drawable.pique);
+                break;
+            case "trefle" :
+                iv.setImageResource(R.drawable.trefle);
+                break;
+            case "carreau" :
+                iv.setImageResource(R.drawable.carreau);
+                break;
+        }
+    }
+
+    private void choixAtout() {
+
+        // Masque le choix des couleurs pour le 2ème tour
+        LinearLayout ll = findViewById(R.id.layout_couleur_2eme_tour);
+        ll.setVisibility(View.GONE);
     }
 
     @Override
@@ -438,6 +451,12 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             }
             iv.setVisibility(View.GONE);
         }
+        else {
+            afficheCouleurAtout(R.id.table_carte_image_atout, mAtoutChoisi);
+            choixAtout();
+
+
+        }
     }
 
     private void afficheTable(ArrayList<Pli> plis) {
@@ -500,41 +519,14 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
     private void affichePseudos(ArrayList<Joueur> listeJoueurs) {
         mListePseudo = new String[listeJoueurs.size()];
+        TextView tv;
         for (int i = 0; i < listeJoueurs.size(); i++) {
             mListePseudo[i] = listeJoueurs.get(i).getNomJoueur();
             debug(listeJoueurs.get(i).getNomJoueur());
+            tv = findViewById(getTableIdPseudo[i]);
+            tv.setText(mListePseudo[i]);
+            tv.setVisibility(View.VISIBLE);
         }
-
-        //switch (mListePseudo.length) {
-        //    case 5:
-        //        mCommPseudoJoueur5.setText(mListePseudo[4]);
-        //        mCommPseudoJoueur5.setVisibility(View.VISIBLE);
-        //        mCommJoueur5.setVisibility(View.VISIBLE);
-        //        mTachePseudoJoueur5.setText(mListePseudo[4]);
-        //        mTachePseudoJoueur5.setVisibility(View.VISIBLE);
-        //        mTaches1Joueur5.setVisibility(View.VISIBLE);
-        //        mTaches2Joueur5.setVisibility(View.VISIBLE);
-        //        mTaches3Joueur5.setVisibility(View.VISIBLE);
-        //        mTaches4Joueur5.setVisibility(View.VISIBLE);
-        //    case 4:
-        //        mCommPseudoJoueur4.setText(mListePseudo[3]);
-        //        mCommPseudoJoueur4.setVisibility(View.VISIBLE);
-        //        mCommJoueur4.setVisibility(View.VISIBLE);
-        //        mTachePseudoJoueur4.setText(mListePseudo[3]);
-        //        mTachePseudoJoueur4.setVisibility(View.VISIBLE);
-        //        mTaches1Joueur4.setVisibility(View.VISIBLE);
-        //        mTaches2Joueur4.setVisibility(View.VISIBLE);
-        //        mTaches3Joueur4.setVisibility(View.VISIBLE);
-        //        mTaches4Joueur4.setVisibility(View.VISIBLE);
-        //    default:
-        //        mCommPseudoJoueur3.setText(mListePseudo[2]);
-        //        mTachePseudoJoueur3.setText(mListePseudo[2]);
-        //        mCommPseudoJoueur2.setText(mListePseudo[1]);
-        //        mTachePseudoJoueur2.setText(mListePseudo[1]);
-        //        mCommPseudoJoueur1.setText(mListePseudo[0]);
-        //        mTachePseudoJoueur1.setText(mListePseudo[0]);
-        //        break;
-        //}
     }
 
     private void affichePliEnCours(ArrayList<Pli> plis) {
