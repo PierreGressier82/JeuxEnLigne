@@ -272,6 +272,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
+                    android:tag="coeur"
                     android:src="@drawable/coeur" />
 
                 <ImageView
@@ -279,6 +280,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
+                    android:tag="pique"
                     android:src="@drawable/pique" />
 
                 <ImageView
@@ -286,6 +288,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
+                    android:tag="carreau"
                     android:src="@drawable/carreau" />
 
                 <ImageView
@@ -293,6 +296,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
+                    android:tag="trefle"
                     android:src="@drawable/trefle" />
             </LinearLayout>
 

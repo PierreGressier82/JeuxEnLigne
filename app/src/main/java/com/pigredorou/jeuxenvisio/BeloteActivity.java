@@ -62,6 +62,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private String mPseudo; // Pseudo du joueur
     private String mJoueurQuiAPris; // Pseudo du joueur qui a décidé de l'atout
     private String mAtoutChoisi; // Atout de la partie
+    private int mEstCeMonTourDeChoisir = 0; // 0:non, 1:premier tour, 2:2ème tour
     private int mIdSalon;
     private int mIdPartie;
     private int mNumeroPli=0;
@@ -113,6 +114,14 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         // ChoixAtout
         Button boutonPasser = findViewById(R.id.bouton_passer);
         boutonPasser.setOnClickListener(this);
+        ImageView iv = findViewById(R.id.image_2eme_tour_coeur);
+        iv.setOnClickListener(this);
+        iv = findViewById(R.id.image_2eme_tour_coeur);
+        iv.setOnClickListener(this);
+        iv = findViewById(R.id.image_2eme_tour_trefle);
+        iv.setOnClickListener(this);
+        iv = findViewById(R.id.image_2eme_tour_carreau);
+        iv.setOnClickListener(this);
 
         // Table
         mTitrePli = findViewById(R.id.titre_pli);
@@ -161,7 +170,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                                     new TacheGetInfoBelote().execute(urlBelote+mIdPartie+"&joueur="+mPseudo);
                                 }
                             });
-                            Thread.sleep(1000);
+                            Thread.sleep(2000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -231,26 +240,44 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 finish();
                 break;
 
-            case R.id.titre_pli:
-                if (mTable.getVisibility() == View.GONE)
-                    mTable.setVisibility(View.VISIBLE);
-                else
-                    mTable.setVisibility(View.GONE);
-                break;
-
             case R.id.table_carte_image_atout :
-                String tag = v.getTag().toString();
-                String[] chaine = tag.split("_");
-                afficheCouleurAtout(R.id.table_carte_image_couleur_atout, chaine[1]);
-                new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+chaine[1]);
-                // TODO : masquer les choix des couleurs et afficher les pseudos
+                if (mEstCeMonTourDeChoisir == 2)
+                    break;
+            case R.id.image_2eme_tour_coeur :
+            case R.id.image_2eme_tour_pique :
+            case R.id.image_2eme_tour_trefle :
+            case R.id.image_2eme_tour_carreau :
+                if (mEstCeMonTourDeChoisir == 0) {
+                    Toast.makeText(this, "Ce n'est pas ton tour !", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                String tag;
+                if (v.getId() == R.id.table_carte_image_atout) {
+                    String[] chaine = v.getTag().toString().split("_");
+                    tag = chaine[1];
+                }
+                else
+                    tag = v.getTag().toString();
+                afficheCouleurAtout(R.id.table_carte_image_couleur_atout, tag);
+                new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+tag);
                 MasqueChoixAtout();
                 break;
 
             case R.id.bouton_passer:
-                new MainActivity.TacheURLSansRetour().execute(urlMAJContrat+mIdPartie+"&joueur="+mPseudo+"&contrat=non");
-                Button b = findViewById(v.getId());
-                b.setVisibility(View.INVISIBLE);
+                switch (mEstCeMonTourDeChoisir) {
+                    case 0:
+                        Toast.makeText(this, "Ce n'est pas ton tour !", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1 :
+                        new MainActivity.TacheURLSansRetour().execute(urlMAJContrat+mIdPartie+"&joueur="+mPseudo+"&contrat=non");
+                        break;
+                    case 2 :
+                        new MainActivity.TacheURLSansRetour().execute(urlMAJContrat+mIdPartie+"&joueur="+mPseudo+"&contrat=deux");
+                        break;
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + v.getId());
         }
     }
 
@@ -465,7 +492,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             mTable.setVisibility(View.GONE);
         }
         else {
-            afficheCouleurAtout(R.id.table_carte_image_atout, mAtoutChoisi);
+            afficheCouleurAtout(R.id.table_carte_image_couleur_atout, mAtoutChoisi);
             MasqueChoixAtout();
             mTable.setVisibility(View.VISIBLE);
         }
@@ -649,6 +676,13 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         String pseudo="";
         String equipe="";
         int admin=0;
+        int nbJoueurQuiPassent=0;
+        int maPostion=-1;
+        boolean estCeLe2EmeTour=false;
+        mAtoutChoisi = "";
+        mJoueurQuiAPris = "";
+        TextView tv = findViewById(R.id.pseudo_joueur_qui_a_pris);
+        tv.setText("");
         ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
         for (int i=0; i<NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
@@ -662,6 +696,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         tvPseudo = findViewById(tableIdPseudoChoixAtout[i]);
                         tvPseudo.setText(pseudo);
+                        if(pseudo.equals(mPseudo))
+                            maPostion=i;
                         break;
                     case "admin" :
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
@@ -671,7 +707,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                         break;
                     case "contrat" :
                         String contrat = noeudCarte.getAttributes().item(j).getNodeValue();
-                        TextView tv = findViewById(R.id.pseudo_joueur_qui_a_pris);
                         switch (contrat) {
                             case "pique" :
                             case "coeur" :
@@ -681,15 +716,15 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                                 mJoueurQuiAPris = pseudo;
                                 tv.setText(mJoueurQuiAPris);
                                 break;
+                            case "deux" :
+                                estCeLe2EmeTour=true;
+                                nbJoueurQuiPassent++;
                             case "non" :
                                 tvPseudo = findViewById(tableIdPseudoChoixAtout[i]);
                                 String texte = pseudo + " : " + contrat;
                                 tvPseudo.setText(texte);
-                                break;
-                            default:
-                                mAtoutChoisi = "";
-                                mJoueurQuiAPris = "";
-                                tv.setText("");
+                                if (!estCeLe2EmeTour)
+                                    nbJoueurQuiPassent++;
                                 break;
                         }
                         break;
@@ -702,6 +737,22 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             Joueur joueur = new Joueur(pseudo, equipe, admin);
             listeJoueurs.add(joueur);
         }
+
+        // Est-ce mon tour de jouer ?
+        if (nbJoueurQuiPassent%4 == maPostion) {
+            mEstCeMonTourDeChoisir = 1;
+            if (estCeLe2EmeTour || nbJoueurQuiPassent==4)
+                mEstCeMonTourDeChoisir++;
+        }
+        else
+            mEstCeMonTourDeChoisir=0;
+
+        // Si tout le monde a répondu pour le premier tour, affichage des couleurs pour le second tour
+        LinearLayout ll = findViewById(R.id.layout_couleur_2eme_tour);
+        if (mEstCeMonTourDeChoisir==2)
+            ll.setVisibility(View.VISIBLE);
+        else
+            ll.setVisibility(View.GONE);
 
         return listeJoueurs;
     }
