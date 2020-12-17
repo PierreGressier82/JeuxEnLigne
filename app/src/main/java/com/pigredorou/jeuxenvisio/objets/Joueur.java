@@ -7,11 +7,8 @@ public class Joueur {
     private String mNomEquipe;
     private int mAdmin;
 
-    public Joueur(String nomJoueur, String nomSalon, String nomEquipe, int admin) {
+    public Joueur(String nomJoueur) {
         mNomJoueur = nomJoueur;
-        mNomSalon = nomSalon;
-        mNomEquipe = nomEquipe;
-        mAdmin = admin;
     }
 
     public Joueur(String nomJoueur, String nomEquipe, int admin) {
@@ -23,9 +20,6 @@ public class Joueur {
     public Joueur(String nomJoueur, int admin) {
         mNomJoueur = nomJoueur;
         mAdmin = admin;
-    }
-
-    public Joueur() {
     }
 
     public String getNomEquipe() {

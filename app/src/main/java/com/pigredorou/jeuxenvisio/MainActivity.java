@@ -41,9 +41,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.00 : The Crew - Implementation XML + refresh complet toutes les secondes
      * 2.01 : The Crew - Correction affichage tâches réalisées + blocage communication avant le pli autorisé
      * 2.02 : Belote : Implémentation XML
+     * 2.03 : Belote : Ajout de l'affichage de l'historique des plis
      */
     // Variables statiques
-    private static final String mNumVersion = "2.02";
+    private static final String mNumVersion = "2.03";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";

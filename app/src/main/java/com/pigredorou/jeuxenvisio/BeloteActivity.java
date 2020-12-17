@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
+import com.pigredorou.jeuxenvisio.objets.HistoriquePlis;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Pli;
 
@@ -52,6 +53,17 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private static final int[] tableIdPseudoChoixAtout = {R.id.pseudo_joueur1_choix_atout, R.id.pseudo_joueur2_choix_atout, R.id.pseudo_joueur3_choix_atout, R.id.pseudo_joueur4_choix_atout};
     private static final int[] tableIdPseudoPli = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4};
     private static final int[] tableIdImageCartePli = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4};
+    private static final int[] tableIdHisto1 = {R.id.carte1_histo_pli1, R.id.carte2_histo_pli1, R.id.carte3_histo_pli1, R.id.carte4_histo_pli1};
+    private static final int[] tableIdHisto2 = {R.id.carte1_histo_pli2, R.id.carte2_histo_pli2, R.id.carte3_histo_pli2, R.id.carte4_histo_pli2};
+    private static final int[] tableIdHisto3 = {R.id.carte1_histo_pli3, R.id.carte2_histo_pli3, R.id.carte3_histo_pli3, R.id.carte4_histo_pli3};
+    private static final int[] tableIdHisto4 = {R.id.carte1_histo_pli4, R.id.carte2_histo_pli4, R.id.carte3_histo_pli4, R.id.carte4_histo_pli4};
+    private static final int[] tableIdHisto5 = {R.id.carte1_histo_pli5, R.id.carte2_histo_pli5, R.id.carte3_histo_pli5, R.id.carte4_histo_pli5};
+    private static final int[] tableIdHisto6 = {R.id.carte1_histo_pli6, R.id.carte2_histo_pli6, R.id.carte3_histo_pli6, R.id.carte4_histo_pli6};
+    private static final int[] tableIdHisto7 = {R.id.carte1_histo_pli7, R.id.carte2_histo_pli7, R.id.carte3_histo_pli7, R.id.carte4_histo_pli7};
+    private static final int[] tableIdHisto8 = {R.id.carte1_histo_pli8, R.id.carte2_histo_pli8, R.id.carte3_histo_pli8, R.id.carte4_histo_pli8};
+    private static final int[] tableIdHistoLayout = {R.id.layout_histo_pli1, R.id.layout_histo_pli2, R.id.layout_histo_pli3, R.id.layout_histo_pli4, R.id.layout_histo_pli5, R.id.layout_histo_pli6, R.id.layout_histo_pli7, R.id.layout_histo_pli8};
+    private static final int[] tableIdHistoScore = {R.id.score_pli1, R.id.score_pli2, R.id.score_pli3, R.id.score_pli4, R.id.score_pli5, R.id.score_pli6, R.id.score_pli7, R.id.score_pli8};
+    private static final int[] tableIdHistoJoueur = {R.id.joueur_pli1, R.id.joueur_pli2, R.id.joueur_pli3, R.id.joueur_pli4, R.id.joueur_pli5, R.id.joueur_pli6, R.id.joueur_pli7, R.id.joueur_pli8};
     // URLs des actions en base
     private static final String urlBelote = MainActivity.url + "belote.php?partie=";
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
@@ -634,12 +646,153 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         affichePseudos(mListeJoueurs);
 
         // Pli en cours
-        mListeCartesPliEnCours = parseNoeudsPli(doc, "Pli");
+        mListeCartesPliEnCours = parseNoeudsPliFromDoc(doc, "Pli");
         affichePliEnCours(mListeCartesPliEnCours);
 
         // Atout
         ArrayList<Carte> mListeCarteAtout = parseNoeudsCarte(doc, "Atout");
         afficheCarteAtout(mListeCarteAtout);
+
+        // Historique des plis joués
+        ArrayList<HistoriquePlis> mHistoriquePlis = new ArrayList<>();
+        // On parcours l'historique des plis
+        int scorePli = 0;
+        String joueurRemportePli="";
+        Node noeudHistorique = getNoeudUnique(doc, "Historique");
+        for (int i=0; i<noeudHistorique.getChildNodes().getLength(); i++) { // Parcours toutes les plis
+            Node noeudPli = noeudHistorique.getChildNodes().item(i);
+            ArrayList<Pli> histoPli = parseNoeudsPlis(noeudPli); // Charge les cartes du pli
+
+            scorePli = 0;
+            joueurRemportePli ="";
+            for (int j = 0; j < noeudPli.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud pli
+                switch (noeudPli.getAttributes().item(j).getNodeName()) {
+                    case "numero":
+                        break;
+                    case "score":
+                        scorePli = Integer.parseInt(noeudPli.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "joueur":
+                        joueurRemportePli = noeudPli.getAttributes().item(j).getNodeValue();
+                        break;
+                }
+            }
+            HistoriquePlis histoPlis = new HistoriquePlis(histoPli, scorePli, joueurRemportePli);
+            mHistoriquePlis.add(histoPlis);
+        }
+        // Ajout du pli en cours en dernier élément de l'historique
+        if (mNumeroPli == 8) {
+            Node noeudPli = getNoeudUnique(doc, "Pli");
+            for (int j = 0; j < noeudPli.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud pli
+                switch (noeudPli.getAttributes().item(j).getNodeName()) {
+                    case "numero":
+                        break;
+                    case "score":
+                        scorePli = Integer.parseInt(noeudPli.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "joueur":
+                        joueurRemportePli = noeudPli.getAttributes().item(j).getNodeValue();
+                        break;
+                }
+            }
+            HistoriquePlis histoPlis = new HistoriquePlis(mListeCartesPliEnCours, scorePli, joueurRemportePli);
+            mHistoriquePlis.add(histoPlis);
+        }
+        // Affiche l'histotiques des plis
+        afficheHistoriquePlis(mHistoriquePlis);
+    }
+
+    private void afficheHistoriquePlis(ArrayList<HistoriquePlis> histoPlis) {
+        int[] idImageCarte;
+        // Parcours les plis
+        for(int i=0; i<histoPlis.size();i++) {
+            idImageCarte = getIdImageHisto(i);
+            HistoriquePlis histoPli = histoPlis.get(i);
+            TextView tv = findViewById(tableIdHistoScore[i]);
+            tv.setText(String.valueOf(histoPli.getScore()));
+            tv = findViewById(tableIdHistoJoueur[i]);
+            tv.setText(histoPli.getJoueurQuiRemportePli());
+            LinearLayout ll = findViewById(tableIdHistoLayout[i]);
+            ll.setVisibility(View.VISIBLE);
+
+            // Parcours les cartes du pli
+            for(int j=0;j<histoPli.getPlis().size();j++) {
+                ImageView iv = findViewById(idImageCarte[j]);
+                iv.setImageResource(getImageCarte(histoPli.getPlis().get(j).getCarte().getCouleur(),histoPli.getPlis().get(j).getCarte().getValeur()));
+            }
+        }
+        // Masque les pli non réalisés
+        for (int j=histoPlis.size();j<8;j++) {
+            LinearLayout ll = findViewById(tableIdHistoLayout[j]);
+            ll.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private int[] getIdImageHisto(int i) {
+        int[] idImageCarte = new int[4];
+        switch (i) {
+            case 0:
+                idImageCarte = tableIdHisto1;
+                break;
+            case 1:
+                idImageCarte = tableIdHisto2;
+                break;
+            case 2:
+                idImageCarte = tableIdHisto3;
+                break;
+            case 3:
+                idImageCarte = tableIdHisto4;
+                break;
+            case 4:
+                idImageCarte = tableIdHisto5;
+                break;
+            case 5:
+                idImageCarte = tableIdHisto6;
+                break;
+            case 6:
+                idImageCarte = tableIdHisto7;
+                break;
+            case 7:
+                idImageCarte = tableIdHisto8;
+                break;
+        }
+
+        return idImageCarte;
+    }
+
+    private ArrayList<Pli> parseNoeudsPlis(Node NoeudCartes) {
+        String pseudo="";
+        String couleur="";
+        int valeur=0;
+        String com="";
+        ArrayList<Pli> listePli = new ArrayList<>();
+
+        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
+            Log.d("PGR-XML-Pli",noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Pli", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "joueur" :
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "couleur" :
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur" :
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "com" :
+                        com = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                }
+            }
+            Pli pli = new Pli(pseudo,new Carte(couleur, valeur), com);
+            listePli.add(pli);
+        }
+
+        return listePli;
+
     }
 
     private ArrayList<Carte> parseNoeudsCarte(Document doc, String nomNoeud) {
@@ -757,14 +910,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         return listeJoueurs;
     }
 
-    private ArrayList<Pli> parseNoeudsPli(Document doc, String nomDuNoeud) {
+    private ArrayList<Pli> parseNoeudsPliFromDoc(Document doc, String nomDuNoeud) {
         Node NoeudCartes = getNoeudUnique(doc, nomDuNoeud);
-
-        String pseudo="";
-        String couleur="";
-        int valeur=0;
-        String com="";
-        ArrayList<Pli> listePli = new ArrayList<>();
 
         if(nomDuNoeud.equals("Pli")) {
             mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(0).getNodeValue());
@@ -772,31 +919,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             mTitrePli.setText(titrePli);
         }
 
-        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
-            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
-            Log.d("PGR-XML-Pli",noeudCarte.getNodeName());
-            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
-                Log.d("PGR-XML-Pli", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
-                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "joueur" :
-                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "couleur" :
-                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "valeur" :
-                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "com" :
-                        com = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                }
-            }
-            Pli pli = new Pli(pseudo,new Carte(couleur, valeur), com);
-            listePli.add(pli);
-        }
-
-        return listePli;
+        return parseNoeudsPlis(NoeudCartes);
     }
 
     private Node getNoeudUnique(Document doc, String nomDuNoeud) {

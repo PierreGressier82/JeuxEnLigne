@@ -189,24 +189,25 @@
                         android:textSize="20sp" />
 
                     <ImageView
-                    android:id="@+id/table_carte_image_atout"
-                    android:layout_width="80dp"
-                    android:layout_height="110dp"
-                    android:contentDescription="@string/carte"
-                    android:src="@drawable/trefle_valet" />
+                        android:id="@+id/table_carte_image_atout"
+                        android:layout_width="80dp"
+                        android:layout_height="110dp"
+                        android:contentDescription="@string/carte"
+                        android:src="@drawable/trefle_valet" />
 
                     <Button
                         android:id="@+id/bouton_passer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/passer"
-                        android:layout_marginTop="5dp"
                         android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginEnd="10dp"
                         android:background="@color/vert"
-                        android:textColor="@color/blanc"/>
+                        android:text="@string/passer"
+                        android:textColor="@color/blanc" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -272,32 +273,32 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:tag="coeur"
-                    android:src="@drawable/coeur" />
+                    android:src="@drawable/coeur"
+                    android:tag="coeur" />
 
                 <ImageView
                     android:id="@+id/image_2eme_tour_pique"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:tag="pique"
-                    android:src="@drawable/pique" />
+                    android:src="@drawable/pique"
+                    android:tag="pique" />
 
                 <ImageView
                     android:id="@+id/image_2eme_tour_carreau"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:tag="carreau"
-                    android:src="@drawable/carreau" />
+                    android:src="@drawable/carreau"
+                    android:tag="carreau" />
 
                 <ImageView
                     android:id="@+id/image_2eme_tour_trefle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:tag="trefle"
-                    android:src="@drawable/trefle" />
+                    android:src="@drawable/trefle"
+                    android:tag="trefle" />
             </LinearLayout>
 
             <TextView
@@ -340,7 +341,7 @@
                         android:id="@+id/table_carte_image_joueur1"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte"/>
+                        android:contentDescription="@string/carte" />
 
                     <TextView
                         android:id="@+id/table_pseudo_joueur3"
@@ -356,7 +357,7 @@
                         android:id="@+id/table_carte_image_joueur3"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte"/>
+                        android:contentDescription="@string/carte" />
 
                 </LinearLayout>
 
@@ -504,6 +505,542 @@
                         android:textSize="20sp" />
 
 
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli1"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli1"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli1"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli1"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli2"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli2"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli2"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli2"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli3"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli3"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli3"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli3"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli4"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli4"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli4"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli4"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli5"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli5"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli5"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli5"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli6"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli6"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli6"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli6"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli7"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli7"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli7"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli7"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_histo_pli8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte1_histo_pli8"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte2_histo_pli8"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte3_histo_pli8"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <ImageView
+                    android:id="@+id/carte4_histo_pli8"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/joueur_pli8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_pli8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
