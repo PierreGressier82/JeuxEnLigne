@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 1.16 : Correction distribution si nombre de carte pas équitable + ajout de plus de salons + correction double clic + The Crew : implémentation Zone de silence
      * 2.00 : The Crew - Implementation XML + refresh complet toutes les secondes
      * 2.01 : The Crew - Correction affichage tâches réalisées + blocage communication avant le pli autorisé
-     * 2.02 : Belote : Implémentation XML
-     * 2.03 : Belote : Ajout de l'affichage de l'historique des plis
+     * 2.02 : Belote : Implémentation XML + Gestion du chois de l'atout (1er et 2ème tour)
+     * 2.03 : Belote : Ajout de l'affichage de l'historique des plis + score + joueur qui remporte le pli
      */
     // Variables statiques
     private static final String mNumVersion = "2.03";

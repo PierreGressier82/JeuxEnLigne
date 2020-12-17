@@ -724,7 +724,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         // Masque les pli non réalisés
         for (int j=histoPlis.size();j<8;j++) {
             LinearLayout ll = findViewById(tableIdHistoLayout[j]);
-            ll.setVisibility(View.VISIBLE);
+            ll.setVisibility(View.GONE);
         }
     }
 
