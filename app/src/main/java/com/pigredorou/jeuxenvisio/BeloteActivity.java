@@ -645,16 +645,20 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         TextView tvScore = findViewById(R.id.score_partie_equipe1);
         String scorePar = "(" + scorePartie[0] + ")";
         tvScore.setText(scorePar);
+        tvScore.setTag(scorePartie[0]);
         tvScore = findViewById(R.id.score_partie_equipe2);
         scorePar = "(" + scorePartie[1] + ")";
         tvScore.setText(scorePar);
+        tvScore.setText(scorePartie[1]);
     }
 
     private void passerTourSuivante() {
+        // On change de premier joueur
         if (mNumeroPli==0)
             new MainActivity.TacheURLSansRetour().execute(urlTourSuivant+mIdPartie);
         else
         {
+            // Prise en compte des scores de la partie
             TextView tvScore1 = findViewById(R.id.score_partie_equipe1);
             TextView tvScore2 = findViewById(R.id.score_partie_equipe2);
             TextView tvEquipe1 = findViewById(R.id.score_equipe1);
@@ -664,6 +668,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             urlTS+="&score1="+tvScore1.getText().toString()+"&score2="+tvScore2.getText().toString();
             new MainActivity.TacheURLSansRetour().execute(urlTS);
         }
+        // On distribue les cartes
+        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlDistribueCartes+mIdPartie+"&typeCarte=4&nbCarteParJoueur=4&belote=Table");
     }
 
     private int[] getIdImageHisto(int i) {
@@ -783,12 +789,14 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 TextView tvScore = findViewById(R.id.score_partie_equipe1);
                 tvScore.setText("");
+                tvScore.setTag("");
                 tvScore = findViewById(R.id.score_partie_equipe2);
                 tvScore.setText("");
-                if (mNumeroPli != 0)
-                    mBoutonTourSuivant.setVisibility(View.GONE);
+                tvScore.setTag("");
             }
         }
+        if (mNumeroPli == 0)
+            mBoutonTourSuivant.setVisibility(View.VISIBLE);
     }
 
     private ArrayList<Pli> parseNoeudsPlis(Node NoeudCartes) {

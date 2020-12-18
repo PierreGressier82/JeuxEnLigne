@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Variables statiques
     private static final String mNumVersion = "2.06";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
-    private static final String urlGetSalons = url + "getSalons.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
+    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
+    private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
-    private static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
     private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
     private static final String urlEchangeCarte = url + "echangeCarte.php?partie=";
