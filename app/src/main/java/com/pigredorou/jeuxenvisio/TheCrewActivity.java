@@ -67,6 +67,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?partie=";
     private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
     private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
+    private static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
     private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
@@ -324,7 +325,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                     new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&joueur="+mPseudo);
                                 }
                             });
-                            Thread.sleep(1000);
+                            Thread.sleep(2000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -459,7 +460,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             default:
                 if (v.getTag().toString().startsWith("tacheAAttribuer")) {
-                    clickTacheAAttribuer(v);
+                    clicTacheAAttribuer(v);
                 }
                 break;
         }
@@ -485,7 +486,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         //iv.setVisibility(View.VISIBLE);
     }
 
-    private void clickTacheAAttribuer (View v) {
+    private void clicTacheAAttribuer(View v) {
         String[] chaine = v.getTag().toString().split("_"); // ex : tacheAAttribuer_bleu_2
         String couleurTacheActive = chaine[1];
         String valeurTacheActive = chaine[2];
@@ -615,7 +616,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
-            clickTacheAAttribuer(v);
+            clicTacheAAttribuer(v);
         }
         else {
             switch (v.getId()) {
@@ -636,8 +637,22 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 case R.id.tache3_joueur5:
                     clicTache(v);
                     break;
+                case R.id.table_carte_image_joueur1:
+                case R.id.table_carte_image_joueur2:
+                case R.id.table_carte_image_joueur3:
+                case R.id.table_carte_image_joueur4:
+                case R.id.table_carte_image_joueur5:
+                    clicAnnulCarte(v);
+                    break;
             }
         }
+    }
+
+    private void clicAnnulCarte(View v) {
+        ImageView iv = findViewById(v.getId());
+        String[] chaine = iv.getTag().toString().split("_");
+        new MainActivity.TacheURLSansRetour().execute(urlAnnulCarte+mIdPartie+"&couleur_carte="+chaine[1]+"&valeur_carte="+chaine[2]);
+        Toast.makeText(this, "Carte "+chaine[2]+" "+chaine[1]+" annulée", Toast.LENGTH_SHORT).show();
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -731,7 +746,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 String pseudoTexte=mListePseudo[positionJoueur];
                 if (mListePseudo[positionJoueur].equals(mCommandant)) {
                     pseudo.setTextColor(getResources().getColor(R.color.noir));
-                    //pseudoTexte="^"+mCommandant+"^";
                 }
                 else
                     pseudo.setTextColor(getResources().getColor(R.color.blanc));
@@ -740,9 +754,15 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
                 if (plis!=null && i < plis.size()) {
                     imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
-                    imageCarte.setTag("carte_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
+                    imageCarte.setTag("pli_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
                     imageCarte.setVisibility(View.VISIBLE);
+                    // Rend clicable uniquement la dernière carte posée si c'est ma carte
+                    if ((i+1) == plis.size() && mPseudo.equals(pseudoTexte))
+                        imageCarte.setOnTouchListener(this);
+                    else
+                        imageCarte.setOnTouchListener(null);
                 } else {
+                    imageCarte.setOnTouchListener(null);
                     imageCarte.setVisibility(View.INVISIBLE);
                 }
             }
@@ -751,7 +771,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void afficheTaches(ArrayList<Tache> taches) {
-        int nbTacheAffectees=0;
         int ligneTache=0;
         int[] nbTacheParJoueur= new int[mListePseudo.length];
         TableRow trTacheAAttribuer = findViewById(R.id.taches_a_attribuer);
@@ -789,7 +808,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             else {
                 if(i == 0) // Aucune tache a attribuee, on masque le titre
                     mTitreTachesAAtribuer.setVisibility(View.GONE);
-                nbTacheAffectees++;
                 int indexPseudo = getIndexPseudo(pseudoTache);
 
                 // Affichage ligne

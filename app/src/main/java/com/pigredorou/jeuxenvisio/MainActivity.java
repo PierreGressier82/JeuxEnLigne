@@ -42,9 +42,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.01 : The Crew - Correction affichage tâches réalisées + blocage communication avant le pli autorisé
      * 2.02 : Belote : Implémentation XML + Gestion du chois de l'atout (1er et 2ème tour)
      * 2.03 : Belote : Ajout de l'affichage de l'historique des plis + score + joueur qui remporte le pli
+     * 2.04 : Belote : Ajout de l'affichage des scores
+     * 2.05 : The Crew : Annulation dernière carte posée sur double clic (uniquement par le joueur qui l'a posé)
      */
     // Variables statiques
-    private static final String mNumVersion = "2.03";
+    private static final String mNumVersion = "2.05";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     private static final String urlGetSalons = url + "getSalons.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";

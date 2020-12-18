@@ -541,6 +541,16 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <Button
+                android:id="@+id/bouton_tour_suivant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/blanc"
+                android:text="Passer au tour suivant"
+                android:background="@color/vert"/>
+
             <LinearLayout
                 android:id="@+id/layout_histo_pli1"
                 android:layout_width="match_parent"
