@@ -462,6 +462,23 @@
                         android:textColor="@color/blanc"
                         android:textSize="20sp" />
 
+                    <TextView
+                        android:id="@+id/score_total_equipe1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/score_partie_equipe1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -504,7 +521,23 @@
                         android:textColor="@color/blanc"
                         android:textSize="20sp" />
 
+                    <TextView
+                        android:id="@+id/score_total_equipe2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
 
+                    <TextView
+                        android:id="@+id/score_partie_equipe2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 

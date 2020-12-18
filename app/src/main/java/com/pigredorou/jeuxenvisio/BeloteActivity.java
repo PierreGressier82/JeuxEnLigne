@@ -78,6 +78,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private int mIdSalon;
     private int mIdPartie;
     private int mNumeroPli=0;
+    private int[] scorePartie = {0,0};
     private ArrayList<Carte> mListeCartesMainJoueur;
     private ArrayList<Pli> mListeCartesPliEnCours;
     private ArrayList<Joueur> mListeJoueurs;
@@ -164,6 +165,19 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         return pseudoQuiDoitJoueur;
+    }
+
+    private String getEquipeJoueur(String pseudo) {
+        String equipe="";
+
+        for (int i=0;i<mListeJoueurs.size();i++) {
+            if (pseudo.equals(mListeJoueurs.get(i).getNomJoueur())) {
+                equipe = mListeJoueurs.get(i).getNomEquipe();
+                break;
+            }
+        }
+
+        return equipe;
     }
 
     private void startRefreshAuto() {
@@ -510,63 +524,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void afficheTable(ArrayList<Pli> plis) {
-        TextView pseudo;
-        ImageView imageCarte;
-        int nbJoueur = mListePseudo.length;
-        int positionPremierJoueur = 0;
-        int positionJoueur;
-        // On récupère la place du premier joueur
-        if (plis != null && plis.size() > 0) {
-            for (int j = 0; j < nbJoueur; j++) {
-                if (mListePseudo[j].equals(plis.get(0).getJoueur())) {
-                    positionPremierJoueur = j;
-                    debug("posPremJoueur " + positionPremierJoueur);
-                }
-            }
-        } else {
-            // Si on a pas encore joué, on positionne le commandant comme premier joueur
-            for (int i = 0; i < nbJoueur; i++)
-                if (mListePseudo[i].equals(mJoueurQuiAPris)) {
-                    positionPremierJoueur = i;
-                    break;
-                }
-        }
-        // On parcours les id des pseudo
-        for (int i = 0; i < tableIdPseudoPli.length; i++) {
-            pseudo = findViewById(tableIdPseudoPli[i]);
-            imageCarte = findViewById(tableIdImageCartePli[i]);
-            // Si moins de 5 joueurs, on retire de l'écran
-            if (i >= nbJoueur) {
-                pseudo.setVisibility(View.GONE);
-                imageCarte.setVisibility(View.GONE);
-            }
-            // Affichage de tous les pseudo dans l'ordre de jeu, même si le joueur n'a pas encore joué
-            else {
-                positionJoueur = (positionPremierJoueur + i) % nbJoueur;
-                debug("posJoueurNonJoué " + i + " positionPremierJoueur " + positionPremierJoueur + " nbJoueur " + nbJoueur + " positionJoueur" + positionJoueur);
-                // Si le joueur est le commmandant, on affiche le nom en noir
-                String pseudoTexte=mListePseudo[positionJoueur];
-                if (mListePseudo[positionJoueur].equals(mJoueurQuiAPris)) {
-                    pseudo.setTextColor(getResources().getColor(R.color.noir));
-                }
-                else
-                    pseudo.setTextColor(getResources().getColor(R.color.blanc));
-                pseudo.setText(pseudoTexte);
-                pseudo.setVisibility(View.VISIBLE);
-
-                if (plis!=null && i < plis.size()) {
-                    imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
-                    imageCarte.setTag("carte_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
-                    imageCarte.setVisibility(View.VISIBLE);
-                } else {
-                    imageCarte.setVisibility(View.INVISIBLE);
-                }
-            }
-
-        }
-    }
-
     private void affichePseudos(ArrayList<Joueur> listeJoueurs) {
         mListePseudo = new String[listeJoueurs.size()];
         TextView tv;
@@ -577,6 +534,30 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             tv.setText(mListePseudo[i]);
             tv.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void afficheScore() {
+        TextView tv = findViewById(tableIdPseudoPli[0]);
+        String pseudoPremierJoueur = tv.getText().toString();
+        int posPremierJoueur = -1;
+
+        TextView tvScoreEquipe = findViewById(R.id.score_equipe1);
+        TextView tvScoreTotal = findViewById(R.id.score_total_equipe1);
+
+        for (int i=0;i<mListeJoueurs.size();i++) {
+            if (pseudoPremierJoueur.equals(mListeJoueurs.get(i).getNomJoueur())) {
+                tvScoreEquipe.setText(mListeJoueurs.get(i).getNomEquipe());
+                tvScoreTotal.setText(String.valueOf(mListeJoueurs.get(i).getScoreEquipe()));
+                posPremierJoueur=i;
+                break;
+            }
+        }
+
+        tvScoreEquipe = findViewById(R.id.score_equipe2);
+        tvScoreTotal = findViewById(R.id.score_total_equipe2);
+
+        tvScoreEquipe.setText(mListeJoueurs.get((posPremierJoueur+1)%2).getNomEquipe());
+        tvScoreTotal.setText(String.valueOf(mListeJoueurs.get((posPremierJoueur+1)%2).getScoreEquipe()));
     }
 
     private void affichePliEnCours(ArrayList<Pli> plis) {
@@ -617,15 +598,78 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private int getIndexPseudo(String pseudo) {
-        int index=0;
-        for (int i=0;i<mListePseudo.length;i++) {
-            if(mListePseudo[i].equals(pseudo)) {
-                index=i;
-                break;
+    private void afficheHistoriquePlis(ArrayList<HistoriquePlis> histoPlis) {
+        int[] idImageCarte;
+        scorePartie[0]=0;
+        scorePartie[1]=0;
+        TextView tvEquipe = findViewById(R.id.score_equipe1);
+        String equipePremierJoueur = tvEquipe.getText().toString();
+        // Parcours les plis
+        for(int i=0; i<histoPlis.size();i++) {
+            idImageCarte = getIdImageHisto(i);
+            HistoriquePlis histoPli = histoPlis.get(i);
+            TextView tv = findViewById(tableIdHistoScore[i]);
+            tv.setText(String.valueOf(histoPli.getScore()));
+            tv = findViewById(tableIdHistoJoueur[i]);
+            tv.setText(histoPli.getJoueurQuiRemportePli());
+            LinearLayout ll = findViewById(tableIdHistoLayout[i]);
+            ll.setVisibility(View.VISIBLE);
+
+            if (equipePremierJoueur.equals(getEquipeJoueur(histoPli.getJoueurQuiRemportePli())))
+                scorePartie[0]+=histoPli.getScore();
+            else
+                scorePartie[1]+=histoPli.getScore();
+
+            // Parcours les cartes du pli
+            for(int j=0;j<histoPli.getPlis().size();j++) {
+                ImageView iv = findViewById(idImageCarte[j]);
+                iv.setImageResource(getImageCarte(histoPli.getPlis().get(j).getCarte().getCouleur(),histoPli.getPlis().get(j).getCarte().getValeur()));
             }
         }
-        return index;
+        // Masque les pli non réalisés
+        for (int j=histoPlis.size();j<8;j++) {
+            LinearLayout ll = findViewById(tableIdHistoLayout[j]);
+            ll.setVisibility(View.GONE);
+        }
+        // Affiche score de la partie
+        TextView tvScore = findViewById(R.id.score_partie_equipe1);
+        String scorePar = "(" + scorePartie[0] + ")";
+        tvScore.setText(scorePar);
+        tvScore = findViewById(R.id.score_partie_equipe2);
+        scorePar = "(" + scorePartie[1] + ")";
+        tvScore.setText(scorePar);
+    }
+
+    private int[] getIdImageHisto(int i) {
+        int[] idImageCarte = new int[4];
+        switch (i) {
+            case 0:
+                idImageCarte = tableIdHisto1;
+                break;
+            case 1:
+                idImageCarte = tableIdHisto2;
+                break;
+            case 2:
+                idImageCarte = tableIdHisto3;
+                break;
+            case 3:
+                idImageCarte = tableIdHisto4;
+                break;
+            case 4:
+                idImageCarte = tableIdHisto5;
+                break;
+            case 5:
+                idImageCarte = tableIdHisto6;
+                break;
+            case 6:
+                idImageCarte = tableIdHisto7;
+                break;
+            case 7:
+                idImageCarte = tableIdHisto8;
+                break;
+        }
+
+        return idImageCarte;
     }
 
     private void debug(String message) {
@@ -648,6 +692,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         // Pli en cours
         mListeCartesPliEnCours = parseNoeudsPliFromDoc(doc, "Pli");
         affichePliEnCours(mListeCartesPliEnCours);
+        afficheScore();
 
         // Atout
         ArrayList<Carte> mListeCarteAtout = parseNoeudsCarte(doc, "Atout");
@@ -682,6 +727,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Ajout du pli en cours en dernier élément de l'historique
         if (mNumeroPli == 8) {
+            //mScorePartie
             Node noeudPli = getNoeudUnique(doc, "Pli");
             for (int j = 0; j < noeudPli.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud pli
                 switch (noeudPli.getAttributes().item(j).getNodeName()) {
@@ -697,67 +743,13 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             }
             HistoriquePlis histoPlis = new HistoriquePlis(mListeCartesPliEnCours, scorePli, joueurRemportePli);
             mHistoriquePlis.add(histoPlis);
-        }
-        // Affiche l'histotiques des plis
-        afficheHistoriquePlis(mHistoriquePlis);
-    }
 
-    private void afficheHistoriquePlis(ArrayList<HistoriquePlis> histoPlis) {
-        int[] idImageCarte;
-        // Parcours les plis
-        for(int i=0; i<histoPlis.size();i++) {
-            idImageCarte = getIdImageHisto(i);
-            HistoriquePlis histoPli = histoPlis.get(i);
-            TextView tv = findViewById(tableIdHistoScore[i]);
-            tv.setText(String.valueOf(histoPli.getScore()));
-            tv = findViewById(tableIdHistoJoueur[i]);
-            tv.setText(histoPli.getJoueurQuiRemportePli());
-            LinearLayout ll = findViewById(tableIdHistoLayout[i]);
-            ll.setVisibility(View.VISIBLE);
+            // Affiche l'histotiques des plis en fin de partie
+            if (mListeCartesPliEnCours.size() == 4) {
+                afficheHistoriquePlis(mHistoriquePlis);
 
-            // Parcours les cartes du pli
-            for(int j=0;j<histoPli.getPlis().size();j++) {
-                ImageView iv = findViewById(idImageCarte[j]);
-                iv.setImageResource(getImageCarte(histoPli.getPlis().get(j).getCarte().getCouleur(),histoPli.getPlis().get(j).getCarte().getValeur()));
             }
         }
-        // Masque les pli non réalisés
-        for (int j=histoPlis.size();j<8;j++) {
-            LinearLayout ll = findViewById(tableIdHistoLayout[j]);
-            ll.setVisibility(View.GONE);
-        }
-    }
-
-    private int[] getIdImageHisto(int i) {
-        int[] idImageCarte = new int[4];
-        switch (i) {
-            case 0:
-                idImageCarte = tableIdHisto1;
-                break;
-            case 1:
-                idImageCarte = tableIdHisto2;
-                break;
-            case 2:
-                idImageCarte = tableIdHisto3;
-                break;
-            case 3:
-                idImageCarte = tableIdHisto4;
-                break;
-            case 4:
-                idImageCarte = tableIdHisto5;
-                break;
-            case 5:
-                idImageCarte = tableIdHisto6;
-                break;
-            case 6:
-                idImageCarte = tableIdHisto7;
-                break;
-            case 7:
-                idImageCarte = tableIdHisto8;
-                break;
-        }
-
-        return idImageCarte;
     }
 
     private ArrayList<Pli> parseNoeudsPlis(Node NoeudCartes) {
@@ -829,6 +821,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         String pseudo="";
         String equipe="";
         int admin=0;
+        int scoreEquipe=0;
         int nbJoueurQuiPassent=0;
         int maPostion=-1;
         boolean estCeLe2EmeTour=false;
@@ -857,6 +850,9 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                         break;
                     case "equipe" :
                         equipe = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "scoreEquipe" :
+                        scoreEquipe = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
                     case "contrat" :
                         String contrat = noeudCarte.getAttributes().item(j).getNodeValue();
@@ -887,7 +883,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                         break;
                 }
             }
-            Joueur joueur = new Joueur(pseudo, equipe, admin);
+            Joueur joueur = new Joueur(pseudo, equipe, scoreEquipe, admin);
             listeJoueurs.add(joueur);
         }
 
@@ -930,47 +926,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         return noeud;
-    }
-
-    /**
-     * Classe qui permet de récupérer la carte atout proposée
-     * -> Retourne la carte atout proposée (21ème carte de la distribution)
-     */
-    private class TacheGetCarteAtout extends AsyncTask<String, Void, ArrayList<Carte>> {
-        String result;
-
-        @Override
-        protected ArrayList<Carte> doInBackground(String... strings) {
-            ArrayList<Carte> cartes = new ArrayList<>();
-            URL url;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null) {
-                    String[] chaine = stringBuffer.split("_");
-                    Carte carte = new Carte(chaine[0], Integer.parseInt(chaine[1]));
-                    cartes.add(carte);
-                    string = String.format("%s%s", string, stringBuffer);
-
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
-            }
-
-            return cartes;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Carte> cartes) {
-            afficheCarteAtout(cartes);
-            super.onPostExecute(cartes);
-        }
     }
 
     /**
