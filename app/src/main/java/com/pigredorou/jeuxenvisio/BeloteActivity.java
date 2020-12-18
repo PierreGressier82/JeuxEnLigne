@@ -69,6 +69,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private static final String urlJoueCarte = MainActivity.url + "majTable.php?partie=";
     private static final String urlDistribueBelote = MainActivity.url + "distribueBelote.php?partie=";
     private static final String urlMAJContrat = MainActivity.url + "majContrat.php?partie=";
+    private static final String urlTourSuivant = MainActivity.url + "tourSuivant.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -98,6 +99,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     long mDurationClick;
     static final int MAX_DURATION_CLICK = 500;
     static final int MAX_DURATION_DOUBLE_CLICK = 2000;
+    // Tour suivant
+    Button mBoutonTourSuivant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +142,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         // Table
         mTitrePli = findViewById(R.id.titre_pli);
         mTitrePli.setOnClickListener(this);
-        // TODO : mise à jour du numero de plis en cours
         mTable = findViewById(R.id.table);
 
         // Refresh auto
@@ -147,6 +149,11 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
         mBoutonRefreshAuto.setOnClickListener(this);
         mHeureRefresh = findViewById(R.id.heure_refresh);
+
+        // Tour suivant
+        mBoutonTourSuivant = findViewById(R.id.bouton_tour_suivant);
+        mBoutonTourSuivant.setOnClickListener(this);
+        mBoutonTourSuivant.setVisibility(View.GONE);
     }
 
     private String getPseudoQuiDoitJouer() {
@@ -301,6 +308,9 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                         new MainActivity.TacheURLSansRetour().execute(urlMAJContrat+mIdPartie+"&joueur="+mPseudo+"&contrat=deux");
                         break;
                 }
+                break;
+            case R.id.bouton_tour_suivant:
+                passerTourSuivante();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
@@ -640,6 +650,22 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         tvScore.setText(scorePar);
     }
 
+    private void passerTourSuivante() {
+        if (mNumeroPli==0)
+            new MainActivity.TacheURLSansRetour().execute(urlTourSuivant+mIdPartie);
+        else
+        {
+            TextView tvScore1 = findViewById(R.id.score_partie_equipe1);
+            TextView tvScore2 = findViewById(R.id.score_partie_equipe2);
+            TextView tvEquipe1 = findViewById(R.id.score_equipe1);
+            TextView tvEquipe2 = findViewById(R.id.score_equipe2);
+
+            String urlTS = urlTourSuivant+mIdPartie+"&equipe1="+tvEquipe1.getText().toString()+"&equipe2="+ tvEquipe2.getText().toString();
+            urlTS+="&score1="+tvScore1.getText().toString()+"&score2="+tvScore2.getText().toString();
+            new MainActivity.TacheURLSansRetour().execute(urlTS);
+        }
+    }
+
     private int[] getIdImageHisto(int i) {
         int[] idImageCarte = new int[4];
         switch (i) {
@@ -747,7 +773,20 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             // Affiche l'histotiques des plis en fin de partie
             if (mListeCartesPliEnCours.size() == 4) {
                 afficheHistoriquePlis(mHistoriquePlis);
-
+                mBoutonTourSuivant.setVisibility(View.VISIBLE);
+            }
+            else {
+                // Masque l'historique
+                for (int value : tableIdHistoLayout) {
+                    LinearLayout ll = findViewById(value);
+                    ll.setVisibility(View.GONE);
+                }
+                TextView tvScore = findViewById(R.id.score_partie_equipe1);
+                tvScore.setText("");
+                tvScore = findViewById(R.id.score_partie_equipe2);
+                tvScore.setText("");
+                if (mNumeroPli != 0)
+                    mBoutonTourSuivant.setVisibility(View.GONE);
             }
         }
     }
