@@ -669,7 +669,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             new MainActivity.TacheURLSansRetour().execute(urlTS);
         }
         // On distribue les cartes
-        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlDistribueCartes+mIdPartie+"&typeCarte=4&nbCarteParJoueur=4&belote=Table");
+        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlDistribueCartes+mIdPartie+"&typeCarte=4&nbCarteParJoueur=5&belote=Table");
     }
 
     private int[] getIdImageHisto(int i) {
@@ -795,8 +795,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 tvScore.setTag("");
             }
         }
-        if (mNumeroPli == 0)
-            mBoutonTourSuivant.setVisibility(View.VISIBLE);
     }
 
     private ArrayList<Pli> parseNoeudsPlis(Node NoeudCartes) {
@@ -942,6 +940,9 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
         else
             mEstCeMonTourDeChoisir=0;
+
+        if (estCeLe2EmeTour && nbJoueurQuiPassent==4)
+            mBoutonTourSuivant.setVisibility(View.VISIBLE);
 
         // Si tout le monde a répondu pour le premier tour, affichage des couleurs pour le second tour
         LinearLayout ll = findViewById(R.id.layout_couleur_2eme_tour);
