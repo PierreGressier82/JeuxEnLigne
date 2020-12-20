@@ -500,6 +500,9 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private void afficheCarteAtout(ArrayList<Carte> cartes) {
         // Affiche la carte
         if (cartes != null && cartes.size()>0) {
+            // Affiche le choix de l'atout
+            LinearLayout ll = findViewById(R.id.layout_choix_atout);
+            ll.setVisibility(View.VISIBLE);
             ImageView imageCarte = findViewById(R.id.table_carte_image_atout);
             String couleur = cartes.get(0).getCouleur();
             String nomCarte = couleur + "_" + cartes.get(0).getValeur();
@@ -527,6 +530,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             iv.setVisibility(View.GONE);
             mTable.setVisibility(View.GONE);
         }
+        // Cache la zone du choix l'atout
         else {
             afficheCouleurAtout(R.id.table_carte_image_couleur_atout, mAtoutChoisi);
             MasqueChoixAtout();
@@ -731,17 +735,21 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         afficheCarteAtout(mListeCarteAtout);
 
         // Historique des plis joués
+        parseEtAfficheNoeudsHisto(doc);
+    }
+
+    private void parseEtAfficheNoeudsHisto(Document doc) {
         ArrayList<HistoriquePlis> mHistoriquePlis = new ArrayList<>();
         // On parcours l'historique des plis
         int scorePli = 0;
-        String joueurRemportePli="";
+        String joueurRemportePli = "";
         Node noeudHistorique = getNoeudUnique(doc, "Historique");
-        for (int i=0; i<noeudHistorique.getChildNodes().getLength(); i++) { // Parcours toutes les plis
+        for (int i = 0; i < noeudHistorique.getChildNodes().getLength(); i++) { // Parcours toutes les plis
             Node noeudPli = noeudHistorique.getChildNodes().item(i);
             ArrayList<Pli> histoPli = parseNoeudsPlis(noeudPli); // Charge les cartes du pli
 
             scorePli = 0;
-            joueurRemportePli ="";
+            joueurRemportePli = "";
             for (int j = 0; j < noeudPli.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud pli
                 switch (noeudPli.getAttributes().item(j).getNodeName()) {
                     case "numero":
@@ -757,6 +765,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             HistoriquePlis histoPlis = new HistoriquePlis(histoPli, scorePli, joueurRemportePli);
             mHistoriquePlis.add(histoPlis);
         }
+
         // Ajout du pli en cours en dernier élément de l'historique
         if (mNumeroPli == 8) {
             //mScorePartie
@@ -780,8 +789,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             if (mListeCartesPliEnCours.size() == 4) {
                 afficheHistoriquePlis(mHistoriquePlis);
                 mBoutonTourSuivant.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 // Masque l'historique
                 for (int value : tableIdHistoLayout) {
                     LinearLayout ll = findViewById(value);
@@ -943,6 +951,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
         if (estCeLe2EmeTour && nbJoueurQuiPassent==4)
             mBoutonTourSuivant.setVisibility(View.VISIBLE);
+        else
+            mBoutonTourSuivant.setVisibility(View.GONE);
 
         // Si tout le monde a répondu pour le premier tour, affichage des couleurs pour le second tour
         LinearLayout ll = findViewById(R.id.layout_couleur_2eme_tour);
