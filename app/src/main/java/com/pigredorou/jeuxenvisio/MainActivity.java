@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.04 : Belote : Ajout de l'affichage des scores
      * 2.05 : The Crew : Annulation dernière carte posée sur double clic (uniquement par le joueur qui l'a posé)
      * 2.06 : Belote : Gestion tour suivant (changement premier joueur + maj score)
+     * 2.07 : Belote : Correction bug refresh histo + couleur choix 2ème tour
      */
     // Variables statiques
     private static final String mNumVersion = "2.06";

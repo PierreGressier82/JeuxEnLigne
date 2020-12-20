@@ -425,26 +425,33 @@
 
                     <ImageView
                         android:id="@+id/bouton_donne_a_gauche"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="50dp"
+                        android:layout_weight="0.2"
+                        android:contentDescription="@string/the_crew" />
+
+                    <ImageView
+                        android:id="@+id/bouton_detresse"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.2"
                         android:contentDescription="@string/the_crew"
-                        android:src="@drawable/jeton_communication_off"
-                        android:visibility="gone" />
+                        android:src="@drawable/detresse_noir" />
 
                     <ImageView
                         android:id="@+id/bouton_communication"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="50dp"
+                        android:layout_weight="0.2"
                         android:contentDescription="@string/the_crew"
                         android:src="@drawable/jeton_communication_off" />
 
                     <ImageView
                         android:id="@+id/bouton_donne_a_droite"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="50dp"
-                        android:contentDescription="@string/the_crew"
-                        android:src="@drawable/jeton_communication_off"
-                        android:visibility="gone" />
+                        android:layout_weight="0.2"
+                        android:contentDescription="@string/the_crew" />
                 </LinearLayout>
 
                 <TextView

@@ -49,6 +49,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private static final int[] imagesCoeur = {0, 0, 0, 0, 0, 0, 0, R.drawable.coeur_7, R.drawable.coeur_8, R.drawable.coeur_9, R.drawable.coeur_10, R.drawable.coeur_valet, R.drawable.coeur_dame, R.drawable.coeur_roi, R.drawable.coeur_as};
     private static final int[] imagesTrefle = {0, 0, 0, 0, 0, 0, 0, R.drawable.trefle_7, R.drawable.trefle_8, R.drawable.trefle_9, R.drawable.trefle_10, R.drawable.trefle_valet, R.drawable.trefle_dame, R.drawable.trefle_roi, R.drawable.trefle_as};
     private static final int[] imagesCarreau = {0, 0, 0, 0, 0, 0, 0, R.drawable.carreau_7, R.drawable.carreau_8, R.drawable.carreau_9, R.drawable.carreau_10, R.drawable.carreau_valet, R.drawable.carreau_dame, R.drawable.carreau_roi, R.drawable.carreau_as};
+    private static final int[] imagesCouleur = {R.id.image_2eme_tour_coeur, R.id.image_2eme_tour_pique, R.id.image_2eme_tour_carreau, R.id.image_2eme_tour_trefle};
     private static final int[] tableIdImageCarteMain = {R.id.carte_1, R.id.carte_2, R.id.carte_3, R.id.carte_4, R.id.carte_5, R.id.carte_6, R.id.carte_7, R.id.carte_8};
     private static final int[] tableIdPseudoChoixAtout = {R.id.pseudo_joueur1_choix_atout, R.id.pseudo_joueur2_choix_atout, R.id.pseudo_joueur3_choix_atout, R.id.pseudo_joueur4_choix_atout};
     private static final int[] tableIdPseudoPli = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4};
@@ -291,7 +292,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 else
                     tag = v.getTag().toString();
-                afficheCouleurAtout(R.id.table_carte_image_couleur_atout, tag);
+                afficheCouleurAtout(tag);
                 new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+tag);
                 MasqueChoixAtout();
                 break;
@@ -317,23 +318,32 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void afficheCouleurAtout(int id, String couleur) {
-        ImageView iv = findViewById(id);
+    private void afficheCouleurAtout(String couleur) {
+        ImageView iv;
+        for (int value : imagesCouleur) {
+            iv = findViewById(value);
+            iv.setVisibility(View.GONE);
+        }
         switch (couleur) {
             default:
             case "coeur" :
+                iv = findViewById(imagesCouleur[0]);
                 iv.setImageResource(R.drawable.coeur);
                 break;
             case "pique" :
+                iv = findViewById(imagesCouleur[1]);
                 iv.setImageResource(R.drawable.pique);
                 break;
             case "trefle" :
+                iv = findViewById(imagesCouleur[3]);
                 iv.setImageResource(R.drawable.trefle);
                 break;
             case "carreau" :
+                iv = findViewById(imagesCouleur[2]);
                 iv.setImageResource(R.drawable.carreau);
                 break;
         }
+        iv.setVisibility(View.VISIBLE);
     }
 
     private void MasqueChoixAtout() {
@@ -532,7 +542,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Cache la zone du choix l'atout
         else {
-            afficheCouleurAtout(R.id.table_carte_image_couleur_atout, mAtoutChoisi);
+            afficheCouleurAtout(mAtoutChoisi);
             MasqueChoixAtout();
             mTable.setVisibility(View.VISIBLE);
         }
@@ -653,7 +663,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         tvScore = findViewById(R.id.score_partie_equipe2);
         scorePar = "(" + scorePartie[1] + ")";
         tvScore.setText(scorePar);
-        tvScore.setText(scorePartie[1]);
+        tvScore.setTag(scorePartie[1]);
     }
 
     private void passerTourSuivante() {
@@ -791,18 +801,25 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 mBoutonTourSuivant.setVisibility(View.VISIBLE);
             } else {
                 // Masque l'historique
-                for (int value : tableIdHistoLayout) {
-                    LinearLayout ll = findViewById(value);
-                    ll.setVisibility(View.GONE);
-                }
-                TextView tvScore = findViewById(R.id.score_partie_equipe1);
-                tvScore.setText("");
-                tvScore.setTag("");
-                tvScore = findViewById(R.id.score_partie_equipe2);
-                tvScore.setText("");
-                tvScore.setTag("");
+                masqueHistorique();
             }
+        } else {
+            // Masque l'historique
+            masqueHistorique();
         }
+    }
+
+    private void masqueHistorique() {
+        for (int value : tableIdHistoLayout) {
+            LinearLayout ll = findViewById(value);
+            ll.setVisibility(View.GONE);
+        }
+        TextView tvScore = findViewById(R.id.score_partie_equipe1);
+        tvScore.setText("");
+        tvScore.setTag("");
+        tvScore = findViewById(R.id.score_partie_equipe2);
+        tvScore.setText("");
+        tvScore.setTag("");
     }
 
     private ArrayList<Pli> parseNoeudsPlis(Node NoeudCartes) {

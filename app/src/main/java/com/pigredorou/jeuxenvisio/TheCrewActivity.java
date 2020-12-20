@@ -93,6 +93,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private TextView mTitrePli;
     private TextView mHeureRefresh;
     private TextView mObjectifCommun;
+    // Detresse
+    private Button mDetresse;
     // Communication
     private TextView mTitreCommunication;
     private TableLayout mTableauCommunication;
@@ -457,6 +459,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.tache4_joueur4:
             case R.id.tache4_joueur5:
                     clicTache(v);
+                break;
+
+            case R.id.bouton_detresse:
+                if (mDetresse.getResources().getResourceName(R.drawable.detresse).equals(R.drawable.detresse))
+                    mDetresse.setBackgroundResource(R.drawable.detresse_noir);
+                else
+                    mDetresse.setBackgroundResource(R.drawable.detresse);
                 break;
             default:
                 if (v.getTag().toString().startsWith("tacheAAttribuer")) {
