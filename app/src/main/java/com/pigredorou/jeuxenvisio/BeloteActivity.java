@@ -75,6 +75,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
     private String mJoueurQuiAPris; // Pseudo du joueur qui a décidé de l'atout
+    private String mJoueurQuiRemporteLePli; // Pseudo du joueur qui a remporté le pli
     private String mAtoutChoisi; // Atout de la partie
     private int mEstCeMonTourDeChoisir = 0; // 0:non, 1:premier tour, 2:2ème tour
     private int mIdSalon;
@@ -158,21 +159,21 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private String getPseudoQuiDoitJouer() {
-        String pseudoQuiDoitJoueur = "";
+        String pseudoQuiDoitJouer = "";
         ImageView iv;
         TextView tv;
-        // Parcourt les images pour savoir si c'est mon tour
+        // Parcours les images pour savoir si c'est mon tour
         for (int i = 0; i < tableIdImageCartePli.length; i++) {
             iv = findViewById(tableIdImageCartePli[i]);
             tv = findViewById(tableIdPseudoPli[i]);
             // On prends le pseudo de la première image invisible
             if (iv.getVisibility() == View.INVISIBLE) {
-                pseudoQuiDoitJoueur = tv.getText().toString();
-                debug("pseudoQuiDoitJoueur :" + pseudoQuiDoitJoueur);
+                pseudoQuiDoitJouer = tv.getText().toString();
+                debug("pseudoQuiDoitJouer :" + pseudoQuiDoitJouer);
                 break;
             }
         }
-        return pseudoQuiDoitJoueur;
+        return pseudoQuiDoitJouer;
     }
 
     private String getEquipeJoueur(String pseudo) {
@@ -292,7 +293,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 else
                     tag = v.getTag().toString();
-                afficheCouleurAtout(tag);
+                afficheCouleurAtout(R.id.table_carte_image_couleur_atout, tag);
                 new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+tag);
                 MasqueChoixAtout();
                 break;
@@ -318,32 +319,23 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void afficheCouleurAtout(String couleur) {
-        ImageView iv;
-        for (int value : imagesCouleur) {
-            iv = findViewById(value);
-            iv.setVisibility(View.GONE);
-        }
+    private void afficheCouleurAtout(int id, String couleur) {
+        ImageView iv = findViewById(id);
         switch (couleur) {
             default:
             case "coeur" :
-                iv = findViewById(imagesCouleur[0]);
                 iv.setImageResource(R.drawable.coeur);
                 break;
             case "pique" :
-                iv = findViewById(imagesCouleur[1]);
                 iv.setImageResource(R.drawable.pique);
                 break;
             case "trefle" :
-                iv = findViewById(imagesCouleur[3]);
                 iv.setImageResource(R.drawable.trefle);
                 break;
             case "carreau" :
-                iv = findViewById(imagesCouleur[2]);
                 iv.setImageResource(R.drawable.carreau);
                 break;
         }
-        iv.setVisibility(View.VISIBLE);
     }
 
     private void MasqueChoixAtout() {
@@ -419,7 +411,11 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             boolean JeJoueUneCarteAutorisee = false;
             // A qui est-ce le tour ?
             String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
-            String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
+            String messageErreur;
+            if (pseudoQuiDoitJouer.equals(""))
+                messageErreur = "C'est à " + mJoueurQuiRemporteLePli + " de jouer";
+            else
+                messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
             // Quelle est la couleur de la première carte jouée dans ce pli ?
             if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
                 ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
@@ -446,12 +442,28 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
             }
-            // Si je peux jouer la couleur ou si tout le monde a joué le pli
-            if (JeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
+            // Si je peux jouer la couleur ou si tout le monde a joué le pli et que j'ai remporté le pli
+            if (JeJoueUneCarteAutorisee || (pseudoQuiDoitJouer.equals("") && mJoueurQuiRemporteLePli.equals(mPseudo))) {
                 new BeloteActivity.TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
             } else
                 Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
+        } else {
+            switch (v.getId()) {
+                case R.id.table_carte_image_joueur1:
+                case R.id.table_carte_image_joueur2:
+                case R.id.table_carte_image_joueur3:
+                case R.id.table_carte_image_joueur4:
+                    clicAnnulCarte(v);
+                    break;
+            }
         }
+    }
+
+    private void clicAnnulCarte(View v) {
+        ImageView iv = findViewById(v.getId());
+        String[] chaine = iv.getTag().toString().split("_");
+        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlAnnulCarte + mIdPartie + "&couleur_carte=" + chaine[1] + "&valeur_carte=" + chaine[2]);
+        Toast.makeText(this, "Carte recupérée", Toast.LENGTH_SHORT).show();
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -520,8 +532,13 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             imageCarte.setTag("carte_" + nomCarte);
             imageCarte.setOnClickListener(this);
 
-            // Masque la couleur pour le 2ème tour (affiche tout en premier)
+            // Affiche toutes les couleurs
             ImageView iv;
+            for (int value : imagesCouleur) {
+                iv = findViewById(value);
+                iv.setVisibility(View.VISIBLE);
+            }
+            // Masque la couleur pour le 2ème tour
             switch (couleur) {
                 default:
                 case "coeur" :
@@ -542,7 +559,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Cache la zone du choix l'atout
         else {
-            afficheCouleurAtout(mAtoutChoisi);
+            afficheCouleurAtout(R.id.table_carte_image_couleur_atout, mAtoutChoisi);
             MasqueChoixAtout();
             mTable.setVisibility(View.VISIBLE);
         }
@@ -614,9 +631,15 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
             if (plis!=null && i < plis.size()) {
                 imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
-                imageCarte.setTag("carte_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
+                imageCarte.setTag("pli_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
                 imageCarte.setVisibility(View.VISIBLE);
+                // Rend clicable uniquement la dernière carte posée si c'est ma carte
+                if ((i + 1) == plis.size() && mPseudo.equals(pseudoTexte))
+                    imageCarte.setOnTouchListener(this);
+                else
+                    imageCarte.setOnTouchListener(null);
             } else {
+                imageCarte.setOnTouchListener(null);
                 imageCarte.setVisibility(View.INVISIBLE);
             }
         }
@@ -659,11 +682,11 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         TextView tvScore = findViewById(R.id.score_partie_equipe1);
         String scorePar = "(" + scorePartie[0] + ")";
         tvScore.setText(scorePar);
-        tvScore.setTag(scorePartie[0]);
+        //tvScore.setTag(scorePartie[0]);
         tvScore = findViewById(R.id.score_partie_equipe2);
         scorePar = "(" + scorePartie[1] + ")";
         tvScore.setText(scorePar);
-        tvScore.setTag(scorePartie[1]);
+        //tvScore.setTag(scorePartie[1]);
     }
 
     private void passerTourSuivante() {
@@ -679,7 +702,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             TextView tvEquipe2 = findViewById(R.id.score_equipe2);
 
             String urlTS = urlTourSuivant+mIdPartie+"&equipe1="+tvEquipe1.getText().toString()+"&equipe2="+ tvEquipe2.getText().toString();
-            urlTS+="&score1="+tvScore1.getText().toString()+"&score2="+tvScore2.getText().toString();
+            urlTS += "&score1=" + tvScore1.getTag().toString() + "&score2=" + tvScore2.getTag().toString();
             new MainActivity.TacheURLSansRetour().execute(urlTS);
         }
         // On distribue les cartes
@@ -736,7 +759,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         affichePseudos(mListeJoueurs);
 
         // Pli en cours
-        mListeCartesPliEnCours = parseNoeudsPliFromDoc(doc, "Pli");
+        mListeCartesPliEnCours = parseNoeudsPliFromDoc(doc);
         affichePliEnCours(mListeCartesPliEnCours);
         afficheScore();
 
@@ -746,6 +769,44 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
         // Historique des plis joués
         parseEtAfficheNoeudsHisto(doc);
+
+        // Score
+        parseNoeudsEquipeFromDoc(doc);
+        //afficheScore();
+    }
+
+    private void parseNoeudsEquipeFromDoc(Document doc) {
+        Node NoeudScores = getNoeudUnique(doc, "Scores");
+
+        for (int i = 0; i < NoeudScores.getChildNodes().getLength(); i++) { // Parcours toutes les équipes
+            Node noeudEquipe = NoeudScores.getChildNodes().item(i);
+            Log.d("PGR-XML-Equipe", noeudEquipe.getNodeName());
+            int scorePartie = 0;
+            int scoreTotal = 0;
+            String nomEquipe = "";
+            TextView tvEquipe = findViewById(R.id.score_equipe1);
+            String equipePremierJoueur = tvEquipe.getText().toString();
+            for (int j = 0; j < noeudEquipe.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud Equipe
+                Log.d("PGR-XML-Equipe", noeudEquipe.getAttributes().item(j).getNodeName() + "_" + noeudEquipe.getAttributes().item(j).getNodeValue());
+                switch (noeudEquipe.getAttributes().item(j).getNodeName()) {
+                    case "nom":
+                        nomEquipe = noeudEquipe.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "scorePartie":
+                        scorePartie = Integer.parseInt(noeudEquipe.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "scoreTotal":
+                        scoreTotal = Integer.parseInt(noeudEquipe.getAttributes().item(j).getNodeValue());
+                        break;
+                }
+            }
+
+            for (int index = 0; index < mListeJoueurs.size(); index++) {
+                if (mListeJoueurs.get(index).getNomEquipe().equals(nomEquipe)) {
+                    mListeJoueurs.get(index).setScoreEquipe(scoreTotal);
+                }
+            }
+        }
     }
 
     private void parseEtAfficheNoeudsHisto(Document doc) {
@@ -890,8 +951,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
         String pseudo="";
         String equipe="";
-        int admin=0;
-        int scoreEquipe=0;
         int nbJoueurQuiPassent=0;
         int maPostion=-1;
         boolean estCeLe2EmeTour=false;
@@ -902,6 +961,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
         for (int i=0; i<NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            int admin = 0;
+            int scoreEquipe = 0;
             Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
             TextView tvPseudo;
             Log.d("PGR-XML-Joueur",noeudCarte.getNodeName());
@@ -981,13 +1042,25 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         return listeJoueurs;
     }
 
-    private ArrayList<Pli> parseNoeudsPliFromDoc(Document doc, String nomDuNoeud) {
-        Node NoeudCartes = getNoeudUnique(doc, nomDuNoeud);
+    private ArrayList<Pli> parseNoeudsPliFromDoc(Document doc) {
+        Node NoeudCartes = getNoeudUnique(doc, "Pli");
+        mJoueurQuiRemporteLePli = "";
 
-        if(nomDuNoeud.equals("Pli")) {
-            mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(0).getNodeValue());
-            String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
-            mTitrePli.setText(titrePli);
+        if ("Pli".equals("Pli")) {
+            for (int i = 0; i < NoeudCartes.getAttributes().getLength(); i++) {
+                switch (NoeudCartes.getAttributes().item(i).getNodeName()) {
+                    case "numero":
+                        mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(i).getNodeValue());
+                        String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
+                        mTitrePli.setText(titrePli);
+                        break;
+                    case "score":
+                        break;
+                    case "joueur":
+                        mJoueurQuiRemporteLePli = NoeudCartes.getAttributes().item(i).getNodeValue();
+                        break;
+                }
+            }
         }
 
         return parseNoeudsPlis(NoeudCartes);

@@ -67,7 +67,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final String urlCommuniqueCarte = MainActivity.url + "majCommunication.php?partie=";
     private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
     private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
-    private static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
     private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
@@ -667,7 +666,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private void clicAnnulCarte(View v) {
         ImageView iv = findViewById(v.getId());
         String[] chaine = iv.getTag().toString().split("_");
-        new MainActivity.TacheURLSansRetour().execute(urlAnnulCarte+mIdPartie+"&couleur_carte="+chaine[1]+"&valeur_carte="+chaine[2]);
+        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlAnnulCarte + mIdPartie + "&couleur_carte=" + chaine[1] + "&valeur_carte=" + chaine[2]);
         Toast.makeText(this, "Carte "+chaine[2]+" "+chaine[1]+" annulée", Toast.LENGTH_SHORT).show();
     }
 

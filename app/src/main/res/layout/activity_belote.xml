@@ -341,7 +341,8 @@
                         android:id="@+id/table_carte_image_joueur1"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte" />
+                        android:contentDescription="@string/carte"
+                        android:visibility="invisible" />
 
                     <TextView
                         android:id="@+id/table_pseudo_joueur3"
@@ -357,7 +358,8 @@
                         android:id="@+id/table_carte_image_joueur3"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte" />
+                        android:contentDescription="@string/carte"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -417,7 +419,8 @@
                         android:id="@+id/table_carte_image_joueur2"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte" />
+                        android:contentDescription="@string/carte"
+                        android:visibility="invisible" />
 
                     <TextView
                         android:id="@+id/table_pseudo_joueur4"
@@ -433,7 +436,8 @@
                         android:id="@+id/table_carte_image_joueur4"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
-                        android:contentDescription="@string/carte" />
+                        android:contentDescription="@string/carte"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
             </LinearLayout>

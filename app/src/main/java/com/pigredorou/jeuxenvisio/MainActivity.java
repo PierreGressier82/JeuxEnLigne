@@ -29,6 +29,10 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
+    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
+    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -46,12 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.05 : The Crew : Annulation dernière carte posée sur double clic (uniquement par le joueur qui l'a posé)
      * 2.06 : Belote : Gestion tour suivant (changement premier joueur + maj score)
      * 2.07 : Belote : Correction bug refresh histo + couleur choix 2ème tour + The Crew : début implémentation jeton détresse
+     * 2.08 : Belote : Annulation dernière carte posée sur double clic (uniquement par le joueur qui l'a posé) + seul le joueur qui remporte le pli peut jouer le pli suivant
      */
     // Variables statiques
     private static final String mNumVersion = "2.07";
-    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
-    public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
-    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
