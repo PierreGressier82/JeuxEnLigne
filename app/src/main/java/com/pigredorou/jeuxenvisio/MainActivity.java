@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.08 : Belote : Annulation dernière carte posée sur double clic (uniquement par le joueur qui l'a posé) + seul le joueur qui remporte le pli peut jouer le pli suivant
      */
     // Variables statiques
-    private static final String mNumVersion = "2.07";
+    private static final String mNumVersion = "2.08";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";

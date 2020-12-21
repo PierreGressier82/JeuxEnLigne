@@ -682,11 +682,11 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         TextView tvScore = findViewById(R.id.score_partie_equipe1);
         String scorePar = "(" + scorePartie[0] + ")";
         tvScore.setText(scorePar);
-        //tvScore.setTag(scorePartie[0]);
+        tvScore.setTag(scorePartie[0]);
         tvScore = findViewById(R.id.score_partie_equipe2);
         scorePar = "(" + scorePartie[1] + ")";
         tvScore.setText(scorePar);
-        //tvScore.setTag(scorePartie[1]);
+        tvScore.setTag(scorePartie[1]);
     }
 
     private void passerTourSuivante() {
@@ -801,10 +801,28 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
 
+            // Mets à jour le score d'équipe de chaque joueur de l'équipe
             for (int index = 0; index < mListeJoueurs.size(); index++) {
                 if (mListeJoueurs.get(index).getNomEquipe().equals(nomEquipe)) {
                     mListeJoueurs.get(index).setScoreEquipe(scoreTotal);
                 }
+            }
+            // On mets à jour le score de la partie en cours
+            if (mNumeroPli == 8 && mListeCartesPliEnCours.size() == 4) {
+                if (equipePremierJoueur.equals(nomEquipe))
+                    tvEquipe = findViewById(R.id.score_partie_equipe1);
+                else
+                    tvEquipe = findViewById(R.id.score_partie_equipe2);
+                int scoreCumulPlis = Integer.parseInt(tvEquipe.getTag().toString());
+                if (scoreCumulPlis == scorePartie) {
+                    tvEquipe.setText(String.valueOf(scorePartie));
+                } else {
+                    // Si somme des plis n'est pas le même score, on affiche les 2
+                    String texte = tvEquipe.getText().toString();
+                    texte = scorePartie + " " + texte;
+                    tvEquipe.setText(texte);
+                }
+                tvEquipe.setTag(String.valueOf(scorePartie));
             }
         }
     }
