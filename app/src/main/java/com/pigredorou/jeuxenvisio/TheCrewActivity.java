@@ -77,6 +77,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private int mIdPartie;
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
+    private boolean mDetresseUtilise = false;
     private int mNbTacheAAtribuer=0;
     private int mZoneSilence=0;
     private int mNumeroPli=0;
@@ -94,7 +95,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private TextView mHeureRefresh;
     private TextView mObjectifCommun;
     // Detresse
-    private Button mDetresse;
+    private ImageView mImageDetresse;
     // Communication
     private TextView mTitreCommunication;
     private TableLayout mTableauCommunication;
@@ -188,6 +189,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Communications
         chargeVuesCommunication();
+        mImageDetresse = findViewById(R.id.bouton_detresse);
+        mImageDetresse.setOnClickListener(this);
 
         // Objectifs commun
         mObjectifCommun = findViewById(R.id.objectif_commun);
@@ -462,10 +465,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.bouton_detresse:
-                if (mDetresse.getResources().getResourceName(R.drawable.detresse).equals(R.drawable.detresse))
-                    mDetresse.setBackgroundResource(R.drawable.detresse_noir);
-                else
-                    mDetresse.setBackgroundResource(R.drawable.detresse);
+                if (mDetresseUtilise) {
+                    mImageDetresse.setImageResource(R.drawable.detresse_noir);
+                    mDetresseUtilise = false;
+                } else {
+                    mImageDetresse.setImageResource(R.drawable.detresse);
+                    mDetresseUtilise = true;
+                    // Affichage des fleches pour passer une carte au voisin de droite ou gauche
+                }
                 break;
             default:
                 if (v.getTag().toString().startsWith("tacheAAttribuer")) {
