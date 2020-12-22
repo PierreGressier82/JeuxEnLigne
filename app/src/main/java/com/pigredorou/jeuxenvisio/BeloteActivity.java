@@ -312,7 +312,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
             case R.id.bouton_tour_suivant:
-                passerTourSuivante();
+                passerTourSuivant();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
@@ -689,7 +689,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         tvScore.setTag(scorePartie[1]);
     }
 
-    private void passerTourSuivante() {
+    private void passerTourSuivant() {
         // On change de premier joueur
         if (mNumeroPli==0)
             new MainActivity.TacheURLSansRetour().execute(urlTourSuivant+mIdPartie);
@@ -705,8 +705,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             urlTS += "&score1=" + tvScore1.getTag().toString() + "&score2=" + tvScore2.getTag().toString();
             new MainActivity.TacheURLSansRetour().execute(urlTS);
         }
-        // On distribue les cartes
-        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlDistribueCartes+mIdPartie+"&typeCarte=4&nbCarteParJoueur=5&belote=Table");
     }
 
     private int[] getIdImageHisto(int i) {
