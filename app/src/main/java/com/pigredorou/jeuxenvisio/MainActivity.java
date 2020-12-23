@@ -52,9 +52,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.07 : Belote : Correction bug refresh histo + couleur choix 2ème tour + The Crew : début implémentation jeton détresse
      * 2.08 : Belote : Annulation dernière carte posée sur double clic (uniquement par le joueur qui l'a posé) + seul le joueur qui remporte le pli peut jouer le pli suivant
      * 2.09 : Belote : Gestion de la "coupe" pour les distributions et de la "goutière" pour la fin de distribution (on ne mélange pas les cartes entre les manches)
+     * 2.10 : Fiesta de los muertos : début implémentation
      */
     // Variables statiques
-    private static final String mNumVersion = "2.09";
+    private static final String mNumVersion = "2.10";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
