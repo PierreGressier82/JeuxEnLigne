@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JeuxEnLigne  </string>
+    <string name="app_name">Jeux en visio</string>
     <string name="Chargement">Chargement</string>
     <string name="retour_l_accueil">Retour à l\'accueil</string>
     <string name="carte">carte</string>
@@ -35,7 +35,7 @@
     <string name="sup3"><![CDATA[>>>]]></string>
     <string name="sup4"><![CDATA[>>>>]]></string>
     <string name="d">D</string>
-    <string name="fiesta_de_los_muertos">FIESTA DE LOS MUERTOS</string>
+    <string name="fiesta_de_los_muertos">Fiesta de los muertos</string>
     <string name="Le_roi_des_nains">Le roi des nains</string>
     <string name="belote">Belote</string>
     <string name="Manchots_barjots">Manchots Barjots</string>
@@ -43,4 +43,5 @@
     <string name="score_quipe">Score</string>
     <string name="passer">Passer</string>
     <string name="valider">Valider</string>
+    <string name="personnage">Personnage</string>
 </resources>

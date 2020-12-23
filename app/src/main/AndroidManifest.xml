@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute"
         tools:targetApi="m">
-        <activity android:name=".BeloteActivity"></activity>
+        <activity android:name=".BeloteActivity" />
         <activity android:name=".ManchotsBarjotsActivity" />
         <activity android:name=".LeRoiDesNainsActivity" />
         <activity android:name=".FiestaDeLosMuertosActivity" />
