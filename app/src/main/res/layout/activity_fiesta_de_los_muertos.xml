@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/couleurFondFiestaMuertos"
+    android:orientation="vertical"
     tools:context="com.pigredorou.jeuxenvisio.FiestaDeLosMuertosActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,4 +64,62 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/crane"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/image_crane"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/fiesta_crane_ferme"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/zone_saisie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="Ecrit un mot"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/image_crane"
+            app:layout_constraintStart_toStartOf="@id/image_crane" />
+
+        <Button
+            android:id="@+id/bouton_valider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/noir"
+            android:text="@string/valider"
+            android:textColor="@color/blanc"
+            app:layout_constraintStart_toStartOf="@id/image_crane"
+            app:layout_constraintTop_toBottomOf="@id/image_crane" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clavier"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
