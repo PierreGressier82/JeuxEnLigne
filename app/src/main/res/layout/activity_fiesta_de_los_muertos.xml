@@ -76,7 +76,6 @@
             android:id="@+id/image_crane"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginEnd="10dp"
             android:src="@drawable/fiesta_crane_ouvert"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -96,11 +95,26 @@
             app:layout_constraintStart_toStartOf="@id/image_crane"
             app:layout_constraintTop_toTopOf="@id/image_crane" />
 
+        <TextView
+            android:id="@+id/contexte_personnage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:fontFamily=""
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_crane"
+            app:layout_constraintTop_toBottomOf="@id/nom_personnage" />
+
         <EditText
             android:id="@+id/zone_saisie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="65dp"
             android:background="@android:color/transparent"
             android:ellipsize="end"
             android:hint="Ecrit un mot"

@@ -146,8 +146,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         mTitrePli.setOnClickListener(this);
         mTable = findViewById(R.id.table);
 
-        // Refresh auto
-        startRefreshAuto();
         mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
         mBoutonRefreshAuto.setOnClickListener(this);
         mHeureRefresh = findViewById(R.id.heure_refresh);
