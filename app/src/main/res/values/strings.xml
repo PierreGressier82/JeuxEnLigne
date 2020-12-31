@@ -44,4 +44,5 @@
     <string name="passer">Passer</string>
     <string name="valider">Valider</string>
     <string name="personnage">Personnage</string>
+    <string name="ecrit_un_mot">Ecrit un mot</string>
 </resources>

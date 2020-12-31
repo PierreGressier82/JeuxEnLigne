@@ -100,9 +100,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 break;
             case R.id.bouton_valider:
                 Toast.makeText(this, mZoneSaisie.getText().toString(), Toast.LENGTH_SHORT).show();
-                mNomPersonnage.setVisibility(View.INVISIBLE);
-                mContextePersonnage.setVisibility(View.INVISIBLE);
-                mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_1);
                 break;
         }
     }
@@ -238,9 +235,41 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     }
 
     private void afficheMonCrane(Crane monCrane) {
-        String contexte = "(" + monCrane.getContexte() + ")";
-        mNomPersonnage.setText(monCrane.getPersonnage());
-        mContextePersonnage.setText(contexte);
+        String contexte = monCrane.getContexte();
+        String mot = monCrane.getMot();
+        int tourDeJeu = monCrane.getTourDeJeu();
+
+        if (!contexte.equals(""))
+            contexte = "(" + contexte + ")";
+
+        // Si on a un mot, on n'affiche pas le personnage
+        if (mot.equals("")) {
+            mNomPersonnage.setText(monCrane.getPersonnage());
+            mContextePersonnage.setText(contexte);
+            mNomPersonnage.setVisibility(View.VISIBLE);
+            mContextePersonnage.setVisibility(View.VISIBLE);
+            mImageCrane.setImageResource(R.drawable.fiesta_crane_ouvert);
+            mZoneSaisie.setHint(R.string.ecrit_un_mot);
+        } else {
+            mZoneSaisie.setHint(mot);
+            mNomPersonnage.setVisibility(View.INVISIBLE);
+            mContextePersonnage.setVisibility(View.INVISIBLE);
+
+            switch (tourDeJeu) {
+                case 1:
+                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_1);
+                    break;
+                case 2:
+                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_2);
+                    break;
+                case 3:
+                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_3);
+                    break;
+                case 4:
+                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_4);
+                    break;
+            }
+        }
     }
 
     private Crane parseNoeudsCrane(Document doc, String nomNoeud) {
@@ -272,8 +301,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                     mot = noeudMonCrane.getAttributes().item(j).getNodeValue();
                     break;
             }
+            monCrane = new Crane(tourDeJeu, personnage, contexte, mot);
         }
-        monCrane = new Crane(personnage, contexte);
 
         return monCrane;
     }
