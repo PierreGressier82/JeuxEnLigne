@@ -38,20 +38,22 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
     // URLs des actions en base
     private static final String urlFiesta = MainActivity.url + "fiesta.php?partie=";
+    private static final String urlValidMot = MainActivity.url + "validMotFiesta.php?partie=";
     // Elements graphiques
-    ImageView mImageCrane;
-    TextView mContextePersonnage;
-    Crane mMonCrane;
+    private ImageView mImageCrane;
+    private TextView mContextePersonnage;
+    private Crane mMonCrane;
     // Refresh auto
-    Thread t;
+    private Thread t;
     // Variables globales
     private String mPseudo;
-    TextView mNomPersonnage;
-    private int mIdSalon;
-    EditText mZoneSaisie;
-    Button mBoutonValider;
-    private int mIdPartie;
+    private TextView mNomPersonnage;
+    private EditText mZoneSaisie;
+    private Button mBoutonValider;
     private ArrayList<Joueur> mListeJoueurs;
+    private int mIdSalon;
+    private int mIdPartie;
+    private int mTourDeJeu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 finish();
                 break;
             case R.id.bouton_valider:
-                Toast.makeText(this, mZoneSaisie.getText().toString(), Toast.LENGTH_SHORT).show();
+                new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + mTourDeJeu);
+                Toast.makeText(this, mZoneSaisie.getText().toString() + " validé", Toast.LENGTH_SHORT).show();
+                mZoneSaisie.setText("");
+                mZoneSaisie.setFocusable(false);
                 break;
         }
     }
@@ -217,7 +222,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         mMonCrane = parseNoeudsCrane(doc, "MonCrane");
         afficheMonCrane(mMonCrane);
 
-        // Pli en cours
+        // Tour de jeu
         //mListeCartesPliEnCours = parseNoeudsPliFromDoc(doc);
         //affichePliEnCours(mListeCartesPliEnCours);
         //afficheScore();
@@ -237,7 +242,11 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private void afficheMonCrane(Crane monCrane) {
         String contexte = monCrane.getContexte();
         String mot = monCrane.getMot();
-        int tourDeJeu = monCrane.getTourDeJeu();
+
+        if (mTourDeJeu != monCrane.getTourDeJeu())
+            mZoneSaisie.setFocusable(true);
+
+        mTourDeJeu = monCrane.getTourDeJeu();
 
         if (!contexte.equals(""))
             contexte = "(" + contexte + ")";
@@ -248,27 +257,32 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             mContextePersonnage.setText(contexte);
             mNomPersonnage.setVisibility(View.VISIBLE);
             mContextePersonnage.setVisibility(View.VISIBLE);
-            mImageCrane.setImageResource(R.drawable.fiesta_crane_ouvert);
             mZoneSaisie.setHint(R.string.ecrit_un_mot);
         } else {
             mZoneSaisie.setHint(mot);
             mNomPersonnage.setVisibility(View.INVISIBLE);
             mContextePersonnage.setVisibility(View.INVISIBLE);
+            afficheCrane();
+        }
+    }
 
-            switch (tourDeJeu) {
-                case 1:
-                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_1);
-                    break;
-                case 2:
-                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_2);
-                    break;
-                case 3:
-                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_3);
-                    break;
-                case 4:
-                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_4);
-                    break;
-            }
+    private void afficheCrane() {
+        switch (mTourDeJeu) {
+            case 1:
+                mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_1);
+                break;
+            case 2:
+                mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_2);
+                break;
+            case 3:
+                mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_3);
+                break;
+            case 4:
+                mImageCrane.setImageResource(R.drawable.fiesta_crane_ferme_4);
+                break;
+            default:
+                mImageCrane.setImageResource(R.drawable.fiesta_crane_ouvert);
+                break;
         }
     }
 
