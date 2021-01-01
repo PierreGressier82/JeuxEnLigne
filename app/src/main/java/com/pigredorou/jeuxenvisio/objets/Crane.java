@@ -2,22 +2,15 @@ package com.pigredorou.jeuxenvisio.objets;
 
 public class Crane {
     private int mId;
-    private int mTourDeJeu;
-    private String mPersonnage;
-    private String mContexte;
-    private int mNiveau;
-    private String mMot;
+    private Personnage mPersonnage;
 
-    public Crane(int tourDeJeu, String personnage, String contexte, String mot) {
-        mTourDeJeu = tourDeJeu;
+    public Crane(int id, Personnage personnage) {
+        mId = id;
         mPersonnage = personnage;
-        mContexte = contexte;
-        mMot = mot;
     }
 
-    public Crane(String personnage, String contexte) {
+    public Crane(Personnage personnage) {
         mPersonnage = personnage;
-        mContexte = contexte;
     }
 
     public int getId() {
@@ -28,43 +21,11 @@ public class Crane {
         mId = id;
     }
 
-    public String getPersonnage() {
+    public Personnage getPersonnage() {
         return mPersonnage;
     }
 
-    public void setPersonnage(String personnage) {
+    public void setPersonnage(Personnage personnage) {
         mPersonnage = personnage;
-    }
-
-    public String getContexte() {
-        return mContexte;
-    }
-
-    public void setContexte(String contexte) {
-        mContexte = contexte;
-    }
-
-    public int getNiveau() {
-        return mNiveau;
-    }
-
-    public void setNiveau(int niveau) {
-        mNiveau = niveau;
-    }
-
-    public String getMot() {
-        return mMot;
-    }
-
-    public void setMot(String mot) {
-        mMot = mot;
-    }
-
-    public int getTourDeJeu() {
-        return mTourDeJeu;
-    }
-
-    public void setTourDeJeu(int tourDeJeu) {
-        mTourDeJeu = tourDeJeu;
     }
 }
