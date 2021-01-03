@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,9 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     // Refresh auto
     private Thread t;
     // Variables globales
+    private int[] mListeIdPersonnage = {R.id.personnage1, R.id.personnage2, R.id.personnage3, R.id.personnage4, R.id.personnage5, R.id.personnage6, R.id.personnage7, R.id.personnage8};
+    private int[] mListeIdPersoArdoise = {R.id.nom_ardoise_1, R.id.nom_ardoise_2, R.id.nom_ardoise_3, R.id.nom_ardoise_4, R.id.nom_ardoise_5, R.id.nom_ardoise_6, R.id.nom_ardoise_7, R.id.nom_ardoise_8};
+    private int[] mListeIdMot = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
     private String mPseudo;
     private String mMot;
     private TextView mNomPersonnage;
@@ -204,13 +208,36 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Tour de jeu
         mListeTourDeJeu = parseNoeudsTourDeJeu(doc);
         afficheNbJoueursValides();
+        afficheMots();
 
         // Personnages
         mListePersonnages = parseNoeudsPersonnage(doc);
+        affichePersonnages();
 
         // Déductions
         //parseEtAfficheNoeudsDeduction(doc);
 
+    }
+
+    private void afficheMots() {
+        for (int i = 0; i < mListeIdMot.length; i++) {
+            TextView tv = findViewById(mListeIdMot[i]);
+            if (i < mListeCranes.size())
+                tv.setText(mListeTourDeJeu.get(i + 12).getMot());
+            else
+                tv.setText("");
+        }
+
+    }
+
+    private void affichePersonnages() {
+        for (int i = 0; i < mListeIdPersonnage.length; i++) {
+            TextView tv = findViewById(mListeIdPersonnage[i]);
+            String textePerso = mListePersonnages.get(i).getNom();
+            if (!mListePersonnages.get(i).getContexte().equals(""))
+                textePerso += "\n (" + mListePersonnages.get(i).getContexte() + ")";
+            tv.setText(textePerso);
+        }
     }
 
     private void afficheNbJoueursValides() {
@@ -392,13 +419,19 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         String contexte = monCrane.getPersonnage().getContexte();
 
         ConstraintLayout crane = findViewById(R.id.crane);
-        ConstraintLayout ardoise = findViewById(R.id.ardoise);
+        LinearLayout ardoise = findViewById(R.id.ardoise);
+        LinearLayout personnages = findViewById(R.id.personnages);
+        LinearLayout clavier = findViewById(R.id.clavier);
         if (mTourDeJeu == 4 && mNbJoueurValides == 4) {
             crane.setVisibility(View.GONE);
+            clavier.setVisibility(View.GONE);
             ardoise.setVisibility(View.VISIBLE);
+            personnages.setVisibility(View.VISIBLE);
         } else {
             crane.setVisibility(View.VISIBLE);
+            clavier.setVisibility(View.VISIBLE);
             ardoise.setVisibility(View.GONE);
+            personnages.setVisibility(View.GONE);
         }
 
         Log.d("DEBUG", mTourDeJeu + "-" + mNbJoueurValides);

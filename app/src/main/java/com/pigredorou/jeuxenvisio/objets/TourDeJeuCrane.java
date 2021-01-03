@@ -28,4 +28,20 @@ public class TourDeJeuCrane {
     public void setPseudo(String pseudo) {
         mPseudo = pseudo;
     }
+
+    public int getTourDeJeu() {
+        return mTourDeJeu;
+    }
+
+    public void setTourDeJeu(int tourDeJeu) {
+        mTourDeJeu = tourDeJeu;
+    }
+
+    public String getMot() {
+        return mMot;
+    }
+
+    public void setMot(String mot) {
+        mMot = mot;
+    }
 }
