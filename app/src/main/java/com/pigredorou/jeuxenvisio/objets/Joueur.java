@@ -8,10 +8,6 @@ public class Joueur {
     private int mScoreEquipe;
     private int mAdmin;
 
-    public Joueur(String nomJoueur) {
-        mNomJoueur = nomJoueur;
-    }
-
     public Joueur(String nomJoueur, String nomEquipe, int scoreEquipe, int admin) {
         mNomJoueur = nomJoueur;
         mNomEquipe = nomEquipe;
@@ -42,31 +38,11 @@ public class Joueur {
         return mNomEquipe;
     }
 
-    public void setNomEquipe(String nomEquipe) {
-        mNomEquipe = nomEquipe;
-    }
-
     public String getNomJoueur() {
         return mNomJoueur;
     }
 
-    public String getNomSalon() {
-        return mNomSalon;
-    }
-
     public int getAdmin() {
         return mAdmin;
-    }
-
-    public void setNomJoueur(String nomJoueur) {
-        mNomJoueur = nomJoueur;
-    }
-
-    public void setNomSalon(String nomSalon) {
-        mNomSalon = nomSalon;
-    }
-
-    public void setAdmin(int admin) {
-        mAdmin = admin;
     }
 }

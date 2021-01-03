@@ -5,11 +5,6 @@ public class Pli {
     private Carte mCarte;
     private String mCommunication;
 
-    public Pli(String joueur, Carte carte) {
-        mNomJoueur = joueur;
-        mCarte = carte;
-    }
-
     public Pli(String nomJoueur, Carte carte, String communication) {
         mNomJoueur = nomJoueur;
         mCarte = carte;
@@ -20,24 +15,12 @@ public class Pli {
         return mNomJoueur;
     }
 
-    public void setNomJoueur(String nomJoueur) {
-        mNomJoueur = nomJoueur;
-    }
-
     public String getCommunication() {
         return mCommunication;
     }
 
-    public void setCommunication(String communication) {
-        mCommunication = communication;
-    }
-
     public String getJoueur() {
         return mNomJoueur;
-    }
-
-    public void setJoueur(String joueur) {
-        mNomJoueur = joueur;
     }
 
     public Carte getCarte() {

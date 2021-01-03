@@ -3,9 +3,9 @@ package com.pigredorou.jeuxenvisio.objets;
 import java.util.ArrayList;
 
 public class HistoriquePlis {
-    ArrayList<Pli> mPlis;
-    int mScore;
-    String mJoueurQuiRemportePli;
+    private ArrayList<Pli> mPlis;
+    private int mScore;
+    private String mJoueurQuiRemportePli;
 
     public HistoriquePlis(ArrayList<Pli> plis, int score, String joueurQuiRemportePli) {
         this.mPlis = plis;

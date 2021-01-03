@@ -125,20 +125,170 @@
             app:layout_constraintBottom_toBottomOf="@id/image_crane"
             app:layout_constraintStart_toStartOf="@id/image_crane" />
 
-        <Button
-            android:id="@+id/bouton_valider"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ardoise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_ardoise"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:src="@drawable/fiesta_ardoise_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/noir"
-            android:text="@string/valider"
-            android:textColor="@color/blanc"
-            app:layout_constraintStart_toStartOf="@id/image_crane"
-            app:layout_constraintTop_toBottomOf="@id/image_crane" />
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toTopOf="@id/image_ardoise" />
 
+        <TextView
+            android:id="@+id/nom_ardoise_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_1" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_2" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_3" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_4" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_5" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_6" />
+
+        <TextView
+            android:id="@+id/nom_ardoise_8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:text="@string/personnage"
+            android:textAlignment="center"
+            android:textColor="@color/noir"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/image_ardoise"
+            app:layout_constraintTop_toBottomOf="@id/nom_ardoise_7" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/validation_joueurs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/blanc"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/image_crane"
+        app:layout_constraintTop_toBottomOf="@id/image_crane" />
+
+    <Button
+        android:id="@+id/bouton_valider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/noir"
+        android:text="@string/valider"
+        android:textColor="@color/blanc"
+        app:layout_constraintStart_toStartOf="@id/image_crane"
+        app:layout_constraintTop_toBottomOf="@id/validation_joueurs" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clavier"

@@ -1,9 +1,9 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Personnage {
-    String mNom;
-    String mContexte;
-    int mNiveau;
+    private String mNom;
+    private String mContexte;
+    private int mNiveau;
 
     public Personnage(String nom, String contexte) {
         mNom = nom;
@@ -20,10 +20,6 @@ public class Personnage {
 
     public String getContexte() {
         return mContexte;
-    }
-
-    public void setContexte(String contexte) {
-        mContexte = contexte;
     }
 
     public int getNiveau() {

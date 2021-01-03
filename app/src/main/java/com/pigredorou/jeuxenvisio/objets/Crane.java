@@ -4,6 +4,10 @@ public class Crane {
     private int mId;
     private Personnage mPersonnage;
 
+    public Crane(int id) {
+        mId = id;
+    }
+
     public Crane(int id, Personnage personnage) {
         mId = id;
         mPersonnage = personnage;
@@ -25,7 +29,4 @@ public class Crane {
         return mPersonnage;
     }
 
-    public void setPersonnage(Personnage personnage) {
-        mPersonnage = personnage;
-    }
 }

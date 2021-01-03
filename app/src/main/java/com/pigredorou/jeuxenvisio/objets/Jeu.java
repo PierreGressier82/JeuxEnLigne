@@ -17,24 +17,12 @@ public class Jeu {
         return mIdPartie;
     }
 
-    public void setIdPartie(int idPartie) {
-        mIdPartie = idPartie;
-    }
-
     public int getNumMission() {
         return mNumMission;
     }
 
-    public void setNumMission(int numMission) {
-        this.mNumMission = numMission;
-    }
-
     public String getNom() {
         return mNom;
-    }
-
-    public void setNom(String nom) {
-        this.mNom = nom;
     }
 
     public int getId() {

@@ -1,22 +1,16 @@
 package com.pigredorou.jeuxenvisio.objets;
 
-public class Tour {
-    String mMot;
-    Crane mCrane;
-    String mPseudo;
+public class TourDeJeuCrane {
+    private int mTourDeJeu;
+    private String mMot;
+    private Crane mCrane;
+    private String mPseudo;
 
-    public Tour(String mot, Crane crane, String pseudo) {
+    public TourDeJeuCrane(int tourDeJeu, String mot, Crane crane, String pseudo) {
+        mTourDeJeu = tourDeJeu;
         mMot = mot;
         mCrane = crane;
         mPseudo = pseudo;
-    }
-
-    public String getMot() {
-        return mMot;
-    }
-
-    public void setMot(String mot) {
-        mMot = mot;
     }
 
     public Crane getCrane() {
