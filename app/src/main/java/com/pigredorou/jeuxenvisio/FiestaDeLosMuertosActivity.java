@@ -54,6 +54,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private int[] mListeIdMot = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
     private String mPseudo;
     private String mMot;
+    private String mPersonnageSelectionne;
     private TextView mNomPersonnage;
     private EditText mZoneSaisie;
     private Button mBoutonValider;
@@ -102,6 +103,16 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonValider.setOnClickListener(this);
 
+        // Ardoise
+        for (int value : mListeIdPersoArdoise) {
+            TextView tv = findViewById(value);
+            tv.setOnClickListener(this);
+        }
+        for (int value : mListeIdPersonnage) {
+            TextView tv = findViewById(value);
+            tv.setOnClickListener(this);
+        }
+
         // Refresh auto
         startRefreshAuto();
     }
@@ -115,6 +126,35 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case R.id.bouton_valider:
                 new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + (mTourDeJeu + 1));
                 mZoneSaisie.setText("");
+                break;
+
+            case R.id.personnage1:
+            case R.id.personnage2:
+            case R.id.personnage3:
+            case R.id.personnage4:
+            case R.id.personnage5:
+            case R.id.personnage6:
+            case R.id.personnage7:
+            case R.id.personnage8:
+                for (int value : mListeIdPersonnage) {
+                    TextView tv = findViewById(value);
+                    tv.setTextColor(getResources().getColor(R.color.couleurFondFiestaMuertos));
+                }
+                TextView tv = findViewById(v.getId());
+                tv.setTextColor(getResources().getColor(R.color.rouge));
+                mPersonnageSelectionne = tv.getTag().toString();
+                break;
+
+            case R.id.nom_ardoise_1:
+            case R.id.nom_ardoise_2:
+            case R.id.nom_ardoise_3:
+            case R.id.nom_ardoise_4:
+            case R.id.nom_ardoise_5:
+            case R.id.nom_ardoise_6:
+            case R.id.nom_ardoise_7:
+            case R.id.nom_ardoise_8:
+                tv = findViewById(v.getId());
+                tv.setText(mPersonnageSelectionne);
                 break;
         }
     }
@@ -237,6 +277,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             if (!mListePersonnages.get(i).getContexte().equals(""))
                 textePerso += "\n (" + mListePersonnages.get(i).getContexte() + ")";
             tv.setText(textePerso);
+            tv.setTag(mListePersonnages.get(i).getNom());
         }
     }
 
@@ -245,6 +286,14 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         String texteNbJoueur = mNbJoueurValides + "/" + mListeJoueurs.size();
         tv.setText(texteNbJoueur);
 
+        // Rend clickable que les lignes ayant un mot
+        for (int value = 0; value < mListeIdPersoArdoise.length; value++) {
+            tv = findViewById(mListeIdPersoArdoise[value]);
+            if (value < mListeJoueurs.size())
+                tv.setOnClickListener(this);
+            else
+                tv.setOnClickListener(null);
+        }
     }
 
     private ArrayList<TourDeJeuCrane> parseNoeudsTourDeJeu(Document doc) {
