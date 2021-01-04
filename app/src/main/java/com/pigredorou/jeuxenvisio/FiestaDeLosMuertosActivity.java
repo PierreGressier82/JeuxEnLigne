@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -67,6 +68,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private int mTourDeJeu;
     private int mNbJoueurValides;
     private boolean mMotValide;
+    private boolean mActiverBoutonValider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +126,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 finish();
                 break;
             case R.id.bouton_valider:
-                new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + (mTourDeJeu + 1));
-                mZoneSaisie.setText("");
+                if (mMotValide)
+                    Toast.makeText(this, "TODO : Enregistre l'ardoise", Toast.LENGTH_SHORT).show();
+                else {
+                    new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + (mTourDeJeu + 1));
+                    mZoneSaisie.setText("");
+                }
+                activeBoutonValider(false);
                 break;
 
             case R.id.personnage1:
@@ -155,8 +162,32 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case R.id.nom_ardoise_8:
                 tv = findViewById(v.getId());
                 tv.setText(mPersonnageSelectionne);
+                mActiverBoutonValider = estJeToutesLesReponses();
+                activeBoutonValider(mActiverBoutonValider);
                 break;
         }
+    }
+
+    private boolean estJeToutesLesReponses() {
+        boolean estJeToutesLesReponses = true;
+        // Vérifie si tous les cranes ont un personnage pour autoriser l'enregistrement des choix
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            TextView tv = findViewById(mListeIdPersoArdoise[i]);
+            if (tv.getText().toString().equals(""))
+                estJeToutesLesReponses = false;
+        }
+
+        return estJeToutesLesReponses;
+    }
+
+    private void activeBoutonValider(boolean active) {
+        mZoneSaisie.setFocusable(active);
+        mBoutonValider.setClickable(active);
+
+        if (active)
+            mBoutonValider.setTextColor(getResources().getColor(R.color.blanc));
+        else
+            mBoutonValider.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
     }
 
 
@@ -238,10 +269,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Joueurs
         mListeJoueurs = parseNoeudsJoueur(doc);
 
-        // Mon Crane
-        mMonCrane = parseNoeudsMonCrane(doc);
-        afficheMonCrane(mMonCrane);
-
         // Cranes
         mListeCranes = parseNoeudsCranes(doc);
 
@@ -250,6 +277,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         afficheNbJoueursValides();
         afficheMots();
 
+        // Mon Crane
+        mMonCrane = parseNoeudsMonCrane(doc);
+        afficheMonCrane(mMonCrane);
+
         // Personnages
         mListePersonnages = parseNoeudsPersonnage(doc);
         affichePersonnages();
@@ -257,6 +288,14 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Déductions
         //parseEtAfficheNoeudsDeduction(doc);
 
+        if (!mMotValide || (mTourDeJeu == 4 && mNbJoueurValides == mListeJoueurs.size() && estJeToutesLesReponses()))
+            mActiverBoutonValider = true;
+        else
+            mActiverBoutonValider = false;
+
+        activeBoutonValider(mActiverBoutonValider);
+
+        // TODO : prévoir le RAZ de l'ardoise entre 2 manches => mListeIdPersoArdoise
     }
 
     private void afficheMots() {
@@ -331,7 +370,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 TourDeJeuCrane tourDeJeuCrane = new TourDeJeuCrane(numeroTour, mot, new Crane(idCrane), pseudo);
                 listeTourDeJeu.add(tourDeJeuCrane);
             }
-            if (mNbJoueurValides == 4 && numeroTour < 4)
+            if (mNbJoueurValides == mListeJoueurs.size() && numeroTour < 4)
                 mNbJoueurValides = 0;
         }
 
@@ -471,7 +510,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         LinearLayout ardoise = findViewById(R.id.ardoise);
         LinearLayout personnages = findViewById(R.id.personnages);
         LinearLayout clavier = findViewById(R.id.clavier);
-        if (mTourDeJeu == 4 && mNbJoueurValides == 4) {
+        if (mTourDeJeu == 4 && mNbJoueurValides == mListeJoueurs.size()) {
             crane.setVisibility(View.GONE);
             clavier.setVisibility(View.GONE);
             ardoise.setVisibility(View.VISIBLE);
@@ -493,6 +532,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         // On n'affiche le personnage que si le joueur n'a pas encore écrit de mot au premier tour
         if (!mMotValide && mTourDeJeu == 0) {
+            mNomPersonnage.setText(monCrane.getPersonnage().getNom());
             mContextePersonnage.setText(contexte);
             mNomPersonnage.setVisibility(View.VISIBLE);
             mContextePersonnage.setVisibility(View.VISIBLE);
@@ -504,17 +544,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             mContextePersonnage.setVisibility(View.INVISIBLE);
         }
         afficheCrane();
-
-        if (mMotValide || mTourDeJeu == 4) {
-            mZoneSaisie.setFocusable(false);
-            mBoutonValider.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            mBoutonValider.setClickable(false);
-        } else {
-            mZoneSaisie.setFocusable(true);
-            mBoutonValider.setTextColor(getResources().getColor(R.color.blanc));
-            mBoutonValider.setClickable(true);
-        }
-
     }
 
     private void afficheCrane() {
@@ -560,7 +589,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         @Override
         protected void onPostExecute(Document doc) {
-            parseXML(doc);
+            if (doc != null)
+                parseXML(doc);
             super.onPostExecute(doc);
         }
     }
