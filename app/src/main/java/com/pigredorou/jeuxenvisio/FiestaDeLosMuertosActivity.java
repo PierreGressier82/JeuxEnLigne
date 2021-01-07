@@ -43,6 +43,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     // URLs des actions en base
     private static final String urlFiesta = MainActivity.url + "fiesta.php?partie=";
     private static final String urlValidMot = MainActivity.url + "validMotFiesta.php?partie=";
+    private static final String urlDeduction = MainActivity.url + "deductionFiesta.php?partie=";
     // Elements graphiques
     private ImageView mImageCrane;
     private TextView mContextePersonnage;
@@ -67,6 +68,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private int mIdPartie;
     private int mTourDeJeu;
     private int mNbJoueurValides;
+    private int mIdPerso;
     private boolean mMotValide;
     private boolean mActiverBoutonValider;
 
@@ -126,8 +128,11 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 finish();
                 break;
             case R.id.bouton_valider:
-                if (mMotValide)
-                    Toast.makeText(this, "TODO : Enregistre l'ardoise", Toast.LENGTH_SHORT).show();
+                if (mMotValide) {
+                    String associatioCranePersonnage = getAssociatioCranePersonnage();
+                    new MainActivity.TacheURLSansRetour().execute(urlDeduction + mIdPartie + "&joueur=" + mPseudo + "&reponse=" + associatioCranePersonnage);
+                    Toast.makeText(this, associatioCranePersonnage, Toast.LENGTH_SHORT).show();
+                }
                 else {
                     new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + (mTourDeJeu + 1));
                     mZoneSaisie.setText("");
@@ -150,6 +155,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 TextView tv = findViewById(v.getId());
                 tv.setTextColor(getResources().getColor(R.color.rouge));
                 mPersonnageSelectionne = tv.getTag().toString();
+                for (int i = 0; i < mListePersonnages.size(); i++) {
+                    if (mListePersonnages.get(i).getNom().equals(mPersonnageSelectionne))
+                        mIdPerso = mListePersonnages.get(i).getId();
+                }
                 break;
 
             case R.id.nom_ardoise_1:
@@ -162,10 +171,31 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case R.id.nom_ardoise_8:
                 tv = findViewById(v.getId());
                 tv.setText(mPersonnageSelectionne);
+                tv.setTag(String.valueOf(mIdPerso));
                 mActiverBoutonValider = estJeToutesLesReponses();
                 activeBoutonValider(mActiverBoutonValider);
                 break;
         }
+    }
+
+    private String getAssociatioCranePersonnage() {
+        StringBuilder retour = new StringBuilder();
+        for (int index = 0; index < mListeIdPersoArdoise.length; index++) {
+            TextView tv = findViewById(mListeIdPersoArdoise[index]);
+
+            if (!tv.getText().toString().isEmpty()) {
+                int idPerso = Integer.parseInt(tv.getTag().toString());
+                int idCrane = mListeCranes.get(index).getId();
+
+                if (!retour.toString().isEmpty())
+                    retour.append("_");
+                retour.append(idCrane).append("-").append(idPerso);
+            }
+        }
+
+        Log.d("PGR-Assoc", retour.toString());
+
+        return retour.toString();
     }
 
     private boolean estJeToutesLesReponses() {
@@ -173,7 +203,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Vérifie si tous les cranes ont un personnage pour autoriser l'enregistrement des choix
         for (int i = 0; i < mListeJoueurs.size(); i++) {
             TextView tv = findViewById(mListeIdPersoArdoise[i]);
-            if (tv.getText().toString().equals(""))
+            if (tv.getText().toString().isEmpty())
                 estJeToutesLesReponses = false;
         }
 
@@ -269,6 +299,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Joueurs
         mListeJoueurs = parseNoeudsJoueur(doc);
 
+        // Personnages
+        mListePersonnages = parseNoeudsPersonnage(doc);
+        affichePersonnages();
+
         // Cranes
         mListeCranes = parseNoeudsCranes(doc);
 
@@ -280,10 +314,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Mon Crane
         mMonCrane = parseNoeudsMonCrane(doc);
         afficheMonCrane(mMonCrane);
-
-        // Personnages
-        mListePersonnages = parseNoeudsPersonnage(doc);
-        affichePersonnages();
 
         // Déductions
         //parseEtAfficheNoeudsDeduction(doc);
@@ -302,7 +332,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         for (int i = 0; i < mListeIdMot.length; i++) {
             TextView tv = findViewById(mListeIdMot[i]);
             if (i < mListeCranes.size())
-                tv.setText(mListeTourDeJeu.get(i + 12).getMot());
+                tv.setText(mListeTourDeJeu.get(i + (3 * mListeJoueurs.size())).getMot());
             else
                 tv.setText("");
         }
@@ -313,7 +343,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         for (int i = 0; i < mListeIdPersonnage.length; i++) {
             TextView tv = findViewById(mListeIdPersonnage[i]);
             String textePerso = mListePersonnages.get(i).getNom();
-            if (!mListePersonnages.get(i).getContexte().equals(""))
+            if (!mListePersonnages.get(i).getContexte().isEmpty())
                 textePerso += "\n (" + mListePersonnages.get(i).getContexte() + ")";
             tv.setText(textePerso);
             tv.setTag(mListePersonnages.get(i).getNom());
@@ -365,7 +395,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                             break;
                     }
                 }
-                if (!mot.equals(""))
+                if (!mot.isEmpty())
                     mNbJoueurValides++;
                 TourDeJeuCrane tourDeJeuCrane = new TourDeJeuCrane(numeroTour, mot, new Crane(idCrane), pseudo);
                 listeTourDeJeu.add(tourDeJeuCrane);
@@ -381,8 +411,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         Node NoeudPersonnages = getNoeudUnique(doc, "Cranes");
 
         int idCrane = 0;
-        String personnage = "";
-        String contexte = "";
+        int idPerso = 0;
         ArrayList<Crane> listeCranes = new ArrayList<>();
 
         for (int i = 0; i < NoeudPersonnages.getChildNodes().getLength(); i++) { // Parcours tous les cranes
@@ -391,27 +420,58 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             for (int j = 0; j < noeudCrane.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud Crane
                 Log.d("PGR-XML-Crane", noeudCrane.getAttributes().item(j).getNodeName() + "_" + noeudCrane.getAttributes().item(j).getNodeValue());
                 switch (noeudCrane.getAttributes().item(j).getNodeName()) {
-                    case "idCrane":
+                    case "id":
                         idCrane = Integer.parseInt(noeudCrane.getAttributes().item(j).getNodeValue());
                         break;
-                    case "personnage":
-                        personnage = noeudCrane.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "contexte":
-                        contexte = noeudCrane.getAttributes().item(j).getNodeValue();
+                    case "idPerso":
+                        idPerso = Integer.parseInt(noeudCrane.getAttributes().item(j).getNodeValue());
                         break;
                 }
             }
-            Crane crane = new Crane(idCrane, new Personnage(personnage, contexte));
+            Crane crane = new Crane(idCrane, getPerso(idPerso));
             listeCranes.add(crane);
         }
 
         return listeCranes;
     }
 
+    /**
+     * Fonction qui permet de récupèrer un personnage à partir de son id
+     *
+     * @param idPerso : identifiant du personnage
+     * @return : la structure complète du personnage
+     */
+    private Personnage getPerso(int idPerso) {
+        Personnage perso = null;
+        for (int i = 0; i < mListePersonnages.size(); i++) {
+            if (mListePersonnages.get(i).getId() == idPerso)
+                perso = mListePersonnages.get(i);
+        }
+
+        return perso;
+    }
+
+    /**
+     * Fonction qui permet de récupére l'id du crane dont le personnage (id) est passé en paramètre
+     *
+     * @param idPerso : id du personnage à récupérer
+     * @return : l'id du crane qui a ce personnage
+     */
+    private int getIdCraneFromIdPerso(int idPerso) {
+        int idCrane = 0;
+        for (int i = 0; i < mListeCranes.size(); i++) {
+            if (mListeCranes.get(i).getPersonnage().getId() == idPerso)
+                idCrane = mListeCranes.get(i).getId();
+        }
+
+        return idCrane;
+    }
+
     private ArrayList<Personnage> parseNoeudsPersonnage(Document doc) {
         Node NoeudPersonnages = getNoeudUnique(doc, "Personnages");
 
+        int idPerso = 0;
+        int niveau = 0;
         String nom = "";
         String contexte = "";
         ArrayList<Personnage> listePersonnages = new ArrayList<>();
@@ -422,15 +482,21 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             for (int j = 0; j < noeudPerso.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud Personnage
                 Log.d("PGR-XML-Personnage", noeudPerso.getAttributes().item(j).getNodeName() + "_" + noeudPerso.getAttributes().item(j).getNodeValue());
                 switch (noeudPerso.getAttributes().item(j).getNodeName()) {
+                    case "id":
+                        idPerso = Integer.parseInt(noeudPerso.getAttributes().item(j).getNodeValue());
+                        break;
                     case "nom":
                         nom = noeudPerso.getAttributes().item(j).getNodeValue();
                         break;
                     case "contexte":
                         contexte = noeudPerso.getAttributes().item(j).getNodeValue();
                         break;
+                    case "niveau":
+                        niveau = Integer.parseInt(noeudPerso.getAttributes().item(j).getNodeValue());
+                        break;
                 }
             }
-            Personnage personnage = new Personnage(nom, contexte);
+            Personnage personnage = new Personnage(idPerso, nom, contexte, niveau);
             listePersonnages.add(personnage);
         }
 
@@ -470,34 +536,26 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private Crane parseNoeudsMonCrane(Document doc) {
         Node noeudMonCrane = getNoeudUnique(doc, "MonCrane");
 
-        String pseudo = "";
-        String personnage = "";
-        String contexte = "";
+        int idPerso = 0;
         Crane monCrane = null;
 
         for (int j = 0; j < noeudMonCrane.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud MonCrane
             Log.d("PGR-XML-Crane", noeudMonCrane.getAttributes().item(j).getNodeName() + "_" + noeudMonCrane.getAttributes().item(j).getNodeValue());
             switch (noeudMonCrane.getAttributes().item(j).getNodeName()) {
-                case "pseudo":
-                    pseudo = noeudMonCrane.getAttributes().item(j).getNodeValue();
-                    break;
                 case "tourDeJeu":
                     mTourDeJeu = Integer.parseInt(noeudMonCrane.getAttributes().item(j).getNodeValue());
                     break;
-                case "personnage":
-                    personnage = noeudMonCrane.getAttributes().item(j).getNodeValue();
-                    break;
-                case "contexte":
-                    contexte = noeudMonCrane.getAttributes().item(j).getNodeValue();
-                    break;
                 case "motValide":
                     mMotValide = noeudMonCrane.getAttributes().item(j).getNodeValue().equals("oui");
+                    break;
+                case "idPerso":
+                    idPerso = Integer.parseInt(noeudMonCrane.getAttributes().item(j).getNodeValue());
                     break;
                 case "mot":
                     mMot = noeudMonCrane.getAttributes().item(j).getNodeValue();
                     break;
             }
-            monCrane = new Crane(new Personnage(personnage, contexte));
+            monCrane = new Crane(getPerso(idPerso));
         }
 
         return monCrane;
@@ -524,7 +582,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         Log.d("DEBUG", mTourDeJeu + "-" + mNbJoueurValides);
 
-        if (!contexte.equals(""))
+        if (!contexte.isEmpty())
             contexte = "(" + contexte + ")";
 
         if (!mMotValide)
