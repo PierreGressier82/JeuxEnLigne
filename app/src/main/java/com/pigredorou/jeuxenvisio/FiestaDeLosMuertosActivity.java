@@ -47,13 +47,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     // Elements graphiques
     private ImageView mImageCrane;
     private TextView mContextePersonnage;
-    private Crane mMonCrane;
     // Refresh auto
     private Thread t;
     // Variables globales
-    private int[] mListeIdPersonnage = {R.id.personnage1, R.id.personnage2, R.id.personnage3, R.id.personnage4, R.id.personnage5, R.id.personnage6, R.id.personnage7, R.id.personnage8};
-    private int[] mListeIdPersoArdoise = {R.id.nom_ardoise_1, R.id.nom_ardoise_2, R.id.nom_ardoise_3, R.id.nom_ardoise_4, R.id.nom_ardoise_5, R.id.nom_ardoise_6, R.id.nom_ardoise_7, R.id.nom_ardoise_8};
-    private int[] mListeIdMot = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
+    private static int[] mListeIdPersonnage = {R.id.personnage1, R.id.personnage2, R.id.personnage3, R.id.personnage4, R.id.personnage5, R.id.personnage6, R.id.personnage7, R.id.personnage8};
+    private static int[] mListeIdPersoArdoise = {R.id.nom_ardoise_1, R.id.nom_ardoise_2, R.id.nom_ardoise_3, R.id.nom_ardoise_4, R.id.nom_ardoise_5, R.id.nom_ardoise_6, R.id.nom_ardoise_7, R.id.nom_ardoise_8};
+    private static int[] mListeIdMot = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
+    private static String[] mListePhasesJeu = {"Mots", "Déduction", "Apaiser les morts"};
     private String mPseudo;
     private String mMot;
     private String mPersonnageSelectionne;
@@ -64,11 +64,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private ArrayList<Personnage> mListePersonnages;
     private ArrayList<Crane> mListeCranes;
     private ArrayList<TourDeJeuCrane> mListeTourDeJeu;
-    private int mIdSalon;
+    private int[] mNbBonnesReponsesDeduction;
     private int mIdPartie;
     private int mTourDeJeu;
     private int mNbJoueurValides;
     private int mIdPerso;
+    private int mPhaseEnCours;
+    private int mNbJoueurPhaseDeduction;
     private boolean mMotValide;
     private boolean mActiverBoutonValider;
 
@@ -88,7 +90,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         final Intent intent = getIntent();
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
+        int idSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
@@ -172,8 +174,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 tv = findViewById(v.getId());
                 tv.setText(mPersonnageSelectionne);
                 tv.setTag(String.valueOf(mIdPerso));
-                mActiverBoutonValider = estJeToutesLesReponses();
-                activeBoutonValider(mActiverBoutonValider);
+                if (mTourDeJeu == 4)
+                    activeBoutonValider(aiJeToutesLesReponsesPhaseDeduction());
                 break;
         }
     }
@@ -198,16 +200,16 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         return retour.toString();
     }
 
-    private boolean estJeToutesLesReponses() {
-        boolean estJeToutesLesReponses = true;
+    private boolean aiJeToutesLesReponsesPhaseDeduction() {
+        boolean aiJeToutesLesReponses = true;
         // Vérifie si tous les cranes ont un personnage pour autoriser l'enregistrement des choix
         for (int i = 0; i < mListeJoueurs.size(); i++) {
             TextView tv = findViewById(mListeIdPersoArdoise[i]);
             if (tv.getText().toString().isEmpty())
-                estJeToutesLesReponses = false;
+                aiJeToutesLesReponses = false;
         }
 
-        return estJeToutesLesReponses;
+        return aiJeToutesLesReponses;
     }
 
     private void activeBoutonValider(boolean active) {
@@ -308,24 +310,101 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         // Tour de jeu
         mListeTourDeJeu = parseNoeudsTourDeJeu(doc);
-        afficheNbJoueursValides();
+        activeLignesAvecMot();
         afficheMots();
 
         // Mon Crane
-        mMonCrane = parseNoeudsMonCrane(doc);
-        afficheMonCrane(mMonCrane);
+        Crane monCrane = parseNoeudsMonCrane(doc);
+        afficheMonCrane(monCrane);
 
         // Déductions
-        //parseEtAfficheNoeudsDeduction(doc);
+        parseNoeudsDeduction(doc);
 
-        if (!mMotValide || (mTourDeJeu == 4 && mNbJoueurValides == mListeJoueurs.size() && estJeToutesLesReponses()))
+        affichePhaseDeJeu();
+        // Affichage
+        if (mTourDeJeu < 3)
+            RAZArdoise();
+    }
+
+    private void affichePhaseDeJeu() {
+        // Gestion des phases
+        if (mNbJoueurPhaseDeduction == mListeJoueurs.size()) // Tous les joueurs ont répondu à la deduction
+            mPhaseEnCours = 3;
+        else if (mNbJoueurPhaseDeduction > 0) // Phase déduction en cours
+            mPhaseEnCours = 2;
+        else if (mTourDeJeu >= 4 && mNbJoueurValides == mListeJoueurs.size())
+            mPhaseEnCours = 2;
+        else
+            mPhaseEnCours = 1;
+
+        // Activation bouton valider
+        if (!mMotValide || (mPhaseEnCours == 2 && aiJeToutesLesReponsesPhaseDeduction() && mTourDeJeu == 4))
             mActiverBoutonValider = true;
         else
             mActiverBoutonValider = false;
-
         activeBoutonValider(mActiverBoutonValider);
 
-        // TODO : prévoir le RAZ de l'ardoise entre 2 manches => mListeIdPersoArdoise
+        TextView tv = findViewById(R.id.validation_joueurs);
+        String textePhaseJeu = mListePhasesJeu[mPhaseEnCours - 1];
+        switch (mPhaseEnCours) {
+            case 1:
+                textePhaseJeu += "  -  Joueurs : " + mNbJoueurValides + "/" + mListeJoueurs.size();
+                break;
+            case 2:
+                textePhaseJeu += " - Joueurs : " + mNbJoueurPhaseDeduction + "/" + mListeJoueurs.size();
+                break;
+        }
+        tv.setText(textePhaseJeu);
+
+    }
+
+    private void RAZArdoise() {
+        for (int value : mListeIdPersoArdoise) {
+            TextView tv = findViewById(value);
+            tv.setText("");
+            tv.setTag("");
+        }
+
+        for (int value : mListeIdMot) {
+            TextView tv = findViewById(value);
+            tv.setText("");
+            tv.setTag("");
+        }
+    }
+
+    private void parseNoeudsDeduction(Document doc) {
+        mNbBonnesReponsesDeduction = new int[mListeJoueurs.size()];
+        Node NoeudTourDeJeu = getNoeudUnique(doc, "Deduction");
+
+        int idCrane = 0;
+        int idPerso = 0;
+        mNbJoueurPhaseDeduction = 0;
+
+        for (int i = 0; i < NoeudTourDeJeu.getChildNodes().getLength(); i++) { // Parcours tous les joueurs
+            Node noeudJoueur = NoeudTourDeJeu.getChildNodes().item(i);
+            Log.d("PGR-XML-Deduction", noeudJoueur.getNodeName());
+            String pseudoDeduction = noeudJoueur.getAttributes().item(0).getNodeValue();
+            mNbJoueurPhaseDeduction++;
+            if (pseudoDeduction.equals(mPseudo))
+                mTourDeJeu = 5;
+            for (int j = 0; j < noeudJoueur.getChildNodes().getLength(); j++) { // Parcours tous les cranes
+                Node noeudCrane = noeudJoueur.getChildNodes().item(j);
+                Log.d("PGR-XML-Deduction", noeudCrane.getNodeName());
+                for (int k = 0; k < noeudCrane.getAttributes().getLength(); k++) { // Parcours tous les attributs du noeud Crane
+                    Log.d("PGR-XML-TourDeJeu", noeudCrane.getAttributes().item(k).getNodeName() + "_" + noeudCrane.getAttributes().item(k).getNodeValue());
+                    switch (noeudCrane.getAttributes().item(k).getNodeName()) {
+                        case "idCrane":
+                            idCrane = Integer.parseInt(noeudCrane.getAttributes().item(k).getNodeValue());
+                            break;
+                        case "idPerso":
+                            idPerso = Integer.parseInt(noeudCrane.getAttributes().item(k).getNodeValue());
+                            break;
+                    }
+                }
+                if (getCraneFromId(idCrane).getPersonnage().getId() == idPerso)
+                    mNbBonnesReponsesDeduction[j]++;
+            }
+        }
     }
 
     private void afficheMots() {
@@ -350,14 +429,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         }
     }
 
-    private void afficheNbJoueursValides() {
-        TextView tv = findViewById(R.id.validation_joueurs);
-        String texteNbJoueur = mNbJoueurValides + "/" + mListeJoueurs.size();
-        tv.setText(texteNbJoueur);
-
+    private void activeLignesAvecMot() {
         // Rend clickable que les lignes ayant un mot
         for (int value = 0; value < mListeIdPersoArdoise.length; value++) {
-            tv = findViewById(mListeIdPersoArdoise[value]);
+            TextView tv = findViewById(mListeIdPersoArdoise[value]);
             if (value < mListeJoueurs.size())
                 tv.setOnClickListener(this);
             else
@@ -465,6 +540,22 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         }
 
         return idCrane;
+    }
+
+    /**
+     * Fonction qui permet de récupérer le crane dont l'id est passé en paramètre
+     *
+     * @param idCrane : id du crane à récupérer
+     * @return : la structure crane complète
+     */
+    private Crane getCraneFromId(int idCrane) {
+        Crane crane = null;
+        for (int i = 0; i < mListeCranes.size(); i++) {
+            if (mListeCranes.get(i).getId() == idCrane)
+                crane = mListeCranes.get(i);
+        }
+
+        return crane;
     }
 
     private ArrayList<Personnage> parseNoeudsPersonnage(Document doc) {

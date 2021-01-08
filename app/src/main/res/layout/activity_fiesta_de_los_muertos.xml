@@ -546,9 +546,7 @@
         android:textAlignment="center"
         android:textColor="@color/blanc"
         android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/image_crane"
-        app:layout_constraintTop_toBottomOf="@id/image_crane" />
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/bouton_valider"
@@ -559,9 +557,7 @@
         android:layout_marginEnd="10dp"
         android:background="@color/noir"
         android:text="@string/valider"
-        android:textColor="@color/blanc"
-        app:layout_constraintStart_toStartOf="@id/image_crane"
-        app:layout_constraintTop_toBottomOf="@id/validation_joueurs" />
+        android:textColor="@color/blanc" />
 
     <LinearLayout
         android:id="@+id/clavier"
