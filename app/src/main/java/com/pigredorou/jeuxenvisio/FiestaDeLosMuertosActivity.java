@@ -1,5 +1,6 @@
 package com.pigredorou.jeuxenvisio;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,10 +10,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -53,6 +54,12 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private static int[] mListeIdPersonnage = {R.id.personnage1, R.id.personnage2, R.id.personnage3, R.id.personnage4, R.id.personnage5, R.id.personnage6, R.id.personnage7, R.id.personnage8};
     private static int[] mListeIdPersoArdoise = {R.id.nom_ardoise_1, R.id.nom_ardoise_2, R.id.nom_ardoise_3, R.id.nom_ardoise_4, R.id.nom_ardoise_5, R.id.nom_ardoise_6, R.id.nom_ardoise_7, R.id.nom_ardoise_8};
     private static int[] mListeIdMot = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
+    private static int[] mListeIdCranesResultat = {R.id.crane1, R.id.crane2, R.id.crane3, R.id.crane4, R.id.crane5, R.id.crane6, R.id.crane7, R.id.crane8};
+    private static int[] mListeIdImageCranesResultat = {R.id.image_crane1, R.id.image_crane2, R.id.image_crane3, R.id.image_crane4, R.id.image_crane5, R.id.image_crane6, R.id.image_crane7, R.id.image_crane8};
+    private static int[] mListeIdNomPersoResultat = {R.id.nom_personnage1, R.id.nom_personnage2, R.id.nom_personnage3, R.id.nom_personnage4, R.id.nom_personnage5, R.id.nom_personnage6, R.id.nom_personnage7, R.id.nom_personnage8};
+    private static int[] mListeIdContextePersoResultat = {R.id.contexte_personnage1, R.id.contexte_personnage2, R.id.contexte_personnage3, R.id.contexte_personnage4, R.id.contexte_personnage5, R.id.contexte_personnage6, R.id.contexte_personnage7, R.id.contexte_personnage8};
+    private static int[] mListeIdZoneSaisieResultat = {R.id.zone_saisie1, R.id.zone_saisie2, R.id.zone_saisie3, R.id.zone_saisie4, R.id.zone_saisie5, R.id.zone_saisie6, R.id.zone_saisie7, R.id.zone_saisie8};
+    private static int[] mListeImageCranesOuvert = {R.drawable.fiesta_crane_ouvert, R.drawable.fiesta_crane_ouvert_1, R.drawable.fiesta_crane_ouvert_2, R.drawable.fiesta_crane_ouvert_3, R.drawable.fiesta_crane_ouvert_4, R.drawable.fiesta_crane_ouvert_5, R.drawable.fiesta_crane_ouvert_6, R.drawable.fiesta_crane_ouvert_7};
     private static String[] mListePhasesJeu = {"Mots", "Déduction", "Apaiser les morts"};
     private String mPseudo;
     private String mMot;
@@ -69,10 +76,9 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private int mTourDeJeu;
     private int mNbJoueurValides;
     private int mIdPerso;
-    private int mPhaseEnCours;
     private int mNbJoueurPhaseDeduction;
+    private int mPhaseEnCours;
     private boolean mMotValide;
-    private boolean mActiverBoutonValider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +96,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         final Intent intent = getIntent();
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        int idSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
@@ -131,9 +136,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 break;
             case R.id.bouton_valider:
                 if (mMotValide) {
-                    String associatioCranePersonnage = getAssociatioCranePersonnage();
-                    new MainActivity.TacheURLSansRetour().execute(urlDeduction + mIdPartie + "&joueur=" + mPseudo + "&reponse=" + associatioCranePersonnage);
-                    Toast.makeText(this, associatioCranePersonnage, Toast.LENGTH_SHORT).show();
+                    new MainActivity.TacheURLSansRetour().execute(urlDeduction + mIdPartie + "&joueur=" + mPseudo + "&reponse=" + getAssociatioCranePersonnage());
+                    desactiveArdoise();
                 }
                 else {
                     new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + (mTourDeJeu + 1));
@@ -177,6 +181,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 if (mTourDeJeu == 4)
                     activeBoutonValider(aiJeToutesLesReponsesPhaseDeduction());
                 break;
+        }
+    }
+
+    private void desactiveArdoise() {
+        for (int value : mListeIdPersoArdoise) {
+            TextView tv = findViewById(value);
+            tv.setOnClickListener(null);
         }
     }
 
@@ -246,7 +257,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             };
 
             t.start();
-            debug("start refresh");
+            debug();
         }
     }
 
@@ -279,8 +290,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         super.onResume();
     }
 
-    private void debug(String message) {
-        Log.d("PGR", message);
+    private void debug() {
+        Log.d("PGR", "start refresh");
     }
 
     private Node getNoeudUnique(Document doc, String nomDuNoeud) {
@@ -315,13 +326,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         // Mon Crane
         Crane monCrane = parseNoeudsMonCrane(doc);
-        afficheMonCrane(monCrane);
 
         // Déductions
         parseNoeudsDeduction(doc);
 
-        affichePhaseDeJeu();
         // Affichage
+        affichePhaseDeJeu();
+        afficheCraneEtArdoise(monCrane);
         if (mTourDeJeu < 3)
             RAZArdoise();
     }
@@ -338,12 +349,11 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             mPhaseEnCours = 1;
 
         // Activation bouton valider
-        if (!mMotValide || (mPhaseEnCours == 2 && aiJeToutesLesReponsesPhaseDeduction() && mTourDeJeu == 4))
-            mActiverBoutonValider = true;
-        else
-            mActiverBoutonValider = false;
-        activeBoutonValider(mActiverBoutonValider);
+        boolean activerBoutonValider;
+        activerBoutonValider = !mMotValide || (mPhaseEnCours == 2 && aiJeToutesLesReponsesPhaseDeduction() && mTourDeJeu == 4);
+        activeBoutonValider(activerBoutonValider);
 
+        /* Affichage de l'état de la phase de jeu */
         TextView tv = findViewById(R.id.validation_joueurs);
         String textePhaseJeu = mListePhasesJeu[mPhaseEnCours - 1];
         switch (mPhaseEnCours) {
@@ -352,6 +362,14 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 break;
             case 2:
                 textePhaseJeu += " - Joueurs : " + mNbJoueurPhaseDeduction + "/" + mListeJoueurs.size();
+                break;
+            case 3:
+                int nbMortsApaise = 0;
+                for (int value : mNbBonnesReponsesDeduction) {
+                    if (value >= mListeJoueurs.size() - 1)
+                        nbMortsApaise++;
+                }
+                textePhaseJeu += " : " + nbMortsApaise + " sur " + mListeCranes.size() + " apaisés";
                 break;
         }
         tv.setText(textePhaseJeu);
@@ -527,22 +545,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     }
 
     /**
-     * Fonction qui permet de récupére l'id du crane dont le personnage (id) est passé en paramètre
-     *
-     * @param idPerso : id du personnage à récupérer
-     * @return : l'id du crane qui a ce personnage
-     */
-    private int getIdCraneFromIdPerso(int idPerso) {
-        int idCrane = 0;
-        for (int i = 0; i < mListeCranes.size(); i++) {
-            if (mListeCranes.get(i).getPersonnage().getId() == idPerso)
-                idCrane = mListeCranes.get(i).getId();
-        }
-
-        return idCrane;
-    }
-
-    /**
      * Fonction qui permet de récupérer le crane dont l'id est passé en paramètre
      *
      * @param idCrane : id du crane à récupérer
@@ -652,47 +654,96 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         return monCrane;
     }
 
-    private void afficheMonCrane(Crane monCrane) {
+    private void afficheCraneEtArdoise(Crane monCrane) {
         String contexte = monCrane.getPersonnage().getContexte();
 
         ConstraintLayout crane = findViewById(R.id.crane);
         LinearLayout ardoise = findViewById(R.id.ardoise);
         LinearLayout personnages = findViewById(R.id.personnages);
         LinearLayout clavier = findViewById(R.id.clavier);
-        if (mTourDeJeu == 4 && mNbJoueurValides == mListeJoueurs.size()) {
-            crane.setVisibility(View.GONE);
-            clavier.setVisibility(View.GONE);
-            ardoise.setVisibility(View.VISIBLE);
-            personnages.setVisibility(View.VISIBLE);
-        } else {
-            crane.setVisibility(View.VISIBLE);
-            clavier.setVisibility(View.VISIBLE);
-            ardoise.setVisibility(View.GONE);
-            personnages.setVisibility(View.GONE);
+        HorizontalScrollView cranesReponses = findViewById(R.id.liste_cranes_reponses);
+        switch (mPhaseEnCours) {
+            case 1: // Saisie des mots
+                crane.setVisibility(View.VISIBLE);
+                clavier.setVisibility(View.VISIBLE);
+                ardoise.setVisibility(View.GONE);
+                personnages.setVisibility(View.GONE);
+                cranesReponses.setVisibility(View.GONE);
+                if (!contexte.isEmpty())
+                    contexte = "(" + contexte + ")";
+
+                if (!mMotValide)
+                    mTourDeJeu--;
+
+                // On n'affiche le personnage que si le joueur n'a pas encore écrit de mot au premier tour
+                if (!mMotValide && mTourDeJeu == 0) {
+                    mNomPersonnage.setText(monCrane.getPersonnage().getNom());
+                    mContextePersonnage.setText(contexte);
+                    mNomPersonnage.setVisibility(View.VISIBLE);
+                    mContextePersonnage.setVisibility(View.VISIBLE);
+                    mZoneSaisie.setHint(R.string.ecrit_un_mot);
+                    mImageCrane.setImageResource(R.drawable.fiesta_crane_ouvert);
+                } else {
+                    mZoneSaisie.setHint(mMot);
+                    mNomPersonnage.setVisibility(View.INVISIBLE);
+                    mContextePersonnage.setVisibility(View.INVISIBLE);
+                }
+                afficheCrane();
+                mBoutonValider.setVisibility(View.VISIBLE);
+                break;
+            case 2: // Deduction
+                crane.setVisibility(View.GONE);
+                clavier.setVisibility(View.GONE);
+                ardoise.setVisibility(View.VISIBLE);
+                personnages.setVisibility(View.VISIBLE);
+                cranesReponses.setVisibility(View.GONE);
+                mBoutonValider.setVisibility(View.VISIBLE);
+                break;
+            case 3: // Affichage des resultats
+                crane.setVisibility(View.GONE);
+                clavier.setVisibility(View.GONE);
+                ardoise.setVisibility(View.VISIBLE);
+                personnages.setVisibility(View.GONE);
+                cranesReponses.setVisibility(View.VISIBLE);
+                mBoutonValider.setVisibility(View.GONE);
+                afficheResultats();
+                break;
         }
+    }
 
-        Log.d("DEBUG", mTourDeJeu + "-" + mNbJoueurValides);
+    private void afficheResultats() {
+        for (int i = 0; i < mListeIdCranesResultat.length; i++) {
+            ConstraintLayout crane = findViewById(mListeIdCranesResultat[i]);
+            ImageView iv = findViewById(mListeIdImageCranesResultat[i]);
+            TextView tvPerso = findViewById(mListeIdNomPersoResultat[i]);
+            TextView tvContexte = findViewById(mListeIdContextePersoResultat[i]);
+            TextView tvSaisie = findViewById(mListeIdZoneSaisieResultat[i]);
+            if (i < mListeJoueurs.size()) {
+                crane.setVisibility(View.VISIBLE);
+                iv.setVisibility(View.VISIBLE);
+                tvPerso.setVisibility(View.VISIBLE);
+                tvContexte.setVisibility(View.VISIBLE);
+                tvSaisie.setVisibility(View.VISIBLE);
+                if (mNbBonnesReponsesDeduction[i] >= mListeJoueurs.size() - 1) {
+                    iv.setImageResource(R.drawable.fiesta_crane_ferme);
+                    tvPerso.setText("");
+                    tvContexte.setText("");
+                    tvSaisie.setText(mListeCranes.get(i).getPersonnage().getNom());
+                } else {
+                    iv.setImageResource(mListeImageCranesOuvert[mNbBonnesReponsesDeduction[i]]);
+                    tvPerso.setText(mListeCranes.get(i).getPersonnage().getNom());
+                    tvContexte.setText(mListeCranes.get(i).getPersonnage().getContexte());
+                    tvSaisie.setText("");
+                }
 
-        if (!contexte.isEmpty())
-            contexte = "(" + contexte + ")";
-
-        if (!mMotValide)
-            mTourDeJeu--;
-
-        // On n'affiche le personnage que si le joueur n'a pas encore écrit de mot au premier tour
-        if (!mMotValide && mTourDeJeu == 0) {
-            mNomPersonnage.setText(monCrane.getPersonnage().getNom());
-            mContextePersonnage.setText(contexte);
-            mNomPersonnage.setVisibility(View.VISIBLE);
-            mContextePersonnage.setVisibility(View.VISIBLE);
-            mZoneSaisie.setHint(R.string.ecrit_un_mot);
-            mImageCrane.setImageResource(R.drawable.fiesta_crane_ouvert);
-        } else {
-            mZoneSaisie.setHint(mMot);
-            mNomPersonnage.setVisibility(View.INVISIBLE);
-            mContextePersonnage.setVisibility(View.INVISIBLE);
+            } else {
+                iv.setVisibility(View.GONE);
+                crane.setVisibility(View.GONE);
+                tvPerso.setVisibility(View.GONE);
+                tvContexte.setVisibility(View.GONE);
+                tvSaisie.setVisibility(View.GONE);
+            }
         }
-        afficheCrane();
     }
 
     private void afficheCrane() {
@@ -715,6 +766,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class TacheGetInfoFiesta extends AsyncTask<String, Void, Document> {
 
         @Override

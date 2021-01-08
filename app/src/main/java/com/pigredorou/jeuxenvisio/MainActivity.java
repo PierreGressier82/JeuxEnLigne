@@ -54,9 +54,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.09 : Belote : Gestion de la "coupe" pour les distributions et de la "goutière" pour la fin de distribution (on ne mélange pas les cartes entre les manches)
      * 2.10 : Fiesta de los muertos : début implémentation
      * 2.11 : Fiesta de los muertos : implémentation lecture XML + saisie mot (4x)
+     * 2.12 : Fiesta de los muertos : implémentation v1 terminée
      */
     // Variables statiques
-    private static final String mNumVersion = "2.11";
+    private static final String mNumVersion = "2.12";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
