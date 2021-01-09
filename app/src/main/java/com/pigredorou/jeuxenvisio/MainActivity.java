@@ -55,9 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.10 : Fiesta de los muertos : début implémentation
      * 2.11 : Fiesta de los muertos : implémentation lecture XML + saisie mot (4x)
      * 2.12 : Fiesta de los muertos : implémentation v1 terminée
+     * 2.13 : Fiesta de los muertos : ajout initialisation du jeu + Main : option admin affichées selon le jeu
      */
     // Variables statiques
-    private static final String mNumVersion = "2.12";
+    private static final String mNumVersion = "2.13";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -81,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
     private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.manchots_barjots, R.drawable.belote};
+    private static final int mIdTheCrew = 1;
+    private static final int mIdFiestaDeLosMuertos = 2;
+    private static final int mIdLeRoiDesNains = 3;
+    private static final int mIdManchotsBarjots = 4;
+    private static final int mIdBelote = 5;
 
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
@@ -323,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     iv.setTag("NO");
                     mJeuChoisi=false;
                 }
+                afficheOptionAdmin();
                 break;
 
             // Lancer le jeu dans le salon pour le joueur demandé
@@ -431,7 +438,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.boutonNbTachePlus :
-                mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString())+1));
+                if (Integer.parseInt(mNbTaches.getText().toString()) < 20)
+                    mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString()) + 1));
                 break;
 
             // Incrémente le numéro de mission
@@ -558,7 +566,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void afficheOptionAdmin () {
         int indexJoueur= -1;
 
-        // Todo : afficher les éléments correspondant au jeu sélectionné
         // Récupère l'index du joueur
         for(int i=0;i<mListeJoueurs.size();i++) {
             if(mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
@@ -568,15 +575,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (indexJoueur != -1 && mListeJoueurs.get(indexJoueur).getAdmin() == 1) {
-            mBoutonRAZ.setVisibility(View.VISIBLE);
-            mBoutonDistribueCartes.setVisibility(View.VISIBLE);
-            mBoutonDistribueTache.setVisibility(View.VISIBLE);
-            mLigneNbTaches.setVisibility(View.VISIBLE);
-            mOptionTaches.setVisibility(View.VISIBLE);
-            mLigneNumMission.setVisibility(View.VISIBLE);
-            mBoutonMissionSuivante.setVisibility(View.VISIBLE);
-            mBoutonEchangeCarte.setVisibility(View.VISIBLE);
-            mBoutonEchangeJeu.setVisibility(View.VISIBLE);
+            switch (mIdJeu) {
+                case mIdTheCrew:
+                    mBoutonRAZ.setVisibility(View.VISIBLE);
+                    mBoutonDistribueCartes.setVisibility(View.VISIBLE);
+                    mBoutonDistribueTache.setVisibility(View.VISIBLE);
+                    mLigneNbTaches.setVisibility(View.VISIBLE);
+                    mOptionTaches.setVisibility(View.VISIBLE);
+                    mLigneNumMission.setVisibility(View.VISIBLE);
+                    mBoutonMissionSuivante.setVisibility(View.VISIBLE);
+                    mBoutonEchangeCarte.setVisibility(View.VISIBLE);
+                    mBoutonEchangeJeu.setVisibility(View.INVISIBLE);
+                    break;
+                case mIdBelote:
+                    mBoutonRAZ.setVisibility(View.VISIBLE);
+                    mBoutonDistribueCartes.setVisibility(View.VISIBLE);
+                    mBoutonDistribueTache.setVisibility(View.GONE);
+                    mLigneNbTaches.setVisibility(View.GONE);
+                    mOptionTaches.setVisibility(View.GONE);
+                    mLigneNumMission.setVisibility(View.GONE);
+                    mBoutonMissionSuivante.setVisibility(View.GONE);
+                    mBoutonEchangeCarte.setVisibility(View.GONE);
+                    mBoutonEchangeJeu.setVisibility(View.GONE);
+                    break;
+                case mIdFiestaDeLosMuertos:
+                case mIdLeRoiDesNains:
+                case mIdManchotsBarjots:
+                default:
+                    mBoutonRAZ.setVisibility(View.GONE);
+                    mBoutonDistribueCartes.setVisibility(View.GONE);
+                    mBoutonDistribueTache.setVisibility(View.GONE);
+                    mLigneNbTaches.setVisibility(View.GONE);
+                    mOptionTaches.setVisibility(View.GONE);
+                    mLigneNumMission.setVisibility(View.GONE);
+                    mBoutonMissionSuivante.setVisibility(View.GONE);
+                    mBoutonEchangeCarte.setVisibility(View.GONE);
+                    mBoutonEchangeJeu.setVisibility(View.GONE);
+                    break;
+            }
+
         } else {
             mBoutonRAZ.setVisibility(View.GONE);
             mBoutonDistribueCartes.setVisibility(View.GONE);

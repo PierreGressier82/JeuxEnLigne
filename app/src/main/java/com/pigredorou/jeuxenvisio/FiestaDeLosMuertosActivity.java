@@ -43,6 +43,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
     // URLs des actions en base
     private static final String urlFiesta = MainActivity.url + "fiesta.php?partie=";
+    private static final String urlInitJeu = MainActivity.url + "initFiesta.php?partie=";
     private static final String urlValidMot = MainActivity.url + "validMotFiesta.php?partie=";
     private static final String urlDeduction = MainActivity.url + "deductionFiesta.php?partie=";
     // Elements graphiques
@@ -67,6 +68,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private TextView mNomPersonnage;
     private EditText mZoneSaisie;
     private Button mBoutonValider;
+    private Button mBoutonInitialiser;
     private ArrayList<Joueur> mListeJoueurs;
     private ArrayList<Personnage> mListePersonnages;
     private ArrayList<Crane> mListeCranes;
@@ -113,6 +115,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         mZoneSaisie.setInputType(InputType.TYPE_CLASS_TEXT);
         mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonValider.setOnClickListener(this);
+        mBoutonInitialiser = findViewById(R.id.bouton_initialiser);
+        mBoutonInitialiser.setOnClickListener(this);
 
         // Ardoise
         for (int value : mListeIdPersoArdoise) {
@@ -144,6 +148,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                     mZoneSaisie.setText("");
                 }
                 activeBoutonValider(false);
+                break;
+
+            case R.id.bouton_initialiser:
+                new MainActivity.TacheURLSansRetour().execute(urlInitJeu + mIdPartie);
                 break;
 
             case R.id.personnage1:
@@ -690,6 +698,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 }
                 afficheCrane();
                 mBoutonValider.setVisibility(View.VISIBLE);
+                if (jeSuisAdmin())
+                    mBoutonInitialiser.setVisibility(View.VISIBLE);
+                else
+                    mBoutonInitialiser.setVisibility(View.GONE);
                 break;
             case 2: // Deduction
                 crane.setVisibility(View.GONE);
@@ -698,6 +710,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 personnages.setVisibility(View.VISIBLE);
                 cranesReponses.setVisibility(View.GONE);
                 mBoutonValider.setVisibility(View.VISIBLE);
+                mBoutonInitialiser.setVisibility(View.GONE);
                 break;
             case 3: // Affichage des resultats
                 crane.setVisibility(View.GONE);
@@ -706,9 +719,22 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 personnages.setVisibility(View.GONE);
                 cranesReponses.setVisibility(View.VISIBLE);
                 mBoutonValider.setVisibility(View.GONE);
+                if (jeSuisAdmin())
+                    mBoutonInitialiser.setVisibility(View.VISIBLE);
+                else
+                    mBoutonInitialiser.setVisibility(View.GONE);
                 afficheResultats();
                 break;
         }
+    }
+
+    private boolean jeSuisAdmin() {
+        boolean reponse = false;
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo))
+                reponse = mListeJoueurs.get(i).getAdmin() == 1;
+        }
+        return reponse;
     }
 
     private void afficheResultats() {

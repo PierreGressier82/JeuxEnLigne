@@ -1080,6 +1080,18 @@
         android:text="@string/valider"
         android:textColor="@color/blanc" />
 
+    <Button
+        android:id="@+id/bouton_initialiser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/noir"
+        android:text="@string/initialiser"
+        android:textColor="@color/blanc"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/clavier"
         android:layout_width="match_parent"
