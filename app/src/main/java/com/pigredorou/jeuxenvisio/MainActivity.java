@@ -56,9 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.11 : Fiesta de los muertos : implémentation lecture XML + saisie mot (4x)
      * 2.12 : Fiesta de los muertos : implémentation v1 terminée
      * 2.13 : Fiesta de los muertos : ajout initialisation du jeu + Main : option admin affichées selon le jeu
+     * 2.14 : Fiesta de los muertos : amélioration de l'affichage des résultats
      */
     // Variables statiques
-    private static final String mNumVersion = "2.13";
+    private static final String mNumVersion = "2.14";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";

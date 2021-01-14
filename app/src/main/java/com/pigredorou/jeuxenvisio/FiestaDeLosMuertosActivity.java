@@ -54,7 +54,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     // Variables globales
     private static int[] mListeIdPersonnage = {R.id.personnage1, R.id.personnage2, R.id.personnage3, R.id.personnage4, R.id.personnage5, R.id.personnage6, R.id.personnage7, R.id.personnage8};
     private static int[] mListeIdPersoArdoise = {R.id.nom_ardoise_1, R.id.nom_ardoise_2, R.id.nom_ardoise_3, R.id.nom_ardoise_4, R.id.nom_ardoise_5, R.id.nom_ardoise_6, R.id.nom_ardoise_7, R.id.nom_ardoise_8};
-    private static int[] mListeIdMot = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
+    private static int[] mListeIdMotArdoise = {R.id.mot_ardoise_1, R.id.mot_ardoise_2, R.id.mot_ardoise_3, R.id.mot_ardoise_4, R.id.mot_ardoise_5, R.id.mot_ardoise_6, R.id.mot_ardoise_7, R.id.mot_ardoise_8};
     private static int[] mListeIdCranesResultat = {R.id.crane1, R.id.crane2, R.id.crane3, R.id.crane4, R.id.crane5, R.id.crane6, R.id.crane7, R.id.crane8};
     private static int[] mListeIdImageCranesResultat = {R.id.image_crane1, R.id.image_crane2, R.id.image_crane3, R.id.image_crane4, R.id.image_crane5, R.id.image_crane6, R.id.image_crane7, R.id.image_crane8};
     private static int[] mListeIdNomPersoResultat = {R.id.nom_personnage1, R.id.nom_personnage2, R.id.nom_personnage3, R.id.nom_personnage4, R.id.nom_personnage5, R.id.nom_personnage6, R.id.nom_personnage7, R.id.nom_personnage8};
@@ -71,6 +71,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private Button mBoutonInitialiser;
     private ArrayList<Joueur> mListeJoueurs;
     private ArrayList<Personnage> mListePersonnages;
+    private ArrayList<Personnage> mListeDeMesDeductions = new ArrayList<>();
     private ArrayList<Crane> mListeCranes;
     private ArrayList<TourDeJeuCrane> mListeTourDeJeu;
     private int[] mNbBonnesReponsesDeduction;
@@ -232,7 +233,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     }
 
     private void activeBoutonValider(boolean active) {
-        mZoneSaisie.setFocusable(active);
+        //mZoneSaisie.setFocusable(active);
         mBoutonValider.setClickable(active);
 
         if (active)
@@ -330,7 +331,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         // Tour de jeu
         mListeTourDeJeu = parseNoeudsTourDeJeu(doc);
         activeLignesAvecMot();
-        afficheMots();
 
         // Mon Crane
         Crane monCrane = parseNoeudsMonCrane(doc);
@@ -347,12 +347,16 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
     private void affichePhaseDeJeu() {
         // Gestion des phases
-        if (mNbJoueurPhaseDeduction == mListeJoueurs.size()) // Tous les joueurs ont répondu à la deduction
+        if (mNbJoueurPhaseDeduction == mListeJoueurs.size()) { // Tous les joueurs ont répondu à la deduction
             mPhaseEnCours = 3;
-        else if (mNbJoueurPhaseDeduction > 0) // Phase déduction en cours
+            afficheMesDeductions();
+            afficheHistoriquesMots();
+        } else if ((mNbJoueurPhaseDeduction > 0) || (mTourDeJeu >= 4 && mNbJoueurValides == mListeJoueurs.size())) { // Phase déduction en cours
             mPhaseEnCours = 2;
-        else if (mTourDeJeu >= 4 && mNbJoueurValides == mListeJoueurs.size())
-            mPhaseEnCours = 2;
+            afficheMots();
+            if (mTourDeJeu == 5) // Si j'ai déjà validé ma réponse, on recharge les mots validés
+                afficheMesDeductions();
+        }
         else
             mPhaseEnCours = 1;
 
@@ -384,6 +388,46 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
     }
 
+    private void afficheHistoriquesMots() {
+        // Vide les mots
+        for (int value : mListeIdMotArdoise) {
+            TextView tv = findViewById(value);
+            tv.setText("");
+        }
+        //int nbJoueurs=mListeJoueurs.size();
+        //for(int i=mListeTourDeJeu.size()-1;i>=0;i--) {
+        //    TextView tv = findViewById(mListeIdMotArdoise[i/nbJoueurs]);
+        //    String chaineMots = tv.getText().toString();
+        //    if(! tv.getText().toString().isEmpty())
+        //        chaineMots += " <- ";
+        //    chaineMots += mListeTourDeJeu.get(i).getMot();
+        //    tv.setText(chaineMots);
+        //}
+        for (int i = 0; i < mListeIdMotArdoise.length; i++) {
+            TextView tv = findViewById(mListeIdMotArdoise[i]);
+            if (i < mListeCranes.size()) {
+                String chaineMots = mListeTourDeJeu.get(i + (3 * mListeJoueurs.size())).getMot();
+                chaineMots += " <- " + mListeTourDeJeu.get(i + (2 * mListeJoueurs.size())).getMot();
+                chaineMots += " <- " + mListeTourDeJeu.get(i + mListeJoueurs.size()).getMot();
+                chaineMots += " <- " + mListeTourDeJeu.get(i).getMot();
+                tv.setText(chaineMots);
+            } else
+                tv.setText("");
+        }
+    }
+
+    private void afficheMesDeductions() {
+        int nbPerso = 0;
+        for (int i = 0; i < mListeTourDeJeu.size(); i++) {
+            if (mListeTourDeJeu.get(i).getPseudo().equals(mPseudo)) {
+                TextView tv = findViewById(mListeIdPersoArdoise[nbPerso]);
+                String nomPerso = mListeDeMesDeductions.get(nbPerso).getNom();
+                tv.setText(nomPerso);
+                nbPerso++;
+            }
+        }
+    }
+
     private void RAZArdoise() {
         for (int value : mListeIdPersoArdoise) {
             TextView tv = findViewById(value);
@@ -391,7 +435,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             tv.setTag("");
         }
 
-        for (int value : mListeIdMot) {
+        for (int value : mListeIdMotArdoise) {
             TextView tv = findViewById(value);
             tv.setText("");
             tv.setTag("");
@@ -429,19 +473,31 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 }
                 if (getCraneFromId(idCrane).getPersonnage().getId() == idPerso)
                     mNbBonnesReponsesDeduction[j]++;
+                if (pseudoDeduction.equals(mPseudo)) { // On enregistre mes réponses
+                    Personnage perso = getPerso(idPerso);
+                    mListeDeMesDeductions.add(perso);
+                    // Est-ce la bonne déduction ?
+                    TextView tv = findViewById(mListeIdPersoArdoise[j]);
+                    if (mPhaseEnCours == 3) {
+                        if (idPerso == getCraneFromId(idCrane).getPersonnage().getId())
+                            tv.setTextColor(getResources().getColor(R.color.vert));
+                        else
+                            tv.setTextColor(getResources().getColor(R.color.rouge));
+                    } else
+                        tv.setTextColor(getResources().getColor(R.color.noir));
+                }
             }
         }
     }
 
     private void afficheMots() {
-        for (int i = 0; i < mListeIdMot.length; i++) {
-            TextView tv = findViewById(mListeIdMot[i]);
+        for (int i = 0; i < mListeIdMotArdoise.length; i++) {
+            TextView tv = findViewById(mListeIdMotArdoise[i]);
             if (i < mListeCranes.size())
                 tv.setText(mListeTourDeJeu.get(i + (3 * mListeJoueurs.size())).getMot());
             else
                 tv.setText("");
         }
-
     }
 
     private void affichePersonnages() {
