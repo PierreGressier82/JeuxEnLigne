@@ -340,7 +340,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         // Affichage
         affichePhaseDeJeu();
-        afficheCraneEtArdoise(monCrane);
+        afficheCranesEtArdoise(monCrane);
         if (mTourDeJeu < 3)
             RAZArdoise();
     }
@@ -718,7 +718,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         return monCrane;
     }
 
-    private void afficheCraneEtArdoise(Crane monCrane) {
+    private void afficheCranesEtArdoise(Crane monCrane) {
         String contexte = monCrane.getPersonnage().getContexte();
 
         ConstraintLayout crane = findViewById(R.id.crane);
@@ -733,6 +733,26 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 ardoise.setVisibility(View.GONE);
                 personnages.setVisibility(View.GONE);
                 cranesReponses.setVisibility(View.GONE);
+                TextView mJoueurPrec = findViewById(R.id.joueur_precedent);
+                TextView mJoueurSuiv = findViewById(R.id.joueur_suivant);
+                for (int i = 0; i < mListeJoueurs.size(); i++) {
+                    if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
+                        String textePrec = "";
+                        String texteSuiv = "";
+                        if (i != 0)
+                            textePrec = "  ->\n" + mListeJoueurs.get(i - 1).getNomJoueur() + "\n  ->";
+                        else
+                            textePrec = "  ->\n" + mListeJoueurs.get(mListeJoueurs.size() - 1).getNomJoueur() + "\n  ->";
+                        mJoueurPrec.setText(textePrec);
+
+                        if (i != mListeJoueurs.size() - 1)
+                            texteSuiv = "->  \n" + mListeJoueurs.get(i + 1).getNomJoueur() + "\n->  ";
+                        else
+                            texteSuiv = "->  \n" + mListeJoueurs.get(0).getNomJoueur() + "\n->  ";
+                        mJoueurSuiv.setText(texteSuiv);
+                    }
+                }
+
                 if (!contexte.isEmpty())
                     contexte = "(" + contexte + ")";
 
