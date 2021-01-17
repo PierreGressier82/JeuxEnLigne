@@ -58,9 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.13 : Fiesta de los muertos : ajout initialisation du jeu + Main : option admin affichées selon le jeu
      * 2.14 : Fiesta de los muertos : amélioration de l'affichage des résultats
      * 2.15 : Fiesta de los muertos : ajout du nom des joueurs précédent et suivants pour la première phase
+     * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultats
      */
     // Variables statiques
-    private static final String mNumVersion = "2.15";
+    private static final String mNumVersion = "2.16";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";

@@ -71,7 +71,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private Button mBoutonInitialiser;
     private ArrayList<Joueur> mListeJoueurs;
     private ArrayList<Personnage> mListePersonnages;
-    private ArrayList<Personnage> mListeDeMesDeductions = new ArrayList<>();
+    private ArrayList<Personnage> mListeDeMesDeductions;
     private ArrayList<Crane> mListeCranes;
     private ArrayList<TourDeJeuCrane> mListeTourDeJeu;
     private int[] mNbBonnesReponsesDeduction;
@@ -394,15 +394,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             TextView tv = findViewById(value);
             tv.setText("");
         }
-        //int nbJoueurs=mListeJoueurs.size();
-        //for(int i=mListeTourDeJeu.size()-1;i>=0;i--) {
-        //    TextView tv = findViewById(mListeIdMotArdoise[i/nbJoueurs]);
-        //    String chaineMots = tv.getText().toString();
-        //    if(! tv.getText().toString().isEmpty())
-        //        chaineMots += " <- ";
-        //    chaineMots += mListeTourDeJeu.get(i).getMot();
-        //    tv.setText(chaineMots);
-        //}
         for (int i = 0; i < mListeIdMotArdoise.length; i++) {
             TextView tv = findViewById(mListeIdMotArdoise[i]);
             if (i < mListeCranes.size()) {
@@ -417,14 +408,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     }
 
     private void afficheMesDeductions() {
-        int nbPerso = 0;
-        for (int i = 0; i < mListeTourDeJeu.size(); i++) {
-            if (mListeTourDeJeu.get(i).getPseudo().equals(mPseudo)) {
-                TextView tv = findViewById(mListeIdPersoArdoise[nbPerso]);
-                String nomPerso = mListeDeMesDeductions.get(nbPerso).getNom();
-                tv.setText(nomPerso);
-                nbPerso++;
-            }
+        for (int i = 0; i < mListeDeMesDeductions.size(); i++) {
+            TextView tv = findViewById(mListeIdPersoArdoise[i]);
+            String nomPerso = mListeDeMesDeductions.get(i).getNom();
+            tv.setText(nomPerso);
         }
     }
 
@@ -449,6 +436,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         int idCrane = 0;
         int idPerso = 0;
         mNbJoueurPhaseDeduction = 0;
+        mListeDeMesDeductions = new ArrayList<>();
 
         for (int i = 0; i < NoeudTourDeJeu.getChildNodes().getLength(); i++) { // Parcours tous les joueurs
             Node noeudJoueur = NoeudTourDeJeu.getChildNodes().item(i);
@@ -473,19 +461,20 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 }
                 if (getCraneFromId(idCrane).getPersonnage().getId() == idPerso)
                     mNbBonnesReponsesDeduction[j]++;
+                TextView tv = findViewById(mListeIdPersoArdoise[j]);
                 if (pseudoDeduction.equals(mPseudo)) { // On enregistre mes réponses
                     Personnage perso = getPerso(idPerso);
                     mListeDeMesDeductions.add(perso);
                     // Est-ce la bonne déduction ?
-                    TextView tv = findViewById(mListeIdPersoArdoise[j]);
                     if (mPhaseEnCours == 3) {
                         if (idPerso == getCraneFromId(idCrane).getPersonnage().getId())
                             tv.setTextColor(getResources().getColor(R.color.vert));
                         else
                             tv.setTextColor(getResources().getColor(R.color.rouge));
-                    } else
-                        tv.setTextColor(getResources().getColor(R.color.noir));
+                    }
                 }
+                if (mPhaseEnCours != 3)
+                    tv.setTextColor(getResources().getColor(R.color.noir));
             }
         }
     }
