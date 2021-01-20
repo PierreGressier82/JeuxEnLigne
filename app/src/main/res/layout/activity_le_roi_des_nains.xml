@@ -343,6 +343,7 @@
                     android:textSize="20sp" />
             </TableRow>
             <TableRow
+                android:id="@+id/source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="fill_horizontal">
@@ -401,6 +402,7 @@
         android:layout_marginTop="20dp">
 
         <TableRow
+            android:id="@+id/cible"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -432,8 +434,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.25"
-                android:textAlignment="center"
-                android:text="Pigre"/>
+                android:text="Pigre"
+                android:textAlignment="center" />
 
             <TextView
                 android:layout_width="0dp"
@@ -458,10 +460,17 @@
         android:layout_marginTop="10dp"
         android:text="@string/refresh"
         android:textColor="@color/noir"
-        android:textColorHint="@color/blanc"/>
+        android:textColorHint="@color/blanc" />
+
     <TextView
         android:id="@+id/heure_refresh"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
 
 </LinearLayout>
