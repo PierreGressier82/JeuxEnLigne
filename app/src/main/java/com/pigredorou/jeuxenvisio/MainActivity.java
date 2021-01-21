@@ -29,10 +29,6 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
-    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
-    public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
-    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -60,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.15 : Fiesta de los muertos : ajout du nom des joueurs précédent et suivants pour la première phase
      * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultats
      */
+    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
+    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
+    public static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
     // Variables statiques
     private static final String mNumVersion = "2.16";
     private static final String urlGetSalons = url + "getSalons.php";

@@ -80,32 +80,20 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private int mNbTacheAAtribuer=0;
     private int mZoneSilence=0;
     private int mNumeroPli=0;
-    private ArrayList<Carte> mListeCartesMainJoueur;
-    private ArrayList<Pli> mListeCartesPliEnCours;
-    private ArrayList<Joueur> mListeJoueurs;
-    private ArrayList<Pli> mListeCommunications;
-    private ArrayList<Tache> mListeTaches;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
-    private TextView mTextResultat;
-    private TextView mTitre;
     private TextView mTitrePli;
     private TextView mHeureRefresh;
     private TextView mObjectifCommun;
     // Detresse
     private ImageView mImageDetresse;
-    // Communication
-    private TextView mTitreCommunication;
     private TableLayout mTableauCommunication;
     private TextView mCommPseudoJoueur1;
     private TextView mCommPseudoJoueur2;
     private TextView mCommPseudoJoueur3;
     private TextView mCommPseudoJoueur4;
     private TextView mCommPseudoJoueur5;
-    private TextView mCommJoueur1;
-    private TextView mCommJoueur2;
-    private TextView mCommJoueur3;
     private TextView mCommJoueur4;
     private TextView mCommJoueur5;
     private ImageView mBoutonComm;
@@ -118,24 +106,12 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private TextView mTachePseudoJoueur3;
     private TextView mTachePseudoJoueur4;
     private TextView mTachePseudoJoueur5;
-    private TextView mTaches1Joueur1;
-    private TextView mTaches1Joueur2;
-    private TextView mTaches1Joueur3;
     private TextView mTaches1Joueur4;
     private TextView mTaches1Joueur5;
-    private TextView mTaches2Joueur1;
-    private TextView mTaches2Joueur2;
-    private TextView mTaches2Joueur3;
     private TextView mTaches2Joueur4;
     private TextView mTaches2Joueur5;
-    private TextView mTaches3Joueur1;
-    private TextView mTaches3Joueur2;
-    private TextView mTaches3Joueur3;
     private TextView mTaches3Joueur4;
     private TextView mTaches3Joueur5;
-    private TextView mTaches4Joueur1;
-    private TextView mTaches4Joueur2;
-    private TextView mTaches4Joueur3;
     private TextView mTaches4Joueur4;
     private TextView mTaches4Joueur5;
     // Auto resfresh
@@ -161,7 +137,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_the_crew);
 
         // ENTETE
-        mTitre = findViewById(R.id.titre_jeu);
+        TextView titre = findViewById(R.id.titre_jeu);
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
         TextView tvNomSalon = findViewById(R.id.nom_salon);
@@ -178,8 +154,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
 
         // Affiche un message chargement le temps de récupérer les informations en base
-        mTextResultat = findViewById(R.id.resultat);
-        mTextResultat.setText(R.string.Chargement);
+        TextView textResultat = findViewById(R.id.resultat);
+        textResultat.setText(R.string.Chargement);
 
         // Table
         mTitrePli = findViewById(R.id.titre_pli);
@@ -206,17 +182,15 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void chargeVuesCommunication() {
-        mTitreCommunication = findViewById(R.id.titre_communication);
-        mTitreCommunication.setOnClickListener(this);
+        // Communication
+        TextView titreCommunication = findViewById(R.id.titre_communication);
+        titreCommunication.setOnClickListener(this);
         mTableauCommunication = findViewById(R.id.tableau_communication);
         mCommPseudoJoueur1 = findViewById(R.id.comm_pseudo_joueur1);
         mCommPseudoJoueur2 = findViewById(R.id.comm_pseudo_joueur2);
         mCommPseudoJoueur3 = findViewById(R.id.comm_pseudo_joueur3);
         mCommPseudoJoueur4 = findViewById(R.id.comm_pseudo_joueur4);
         mCommPseudoJoueur5 = findViewById(R.id.comm_pseudo_joueur5);
-        mCommJoueur1 = findViewById(R.id.communication_joueur1);
-        mCommJoueur2 = findViewById(R.id.communication_joueur2);
-        mCommJoueur3 = findViewById(R.id.communication_joueur3);
         mCommJoueur4 = findViewById(R.id.communication_joueur4);
         mCommJoueur5 = findViewById(R.id.communication_joueur5);
         mBoutonComm = findViewById(R.id.bouton_communication);
@@ -233,24 +207,12 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mTachePseudoJoueur3 = findViewById(R.id.tache_pseudo_joueur3);
         mTachePseudoJoueur4 = findViewById(R.id.tache_pseudo_joueur4);
         mTachePseudoJoueur5 = findViewById(R.id.tache_pseudo_joueur5);
-        mTaches1Joueur1 = findViewById(R.id.tache_joueur1);
-        mTaches1Joueur2 = findViewById(R.id.tache_joueur2);
-        mTaches1Joueur3 = findViewById(R.id.tache_joueur3);
         mTaches1Joueur4 = findViewById(R.id.tache_joueur4);
         mTaches1Joueur5 = findViewById(R.id.tache_joueur5);
-        mTaches2Joueur1 = findViewById(R.id.tache2_joueur1);
-        mTaches2Joueur2 = findViewById(R.id.tache2_joueur2);
-        mTaches2Joueur3 = findViewById(R.id.tache2_joueur3);
         mTaches2Joueur4 = findViewById(R.id.tache2_joueur4);
         mTaches2Joueur5 = findViewById(R.id.tache2_joueur5);
-        mTaches3Joueur1 = findViewById(R.id.tache3_joueur1);
-        mTaches3Joueur2 = findViewById(R.id.tache3_joueur2);
-        mTaches3Joueur3 = findViewById(R.id.tache3_joueur3);
         mTaches3Joueur4 = findViewById(R.id.tache3_joueur4);
         mTaches3Joueur5 = findViewById(R.id.tache3_joueur5);
-        mTaches4Joueur1 = findViewById(R.id.tache4_joueur1);
-        mTaches4Joueur2 = findViewById(R.id.tache4_joueur2);
-        mTaches4Joueur3 = findViewById(R.id.tache4_joueur3);
         mTaches4Joueur4 = findViewById(R.id.tache4_joueur4);
         mTaches4Joueur5 = findViewById(R.id.tache4_joueur5);
         mTitreTachesAAtribuer.setVisibility(View.GONE);
@@ -972,31 +934,31 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void parseXML(Document doc) {
 
-        Element element=doc.getDocumentElement();
+        Element element = doc.getDocumentElement();
         element.normalize();
 
         // Cartes que le joueur a en main
-        mListeCartesMainJoueur = parseNoeudsCarte(doc);
-        afficheCartes(mListeCartesMainJoueur);
+        ArrayList<Carte> listeCartesMainJoueur = parseNoeudsCarte(doc);
+        afficheCartes(listeCartesMainJoueur);
 
         // Joueurs
-        mListeJoueurs = parseNoeudsJoueur(doc);
-        affichePseudos(mListeJoueurs);
+        ArrayList<Joueur> listeJoueurs = parseNoeudsJoueur(doc);
+        affichePseudos(listeJoueurs);
 
         // Pli en cours
-        mListeCartesPliEnCours = parseNoeudsPli(doc, "Pli");
-        affichePliEnCours(mListeCartesPliEnCours);
+        ArrayList<Pli> listeCartesPliEnCours = parseNoeudsPli(doc, "Pli");
+        affichePliEnCours(listeCartesPliEnCours);
 
         // Communications
-        mListeCommunications = parseNoeudsPli(doc, "Communications");
-        afficheCommunications(mListeCommunications);
+        ArrayList<Pli> listeCommunications = parseNoeudsPli(doc, "Communications");
+        afficheCommunications(listeCommunications);
 
         // Mission
         parseMission(doc);
 
         // Taches
-        mListeTaches = parseNoeudsTache(doc);
-        afficheTaches(mListeTaches);
+        ArrayList<Tache> listeTaches = parseNoeudsTache(doc);
+        afficheTaches(listeTaches);
     }
 
     private ArrayList<Carte> parseNoeudsCarte(Document doc) {
