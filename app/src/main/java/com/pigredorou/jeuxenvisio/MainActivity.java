@@ -55,13 +55,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.14 : Fiesta de los muertos : amélioration de l'affichage des résultats
      * 2.15 : Fiesta de los muertos : ajout du nom des joueurs précédent et suivants pour la première phase
      * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultats
+     * 2.17 : Fiesta de los muertos : Correction couleur nom perso deduction (si plusieurs parties de suite) + Manchots barjot : test de drag&drop pour The Crew
      */
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
     // Variables statiques
-    private static final String mNumVersion = "2.16";
+    private static final String mNumVersion = "2.17";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";

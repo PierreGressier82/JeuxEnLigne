@@ -428,6 +428,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             TextView tv = findViewById(value);
             tv.setText("");
             tv.setTag("");
+            tv.setTextColor(getResources().getColor(color.noir));
         }
 
         for (int value : mListeIdMotArdoise) {
