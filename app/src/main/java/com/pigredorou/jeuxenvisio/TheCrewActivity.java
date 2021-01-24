@@ -46,6 +46,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
+    static final int MAX_DURATION_CLICK = 500;
+    static final int MAX_DURATION_DOUBLE_CLICK = 2000;
     // Constantes
     // Tableaux des resssources
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
@@ -68,6 +70,12 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
     private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
     private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
+    Thread t;
+    // Gestion du double clic
+    int mClickCount = 0;
+    int mLastViewID = 0;
+    long mStartTimeClick;
+    long mDurationClick;
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -77,9 +85,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
     private boolean mDetresseUtilise = false;
-    private int mNbTacheAAtribuer=0;
-    private int mZoneSilence=0;
-    private int mNumeroPli=0;
+    private int mNbTacheAAtribuer = 0;
+    private int mZoneSilence = 0;
+    private int mNumeroPli = 0;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
@@ -117,14 +125,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     // Auto resfresh
     private Button mBoutonRefreshAuto;
     private Boolean mRefreshAuto;
-    Thread t;
-    // Gestion du double clic
-    int mClickCount = 0;
-    int mLastViewID = 0;
-    long mStartTimeClick;
-    long mDurationClick;
-    static final int MAX_DURATION_CLICK = 500;
-    static final int MAX_DURATION_DOUBLE_CLICK = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +178,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
         mBoutonRefreshAuto.setOnClickListener(this);
         mHeureRefresh = findViewById(R.id.heure_refresh);
-         // TODO : Signal de détresse : Choix d'une carte pour la passer à son voisin (change le pseudo du joueur avec un tag pour retirer du joueur mais mettre en attente la carte
+        // TODO : Signal de détresse : Choix d'une carte pour la passer à son voisin (change le pseudo du joueur avec un tag pour retirer du joueur mais mettre en attente la carte
     }
 
     private void chargeVuesCommunication() {
@@ -288,7 +288,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                 public void run() {
                                     updateTextView();
                                     // Mise à jour complète
-                                    new TacheGetInfoTheCrew().execute(urlTheCrew+mIdPartie+"&joueur="+mPseudo);
+                                    new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
                                 }
                             });
                             Thread.sleep(2000);
@@ -373,12 +373,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                             mCommunicationAChoisir = true;
                         }
                     }
-                }
+                } else if (mNbTacheAAtribuer > 0)
+                    Toast.makeText(this, "Communication après attribution des tâches", Toast.LENGTH_SHORT).show();
                 else
-                    if (mNbTacheAAtribuer > 0)
-                        Toast.makeText(this, "Communication après attribution des tâches", Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(this, "Communication possible à partir du pli " + mZoneSilence, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Communication possible à partir du pli " + mZoneSilence, Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.titre_pli:
@@ -422,7 +420,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.tache4_joueur3:
             case R.id.tache4_joueur4:
             case R.id.tache4_joueur5:
-                    clicTache(v);
+                clicTache(v);
                 break;
 
             case R.id.bouton_detresse:
@@ -448,13 +446,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         String[] chaine = tache.getTag().toString().split("_"); // ex : tache_bleu_2_0
         String couleurTacheActive = chaine[1];
         String valeurTacheActive = chaine[2];
-        int realise=Integer.parseInt(chaine[3]);
+        int realise = Integer.parseInt(chaine[3]);
         if (realise == 0)
             realise = 1;
         else
             realise = 0;
-        String url = urlRealiseTache+mIdPartie+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive+"&realise="+realise;
-        tache.setTag("tache_"+couleurTacheActive+"_"+valeurTacheActive+"_"+realise);
+        String url = urlRealiseTache + mIdPartie + "&valeur_carte=" + valeurTacheActive + "&couleur_carte=" + couleurTacheActive + "&realise=" + realise;
+        tache.setTag("tache_" + couleurTacheActive + "_" + valeurTacheActive + "_" + realise);
         debug(url);
         // Mise à jour de la tache en base
         new MainActivity.TacheURLSansRetour().execute(url);
@@ -467,10 +465,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         String[] chaine = v.getTag().toString().split("_"); // ex : tacheAAttribuer_bleu_2
         String couleurTacheActive = chaine[1];
         String valeurTacheActive = chaine[2];
-        String url = urlAttribueTache+mIdPartie+"&pseudo="+mPseudo+"&valeur_carte="+valeurTacheActive+"&couleur_carte="+couleurTacheActive;
+        String url = urlAttribueTache + mIdPartie + "&pseudo=" + mPseudo + "&valeur_carte=" + valeurTacheActive + "&couleur_carte=" + couleurTacheActive;
         debug(url);
         new MainActivity.TacheURLSansRetour().execute(url);
-        if(--mNbTacheAAtribuer == 0) {
+        if (--mNbTacheAAtribuer == 0) {
             HorizontalScrollView hs = findViewById(R.id.HS_taches_a_attribuer);
             hs.setVisibility(View.GONE);
             mTitreTachesAAtribuer.setVisibility(View.GONE);
@@ -486,8 +484,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case MotionEvent.ACTION_DOWN:
                 time = System.currentTimeMillis();
 
-                if (mClickCount > 2 )
-                    mClickCount=0;
+                if (mClickCount > 2)
+                    mClickCount = 0;
                 // Si temps entre 2 clicks trop long, on retourne à 0
                 if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
                     mClickCount = 0;
@@ -519,9 +517,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d("PGR-onTouch", "ACTION_UP " + mClickCount + " " + v.getId() + " ");
                 break;
             default:
-                if (mClickCount > 2 )
-                    mClickCount=0;
-                Log.d("PGR-onTouch", "AUTRE ACTION " + mClickCount + " " + v.getId() + " evt "+event.getAction());
+                if (mClickCount > 2)
+                    mClickCount = 0;
+                Log.d("PGR-onTouch", "AUTRE ACTION " + mClickCount + " " + v.getId() + " evt " + event.getAction());
                 break;
         }
         return true;
@@ -529,6 +527,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     /**
      * Gestion des actions liées à un double clic
+     *
      * @param v : la vue sur laquelle le double clic a été réalisé
      */
     private void doublicClic(View v) {
@@ -542,14 +541,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             // Si c'est pour communiquer
             // -------------------------
             if (mCommunicationAChoisir) {
-                boolean autorise=true;
+                boolean autorise = true;
                 // Est-ce que la communication de cette carte est autorisée ?
                 if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
-                    autorise=false;
-                if(autorise) {
-                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo="+mPseudo+"&silence="+mZoneSilence);
-                }
-                else
+                    autorise = false;
+                if (autorise) {
+                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo=" + mPseudo + "&silence=" + mZoneSilence);
+                } else
                     Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
             }
             // Joue la carte si c'est mon tour
@@ -562,9 +560,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 // Quelle est la couleur de la première carte jouée dans ce pli ?
                 if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
                     ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
-                    String couleurDemandee="";
-                    if (iv!=null && iv.getVisibility()==View.VISIBLE)
-                         couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
+                    String couleurDemandee = "";
+                    if (iv != null && iv.getVisibility() == View.VISIBLE)
+                        couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
                     // Si je joue la couleur demandée => OK
                     if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
                         jeJoueUneCarteAutorisee = true;
@@ -591,11 +589,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 } else
                     Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
             }
-        }
-        else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
+        } else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
             clicTacheAAttribuer(v);
-        }
-        else {
+        } else {
             switch (v.getId()) {
                 case R.id.tache_joueur1:
                 case R.id.tache_joueur2:
@@ -629,7 +625,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         ImageView iv = findViewById(v.getId());
         String[] chaine = iv.getTag().toString().split("_");
         new MainActivity.TacheURLSansRetour().execute(MainActivity.urlAnnulCarte + mIdPartie + "&couleur_carte=" + chaine[1] + "&valeur_carte=" + chaine[2]);
-        Toast.makeText(this, "Carte "+chaine[2]+" "+chaine[1]+" annulée", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Carte " + chaine[2] + " " + chaine[1] + " annulée", Toast.LENGTH_SHORT).show();
     }
 
     private int getImageCarte(String couleurCarte, int valeurCarte) {
@@ -720,21 +716,20 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 positionJoueur = (positionPremierJoueur + i) % nbJoueur;
                 debug("posJoueurNonJoué " + i + " positionPremierJoueur " + positionPremierJoueur + " nbJoueur " + nbJoueur + " positionJoueur" + positionJoueur);
                 // Si le joueur est le commmandant, on affiche le nom en noir
-                String pseudoTexte=mListePseudo[positionJoueur];
+                String pseudoTexte = mListePseudo[positionJoueur];
                 if (mListePseudo[positionJoueur].equals(mCommandant)) {
                     pseudo.setTextColor(getResources().getColor(R.color.noir));
-                }
-                else
+                } else
                     pseudo.setTextColor(getResources().getColor(R.color.blanc));
                 pseudo.setText(pseudoTexte);
                 pseudo.setVisibility(View.VISIBLE);
 
-                if (plis!=null && i < plis.size()) {
+                if (plis != null && i < plis.size()) {
                     imageCarte.setImageResource(getImageCarte(plis.get(i).getCarte().getCouleur(), plis.get(i).getCarte().getValeur()));
                     imageCarte.setTag("pli_" + plis.get(i).getCarte().getCouleur() + "_" + plis.get(i).getCarte().getValeur());
                     imageCarte.setVisibility(View.VISIBLE);
                     // Rend clicable uniquement la dernière carte posée si c'est ma carte
-                    if ((i+1) == plis.size() && mPseudo.equals(pseudoTexte))
+                    if ((i + 1) == plis.size() && mPseudo.equals(pseudoTexte))
                         imageCarte.setOnTouchListener(this);
                     else
                         imageCarte.setOnTouchListener(null);
@@ -748,16 +743,16 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void afficheTaches(ArrayList<Tache> taches) {
-        int ligneTache=0;
-        int[] nbTacheParJoueur= new int[mListePseudo.length];
+        int ligneTache = 0;
+        int[] nbTacheParJoueur = new int[mListePseudo.length];
         TableRow trTacheAAttribuer = findViewById(R.id.taches_a_attribuer);
         trTacheAAttribuer.removeAllViewsInLayout();
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
         params.setMargins(5, 0, 5, 0);
         trTacheAAttribuer.setLayoutParams(params);
-        mNbTacheAAtribuer=0;
+        mNbTacheAAtribuer = 0;
 
-        for(int i=0;i<taches.size();i++) {
+        for (int i = 0; i < taches.size(); i++) {
             String pseudoTache = taches.get(i).getJoueur();
             String texte = String.valueOf(taches.get(i).getCarte().getValeur());
             String option = taches.get(i).getOption();
@@ -766,9 +761,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             else
                 texte += "";
             // TACHE NON ATTRIBUEES
-            if(pseudoTache.equals("")) {
+            if (pseudoTache.equals("")) {
                 mNbTacheAAtribuer++; // Masque la ligne si aucune tache non attribuée
-                if(i == 0) // Affiche le titre si au moins une tache à attribuer
+                if (i == 0) // Affiche le titre si au moins une tache à attribuer
                     mTitreTachesAAtribuer.setVisibility(View.VISIBLE);
                 TextView tv = new TextView(this);
                 tv.setText(texte);
@@ -776,14 +771,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 tv.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
                 params.setMargins(50, 0, 0, 0);
                 tv.setLayoutParams(params);
-                tv.setTag("tacheAAttribuer_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur());
+                tv.setTag("tacheAAttribuer_" + taches.get(i).getCarte().getCouleur() + "_" + taches.get(i).getCarte().getValeur());
                 tv.setOnTouchListener(this);
                 trTacheAAttribuer.addView(tv);
 
             }
             // TACHE ATTRIBUEES A UN JOUEUR
             else {
-                if(i == 0) // Aucune tache a attribuee, on masque le titre
+                if (i == 0) // Aucune tache a attribuee, on masque le titre
                     mTitreTachesAAtribuer.setVisibility(View.GONE);
                 int indexPseudo = getIndexPseudo(pseudoTache);
 
@@ -794,9 +789,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     ligneTache++;
 
                     // On vide toutes cases de la ligne
-                    for(int j=0;j<mListePseudo.length;j++) {
+                    for (int j = 0; j < mListePseudo.length; j++) {
                         TextView tv;
-                        switch(ligneTache) {
+                        switch (ligneTache) {
                             case 1:
                             default:
                                 tv = findViewById(tableTaches1[j]);
@@ -816,31 +811,30 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 TextView tva;
-                switch(nbTacheParJoueur[indexPseudo]) {
-                    case 1 :
+                switch (nbTacheParJoueur[indexPseudo]) {
+                    case 1:
                     default:
                         tva = findViewById(tableTaches1[getIndexPseudo(pseudoTache)]);
                         break;
-                    case 2 :
+                    case 2:
                         tva = findViewById(tableTaches2[getIndexPseudo(pseudoTache)]);
                         break;
-                    case 3 :
+                    case 3:
                         tva = findViewById(tableTaches3[getIndexPseudo(pseudoTache)]);
                         break;
-                    case 4 :
+                    case 4:
                         tva = findViewById(tableTaches4[getIndexPseudo(pseudoTache)]);
                         break;
                 }
                 tva.setText(texte);
                 tva.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
-                String tag="tache_"+taches.get(i).getCarte().getCouleur()+"_"+taches.get(i).getCarte().getValeur();
+                String tag = "tache_" + taches.get(i).getCarte().getCouleur() + "_" + taches.get(i).getCarte().getValeur();
                 if (taches.get(i).isRealise()) {
                     tva.setBackgroundColor(getResources().getColor(R.color.blanc));
-                    tag+="_1";
-                }
-                else {
+                    tag += "_1";
+                } else {
                     tva.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    tag+="_0";
+                    tag += "_0";
                 }
                 tva.setTag(tag);
                 tva.setOnClickListener(this);
@@ -851,21 +845,20 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         if (ligneTache == 0) {
             TableRow tr = findViewById(R.id.ligne_tache_pseudo);
             tr.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             TableRow tr = findViewById(R.id.ligne_tache_pseudo);
             tr.setVisibility(View.VISIBLE);
         }
         // Masque les lignes vides
-        for(int i=ligneTache;i<tableLignesTaches.length;i++) {
+        for (int i = ligneTache; i < tableLignesTaches.length; i++) {
             TableRow tr = findViewById(tableLignesTaches[i]);
             tr.setVisibility(View.GONE);
         }
     }
 
     private void afficheCommunications(ArrayList<Pli> plis) {
-        int nbPlis=plis.size();
-        boolean pseudoTrouve=false;
+        int nbPlis = plis.size();
+        boolean pseudoTrouve = false;
         // Supprime toutes les com
         for (int value : tableCommunication) {
             TextView tva = findViewById(value);
@@ -873,11 +866,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         // Affiche les nouvelles com
-        for(int i=0;i<nbPlis;i++) {
-            if(plis.get(i).getNomJoueur().equals(mPseudo)) {
-                mCommunicationFaite=true;
+        for (int i = 0; i < nbPlis; i++) {
+            if (plis.get(i).getNomJoueur().equals(mPseudo)) {
+                mCommunicationFaite = true;
                 mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
-                pseudoTrouve=true;
+                pseudoTrouve = true;
             }
             String texte = plis.get(i).getCarte().getValeur() + " " + plis.get(i).getCommunication();
             TextView tva = findViewById(tableCommunication[getIndexPseudo(plis.get(i).getJoueur())]);
@@ -895,10 +888,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private int getIndexPseudo(String pseudo) {
-        int index=0;
-        for (int i=0;i<mListePseudo.length;i++) {
-            if(mListePseudo[i].equals(pseudo)) {
-                index=i;
+        int index = 0;
+        for (int i = 0; i < mListePseudo.length; i++) {
+            if (mListePseudo[i].equals(pseudo)) {
+                index = i;
                 break;
             }
         }
@@ -964,20 +957,20 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<Carte> parseNoeudsCarte(Document doc) {
         Node NoeudCartes = getNoeudUnique(doc, "Cartes");
 
-        String couleur="";
-        int valeur=0;
+        String couleur = "";
+        int valeur = 0;
         ArrayList<Carte> listeCartes = new ArrayList<>();
 
-        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+        for (int i = 0; i < NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
             Node noeudCarte = NoeudCartes.getChildNodes().item(i);
-            Log.d("PGR-XML-Carte",noeudCarte.getNodeName());
+            Log.d("PGR-XML-Carte", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Carte", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "couleur" :
+                    case "couleur":
                         couleur = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "valeur" :
+                    case "valeur":
                         valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
                 }
@@ -992,23 +985,23 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
         Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
-        String pseudo="";
-        int admin=0;
+        String pseudo = "";
+        int admin = 0;
         ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
         if (NoeudJoueurs.getAttributes().item(0).getNodeName().equals("commandant"))
             mCommandant = NoeudJoueurs.getAttributes().item(0).getNodeValue();
 
-        for (int i=0; i<NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+        for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
             Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
-            Log.d("PGR-XML-Joueur",noeudCarte.getNodeName());
+            Log.d("PGR-XML-Joueur", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "pseudo" :
+                    case "pseudo":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "admin" :
+                    case "admin":
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
                 }
@@ -1023,39 +1016,39 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<Pli> parseNoeudsPli(Document doc, String nomDuNoeud) {
         Node NoeudCartes = getNoeudUnique(doc, nomDuNoeud);
 
-        String pseudo="";
-        String couleur="";
-        int valeur=0;
-        String com="";
+        String pseudo = "";
+        String couleur = "";
+        int valeur = 0;
+        String com = "";
         ArrayList<Pli> listePli = new ArrayList<>();
 
-        if(nomDuNoeud.equals("Pli")) {
+        if (nomDuNoeud.equals("Pli")) {
             mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(0).getNodeValue());
             String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
             mTitrePli.setText(titrePli);
         }
 
-        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+        for (int i = 0; i < NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
             Node noeudCarte = NoeudCartes.getChildNodes().item(i);
-            Log.d("PGR-XML-Pli",noeudCarte.getNodeName());
+            Log.d("PGR-XML-Pli", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Pli", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "joueur" :
+                    case "joueur":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "couleur" :
+                    case "couleur":
                         couleur = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "valeur" :
+                    case "valeur":
                         valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
-                    case "com" :
+                    case "com":
                         com = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
                 }
             }
-            Pli pli = new Pli(pseudo,new Carte(couleur, valeur), com);
+            Pli pli = new Pli(pseudo, new Carte(couleur, valeur), com);
             listePli.add(pli);
         }
 
@@ -1065,40 +1058,37 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<Tache> parseNoeudsTache(Document doc) {
         Node NoeudTaches = getNoeudUnique(doc, "Taches");
 
-        String pseudo="";
-        String couleur="";
-        int valeur=0;
-        String option="";
-        boolean realise=false;
+        String pseudo = "";
+        String couleur = "";
+        int valeur = 0;
+        String option = "";
+        boolean realise = false;
         ArrayList<Tache> listeTaches = new ArrayList<>();
 
-        for (int i=0; i<NoeudTaches.getChildNodes().getLength(); i++) { // Parcours toutes les taches
+        for (int i = 0; i < NoeudTaches.getChildNodes().getLength(); i++) { // Parcours toutes les taches
             Node noeudCarte = NoeudTaches.getChildNodes().item(i);
-            Log.d("PGR-XML-Tache",noeudCarte.getNodeName());
+            Log.d("PGR-XML-Tache", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud tache
                 Log.d("PGR-XML-Tache", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "joueur" :
+                    case "joueur":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "couleur" :
+                    case "couleur":
                         couleur = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "valeur" :
+                    case "valeur":
                         valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
-                    case "option_tache" :
+                    case "option_tache":
                         option = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "realise" :
-                        if (Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue()) == 1)
-                            realise=true;
-                        else
-                            realise=false;
+                    case "realise":
+                        realise = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue()) == 1;
                         break;
                 }
             }
-            Tache tache = new Tache(pseudo,new Carte(couleur, valeur), option, realise);
+            Tache tache = new Tache(pseudo, new Carte(couleur, valeur), option, realise);
             listeTaches.add(tache);
         }
 
@@ -1106,7 +1096,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private Node getNoeudUnique(Document doc, String nomDuNoeud) {
-        NodeList listeNoeudsMission  = doc.getElementsByTagName(nomDuNoeud);
+        NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
         Node noeud = null;
         if (listeNoeudsMission.getLength() > 0) {
             noeud = listeNoeudsMission.item(0);
@@ -1121,14 +1111,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         for (int j = 0; j < noeudMission.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud
             Log.d("PGR-XML-Mission", noeudMission.getAttributes().item(j).getNodeName() + "_" + noeudMission.getAttributes().item(j).getNodeValue());
             switch (noeudMission.getAttributes().item(j).getNodeName()) {
-                case "num" :
-                    String titreMission = "Mission "+ noeudMission.getAttributes().item(j).getNodeValue();
+                case "num":
+                    String titreMission = "Mission " + noeudMission.getAttributes().item(j).getNodeValue();
                     mTitreTaches.setText(titreMission);
                     break;
-                case "description" :
+                case "description":
                     mObjectifCommun.setText(noeudMission.getAttributes().item(j).getNodeValue());
                     break;
-                case "zone_silence" :
+                case "zone_silence":
                     mZoneSilence = Integer.parseInt(noeudMission.getAttributes().item(j).getNodeValue());
                     break;
             }
@@ -1237,7 +1227,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected Document doInBackground(String... strings) {
             URL url;
-            Document doc=null;
+            Document doc = null;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
                 url = new URL(strings[0]);

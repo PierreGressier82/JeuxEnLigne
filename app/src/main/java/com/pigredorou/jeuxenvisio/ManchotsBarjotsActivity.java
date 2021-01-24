@@ -89,6 +89,7 @@ public class ManchotsBarjotsActivity extends AppCompatActivity implements View.O
     private int mNbTacheAAtribuer = 0;
     private int mZoneSilence = 0;
     private int mNumeroPli = 0;
+    private boolean mMajTerminee = true;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
@@ -132,7 +133,6 @@ public class ManchotsBarjotsActivity extends AppCompatActivity implements View.O
     private long mStartTimeClick;
     private long mDurationClick;
     // Drag & drop
-    private View vueDepart = null;
     private View vueArrivee = null;
 
     @Override
@@ -295,17 +295,20 @@ public class ManchotsBarjotsActivity extends AppCompatActivity implements View.O
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(2000);
                         while (!isInterrupted()) {
+                            Thread.sleep(1000);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateTextView();
-                                    // Mise à jour complète
-                                    new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
+
+                                    if (mMajTerminee) {
+                                        mMajTerminee = false;
+                                        updateTextView();
+                                        // Mise à jour complète
+                                        new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
+                                    }
                                 }
                             });
-                            Thread.sleep(2000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -319,31 +322,10 @@ public class ManchotsBarjotsActivity extends AppCompatActivity implements View.O
     }
 
     private void startRefreshAuto() {
-        if (t == null || !t.isAlive()) {
-            t = new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        while (!isInterrupted()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateTextView();
-                                    // Mise à jour complète
-                                    new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
-                                }
-                            });
-                            Thread.sleep(2000);
-                        }
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            };
-
-            t.start();
-            debug("start refresh");
-        }
+        // Mise à jour complète
+        mMajTerminee = false;
+        new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
+        startRefreshAutoWithDelai();
         mRefreshAuto = true;
     }
 
@@ -1077,10 +1059,7 @@ public class ManchotsBarjotsActivity extends AppCompatActivity implements View.O
                         option = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
                     case "realise":
-                        if (Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue()) == 1)
-                            realise = true;
-                        else
-                            realise = false;
+                        realise = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue()) == 1;
                         break;
                 }
             }
@@ -1378,6 +1357,7 @@ public class ManchotsBarjotsActivity extends AppCompatActivity implements View.O
         @Override
         protected void onPostExecute(Document doc) {
             parseXML(doc);
+            mMajTerminee = true;
             super.onPostExecute(doc);
         }
     }

@@ -71,6 +71,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private String mPseudo;
     private String mMot;
     private String mPersonnageSelectionne;
+    private int mIdPersonnageSelectionne;
     private TextView mNomPersonnage;
     private EditText mZoneSaisie;
     private Button mBoutonValider;
@@ -169,13 +170,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case id.personnage6:
             case id.personnage7:
             case id.personnage8:
-                for (int value : mListeIdPersonnage) {
-                    TextView tv = findViewById(value);
-                    tv.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
-                }
                 TextView tv = findViewById(v.getId());
                 tv.setTextColor(getResources().getColor(color.rouge));
                 mPersonnageSelectionne = tv.getTag().toString();
+                mIdPersonnageSelectionne = tv.getId();
                 for (int i = 0; i < mListePersonnages.size(); i++) {
                     if (mListePersonnages.get(i).getNom().equals(mPersonnageSelectionne))
                         mIdPerso = mListePersonnages.get(i).getId();
@@ -193,6 +191,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 tv = findViewById(v.getId());
                 tv.setText(mPersonnageSelectionne);
                 tv.setTag(String.valueOf(mIdPerso));
+                TextView tvPerso = findViewById(mIdPersonnageSelectionne);
+                tvPerso.setTextColor(getResources().getColor(color.material_grey_300));
                 if (mTourDeJeu == 4)
                     activeBoutonValider(aiJeToutesLesReponsesPhaseDeduction());
                 break;
@@ -435,6 +435,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             TextView tv = findViewById(value);
             tv.setText("");
             tv.setTag("");
+            tv.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
         }
     }
 
