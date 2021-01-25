@@ -1,13 +1,19 @@
 package com.pigredorou.jeuxenvisio;
 
+import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -44,10 +50,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, View.OnDragListener {
 
-    static final int MAX_DURATION_CLICK = 500;
-    static final int MAX_DURATION_DOUBLE_CLICK = 2000;
     // Constantes
     // Tableaux des resssources
     private static final int[] imagesJaune = {0, R.drawable.jaune_1, R.drawable.jaune_2, R.drawable.jaune_3, R.drawable.jaune_4, R.drawable.jaune_5, R.drawable.jaune_6, R.drawable.jaune_7, R.drawable.jaune_8, R.drawable.jaune_9};
@@ -70,12 +74,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final String urlRealiseTache = MainActivity.url + "realiseTache.php?partie=";
     private static final String urlAttribueTache = MainActivity.url + "attribueTache.php?partie=";
     private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
+    private static final int MAX_DURATION_CLICK = 500;
+    private static final int MAX_DURATION_DOUBLE_CLICK = 2000;
     Thread t;
-    // Gestion du double clic
-    int mClickCount = 0;
-    int mLastViewID = 0;
-    long mStartTimeClick;
-    long mDurationClick;
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
@@ -88,6 +89,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private int mNbTacheAAtribuer = 0;
     private int mZoneSilence = 0;
     private int mNumeroPli = 0;
+    private boolean mMajTerminee = true;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
@@ -125,6 +127,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     // Auto resfresh
     private Button mBoutonRefreshAuto;
     private Boolean mRefreshAuto;
+    // Gestion du double clic
+    private int mClickCount = 0;
+    private int mLastViewID = 0;
+    private long mStartTimeClick;
+    private long mDurationClick;
+    // Drag & drop
+    private View vueArrivee = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +188,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mBoutonRefreshAuto.setOnClickListener(this);
         mHeureRefresh = findViewById(R.id.heure_refresh);
         // TODO : Signal de détresse : Choix d'une carte pour la passer à son voisin (change le pseudo du joueur avec un tag pour retirer du joueur mais mettre en attente la carte
+
+        // Drag & drop
+        findViewById(R.id.tableau_cartes).setOnDragListener(this);
+        findViewById(R.id.tableau_table).setOnDragListener(this);
     }
 
     private void chargeVuesCommunication() {
@@ -275,7 +288,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         return pseudoQuiDoitJoueur;
     }
 
-    private void startRefreshAuto() {
+    private void startRefreshAutoWithDelai() {
         if (t == null || !t.isAlive()) {
             t = new Thread() {
 
@@ -283,15 +296,19 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 public void run() {
                     try {
                         while (!isInterrupted()) {
+                            Thread.sleep(1000);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateTextView();
-                                    // Mise à jour complète
-                                    new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
+
+                                    if (mMajTerminee) {
+                                        mMajTerminee = false;
+                                        updateTextView();
+                                        // Mise à jour complète
+                                        new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
+                                    }
                                 }
                             });
-                            Thread.sleep(2000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -301,6 +318,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             t.start();
             debug("start refresh");
         }
+        mRefreshAuto = true;
+    }
+
+    private void startRefreshAuto() {
+        // Mise à jour complète
+        mMajTerminee = false;
+        new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
+        startRefreshAutoWithDelai();
         mRefreshAuto = true;
     }
 
@@ -478,24 +503,29 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         long time;
+
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
             // Appuie sur l'écran
             case MotionEvent.ACTION_DOWN:
-                time = System.currentTimeMillis();
+                if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
+                    jourCarteFromMainJoueur(v);
+                } else {
+                    time = System.currentTimeMillis();
 
-                if (mClickCount > 2)
-                    mClickCount = 0;
-                // Si temps entre 2 clicks trop long, on retourne à 0
-                if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
-                    mClickCount = 0;
-                // Si le précédent click n'est pas sur la même vue, on retourne à 0
-                if (mLastViewID != v.getId())
-                    mClickCount = 0;
+                    if (mClickCount > 2)
+                        mClickCount = 0;
+                    // Si temps entre 2 clicks trop long, on retourne à 0
+                    if ((time - mStartTimeClick) > MAX_DURATION_DOUBLE_CLICK)
+                        mClickCount = 0;
+                    // Si le précédent click n'est pas sur la même vue, on retourne à 0
+                    if (mLastViewID != v.getId())
+                        mClickCount = 0;
 
-                mStartTimeClick = System.currentTimeMillis();
-                mClickCount++;
-                mLastViewID = v.getId();
+                    mStartTimeClick = System.currentTimeMillis();
+                    mClickCount++;
+                    mLastViewID = v.getId();
+                }
                 Log.d("PGR-onTouch", "ACTION_DOWN " + mClickCount + " " + v.getId() + " ");
                 break;
 
@@ -532,64 +562,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
      */
     private void doublicClic(View v) {
         // Cartes de la main du joueur
-        if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-            mCarteActive = findViewById(v.getId());
-            String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
-            String couleurCarteActive = chaine[1];
-            String valeurCarteActive = chaine[2];
-
-            // Si c'est pour communiquer
-            // -------------------------
-            if (mCommunicationAChoisir) {
-                boolean autorise = true;
-                // Est-ce que la communication de cette carte est autorisée ?
-                if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
-                    autorise = false;
-                if (autorise) {
-                    new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo=" + mPseudo + "&silence=" + mZoneSilence);
-                } else
-                    Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
-            }
-            // Joue la carte si c'est mon tour
-            // -------------------------------
-            else {
-                boolean jeJoueUneCarteAutorisee = false;
-                // A qui est-ce le tour ?
-                String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
-                String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
-                // Quelle est la couleur de la première carte jouée dans ce pli ?
-                if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
-                    ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
-                    String couleurDemandee = "";
-                    if (iv != null && iv.getVisibility() == View.VISIBLE)
-                        couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
-                    // Si je joue la couleur demandée => OK
-                    if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
-                        jeJoueUneCarteAutorisee = true;
-                    else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
-                        // On regarde toutes les cartes de la main du joueur
-                        for (int value : tableIdImageCarteMain) {
-                            ImageView iv2 = findViewById(value);
-                            jeJoueUneCarteAutorisee = true;
-                            if (iv2 == null)
-                                break;
-                            // Si une carte visible est de la couleur demandée
-                            if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
-                                // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
-                                jeJoueUneCarteAutorisee = false;
-                                messageErreur = "C'est " + couleurDemandee + " demandé !";
-                                break;
-                            }
-                        }
-                    }
-                }
-                // Si je peux jouer la couleur ou si tout le monde a joué le pli
-                if (jeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
-                    new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
-                } else
-                    Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
-            }
-        } else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
+        if (v.getTag() != null && v.getTag().toString().startsWith("carte_"))
+            jourCarteFromMainJoueur(v);
+        else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
             clicTacheAAttribuer(v);
         } else {
             switch (v.getId()) {
@@ -675,7 +650,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 carte.setImageResource(getImageCarte(cartes.get(i).getCouleur(), cartes.get(i).getValeur()));
                 carte.setTag("carte_" + nomCarte);
                 carte.setId(tableIdImageCarteMain[i]);
-                carte.setOnTouchListener(this);
+                carte.setOnLongClickListener(this);
                 tableauCartes.addView(carte);
             }
     }
@@ -1119,10 +1094,146 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     mObjectifCommun.setText(noeudMission.getAttributes().item(j).getNodeValue());
                     break;
                 case "zone_silence":
-                    mZoneSilence = Integer.parseInt(noeudMission.getAttributes().item(j).getNodeValue());
+                    if (!noeudMission.getAttributes().item(j).getNodeValue().isEmpty())
+                        mZoneSilence = Integer.parseInt(noeudMission.getAttributes().item(j).getNodeValue());
+                    else
+                        mZoneSilence = 0;
                     break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + noeudMission.getAttributes().item(j).getNodeName());
             }
         }
+    }
+
+    @Override
+    public boolean onDrag(View v, DragEvent event) {
+        Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
+        Drawable normalShape = getResources().getDrawable(R.drawable.shape);
+        String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
+        String couleurCarteActive = chaine[1];
+        String valeurCarteActive = chaine[2];
+
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED:
+                // Sauvegarde du contexte de départ
+                Log.d("PGR-OnDrag", "ACTION_DRAG_STARTED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                vueArrivee = null;
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                Log.d("PGR-OnDrag", "ACTION_DRAG_ENTERED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                v.setBackground(enterShape);
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                Log.d("PGR-OnDrag", "ACTION_DRAG_EXITED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                v.setBackground(normalShape);
+                break;
+            case DragEvent.ACTION_DROP:
+                Log.d("PGR-OnDrag", "ACTION_DROP " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                if (v.getId() == R.id.tableau_table)
+                    vueArrivee = v;
+                break;
+            case DragEvent.ACTION_DRAG_ENDED:
+                Log.d("PGR-OnDrag", "ACTION_DRAG_ENDED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                v.setBackground(normalShape);
+                if (event.getResult() && vueArrivee != null && vueArrivee.getId() == R.id.tableau_table && v.getId() == R.id.tableau_table) {
+                    // Carte jouée
+                    Log.d("PGR-Drag&Drop", urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
+                    new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
+                } else {
+                    Log.d("PGR-Drag&Drop", "Drop ignoré");
+                }
+                startRefreshAuto();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
+            jourCarteFromMainJoueur(v);
+        }
+
+        return true;
+    }
+
+    private void jourCarteFromMainJoueur(View v) {
+        mCarteActive = findViewById(v.getId());
+        String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
+        String couleurCarteActive = chaine[1];
+        String valeurCarteActive = chaine[2];
+
+        // Si c'est pour communiquer
+        // -------------------------
+        if (mCommunicationAChoisir) {
+            boolean autorise = true;
+            // Est-ce que la communication de cette carte est autorisée ?
+            if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
+                autorise = false;
+            if (autorise) {
+                new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo=" + mPseudo + "&silence=" + mZoneSilence);
+            } else
+                Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
+        }
+        // Joue la carte si c'est mon tour
+        // -------------------------------
+        else {
+            boolean jeJoueUneCarteAutorisee = false;
+            // A qui est-ce le tour ?
+            String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
+            String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
+            // Quelle est la couleur de la première carte jouée dans ce pli ?
+            if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
+                ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
+                String couleurDemandee = "";
+                if (iv != null && iv.getVisibility() == View.VISIBLE)
+                    couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
+                // Si je joue la couleur demandée => OK
+                if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
+                    jeJoueUneCarteAutorisee = true;
+                else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
+                    // On regarde toutes les cartes de la main du joueur
+                    for (int value : tableIdImageCarteMain) {
+                        ImageView iv2 = findViewById(value);
+                        jeJoueUneCarteAutorisee = true;
+                        if (iv2 == null)
+                            break;
+                        // Si une carte visible est de la couleur demandée
+                        if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
+                            // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
+                            jeJoueUneCarteAutorisee = false;
+                            messageErreur = "C'est " + couleurDemandee + " demandé !";
+                            break;
+                        }
+                    }
+                }
+            }
+            // Si je peux jouer la couleur ou si tout le monde a joué le pli
+            if (jeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
+                //new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
+                startDrag(v);
+            } else {
+                Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
+                stopRefreshAuto(); // Stop le refresh auto pour laisse l'animation se faire
+                Animation animation = new AlphaAnimation((float) 0.5, 0);
+                animation.setDuration(200);
+                animation.setInterpolator(new LinearInterpolator()); //do not alter
+                animation.setRepeatCount(6);
+                animation.setRepeatMode(Animation.REVERSE);
+                animation.getFillAfter();
+                mCarteActive.startAnimation(animation);
+                startRefreshAutoWithDelai(); // Relance tout de suite l'animation mais avec un délai de 2s avant de démarrer
+            }
+        }
+    }
+
+    private void startDrag(View v) {
+        stopRefreshAuto();
+        ClipData data = ClipData.newPlainText("", "");
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+        v.startDrag(data, shadowBuilder, v, 0);
+        v.setVisibility(View.INVISIBLE);
+        mCarteActive = findViewById(v.getId());
     }
 
     /**
@@ -1246,9 +1357,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(Document doc) {
             parseXML(doc);
+            mMajTerminee = true;
             super.onPostExecute(doc);
         }
     }
 
 }
-
