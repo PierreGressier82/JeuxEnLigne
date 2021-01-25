@@ -56,13 +56,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultats
      * 2.17 : Fiesta de los muertos : Correction couleur nom perso deduction (si plusieurs parties de suite) + Manchots barjot : test de drag&drop pour The Crew
      * 2.18 : Fiesta de los muertos : Phase déduction, on grise les personnages déjà placés + scroll sur ardoise pour petits écrans
+     * 2.19 : The Crew : Gestion de la distribution des tâches 1 à 1 (Ajout sans suppression)
      */
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
     // Variables statiques
-    private static final String mNumVersion = "2.18";
+    private static final String mNumVersion = "2.19";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mBoutonRAZ;
     private Button mBoutonDistribueCartes;
     private Button mBoutonDistribueTache;
+    private Button mBoutonOptionTacheAjout;
+    private boolean mOptionAjout;
     private TextView mNbTaches;
     private TableLayout mOptionTaches;
     private LinearLayout mLigneNbTaches;
@@ -214,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void chargementDesTaches() {
         mBoutonDistribueTache = findViewById(R.id.boutonDistribueTache);
+        mBoutonOptionTacheAjout = findViewById(R.id.boutonOptionTacheAjout);
         // Taches
         Button boutonTachesMoins = findViewById(R.id.boutonNbTacheMoins);
         Button boutonTachesPlus = findViewById(R.id.boutonNbTachePlus);
@@ -231,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBoutonOptionTache9 = findViewById(R.id.option_tache_9);
         mBoutonOptionTache10 = findViewById(R.id.option_tache_10);
         mBoutonDistribueTache.setOnClickListener(this);
+        mBoutonOptionTacheAjout.setOnClickListener(this);
         boutonTachesMoins.setOnClickListener(this);
         boutonTachesPlus.setOnClickListener(this);
         mBoutonOptionTache1.setOnClickListener(this);
@@ -244,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBoutonOptionTache9.setOnClickListener(this);
         mBoutonOptionTache10.setOnClickListener(this);
         mBoutonDistribueTache.setVisibility(View.GONE);
+        mBoutonOptionTacheAjout.setVisibility(View.GONE);
         mLigneNbTaches.setVisibility(View.GONE);
         mOptionTaches.setVisibility(View.GONE);
     }
@@ -422,26 +428,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             // Remise à zéro de la dernière distribution
-            case R.id.boutonRAZ :
-                new TacheURLSansRetour().execute(urlRAZDistribution+mIdPartie);
+            case R.id.boutonRAZ:
+                new TacheURLSansRetour().execute(urlRAZDistribution + mIdPartie);
                 Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
                 break;
 
             // Distribue les n tâches dans la salon sélectionné
-            case R.id.boutonDistribueTache :
+            case R.id.boutonDistribueTache:
                 String[] optionDemandees = checkOptionsTaches();
-                String url = urlDistribueTaches+mIdPartie+"&nbTache="+mNbTaches.getText();
-                url+= "&option1="+optionDemandees[0]+"&option2="+optionDemandees[1]+"&option3="+optionDemandees[2]+"&option4="+optionDemandees[3]+"&option5="+optionDemandees[4];
+                String url = urlDistribueTaches + mIdPartie + "&nbTache=" + mNbTaches.getText();
+                url += "&option1=" + optionDemandees[0] + "&option2=" + optionDemandees[1] + "&option3=" + optionDemandees[2] + "&option4=" + optionDemandees[3] + "&option5=" + optionDemandees[4];
+                if (mOptionAjout)
+                    url += "&ajout=oui";
                 new TacheURLSansRetour().execute(url);
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.boutonNbTacheMoins :
+            case R.id.boutonNbTacheMoins:
                 if (!mNbTaches.getText().toString().equals("0"))
-                    mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString())-1));
+                    mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString()) - 1));
                 break;
 
-            case R.id.boutonNbTachePlus :
+            case R.id.boutonNbTachePlus:
                 if (Integer.parseInt(mNbTaches.getText().toString()) < 20)
                     mNbTaches.setText(String.valueOf(Integer.parseInt(mNbTaches.getText().toString()) + 1));
                 break;
@@ -464,7 +472,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.option_tache_7 :
             case R.id.option_tache_8 :
             case R.id.option_tache_9 :
-            case R.id.option_tache_10 :
+            case R.id.option_tache_10:
+            case R.id.boutonOptionTacheAjout:
                 Button b = findViewById(v.getId());
                 if(v.getTag().equals("NO")) {
                     b.setTextColor(getResources().getColor(R.color.blanc));
@@ -515,6 +524,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             optionsDemandees[nbOption++]=mBoutonOptionTache9.getText().toString();
         if (mBoutonOptionTache10.getTag().equals("YES") && nbOption<=5)
             optionsDemandees[nbOption]=mBoutonOptionTache10.getText().toString();
+        mOptionAjout = mBoutonOptionTacheAjout.getTag().equals("YES");
 
         return optionsDemandees;
     }
@@ -584,6 +594,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonDistribueCartes.setVisibility(View.VISIBLE);
                     mBoutonDistribueTache.setVisibility(View.VISIBLE);
+                    mBoutonOptionTacheAjout.setVisibility(View.VISIBLE);
                     mLigneNbTaches.setVisibility(View.VISIBLE);
                     mOptionTaches.setVisibility(View.VISIBLE);
                     mLigneNumMission.setVisibility(View.VISIBLE);
@@ -595,6 +606,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonDistribueCartes.setVisibility(View.VISIBLE);
                     mBoutonDistribueTache.setVisibility(View.GONE);
+                    mBoutonOptionTacheAjout.setVisibility(View.GONE);
                     mLigneNbTaches.setVisibility(View.GONE);
                     mOptionTaches.setVisibility(View.GONE);
                     mLigneNumMission.setVisibility(View.GONE);
@@ -609,6 +621,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mBoutonRAZ.setVisibility(View.GONE);
                     mBoutonDistribueCartes.setVisibility(View.GONE);
                     mBoutonDistribueTache.setVisibility(View.GONE);
+                    mBoutonOptionTacheAjout.setVisibility(View.GONE);
                     mLigneNbTaches.setVisibility(View.GONE);
                     mOptionTaches.setVisibility(View.GONE);
                     mLigneNumMission.setVisibility(View.GONE);
@@ -622,6 +635,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBoutonRAZ.setVisibility(View.GONE);
             mBoutonDistribueCartes.setVisibility(View.GONE);
             mBoutonDistribueTache.setVisibility(View.GONE);
+            mBoutonOptionTacheAjout.setVisibility(View.GONE);
             mLigneNbTaches.setVisibility(View.GONE);
             mOptionTaches.setVisibility(View.GONE);
             mLigneNumMission.setVisibility(View.GONE);

@@ -96,8 +96,8 @@
                     <TextView
                         android:id="@+id/salon_text_1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Copaiiiins"
+                        android:layout_height="match_parent"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -119,7 +119,7 @@
                         android:id="@+id/salon_text_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Gressier's family"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -141,7 +141,7 @@
                         android:id="@+id/salon_text_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Soirée jeu"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -163,7 +163,7 @@
                         android:id="@+id/salon_text_4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Soirée jeu"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -185,7 +185,7 @@
                         android:id="@+id/salon_text_5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Soirée jeu"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -194,7 +194,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/image_salon6"
@@ -216,7 +217,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/image_salon7"
@@ -238,7 +240,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/image_salon8"
@@ -296,6 +299,7 @@
                         android:id="@+id/pseudo_text_joueur1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -315,7 +319,7 @@
                         android:id="@+id/pseudo_text_joueur2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -335,7 +339,7 @@
                         android:id="@+id/pseudo_text_joueur3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -355,7 +359,7 @@
                         android:id="@+id/pseudo_text_joueur4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -375,7 +379,7 @@
                         android:id="@+id/pseudo_text_joueur5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -395,7 +399,7 @@
                         android:id="@+id/pseudo_text_joueur6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -415,7 +419,7 @@
                         android:id="@+id/pseudo_text_joueur7"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
 
@@ -435,7 +439,7 @@
                         android:id="@+id/pseudo_text_joueur8"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pseudo"
+                        android:text="@string/Chargement"
                         android:textAlignment="textStart" />
                 </TableRow>
             </TableLayout>
@@ -513,298 +517,321 @@
         </TableRow>
     </HorizontalScrollView>
 
-    <Button
-        android:id="@+id/boutonValider"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@color/black_overlay"
-        android:padding="5dp"
-        android:text="@string/jouer"
-        android:textColor="@color/blanc"
-        android:textSize="20sp" />
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/boutonRAZ"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:padding="5dp"
-            android:text="@string/raz_distribution"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/boutonDistribue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:padding="5dp"
-            android:text="@string/distribue"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <TableLayout
-        android:id="@+id/option_taches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/option_tache_1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/_1"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/_2"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/_3"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/_4"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/_5"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/sup1"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_7"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/sup2"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_8"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/sup3"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_9"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/sup4"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/option_tache_10"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight=".1"
-                android:background="@color/black_overlay"
-                android:tag="NO"
-                android:text="@string/d"
-                android:textColor="@color/noir"
-                android:textSize="15sp" />
-        </TableRow>
-    </TableLayout>
-
-    <LinearLayout
-        android:id="@+id/ligne_nb_taches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/boutonNbTacheMoins"
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".15"
-            android:background="@color/black_overlay"
-            android:text="@string/moins"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/nbTache"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="@string/_1"
-            android:textAlignment="center"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
+            <Button
+                android:id="@+id/boutonValider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/black_overlay"
+                android:padding="5dp"
+                android:text="@string/jouer"
+                android:textColor="@color/blanc"
+                android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/boutonNbTachePlus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".15"
-            android:background="@color/black_overlay"
-            android:text="@string/plus"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/boutonDistribueTache"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_weight=".5"
-            android:background="@color/black_overlay"
-            android:padding="5dp"
-            android:text="@string/distribue_taches"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
-    </LinearLayout>
+                <Button
+                    android:id="@+id/boutonRAZ"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/raz_distribution"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
 
-    <LinearLayout
-        android:id="@+id/ligne_num_mission"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/boutonDistribue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/distribue"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/numMission"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:text="@string/_1"
-            android:textAlignment="center"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
+            <TableLayout
+                android:id="@+id/option_taches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/boutonValiderNumMission"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:padding="5dp"
-            android:text="@string/maj_num_ro_mission"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
-    </LinearLayout>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/option_tache_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_1"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/boutonEchangeCarte"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:padding="5dp"
-            android:text="@string/echange_carte"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
+                    <Button
+                        android:id="@+id/option_tache_2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_2"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/boutonEchangeJeu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:padding="5dp"
-            android:text="@string/echange_jeu"
-            android:textColor="@color/blanc"
-            android:textSize="20sp" />
-    </LinearLayout>
+                    <Button
+                        android:id="@+id/option_tache_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_3"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_4"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_5"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup1"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup2"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_8"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup3"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_9"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup4"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_10"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/d"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/ligne_nb_taches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/boutonNbTacheMoins"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/black_overlay"
+                    android:text="@string/moins"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/nbTache"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:text="@string/_1"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonNbTachePlus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/black_overlay"
+                    android:text="@string/plus"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonOptionTacheAjout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight=".2"
+                    android:background="@color/black_overlay"
+                    android:tag="NO"
+                    android:text="@string/ajout"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonDistribueTache"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight=".5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/distribue_taches"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ligne_num_mission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/numMission"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"
+                    android:text="@string/_1"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonValiderNumMission"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/maj_num_ro_mission"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/boutonEchangeCarte"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/echange_carte"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonEchangeJeu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/echange_jeu"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
