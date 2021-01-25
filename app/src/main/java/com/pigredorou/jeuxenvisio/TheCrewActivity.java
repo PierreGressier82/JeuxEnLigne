@@ -462,8 +462,24 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 if (v.getTag().toString().startsWith("tacheAAttribuer")) {
                     clicTacheAAttribuer(v);
                 }
+                if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
+                    startAnimation(v);
+                }
                 break;
         }
+    }
+
+    private void startAnimation(View v) {
+        stopRefreshAuto();
+        ImageView iv = findViewById(v.getId());
+        Animation animation = new AlphaAnimation((float) 0.3, 0);
+        animation.setDuration(500);
+        animation.setInterpolator(new LinearInterpolator()); //do not alter
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.getFillAfter();
+        iv.startAnimation(animation);
+        iv.setOnTouchListener(this);
     }
 
     private void clicTache(View v) {
@@ -503,13 +519,16 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         long time;
+        boolean retour = true;
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
             // Appuie sur l'écran
             case MotionEvent.ACTION_DOWN:
                 if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
+                    findViewById(v.getId()).clearAnimation();
                     jourCarteFromMainJoueur(v);
+                    retour = false;
                 } else {
                     time = System.currentTimeMillis();
 
@@ -552,7 +571,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d("PGR-onTouch", "AUTRE ACTION " + mClickCount + " " + v.getId() + " evt " + event.getAction());
                 break;
         }
-        return true;
+        return retour;
     }
 
     /**
@@ -650,7 +669,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 carte.setImageResource(getImageCarte(cartes.get(i).getCouleur(), cartes.get(i).getValeur()));
                 carte.setTag("carte_" + nomCarte);
                 carte.setId(tableIdImageCarteMain[i]);
-                carte.setOnLongClickListener(this);
+                carte.setOnClickListener(this);
                 tableauCartes.addView(carte);
             }
     }

@@ -92,7 +92,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
                     android:src="@drawable/fusee_1"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/carte_2"
@@ -101,7 +101,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
                     android:src="@drawable/fusee_1"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/carte_3"
@@ -110,7 +110,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
                     android:src="@drawable/fusee_1"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/carte_4"
@@ -119,7 +119,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/carte"
                     android:src="@drawable/fusee_1"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/carte_5"
