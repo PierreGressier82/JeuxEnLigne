@@ -272,6 +272,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     private String getPseudoQuiDoitJouer() {
         String pseudoQuiDoitJoueur = "";
+        String couleurDemandee = "";
         ImageView iv;
         TextView tv;
         // Parcours les images pour savoir si c'est mon tour
@@ -285,7 +286,36 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             }
         }
+
         return pseudoQuiDoitJoueur;
+    }
+
+    private String quiARemporterLePli() {
+        String joueurQuiRemporteLePli = "";
+        String couleurDemandee = "";
+        int valeurQuiMene = 0;
+        // Parcours les images pour savoir qui a remporté le pli
+        for (int i = 0; i < tableIdImageCartePli.length; i++) {
+            ImageView iv = findViewById(tableIdImageCartePli[i]);
+            TextView tv = findViewById(tableIdPseudo[i]);
+            if (iv.getVisibility() == View.VISIBLE) {
+                if (i == 0) {
+                    couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
+                    valeurQuiMene = Integer.parseInt(iv.getTag().toString().split("_")[2]);
+                    joueurQuiRemporteLePli = tv.getText().toString();
+                } else {
+                    String couleurCarte = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
+                    int valeurCarte = Integer.parseInt(iv.getTag().toString().split("_")[2]);
+                    if ((couleurCarte.equals(couleurDemandee) && valeurCarte > valeurQuiMene) || couleurCarte.equals("fusee")) {
+                        couleurDemandee = couleurCarte;
+                        valeurQuiMene = valeurCarte;
+                        joueurQuiRemporteLePli = tv.getText().toString();
+                    }
+                }
+            }
+        }
+
+        return joueurQuiRemporteLePli;
     }
 
     private void startRefreshAutoWithDelai() {
@@ -471,8 +501,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void startAnimation(View v) {
         stopRefreshAuto();
+        // On arrête l'animation de toutes les cartes
+        stopAnimation();
+        // On lance l'animation de la carte demandée
         ImageView iv = findViewById(v.getId());
-        Animation animation = new AlphaAnimation((float) 0.3, 0);
+        Animation animation = new AlphaAnimation(1, (float) 0.3);
         animation.setDuration(500);
         animation.setInterpolator(new LinearInterpolator()); //do not alter
         animation.setRepeatCount(Animation.INFINITE);
@@ -480,6 +513,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         animation.getFillAfter();
         iv.startAnimation(animation);
         iv.setOnTouchListener(this);
+    }
+
+    private void stopAnimation() {
+        for (int value : tableIdImageCarteMain) {
+            if (findViewById(value) != null)
+                findViewById(value).clearAnimation();
+        }
     }
 
     private void clicTache(View v) {
@@ -1136,6 +1176,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             case DragEvent.ACTION_DRAG_STARTED:
                 // Sauvegarde du contexte de départ
                 Log.d("PGR-OnDrag", "ACTION_DRAG_STARTED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                stopAnimation();
                 vueArrivee = null;
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
@@ -1176,6 +1217,61 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         return true;
     }
 
+    private void communiqueCarte(String couleurCarteActive, String valeurCarteActive) {
+        boolean autorise = true;
+        // Est-ce que la communication de cette carte est autorisée ?
+        if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
+            autorise = false;
+        if (autorise) {
+            new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo=" + mPseudo + "&silence=" + mZoneSilence);
+        } else
+            Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
+    }
+
+    private String verifieSiJePeuxJouer(String couleurCarteActive) {
+        String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
+        String messageErreur = "";
+        String couleurDemandee = "";
+
+        if (!pseudoQuiDoitJouer.isEmpty())
+            messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
+
+        // Quelle est la couleur de la première carte jouée dans ce pli ?
+        if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
+            ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
+            if (iv != null && iv.getVisibility() == View.VISIBLE)
+                couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
+            // Si je joue la couleur demandée => OK
+            if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive)) {
+                messageErreur = "";
+            } else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
+                // On regarde toutes les cartes de la main du joueur
+                for (int value : tableIdImageCarteMain) {
+                    ImageView iv2 = findViewById(value);
+                    messageErreur = "";
+                    if (iv2 == null)
+                        break;
+                    // Si une carte visible est de la couleur demandée
+                    if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
+                        // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
+                        messageErreur = "C'est " + couleurDemandee + " demandé !";
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Tout le monde a joué, est-ce mon tour ?
+        if (pseudoQuiDoitJouer.isEmpty()) {
+            String joueurQuiARemporteLePli = quiARemporterLePli();
+            if (!joueurQuiARemporteLePli.equals(mPseudo))
+                messageErreur = "C'est à " + joueurQuiARemporteLePli + " de jouer";
+        }
+
+
+        return messageErreur;
+    }
+
     private void jourCarteFromMainJoueur(View v) {
         mCarteActive = findViewById(v.getId());
         String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
@@ -1185,53 +1281,20 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Si c'est pour communiquer
         // -------------------------
         if (mCommunicationAChoisir) {
-            boolean autorise = true;
-            // Est-ce que la communication de cette carte est autorisée ?
-            if (couleurCarteActive.equals("fusee")) // Les autres vérifications sont faites côtés php
-                autorise = false;
-            if (autorise) {
-                new TacheCommuniqueCarte().execute(urlCommuniqueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&pseudo=" + mPseudo + "&silence=" + mZoneSilence);
-            } else
-                Toast.makeText(getBaseContext(), "Cette carte n'est pas autorisée", Toast.LENGTH_SHORT).show();
+            communiqueCarte(couleurCarteActive, valeurCarteActive);
         }
         // Joue la carte si c'est mon tour
         // -------------------------------
         else {
             boolean jeJoueUneCarteAutorisee = false;
             // A qui est-ce le tour ?
-            String pseudoQuiDoitJouer = getPseudoQuiDoitJouer();
-            String messageErreur = "C'est à " + pseudoQuiDoitJouer + " de jouer";
-            // Quelle est la couleur de la première carte jouée dans ce pli ?
-            if (pseudoQuiDoitJouer.equals(mPseudo)) { // Si c'est mon tour dans ce pli, on regarde la couleur jouée
-                ImageView iv = findViewById(tableIdImageCartePli[0]); // Première carte jouée dans le pli en cours
-                String couleurDemandee = "";
-                if (iv != null && iv.getVisibility() == View.VISIBLE)
-                    couleurDemandee = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
-                // Si je joue la couleur demandée => OK
-                if (couleurDemandee.equals("") || couleurDemandee.equals(couleurCarteActive))
-                    jeJoueUneCarteAutorisee = true;
-                else { // Sinon, on vérifie que je n'ai plus la couleur demandée dans ma main
-                    // On regarde toutes les cartes de la main du joueur
-                    for (int value : tableIdImageCarteMain) {
-                        ImageView iv2 = findViewById(value);
-                        jeJoueUneCarteAutorisee = true;
-                        if (iv2 == null)
-                            break;
-                        // Si une carte visible est de la couleur demandée
-                        if (iv2.getVisibility() == View.VISIBLE && iv2.getTag().toString().split("_")[1].equals(couleurDemandee)) {
-                            // Si j'ai la couleur demandée, je ne peux pas jouer une autre carte
-                            jeJoueUneCarteAutorisee = false;
-                            messageErreur = "C'est " + couleurDemandee + " demandé !";
-                            break;
-                        }
-                    }
-                }
-            }
+            String messageErreur = verifieSiJePeuxJouer(couleurCarteActive);
             // Si je peux jouer la couleur ou si tout le monde a joué le pli
-            if (jeJoueUneCarteAutorisee || pseudoQuiDoitJouer.equals("")) {
+            if (messageErreur.isEmpty()) {
                 //new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
                 startDrag(v);
             } else {
+                // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
                 Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
                 stopRefreshAuto(); // Stop le refresh auto pour laisse l'animation se faire
                 Animation animation = new AlphaAnimation((float) 0.5, 0);
