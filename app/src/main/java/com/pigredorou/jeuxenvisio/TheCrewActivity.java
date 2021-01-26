@@ -493,7 +493,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     clicTacheAAttribuer(v);
                 }
                 if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-                    startAnimation(v);
+                    String messageErreur = verifieSiJePeuxJouer(v.getTag().toString().split("_")[1]);
+                    if (messageErreur.isEmpty()) {
+                        startAnimation(v);
+                    } else {
+                        mCarteActive = findViewById(v.getId());
+                        // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
+                        startAnimationErreur(messageErreur);
+                    }
                 }
                 break;
         }
@@ -506,7 +513,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // On lance l'animation de la carte demandée
         ImageView iv = findViewById(v.getId());
         Animation animation = new AlphaAnimation(1, (float) 0.3);
-        animation.setDuration(500);
+        animation.setDuration(750);
         animation.setInterpolator(new LinearInterpolator()); //do not alter
         animation.setRepeatCount(Animation.INFINITE);
         animation.setRepeatMode(Animation.REVERSE);
@@ -517,8 +524,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void stopAnimation() {
         for (int value : tableIdImageCarteMain) {
-            if (findViewById(value) != null)
-                findViewById(value).clearAnimation();
+            ImageView iv = findViewById(value);
+            if (iv != null) {
+                iv.clearAnimation();
+                iv.setOnTouchListener(null);
+            }
         }
     }
 
@@ -1295,18 +1305,22 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 startDrag(v);
             } else {
                 // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
-                Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
-                stopRefreshAuto(); // Stop le refresh auto pour laisse l'animation se faire
-                Animation animation = new AlphaAnimation((float) 0.5, 0);
-                animation.setDuration(200);
-                animation.setInterpolator(new LinearInterpolator()); //do not alter
-                animation.setRepeatCount(6);
-                animation.setRepeatMode(Animation.REVERSE);
-                animation.getFillAfter();
-                mCarteActive.startAnimation(animation);
-                startRefreshAutoWithDelai(); // Relance tout de suite l'animation mais avec un délai de 2s avant de démarrer
+                startAnimationErreur(messageErreur);
             }
         }
+    }
+
+    private void startAnimationErreur(String messageErreur) {
+        Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
+        stopRefreshAuto(); // Stop le refresh auto pour laisse l'animation se faire
+        Animation animation = new AlphaAnimation((float) 0.8, 0);
+        animation.setDuration(200);
+        animation.setInterpolator(new LinearInterpolator()); //do not alter
+        animation.setRepeatCount(6);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.getFillAfter();
+        mCarteActive.startAnimation(animation);
+        startRefreshAutoWithDelai(); // Relance tout de suite l'animation mais avec un délai de 2s avant de démarrer
     }
 
     private void startDrag(View v) {
