@@ -1,34 +1,49 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="Préférences">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+        <ListPreference
+            app:defaultValue="Drag &amp; drop"
+            app:entries="@array/selelections_entries"
+            app:entryValues="@array/selelections_values"
+            app:key="selection"
+            app:title="Méthode de sélection"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:defaultValue="Gris"
+            app:entries="@array/liste_couleurs"
+            app:entryValues="@array/liste_couleurs"
+            app:key="couleur"
+            app:title="Méthode de sélection"
             app:useSimpleSummaryProvider="true" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
         <SwitchPreferenceCompat
+            app:isPreferenceVisible="false"
             app:key="sync"
             app:title="@string/sync_title" />
 
         <SwitchPreferenceCompat
             app:dependency="sync"
+            app:isPreferenceVisible="false"
             app:key="attachment"
             app:summaryOff="@string/attachment_summary_off"
             app:summaryOn="@string/attachment_summary_on"
             app:title="@string/attachment_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/Administration">
+
+        <SwitchPreferenceCompat
+            app:key="admin"
+            app:title="Mode admin" />
+
+        <EditTextPreference
+            app:dependency="admin"
+            app:key="url"
+            app:title="@string/url"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
