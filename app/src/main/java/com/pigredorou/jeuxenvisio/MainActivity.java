@@ -90,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
-    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.manchots_barjots, R.drawable.belote};
+    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote};
     private static final int mIdTheCrew = 1;
     private static final int mIdFiestaDeLosMuertos = 2;
     private static final int mIdLeRoiDesNains = 3;
-    private static final int mIdManchotsBarjots = 4;
+    private static final int mIdGambit7 = 4;
     private static final int mIdBelote = 5;
 
     // Variables globales - contexte
@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         REQUEST_CODE = ROI_NAINS_ACTIVITY_REQUEST_CODE;
                         break;
                     case 4 :
-                        JeuActivity = new Intent(MainActivity.this, ManchotsBarjotsActivity.class);
+                        JeuActivity = new Intent(MainActivity.this, Gambit7Activity.class);
                         REQUEST_CODE = MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE;
                         break;
                     case 5 :
@@ -639,7 +639,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case mIdFiestaDeLosMuertos:
                 case mIdLeRoiDesNains:
-                case mIdManchotsBarjots:
+                case mIdGambit7:
                 default:
                     mBoutonRAZ.setVisibility(View.GONE);
                     mBoutonDistribueCartes.setVisibility(View.GONE);

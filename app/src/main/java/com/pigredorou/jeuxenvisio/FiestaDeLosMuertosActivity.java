@@ -359,6 +359,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             mPhaseEnCours = 3;
             afficheMesDeductions();
             afficheHistoriquesMots();
+            desactiveArdoise();
         } else if ((mNbJoueurPhaseDeduction > 0) || (mTourDeJeu >= 4 && mNbJoueurValides == mListeJoueurs.size())) { // Phase déduction en cours
             mPhaseEnCours = 2;
             afficheMots();
