@@ -53,17 +53,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.13 : Fiesta de los muertos : ajout initialisation du jeu + Main : option admin affichées selon le jeu
      * 2.14 : Fiesta de los muertos : amélioration de l'affichage des résultats
      * 2.15 : Fiesta de los muertos : ajout du nom des joueurs précédent et suivants pour la première phase
-     * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultats
+     * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultatsNu
      * 2.17 : Fiesta de los muertos : Correction couleur nom perso deduction (si plusieurs parties de suite) + Manchots barjot : test de drag&drop pour The Crew
      * 2.18 : Fiesta de los muertos : Phase déduction, on grise les personnages déjà placés + scroll sur ardoise pour petits écrans
      * 2.19 : The Crew : Gestion de la distribution des tâches 1 à 1 (Ajout sans suppression)
+     * 2.20: Fiesta de los muertos : Correction affichage des mots à déduire et de la couleur des personnages sélectionnés
      */
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
-    public static final String urlAnnulCarte = MainActivity.url + "annulCarte.php?partie=";
+    public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
+    public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     // Variables statiques
-    private static final String mNumVersion = "2.19";
+    private static final String mNumVersion = "2.20";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -408,29 +410,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String nbCarteParJoueur;
                 String belote;
                 switch(mIdJeu) {
-                    case 1 :
-                    case 2 :
-                    case 3 :
-                    case 4 :
+                    case mIdTheCrew:
+                    case mIdFiestaDeLosMuertos:
+                    case mIdLeRoiDesNains:
+                    case mIdManchotsBarjots:
                     default:
-                        typeCarte=1;
-                        nbCarteParJoueur="";
-                        belote="";
+                        typeCarte = 1;
+                        nbCarteParJoueur = "";
+                        belote = "";
                         break;
-                    case 5 :
-                        typeCarte=4;
-                        nbCarteParJoueur="5";
-                        belote="Table";
+                    case mIdBelote:
+                        typeCarte = 4;
+                        nbCarteParJoueur = "5";
+                        belote = "Table";
                         break;
                 }
-                new TacheURLSansRetour().execute(urlDistribueCartes+mIdPartie+"&typeCarte="+typeCarte+"&nbCarteParJoueur="+nbCarteParJoueur+"&belote="+belote);
+                new TacheURLSansRetour().execute(urlDistribueCartes + mIdPartie + "&typeCarte=" + typeCarte + "&nbCarteParJoueur=" + nbCarteParJoueur + "&belote=" + belote);
                 Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
                 break;
 
             // Remise à zéro de la dernière distribution
             case R.id.boutonRAZ:
-                new TacheURLSansRetour().execute(urlRAZDistribution + mIdPartie);
-                Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
+                switch (mIdJeu) {
+                    case mIdTheCrew:
+                    case mIdBelote:
+                        new TacheURLSansRetour().execute(urlRAZDistribution + mIdPartie);
+                        Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
+                        break;
+                    case mIdFiestaDeLosMuertos:
+                        new TacheURLSansRetour().execute(urlInitFiesta + mIdPartie);
+                        Toast.makeText(this, "Personnages attribués", Toast.LENGTH_SHORT).show();
+                        break;
+                }
                 break;
 
             // Distribue les n tâches dans la salon sélectionné
@@ -589,6 +600,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (indexJoueur != -1 && mListeJoueurs.get(indexJoueur).getAdmin() == 1) {
+            mBoutonDistribueTache.setVisibility(View.GONE);
+            mBoutonOptionTacheAjout.setVisibility(View.GONE);
+            mLigneNbTaches.setVisibility(View.GONE);
+            mOptionTaches.setVisibility(View.GONE);
+            mLigneNumMission.setVisibility(View.GONE);
+            mBoutonMissionSuivante.setVisibility(View.GONE);
+            mBoutonEchangeCarte.setVisibility(View.GONE);
+            mBoutonEchangeJeu.setVisibility(View.GONE);
+
             switch (mIdJeu) {
                 case mIdTheCrew:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
@@ -605,29 +625,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case mIdBelote:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonDistribueCartes.setVisibility(View.VISIBLE);
-                    mBoutonDistribueTache.setVisibility(View.GONE);
-                    mBoutonOptionTacheAjout.setVisibility(View.GONE);
-                    mLigneNbTaches.setVisibility(View.GONE);
-                    mOptionTaches.setVisibility(View.GONE);
-                    mLigneNumMission.setVisibility(View.GONE);
-                    mBoutonMissionSuivante.setVisibility(View.GONE);
-                    mBoutonEchangeCarte.setVisibility(View.GONE);
-                    mBoutonEchangeJeu.setVisibility(View.GONE);
                     break;
                 case mIdFiestaDeLosMuertos:
+                    mBoutonRAZ.setVisibility(View.VISIBLE);
+                    mBoutonDistribueCartes.setVisibility(View.GONE);
+                    break;
                 case mIdLeRoiDesNains:
                 case mIdManchotsBarjots:
                 default:
                     mBoutonRAZ.setVisibility(View.GONE);
                     mBoutonDistribueCartes.setVisibility(View.GONE);
-                    mBoutonDistribueTache.setVisibility(View.GONE);
-                    mBoutonOptionTacheAjout.setVisibility(View.GONE);
-                    mLigneNbTaches.setVisibility(View.GONE);
-                    mOptionTaches.setVisibility(View.GONE);
-                    mLigneNumMission.setVisibility(View.GONE);
-                    mBoutonMissionSuivante.setVisibility(View.GONE);
-                    mBoutonEchangeCarte.setVisibility(View.GONE);
-                    mBoutonEchangeJeu.setVisibility(View.GONE);
                     break;
             }
 
