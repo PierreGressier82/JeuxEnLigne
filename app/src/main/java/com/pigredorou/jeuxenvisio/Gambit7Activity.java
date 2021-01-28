@@ -58,6 +58,9 @@ public class Gambit7Activity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.bouton_retour) {
+            finish();
+        }
 
     }
 
