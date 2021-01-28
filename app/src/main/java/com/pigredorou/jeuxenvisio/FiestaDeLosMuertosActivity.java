@@ -49,7 +49,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
     // URLs des actions en base
     private static final String urlFiesta = MainActivity.url + "fiesta.php?partie=";
-    private static final String urlInitJeu = MainActivity.url + "initFiesta.php?partie=";
     private static final String urlValidMot = MainActivity.url + "validMotFiesta.php?partie=";
     private static final String urlDeduction = MainActivity.url + "deductionFiesta.php?partie=";
     // Elements graphiques
@@ -159,7 +158,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 break;
 
             case id.bouton_initialiser:
-                new MainActivity.TacheURLSansRetour().execute(urlInitJeu + mIdPartie);
+                new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitFiesta + mIdPartie + "&next=oui");
                 break;
 
             case id.personnage1:
