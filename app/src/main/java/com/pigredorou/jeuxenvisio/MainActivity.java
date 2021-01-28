@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckedTextView;
@@ -14,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Jeu;
@@ -53,11 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.13 : Fiesta de los muertos : ajout initialisation du jeu + Main : option admin affichées selon le jeu
      * 2.14 : Fiesta de los muertos : amélioration de l'affichage des résultats
      * 2.15 : Fiesta de los muertos : ajout du nom des joueurs précédent et suivants pour la première phase
-     * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultatsNu
+     * 2.16 : Fiesta de los muertos : Correction bugs sur l'affichage des résultats
      * 2.17 : Fiesta de los muertos : Correction couleur nom perso deduction (si plusieurs parties de suite) + Manchots barjot : test de drag&drop pour The Crew
      * 2.18 : Fiesta de los muertos : Phase déduction, on grise les personnages déjà placés + scroll sur ardoise pour petits écrans
      * 2.19 : The Crew : Gestion de la distribution des tâches 1 à 1 (Ajout sans suppression)
      * 2.20: Fiesta de los muertos : Correction affichage des mots à déduire et de la couleur des personnages sélectionnés
+     * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil
      */
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     // Variables statiques
-    private static final String mNumVersion = "2.20";
+    private static final String mNumVersion = "3.0.0 - BETA 4";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -88,11 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
-    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.manchots_barjots, R.drawable.belote};
+    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote};
     private static final int mIdTheCrew = 1;
     private static final int mIdFiestaDeLosMuertos = 2;
     private static final int mIdLeRoiDesNains = 3;
-    private static final int mIdManchotsBarjots = 4;
+    private static final int mIdGambit7 = 4;
     private static final int mIdBelote = 5;
 
     // Variables globales - contexte
@@ -136,6 +140,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Salon> mListeSalons = new ArrayList<>();
     private ArrayList<Joueur> mListeJoueurs = new ArrayList<>();
     private ArrayList<Jeu> mListeJeux = new ArrayList<>();
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar
+        // if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -388,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         REQUEST_CODE = ROI_NAINS_ACTIVITY_REQUEST_CODE;
                         break;
                     case 4 :
-                        JeuActivity = new Intent(MainActivity.this, ManchotsBarjotsActivity.class);
+                        JeuActivity = new Intent(MainActivity.this, Gambit7Activity.class);
                         REQUEST_CODE = MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE;
                         break;
                     case 5 :
@@ -413,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case mIdTheCrew:
                     case mIdFiestaDeLosMuertos:
                     case mIdLeRoiDesNains:
-                    case mIdManchotsBarjots:
+                    case mIdGambit7:
                     default:
                         typeCarte = 1;
                         nbCarteParJoueur = "";
@@ -631,7 +654,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mBoutonDistribueCartes.setVisibility(View.GONE);
                     break;
                 case mIdLeRoiDesNains:
-                case mIdManchotsBarjots:
+                case mIdGambit7:
                 default:
                     mBoutonRAZ.setVisibility(View.GONE);
                     mBoutonDistribueCartes.setVisibility(View.GONE);
