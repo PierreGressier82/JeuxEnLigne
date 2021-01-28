@@ -170,6 +170,12 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case id.personnage6:
             case id.personnage7:
             case id.personnage8:
+                for (int value : mListeIdPersonnage) {
+                    TextView tv = findViewById(value);
+                    // TODO : parcourir les noms de personnage deja placés pour mettre en blanc les personnages déjà utilisés
+                    if (tv.getTextColors().getDefaultColor() == getResources().getColor(color.rouge))
+                        tv.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
+                }
                 TextView tv = findViewById(v.getId());
                 tv.setTextColor(getResources().getColor(color.rouge));
                 mPersonnageSelectionne = tv.getTag().toString();
@@ -435,7 +441,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             TextView tv = findViewById(value);
             tv.setText("");
             tv.setTag("");
-            tv.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
         }
     }
 
