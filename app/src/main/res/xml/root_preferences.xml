@@ -15,7 +15,7 @@
             app:entries="@array/liste_couleurs"
             app:entryValues="@array/liste_couleurs"
             app:key="couleur"
-            app:title="Méthode de sélection"
+            app:title="Couleur par défaut"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
@@ -38,6 +38,14 @@
         <SwitchPreferenceCompat
             app:key="admin"
             app:title="Mode admin" />
+
+        <ListPreference
+            app:defaultValue="Gris"
+            app:entries="@array/liste_couleurs"
+            app:entryValues="@array/liste_couleurs"
+            app:key="couleur"
+            app:title="Couleur par défaut"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:dependency="admin"

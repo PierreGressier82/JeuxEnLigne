@@ -69,4 +69,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="question">Question</string>
+    <string name="theme_de_la_question">theme de la question</string>
+    <string name="question_1_7">Question 1/7</string>
 </resources>

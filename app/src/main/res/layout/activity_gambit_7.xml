@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/couleurGambit7">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,5 +61,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:justificationMode="inter_word"
+        android:text="string question test de texte long pour mettre sur plaisueur ligens à l'écrna si plusieurs ligne que se passe t'il ?"
+        android:textColor="@color/blanc"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </LinearLayout>

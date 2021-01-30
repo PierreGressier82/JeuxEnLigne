@@ -10,6 +10,7 @@
     <color name="blanc">#FFFFFF</color>
     <color name="noir">#000000</color>
     <color name="jaune">#C18C46</color>
+    <color name="jaune_clair">#FFC107</color>
     <color name="bleu">#1F7AAF</color>
     <color name="bleu_fonce">#1F41AF</color>
     <color name="vert">#768A33</color>
