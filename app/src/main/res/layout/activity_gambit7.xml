@@ -119,24 +119,54 @@
             android:src="@drawable/gambit_bleu_ardoise"
             app:layout_constraintTop_toBottomOf="@id/question" />
 
+        <EditText
+            android:id="@+id/reponse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Réponse"
+            android:inputType="number"
+            android:maxLength="12"
+            android:maxLines="1"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/ardoise"
+            app:layout_constraintEnd_toEndOf="@id/ardoise"
+            app:layout_constraintStart_toStartOf="@id/ardoise"
+            app:layout_constraintTop_toTopOf="@id/ardoise" />
+
+        <ProgressBar
+            android:id="@+id/sablier"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="30"
+            android:progress="30"
+            android:scrollbarSize="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ardoise" />
+
+        <Button
+            android:id="@+id/bouton_valider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/jaune_clair"
+            android:text="@string/valider"
+            android:textColor="@color/noir"
+            android:textSize="30sp"
+            app:layout_constraintTop_toBottomOf="@id/sablier" />
+
+        <TextView
+            android:id="@+id/temps_restant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blanc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bouton_valider" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/bouton_valider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/jaune_clair"
-        android:text="@string/valider"
-        android:textColor="@color/noir"
-        android:textSize="30sp" />
-
-    <ProgressBar
-        android:id="@+id/sablier"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:indeterminate="false"
-        android:max="30"
-        android:progress="30"
-        android:rotation="-90" />
 
 </LinearLayout>
