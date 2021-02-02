@@ -3,10 +3,13 @@ package com.pigredorou.jeuxenvisio;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ public class Gambit7Activity extends AppCompatActivity implements View.OnClickLi
     private int mIdSalon;
     private int mIdPartie;
     private TextView mTextView;
+    private EditText mReponse;
     private ProgressBar mSablier;
     private CountDownTimer mCompteurARebours;
     private int mValeurProgression = 30;
@@ -59,6 +63,35 @@ public class Gambit7Activity extends AppCompatActivity implements View.OnClickLi
         mSablier = findViewById(R.id.sablier);
         mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonValider.setOnClickListener(this);
+        mReponse = findViewById(R.id.reponse);
+        mReponse.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (start != 0) {
+                    String reponse = "";
+                    String text = s.toString().replace(" ", "");
+                    int len = text.length();
+
+                    for (int i = 0; i < len; i++) {
+                        if (i != 0 && ((len - i) % 3) == 0)
+                            reponse += " ";
+                        reponse += text.charAt(i);
+                    }
+                    mReponse.setText(reponse);
+                    mReponse.setSelection(reponse.length());
+                }
+            }
+        });
         mValeurProgression = 30;
         startChrono();
     }

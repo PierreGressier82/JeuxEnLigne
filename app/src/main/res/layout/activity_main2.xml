@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.pigredorou.jeuxenvisio.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/entete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/bouton_quitter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/retour_l_accueil"
+            android:src="@drawable/bouton_quitter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/titre_jeu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/the_crew"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/version"
+            android:textAlignment="textEnd"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <HorizontalScrollView
+        android:id="@+id/scrollView_jeux"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:id="@+id/tableau_jeux"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="fill_horizontal">
+
+            <ImageView
+                android:id="@+id/jeu_1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/the_crew" />
+
+            <ImageView
+                android:id="@+id/jeu_2"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/fiesta_de_los_muertos" />
+
+            <ImageView
+                android:id="@+id/jeu_3"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/le_roi_des_nains" />
+
+            <ImageView
+                android:id="@+id/jeu_4"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/manchots_barjots" />
+
+            <ImageView
+                android:id="@+id/jeu_5"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/belote" />
+
+            <ImageView
+                android:id="@+id/jeu_6"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/feu_artifice" />
+
+        </TableRow>
+    </HorizontalScrollView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/salons"
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TableLayout
+            android:id="@+id/liste_salons_TL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TableRow
+                android:id="@+id/ligne_salon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/image_salon1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/image_salon2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/image_salon3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/image_salon4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/image_salon5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/image_salon6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Soirée jeu"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/image_salon7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Soirée jeu"
+                    android:textAlignment="textStart" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ligne_salon8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/image_salon8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/icone_check" />
+
+                <TextView
+                    android:id="@+id/salon_text_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Soirée jeu"
+                    android:textAlignment="textStart" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/boutonValider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/black_overlay"
+                android:padding="5dp"
+                android:text="@string/jouer"
+                android:textColor="@color/blanc"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/boutonRAZ"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/raz_distribution"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonDistribue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/distribue"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/option_taches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/option_tache_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_1"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_2"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_3"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_4"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/_5"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup1"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup2"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_8"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup3"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_9"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/sup4"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/option_tache_10"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight=".1"
+                        android:background="@color/black_overlay"
+                        android:tag="NO"
+                        android:text="@string/d"
+                        android:textColor="@color/noir"
+                        android:textSize="15sp" />
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/ligne_nb_taches"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/boutonNbTacheMoins"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/black_overlay"
+                    android:text="@string/moins"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/nbTache"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:text="@string/_1"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonNbTachePlus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/black_overlay"
+                    android:text="@string/plus"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonOptionTacheAjout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight=".2"
+                    android:background="@color/black_overlay"
+                    android:tag="NO"
+                    android:text="@string/ajout"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonDistribueTache"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight=".5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/distribue_taches"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ligne_num_mission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/numMission"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"
+                    android:text="@string/_1"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonValiderNumMission"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/maj_num_ro_mission"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/boutonEchangeCarte"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/echange_carte"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/boutonEchangeJeu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/black_overlay"
+                    android:padding="5dp"
+                    android:text="@string/echange_jeu"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
