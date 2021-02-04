@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0000FF</color>
+    <color name="colorPrimary">#222222</color>
     <color name="colorPrimaryDark">#505050</color>
     <color name="couleurFondRoiNains">#514949</color>
     <color name="couleurFondFiestaMuertos">#101D47</color>
-    <color name="couleurManchotsBarjots">#2949B1</color>
+    <color name="couleurGambit7">#000FA5</color>
     <color name="couleurBelote">#14471D</color>
     <color name="colorAccent">#FF0000</color>
     <color name="blanc">#FFFFFF</color>
     <color name="noir">#000000</color>
     <color name="jaune">#C18C46</color>
+    <color name="jaune_clair">#FFC107</color>
     <color name="bleu">#1F7AAF</color>
     <color name="bleu_fonce">#1F41AF</color>
     <color name="vert">#768A33</color>
