@@ -192,6 +192,25 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         // Liste des jeux du salon
         new TacheGetJeuxSalon().execute(urlGetJeux + mIdSalon);
         // Jeux
+        ChargementJeux();
+
+        // Bouton valider
+        Button boutonValider = findViewById(R.id.boutonValider);
+        boutonValider.setOnClickListener(this);
+
+        // Gestion de la distribution des cartes
+        chargementBoutonsDistribution();
+
+        // Distributions des tâches
+        chargementDesTaches();
+
+        // Mission
+        chargementOptions();
+
+        // Todo : vérifier si une nouvelle version est disponible
+    }
+
+    private void ChargementJeux() {
         ImageView jeu1 = findViewById(R.id.jeu_1);
         ImageView jeu2 = findViewById(R.id.jeu_2);
         ImageView jeu3 = findViewById(R.id.jeu_3);
@@ -207,28 +226,6 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         jeu3.setTag("NO");
         jeu4.setTag("NO");
         jeu5.setTag("NO");
-
-        // Bouton valider
-        Button boutonValider = findViewById(R.id.boutonValider);
-        boutonValider.setOnClickListener(this);
-
-        // Gestion de la distribution des cartes
-        chargementBoutonsDistribution();
-
-        // Distributions des tâches
-        chargementDesTaches();
-
-        // Mission
-        chargementMissions();
-
-        // Autre option
-        mBoutonEchangeCarte = findViewById(R.id.boutonEchangeCarte);
-        mBoutonEchangeJeu = findViewById(R.id.boutonEchangeJeu);
-        mBoutonEchangeCarte.setOnClickListener(this);
-        mBoutonEchangeJeu.setOnClickListener(this);
-        mBoutonEchangeCarte.setVisibility(View.GONE);
-        mBoutonEchangeJeu.setVisibility(View.GONE);
-
     }
 
     private void chargementBoutonsDistribution() {
@@ -279,13 +276,21 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         mOptionTaches.setVisibility(View.GONE);
     }
 
-    private void chargementMissions() {
+    private void chargementOptions() {
+        // Misssions
         mLigneNumMission = findViewById(R.id.ligne_num_mission);
         mBoutonMissionSuivante = findViewById(R.id.boutonValiderNumMission);
         mNumMission = findViewById(R.id.numMission);
         mBoutonMissionSuivante.setOnClickListener(this);
         mLigneNumMission.setVisibility(View.GONE);
         mBoutonMissionSuivante.setVisibility(View.GONE);
+        // Autre option
+        mBoutonEchangeCarte = findViewById(R.id.boutonEchangeCarte);
+        mBoutonEchangeJeu = findViewById(R.id.boutonEchangeJeu);
+        mBoutonEchangeCarte.setOnClickListener(this);
+        mBoutonEchangeJeu.setOnClickListener(this);
+        mBoutonEchangeCarte.setVisibility(View.GONE);
+        mBoutonEchangeJeu.setVisibility(View.GONE);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class Gambit7Activity extends AppCompatActivity implements View.OnClickLi
     private String mPseudo; // Pseudo du joueur
     private int mIdSalon;
     private int mIdPartie;
-    private TextView mTextView;
+    private TextView mTempsRestant;
     private EditText mReponse;
     private ProgressBar mSablier;
     private CountDownTimer mCompteurARebours;
@@ -59,7 +59,7 @@ public class Gambit7Activity extends AppCompatActivity implements View.OnClickLi
         boutonRetour.setOnClickListener(this);
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
         // Text
-        mTextView = findViewById(R.id.temps_restant);
+        mTempsRestant = findViewById(R.id.temps_restant);
         mSablier = findViewById(R.id.sablier);
         mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonValider.setOnClickListener(this);
@@ -117,14 +117,14 @@ public class Gambit7Activity extends AppCompatActivity implements View.OnClickLi
         mCompteurARebours = new CountDownTimer(30000, 1000) {
             public void onTick(long millisUntilFinished) {
                 String texte = String.valueOf(millisUntilFinished / 1000);
-                mTextView.setText(texte);
+                mTempsRestant.setText(texte);
                 mSablier.setProgress((int) (millisUntilFinished / 1000));
             }
 
             public void onFinish() {
                 mBoutonValider.setOnClickListener(null);
                 mBoutonValider.setBackgroundColor(getResources().getColor(R.color.jaune));
-                mTextView.setText("Temps écoulé");
+                mTempsRestant.setText("Temps écoulé");
             }
         }.start();
 

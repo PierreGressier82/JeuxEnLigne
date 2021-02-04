@@ -61,113 +61,451 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bloc_question"
+    <LinearLayout
+        android:id="@+id/question_et_score"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".2">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:src="@drawable/gambit_ardoise_score" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/_1"
+                        android:textAlignment="center"
+                        android:textColor="@color/noir"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight=".3"
+                    android:gravity="center" />
+            </TableLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bloc_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/numero_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:justificationMode="inter_word"
+                    android:text="@string/question_1_7"
+                    android:textColor="@color/design_default_color_background"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/theme_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:justificationMode="inter_word"
+                    android:text="@string/theme_de_la_question"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/design_default_color_background"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:justificationMode="inter_word"
+                    android:text="string question test de texte long pour mettre sur plaisueur ligens à l'écrna si plusieurs ligne que se passe t'il ?"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/theme_question" />
+
+                <ImageView
+                    android:id="@+id/ardoise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/gambit_bleu_ardoise"
+                    app:layout_constraintTop_toBottomOf="@id/question" />
+
+                <EditText
+                    android:id="@+id/reponse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Réponse"
+                    android:inputType="number"
+                    android:maxLength="15"
+                    android:maxLines="1"
+                    android:textAlignment="textEnd"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/ardoise"
+                    app:layout_constraintEnd_toEndOf="@id/ardoise"
+                    app:layout_constraintStart_toStartOf="@id/ardoise"
+                    app:layout_constraintTop_toTopOf="@id/ardoise" />
+
+                <ProgressBar
+                    android:id="@+id/sablier"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="false"
+                    android:max="30"
+                    android:progress="30"
+                    android:scrollbarSize="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ardoise" />
+
+                <Button
+                    android:id="@+id/bouton_valider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/jaune_clair"
+                    android:text="@string/valider"
+                    android:textColor="@color/noir"
+                    android:textSize="30sp"
+                    app:layout_constraintTop_toBottomOf="@id/sablier" />
+
+                <TextView
+                    android:id="@+id/temps_restant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bouton_valider" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bloc_clavier"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".25"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/numero_question"
+            android:id="@+id/clavier"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:justificationMode="inter_word"
-            android:text="@string/question_1_7"
-            android:textColor="@color/design_default_color_background"
-            android:textSize="12sp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bloc_votes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/jeton1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/gambit_violet_1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/theme_question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:justificationMode="inter_word"
-            android:text="@string/theme_de_la_question"
-            android:textAlignment="textEnd"
-            android:textColor="@color/design_default_color_background"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageView
+            android:id="@+id/jeton2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/gambit_violet_1"
+            app:layout_constraintStart_toEndOf="@id/jeton1"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:justificationMode="inter_word"
-            android:text="string question test de texte long pour mettre sur plaisueur ligens à l'écrna si plusieurs ligne que se passe t'il ?"
-            android:textColor="@color/blanc"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/theme_question" />
+        <ImageView
+            android:id="@+id/jeton7"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/gambit_violet_7"
+            app:layout_constraintStart_toEndOf="@id/jeton2"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
-            android:id="@+id/ardoise"
+            android:id="@+id/echelle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/gambit_echelle2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jeton1" />
+
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/gambit_bleu_ardoise"
-            app:layout_constraintTop_toBottomOf="@id/question" />
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@id/echelle"
+            app:layout_constraintTop_toBottomOf="@id/jeton1">
 
-        <EditText
-            android:id="@+id/reponse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Réponse"
-            android:inputType="number"
-            android:maxLength="15"
-            android:maxLines="1"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:textAlignment="textEnd"
-            app:layout_constraintBottom_toBottomOf="@id/ardoise"
-            app:layout_constraintEnd_toEndOf="@id/ardoise"
-            app:layout_constraintStart_toStartOf="@id/ardoise"
-            app:layout_constraintTop_toTopOf="@id/ardoise" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="left">
 
-        <ProgressBar
-            android:id="@+id/sablier"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:max="30"
-            android:progress="30"
-            android:scrollbarSize="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ardoise" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:src="@drawable/gambit_bleu_ardoise"
+                    android:text="@string/_1"
+                    android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/bouton_valider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/jaune_clair"
-            android:text="@string/valider"
-            android:textColor="@color/noir"
-            android:textSize="30sp"
-            app:layout_constraintTop_toBottomOf="@id/sablier" />
+            </TableRow>
 
-        <TextView
-            android:id="@+id/temps_restant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/blanc"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bouton_valider" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gambit_bleu_ardoise" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gambit_bleu_ardoise"
+                    android:visibility="invisible" />
+            </TableRow>
+        </TableLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </LinearLayout>
