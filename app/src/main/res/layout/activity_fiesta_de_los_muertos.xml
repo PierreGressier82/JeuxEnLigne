@@ -1107,6 +1107,24 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/temps_restant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
+
+    <ProgressBar
+        android:id="@+id/sablier"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="30"
+        android:progress="30"
+        android:scrollbarSize="10dp" />
+
     <Button
         android:id="@+id/bouton_valider"
         android:layout_width="match_parent"

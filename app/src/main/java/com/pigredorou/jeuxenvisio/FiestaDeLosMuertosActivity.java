@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,7 +72,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private String mPseudo;
     private String mMot;
     private String mPersonnageSelectionne;
-    private int mIdPersonnageSelectionne;
     private TextView mNomPersonnage;
     private EditText mZoneSaisie;
     private Button mBoutonValider;
@@ -88,6 +89,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private int mNbJoueurPhaseDeduction;
     private int mPhaseEnCours;
     private boolean mMotValide;
+    private TextView mTempsRestant;
+    private ProgressBar mSablier;
+    private CountDownTimer mCompteurARebours;
+    private int mValeurProgression = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,8 +140,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             tv.setOnClickListener(this);
         }
 
+        // Compte à rebourd
+        mTempsRestant = findViewById(R.id.temps_restant);
+        mSablier = findViewById(R.id.sablier);
+
         // Refresh auto
         startRefreshAuto();
+        startChrono();
     }
 
     @Override
@@ -153,6 +163,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 else {
                     new MainActivity.TacheURLSansRetour().execute(urlValidMot + mIdPartie + "&joueur=" + mPseudo + "&mot=" + mZoneSaisie.getText().toString() + "&tourDeJeu=" + (mTourDeJeu + 1));
                     mZoneSaisie.setText("");
+                    mCompteurARebours.cancel();
                 }
                 activeBoutonValider(false);
                 break;
@@ -169,16 +180,10 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case id.personnage6:
             case id.personnage7:
             case id.personnage8:
-                for (int value : mListeIdPersonnage) {
-                    TextView tv = findViewById(value);
-                    // TODO : parcourir les noms de personnage deja placés pour mettre en blanc les personnages déjà utilisés
-                    if (tv.getTextColors().getDefaultColor() == getResources().getColor(color.rouge))
-                        tv.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
-                }
+                majSelectionPerso(true);
                 TextView tv = findViewById(v.getId());
                 tv.setTextColor(getResources().getColor(color.rouge));
                 mPersonnageSelectionne = tv.getTag().toString();
-                mIdPersonnageSelectionne = tv.getId();
                 for (int i = 0; i < mListePersonnages.size(); i++) {
                     if (mListePersonnages.get(i).getNom().equals(mPersonnageSelectionne))
                         mIdPerso = mListePersonnages.get(i).getId();
@@ -196,14 +201,63 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 tv = findViewById(v.getId());
                 tv.setText(mPersonnageSelectionne);
                 tv.setTag(String.valueOf(mIdPerso));
-                TextView tvPerso = findViewById(mIdPersonnageSelectionne);
-                tvPerso.setTextColor(getResources().getColor(color.material_grey_300));
+                majSelectionPerso(false);
                 if (mTourDeJeu == 4)
                     activeBoutonValider(aiJeToutesLesReponsesPhaseDeduction());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
+    }
+
+    private void majSelectionPerso(boolean resetSelection) {
+        for (int perso : mListeIdPersonnage) {
+            TextView tvPerso = findViewById(perso);
+            // Si le perso est en rouge, on ne change pas. On passe au perso suivant
+            if (!resetSelection && tvPerso.getTextColors().getDefaultColor() == getResources().getColor(color.rouge))
+                continue;
+            tvPerso.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
+            // On regarde si ce personnage a déjà été choisi
+            for (int value : mListeIdPersoArdoise) {
+                TextView tvNomPerso = findViewById(value);
+                if (tvPerso.getTag().toString().equals(tvNomPerso.getText().toString())) {
+                    tvPerso.setTextColor(getResources().getColor(color.material_grey_300));
+                    break;
+                }
+            }
+        }
+    }
+
+    private void masqueChrono() {
+        if (mCompteurARebours != null)
+            mCompteurARebours.cancel();
+
+        mSablier.setVisibility(View.GONE);
+        mTempsRestant.setVisibility(View.GONE);
+    }
+
+    private void startChrono() {
+        mSablier.setVisibility(View.VISIBLE);
+        mTempsRestant.setVisibility(View.VISIBLE);
+        mSablier.setIndeterminate(false);
+        mSablier.setMax(mValeurProgression);
+        mSablier.setProgress(mValeurProgression);
+
+        if (mCompteurARebours != null)
+            mCompteurARebours.cancel();
+
+        mCompteurARebours = new CountDownTimer(mValeurProgression * 1000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                String texte = String.valueOf(millisUntilFinished / 1000);
+                mTempsRestant.setText(texte);
+                mSablier.setProgress((int) (millisUntilFinished / 1000));
+            }
+
+            public void onFinish() {
+                mTempsRestant.setText("Temps écoulé");
+            }
+        }.start();
+
     }
 
     private void desactiveArdoise() {
@@ -246,7 +300,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     }
 
     private void activeBoutonValider(boolean active) {
-        //mZoneSaisie.setFocusable(active);
         mBoutonValider.setClickable(active);
 
         if (active)
@@ -384,9 +437,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         String textePhaseJeu = mListePhasesJeu[mPhaseEnCours - 1];
         switch (mPhaseEnCours) {
             case 1:
+                // Relane du chrono
+                if (!mMotValide && !mBoutonValider.isClickable())
+                    startChrono();
                 textePhaseJeu += "  -  Joueurs : " + mNbJoueurValides + "/" + mListeJoueurs.size();
                 break;
             case 2:
+                masqueChrono();
                 textePhaseJeu += " - Joueurs : " + mNbJoueurPhaseDeduction + "/" + mListeJoueurs.size();
                 break;
             case 3:
@@ -395,6 +452,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                     if (value >= mListeJoueurs.size() - 1)
                         nbMortsApaise++;
                 }
+                masqueChrono();
                 textePhaseJeu += " : " + nbMortsApaise + " sur " + mListeCranes.size() + " apaisés";
                 break;
         }
