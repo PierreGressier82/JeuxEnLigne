@@ -72,4 +72,6 @@
     <string name="question">Question</string>
     <string name="theme_de_la_question">theme de la question</string>
     <string name="question_1_7">Question 1/7</string>
+    <string name="topten">TopTen</string>
+    <string name="devoiler_ma_carte">DEVOILER MA CARTE</string>
 </resources>

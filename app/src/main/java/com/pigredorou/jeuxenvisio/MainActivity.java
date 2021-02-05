@@ -59,14 +59,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.19 : The Crew : Gestion de la distribution des tâches 1 à 1 (Ajout sans suppression)
      * 2.20: Fiesta de los muertos : Correction affichage des mots à déduire et de la couleur des personnages sélectionnés
      * 2.21: Fiesta de los muertos : Ajout d'un sablier + correction couleurs des noms de perso en phase 2 (déduction)
+     * 2.22: TopTen : Ajout du jeu
      */
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
-    // Variables statiques
-    private static final String mNumVersion = "2.21";
+    public static final String urlInitTopTen = url + "initTopTen.php?partie=";
+    public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -77,11 +78,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
     public static final String VALEUR_NOM_SALON = "NomSalon";
-    public static final int THE_CREW_ACTIVITY_REQUEST_CODE=11;
-    public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE=12;
-    public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE=13;
-    public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE=14;
-    public static final int BELOTE_ACTIVITY_REQUEST_CODE=15;
+    public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
+    public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
+    public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
+    public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
+    public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
+    // Variables statiques
+    private static final String mNumVersion = "2.22";
     private static final int[] tableIdLignePseudo = {R.id.ligne_pseudo_j1, R.id.ligne_pseudo_j2, R.id.ligne_pseudo_j3, R.id.ligne_pseudo_j4, R.id.ligne_pseudo_j5, R.id.ligne_pseudo_j6, R.id.ligne_pseudo_j7, R.id.ligne_pseudo_j8};
     private static final int[] tableIdImagePseudo = {R.id.image_pseudo_joueur1, R.id.image_pseudo_joueur2, R.id.image_pseudo_joueur3, R.id.image_pseudo_joueur4, R.id.image_pseudo_joueur5, R.id.image_pseudo_joueur6, R.id.image_pseudo_joueur7, R.id.image_pseudo_joueur8};
     private static final int[] tableIdPseudo = {R.id.pseudo_text_joueur1, R.id.pseudo_text_joueur2, R.id.pseudo_text_joueur3, R.id.pseudo_text_joueur4, R.id.pseudo_text_joueur5, R.id.pseudo_text_joueur6, R.id.pseudo_text_joueur7, R.id.pseudo_text_joueur8};
@@ -89,12 +92,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
-    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.manchots_barjots, R.drawable.belote};
+    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.manchots_barjots, R.drawable.belote, R.drawable.top_ten};
     private static final int mIdTheCrew = 1;
     private static final int mIdFiestaDeLosMuertos = 2;
     private static final int mIdLeRoiDesNains = 3;
     private static final int mIdManchotsBarjots = 4;
     private static final int mIdBelote = 5;
+    private static final int mIdTopTen = 6;
 
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
@@ -175,16 +179,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView jeu3 = findViewById(R.id.jeu_3);
         ImageView jeu4 = findViewById(R.id.jeu_4);
         ImageView jeu5 = findViewById(R.id.jeu_5);
+        ImageView jeu6 = findViewById(R.id.jeu_6);
         jeu1.setOnClickListener(this);
         jeu2.setOnClickListener(this);
         jeu3.setOnClickListener(this);
         jeu4.setOnClickListener(this);
         jeu5.setOnClickListener(this);
+        jeu6.setOnClickListener(this);
         jeu1.setTag("NO");
         jeu2.setTag("NO");
         jeu3.setTag("NO");
         jeu4.setTag("NO");
         jeu5.setTag("NO");
+        jeu6.setTag("NO");
 
         // Bouton valider
         Button boutonValider = findViewById(R.id.boutonValider);
@@ -312,7 +319,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.jeu_2 :
             case R.id.jeu_3 :
             case R.id.jeu_4 :
-            case R.id.jeu_5 :
+            case R.id.jeu_5:
+            case R.id.jeu_6:
                 afficheJeux(mListeJeux);
                 ImageView iv = findViewById(v.getId());
                 TextView titre = findViewById(R.id.titre_jeu);
@@ -388,13 +396,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JeuActivity = new Intent(MainActivity.this, LeRoiDesNainsActivity.class);
                         REQUEST_CODE = ROI_NAINS_ACTIVITY_REQUEST_CODE;
                         break;
-                    case 4 :
+                    case 4:
                         JeuActivity = new Intent(MainActivity.this, ManchotsBarjotsActivity.class);
                         REQUEST_CODE = MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE;
                         break;
-                    case 5 :
+                    case 5:
                         JeuActivity = new Intent(MainActivity.this, BeloteActivity.class);
                         REQUEST_CODE = BELOTE_ACTIVITY_REQUEST_CODE;
+                        break;
+                    case 6:
+                        JeuActivity = new Intent(MainActivity.this, TopTenActivity.class);
+                        REQUEST_CODE = TOPTEN_ACTIVITY_REQUEST_CODE;
                         break;
                 }
                 // Lance l'activité du jeu demandé avec les paramètres
@@ -415,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case mIdFiestaDeLosMuertos:
                     case mIdLeRoiDesNains:
                     case mIdManchotsBarjots:
+                    case mIdTopTen:
                     default:
                         typeCarte = 1;
                         nbCarteParJoueur = "";
@@ -441,6 +454,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case mIdFiestaDeLosMuertos:
                         new TacheURLSansRetour().execute(urlInitFiesta + mIdPartie);
                         Toast.makeText(this, "Personnages attribués", Toast.LENGTH_SHORT).show();
+                        break;
+                    case mIdTopTen:
+                        new TacheURLSansRetour().execute(urlInitTopTen + mIdPartie);
+                        Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
@@ -627,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonDistribueCartes.setVisibility(View.VISIBLE);
                     break;
+                case mIdTopTen:
                 case mIdFiestaDeLosMuertos:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonDistribueCartes.setVisibility(View.GONE);

@@ -512,7 +512,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/carte"
                 android:padding="5dp"
-                android:src="@drawable/feu_artifice" />
+                android:src="@drawable/top_ten" />
 
         </TableRow>
     </HorizontalScrollView>
