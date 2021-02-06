@@ -74,4 +74,6 @@
     <string name="question_1_7">Question 1/7</string>
     <string name="topten">TopTen</string>
     <string name="devoiler_ma_carte">DEVOILER MA CARTE</string>
+    <string name="manche_suivante">Manche suivante</string>
+    <string name="perdu">PERDU</string>
 </resources>

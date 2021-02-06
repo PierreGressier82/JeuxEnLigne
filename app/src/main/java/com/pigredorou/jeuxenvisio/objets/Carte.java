@@ -5,8 +5,12 @@ public class Carte {
     private int mValeur;
 
     public Carte(String couleur, int valeur) {
-        this.mValeur=valeur;
-        this.mCouleur=couleur;
+        this.mValeur = valeur;
+        this.mCouleur = couleur;
+    }
+
+    public Carte(int valeur) {
+        this.mValeur = valeur;
     }
 
     public int getValeur() {
