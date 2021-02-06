@@ -154,6 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:text="@string/_5"
+                android:textStyle="bold"
                 android:textAlignment="center"
                 android:textColor="@color/blanc"
                 android:textSize="40sp" />

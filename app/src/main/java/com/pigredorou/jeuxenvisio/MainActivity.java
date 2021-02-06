@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.20: Fiesta de los muertos : Correction affichage des mots à déduire et de la couleur des personnages sélectionnés
      * 2.21: Fiesta de los muertos : Ajout d'un sablier + correction couleurs des noms de perso en phase 2 (déduction)
      * 2.22: TopTen : Ajout du jeu
+     * 2.23: TopTen : Correction bouton manche suivante désativé à tort + nombre caca en gras
      */
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     // Variables statiques
-    private static final String mNumVersion = "2.22";
+    private static final String mNumVersion = "2.23";
     private static final int[] tableIdLignePseudo = {R.id.ligne_pseudo_j1, R.id.ligne_pseudo_j2, R.id.ligne_pseudo_j3, R.id.ligne_pseudo_j4, R.id.ligne_pseudo_j5, R.id.ligne_pseudo_j6, R.id.ligne_pseudo_j7, R.id.ligne_pseudo_j8};
     private static final int[] tableIdImagePseudo = {R.id.image_pseudo_joueur1, R.id.image_pseudo_joueur2, R.id.image_pseudo_joueur3, R.id.image_pseudo_joueur4, R.id.image_pseudo_joueur5, R.id.image_pseudo_joueur6, R.id.image_pseudo_joueur7, R.id.image_pseudo_joueur8};
     private static final int[] tableIdPseudo = {R.id.pseudo_text_joueur1, R.id.pseudo_text_joueur2, R.id.pseudo_text_joueur3, R.id.pseudo_text_joueur4, R.id.pseudo_text_joueur5, R.id.pseudo_text_joueur6, R.id.pseudo_text_joueur7, R.id.pseudo_text_joueur8};

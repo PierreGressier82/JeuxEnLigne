@@ -205,6 +205,11 @@ public class TopTenActivity extends AppCompatActivity implements View.OnClickLis
             desactiveBouton(mBoutonDevoiler);
         else
             activeBouton(mBoutonDevoiler);
+
+        if (mNbCartes == mListeJoueurs.size())
+            activeBouton(mBoutonMancheSuivante);
+        else
+            desactiveBouton(mBoutonMancheSuivante);
     }
 
     private Node getNoeudUnique(Document doc, String nomDuNoeud) {
