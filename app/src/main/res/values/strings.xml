@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Jeux en visio</string>
-    <string name="Chargement">Chargement</string>
+    <string name="Chargement">Chargement...</string>
     <string name="retour_l_accueil">Retour à l\'accueil</string>
     <string name="carte">carte</string>
     <string name="taches">Objectif</string>
@@ -76,4 +76,5 @@
     <string name="devoiler_ma_carte">DEVOILER MA CARTE</string>
     <string name="manche_suivante">Manche suivante</string>
     <string name="perdu">PERDU</string>
+    <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible :</string>
 </resources>

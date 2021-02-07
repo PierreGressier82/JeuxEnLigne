@@ -306,7 +306,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 } else {
                     String couleurCarte = iv.getTag().toString().split("_")[1]; // Couleur de la première carte du pli
                     int valeurCarte = Integer.parseInt(iv.getTag().toString().split("_")[2]);
-                    if ((couleurCarte.equals(couleurDemandee) && valeurCarte > valeurQuiMene) || couleurCarte.equals("fusee")) {
+                    if ((couleurCarte.equals(couleurDemandee) && valeurCarte > valeurQuiMene) || (couleurCarte.equals("fusee") && !couleurCarte.equals(couleurDemandee))) {
                         couleurDemandee = couleurCarte;
                         valeurQuiMene = valeurCarte;
                         joueurQuiRemporteLePli = tv.getText().toString();
@@ -1341,7 +1341,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected Integer doInBackground(String... strings) {
-            //ArrayList<Carte> cartes = new ArrayList<>();
             URL url;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre

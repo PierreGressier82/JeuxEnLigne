@@ -67,13 +67,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil
      */
     // Variables statiques
+    private static final String mNumVersion = "3.0.12 - BETA";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
-    private static final String mNumVersion = "3.0.12 - BETA";
     private static final String urlGetSalons = url + "getSalons.php";
     private static final String urlGetJeux = url + "getJeux.php?salon=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdGambit7 = 4;
     private static final int mIdBelote = 5;
     private static final int mIdTopTen = 6;
+
+    private boolean chargementOK = false;
 
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
@@ -774,6 +776,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheSalons(ArrayList<Salon> listeSalons) {
+        // Masque le bloc de chargement
+        if (chargementOK)
+            findViewById(R.id.chargement).setVisibility(View.GONE);
+
+        // Affiche la liste des salons de jeu de manière dynamique
         TableLayout tl = findViewById(R.id.liste_salons_TL);
         TableRow.LayoutParams paramsRow;
         TableRow.LayoutParams paramsIV;
@@ -832,6 +839,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected ArrayList<Salon> doInBackground(String... strings) {
             URL url;
+            chargementOK = true;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
                 url = new URL(strings[0]);
@@ -851,6 +859,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException e){
                 e.printStackTrace();
                 result = e.toString();
+                chargementOK = false;
             }
 
             return mListeSalons;
@@ -868,6 +877,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             afficheSalonEnBlanc(tableIdLigneSalon[mIndexSalon]);
             super.onPostExecute(listeSalons);
         }
+
+
     }
 
     /**
@@ -894,9 +905,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 bufferedReader.close();
                 result = string;
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
                 result = e.toString();
+                TextView tv = findViewById(R.id.texteChargement);
+                tv.setText(getResources().getString(R.string.chargement_impossible));
             }
 
             return mListeJoueurs;
