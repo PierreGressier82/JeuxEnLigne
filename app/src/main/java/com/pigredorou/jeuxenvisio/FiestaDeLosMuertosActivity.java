@@ -28,7 +28,6 @@ import com.pigredorou.jeuxenvisio.objets.TourDeJeuCrane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -46,6 +45,7 @@ import static com.pigredorou.jeuxenvisio.R.drawable;
 import static com.pigredorou.jeuxenvisio.R.id;
 import static com.pigredorou.jeuxenvisio.R.layout;
 import static com.pigredorou.jeuxenvisio.R.string;
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 
 public class FiestaDeLosMuertosActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -367,16 +367,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
     private void debug() {
         Log.d("PGR", "start refresh");
-    }
-
-    private Node getNoeudUnique(Document doc, String nomDuNoeud) {
-        NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
-        Node noeud = null;
-        if (listeNoeudsMission.getLength() > 0) {
-            noeud = listeNoeudsMission.item(0);
-        }
-
-        return noeud;
     }
 
     private void parseXML(Document doc) {

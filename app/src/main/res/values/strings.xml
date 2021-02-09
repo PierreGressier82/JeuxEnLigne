@@ -76,5 +76,5 @@
     <string name="devoiler_ma_carte">DEVOILER MA CARTE</string>
     <string name="manche_suivante">Manche suivante</string>
     <string name="perdu">PERDU</string>
-    <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible :</string>
+    <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible <a href="https://drive.google.com/file/d/1Pis2WFiyqv6IWABW9RMT608-hRK9e5rh/view?usp=sharing">ici</a></string>
 </resources>

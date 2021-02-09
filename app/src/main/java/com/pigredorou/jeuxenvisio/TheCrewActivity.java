@@ -34,7 +34,6 @@ import com.pigredorou.jeuxenvisio.objets.Tache;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
@@ -49,6 +48,10 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
 
 public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, View.OnDragListener {
 
@@ -83,6 +86,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
     private int mIdSalon;
     private int mIdPartie;
+    private boolean mAdmin = false; // Suis-je admin ?
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
     private boolean mDetresseUtilise = false;
@@ -980,6 +984,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Joueurs
         ArrayList<Joueur> listeJoueurs = parseNoeudsJoueur(doc);
+        mAdmin = suisJeAdmin(mPseudo, listeJoueurs);
+        getCommandant(doc);
         affichePseudos(listeJoueurs);
 
         // Pli en cours
@@ -996,6 +1002,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Taches
         ArrayList<Tache> listeTaches = parseNoeudsTache(doc);
         afficheTaches(listeTaches);
+    }
+
+    private void getCommandant(Document doc) {
+        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
+
+        if (NoeudJoueurs.getAttributes().item(0).getNodeName().equals("commandant"))
+            mCommandant = NoeudJoueurs.getAttributes().item(0).getNodeValue();
     }
 
     private ArrayList<Carte> parseNoeudsCarte(Document doc) {
@@ -1024,37 +1037,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return listeCartes;
-    }
-
-    private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
-        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
-
-        String pseudo = "";
-        int admin = 0;
-        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
-
-        if (NoeudJoueurs.getAttributes().item(0).getNodeName().equals("commandant"))
-            mCommandant = NoeudJoueurs.getAttributes().item(0).getNodeValue();
-
-        for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
-            Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
-            Log.d("PGR-XML-Joueur", noeudCarte.getNodeName());
-            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
-                Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
-                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "pseudo":
-                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "admin":
-                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-            Joueur joueur = new Joueur(pseudo, admin);
-            listeJoueurs.add(joueur);
-        }
-
-        return listeJoueurs;
     }
 
     private ArrayList<Pli> parseNoeudsPli(Document doc, String nomDuNoeud) {
@@ -1137,16 +1119,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return listeTaches;
-    }
-
-    private Node getNoeudUnique(Document doc, String nomDuNoeud) {
-        NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
-        Node noeud = null;
-        if (listeNoeudsMission.getLength() > 0) {
-            noeud = listeNoeudsMission.item(0);
-        }
-
-        return noeud;
     }
 
     private void parseMission(Document doc) {

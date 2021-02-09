@@ -3,7 +3,6 @@ package com.pigredorou.jeuxenvisio.objets;
 public class Joueur {
 
     private String mNomJoueur;
-    private String mNomSalon;
     private String mNomEquipe;
     private int mScoreEquipe;
     private int mAdmin;

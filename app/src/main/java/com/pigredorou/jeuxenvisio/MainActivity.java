@@ -2,8 +2,10 @@ package com.pigredorou.jeuxenvisio;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,14 +25,28 @@ import com.pigredorou.jeuxenvisio.objets.Jeu;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Salon;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String urlGetVersion = url + "getVersion.php";
+    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -64,11 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.21: Fiesta de los muertos : Ajout d'un sablier + correction couleurs des noms de perso en phase 2 (déduction)
      * 2.22: TopTen : Ajout du jeu
      * 2.23: TopTen : Correction bouton manche suivante désativé à tort + nombre caca en gras
-     * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil
+     * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil + Détection mise à jour application
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.12 - BETA";
-    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    private static final String mNumVersion = "3.0.13 - B";
     public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
@@ -104,8 +119,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdGambit7 = 4;
     private static final int mIdBelote = 5;
     private static final int mIdTopTen = 6;
-
+    // Chargement de l'application
     private boolean chargementOK = false;
+    private TextView mTexteNouvelleVersion;
+    private String mNumeroVersionDispo;
+    private String mUrlNewVersion;
 
     // Variables globales - contexte
     private int mIdSalon; // Id du salon (en BDD)
@@ -185,21 +203,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Entete
         TextView version1 = findViewById(R.id.version);
-        String version = version1.getText()+" "+mNumVersion;
+        String version = version1.getText() + " " + mNumVersion;
         version1.setText(version);
         // Entête
         ImageView boutonQuitter = findViewById(R.id.bouton_quitter);
         boutonQuitter.setOnClickListener(this);
 
+        // Liste des joueurs du salon
+        // TODO : premier lancement, demander de sélectionner un joueur
+        // TODO : faire évoluer le php pour récupérer la liste de tous les joueurs
+        // TODO : Faut-il prévoir une recherche par filtre ? (filtrer automatiquement le résultat en temps réel selon le début de la saisie)
+        if (mPseudo.isEmpty()) {
+            Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
+            new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
+        }
+
+        // Liste des jeux disponibles pour le joueur
+        new TacheGetJeuxSalon().execute(urlGetJeux + mIdSalon);
+        chargementJeux();
+
         // Liste des salons de jeu
         new TacheGetSalons().execute(urlGetSalons);
 
-        // Liste des joueurs du salon
-        new TacheGetJoueursSalon().execute(urlGetJoueurs+mIdSalon);
+        // Bouton valider
+        Button boutonValider = findViewById(R.id.boutonValider);
+        boutonValider.setOnClickListener(this);
 
-        // Liste des jeux du salon
-        new TacheGetJeuxSalon().execute(urlGetJeux+mIdSalon);
-        // Jeux
+        // Options
+        chargementOptions();
+
+        // Nouvelle version ?
+        new TacheGetVersion().execute(urlGetVersion);
+        mTexteNouvelleVersion = findViewById(R.id.newVersion);
+        mTexteNouvelleVersion.setOnClickListener(this);
+    }
+
+    private void chargementJeux() {
         ImageView jeu1 = findViewById(R.id.jeu_1);
         ImageView jeu2 = findViewById(R.id.jeu_2);
         ImageView jeu3 = findViewById(R.id.jeu_3);
@@ -218,28 +257,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         jeu4.setTag("NO");
         jeu5.setTag("NO");
         jeu6.setTag("NO");
-
-        // Bouton valider
-        Button boutonValider = findViewById(R.id.boutonValider);
-        boutonValider.setOnClickListener(this);
-
-        // Gestion de la distribution des cartes
-        chargementBoutonsDistribution();
-
-        // Distributions des tâches
-        chargementDesTaches();
-
-        // Mission
-        chargementMissions();
-
-        // Autre option
-        mBoutonEchangeCarte = findViewById(R.id.boutonEchangeCarte);
-        mBoutonEchangeJeu = findViewById(R.id.boutonEchangeJeu);
-        mBoutonEchangeCarte.setOnClickListener(this);
-        mBoutonEchangeJeu.setOnClickListener(this);
-        mBoutonEchangeCarte.setVisibility(View.GONE);
-        mBoutonEchangeJeu.setVisibility(View.GONE);
-
     }
 
     private void chargementBoutonsDistribution() {
@@ -290,6 +307,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mOptionTaches.setVisibility(View.GONE);
     }
 
+    private void chargementOptions() {
+        // Gestion de la distribution des cartes
+        chargementBoutonsDistribution();
+
+        // Distributions des tâches
+        chargementDesTaches();
+
+        // Mission
+        chargementMissions();
+
+        // Autre option
+        chargementAutreOptions();
+    }
+
+    private void chargementAutreOptions() {
+        mBoutonEchangeCarte = findViewById(R.id.boutonEchangeCarte);
+        mBoutonEchangeJeu = findViewById(R.id.boutonEchangeJeu);
+        mBoutonEchangeCarte.setOnClickListener(this);
+        mBoutonEchangeJeu.setOnClickListener(this);
+        mBoutonEchangeCarte.setVisibility(View.GONE);
+        mBoutonEchangeJeu.setVisibility(View.GONE);
+    }
+
     private void chargementMissions() {
         mLigneNumMission = findViewById(R.id.ligne_num_mission);
         mBoutonMissionSuivante = findViewById(R.id.boutonValiderNumMission);
@@ -308,15 +348,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
 
+            case R.id.newVersion:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(mUrlNewVersion));
+                startActivity(intent);
+                break;
+
             // Sélection d'un salon
-            case R.id.ligne_salon1 :
-            case R.id.ligne_salon2 :
-            case R.id.ligne_salon3 :
-            case R.id.ligne_salon4 :
-            case R.id.ligne_salon5 :
-            case R.id.ligne_salon6 :
-            case R.id.ligne_salon7 :
-            case R.id.ligne_salon8 :
+            case R.id.ligne_salon1:
+            case R.id.ligne_salon2:
+            case R.id.ligne_salon3:
+            case R.id.ligne_salon4:
+            case R.id.ligne_salon5:
+            case R.id.ligne_salon6:
+            case R.id.ligne_salon7:
+            case R.id.ligne_salon8:
                 afficheSalonEnBlanc(v.getId());
                 // Chargement des joueurs de ce salon
                 new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
@@ -830,12 +876,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void parseXMLGetVersion(Document doc) {
+        Element element = doc.getDocumentElement();
+        element.normalize();
+
+        Node noeudMission = getNoeudUnique(doc, "numero");
+        for (int i = 0; i < noeudMission.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud
+            Log.d("PGR-XML-Version", noeudMission.getAttributes().item(i).getNodeName() + "_" + noeudMission.getAttributes().item(i).getNodeValue());
+            if ("num".equals(noeudMission.getAttributes().item(i).getNodeName())) {
+                mNumeroVersionDispo = noeudMission.getAttributes().item(i).getNodeValue();
+            } else {
+                throw new IllegalStateException("Unexpected value: " + noeudMission.getAttributes().item(i).getNodeName());
+            }
+        }
+
+        noeudMission = getNoeudUnique(doc, "lien");
+        for (int i = 0; i < noeudMission.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud
+            Log.d("PGR-XML-Version", noeudMission.getAttributes().item(i).getNodeName() + "_" + noeudMission.getAttributes().item(i).getNodeValue());
+            if ("url".equals(noeudMission.getAttributes().item(i).getNodeName())) {
+                mUrlNewVersion = noeudMission.getAttributes().item(i).getNodeValue();
+            } else {
+                throw new IllegalStateException("Unexpected value: " + noeudMission.getAttributes().item(i).getNodeName());
+            }
+        }
+
+        if (mNumeroVersionDispo.equals(mNumVersion)) {
+            mTexteNouvelleVersion.setVisibility(View.GONE);
+            Toast.makeText(this, "Tu as déjà la dernière version", Toast.LENGTH_SHORT).show();
+        } else
+            mTexteNouvelleVersion.setVisibility(View.VISIBLE);
+    }
+
     /**
      * Classe qui permet de récupérer la liste des joueurs du salon et de l'afficher dans une liste déroulante
      * -> Retourne la liste des joeurs du salon
      */
     private class TacheGetSalons extends AsyncTask<String, Void, ArrayList<Salon>> {
         String result;
+
         @Override
         protected ArrayList<Salon> doInBackground(String... strings) {
             URL url;
@@ -962,6 +1040,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(ArrayList<Jeu> listeJeux) {
             afficheJeux(listeJeux);
             super.onPostExecute(listeJeux);
+        }
+    }
+
+    private class TacheGetVersion extends AsyncTask<String, Void, Document> {
+
+        @Override
+        protected Document doInBackground(String... strings) {
+            URL url;
+            Document doc = null;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                // Lecture du flux
+                InputStream is = url.openStream();
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                doc = dBuilder.parse(is);
+            } catch (IOException | ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+            }
+
+            return doc;
+        }
+
+        @Override
+        protected void onPostExecute(Document doc) {
+            parseXMLGetVersion(doc);
+            super.onPostExecute(doc);
         }
     }
 

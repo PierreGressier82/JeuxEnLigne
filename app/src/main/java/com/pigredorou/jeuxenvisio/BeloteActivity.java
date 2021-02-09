@@ -25,7 +25,6 @@ import com.pigredorou.jeuxenvisio.objets.Pli;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
@@ -40,6 +39,8 @@ import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 
 public class BeloteActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
@@ -1060,34 +1061,22 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         Node NoeudCartes = getNoeudUnique(doc, "Pli");
         mJoueurQuiRemporteLePli = "";
 
-        if ("Pli".equals("Pli")) {
-            for (int i = 0; i < NoeudCartes.getAttributes().getLength(); i++) {
-                switch (NoeudCartes.getAttributes().item(i).getNodeName()) {
-                    case "numero":
-                        mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(i).getNodeValue());
-                        String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
-                        mTitrePli.setText(titrePli);
-                        break;
-                    case "score":
-                        break;
-                    case "joueur":
-                        mJoueurQuiRemporteLePli = NoeudCartes.getAttributes().item(i).getNodeValue();
-                        break;
-                }
+        for (int i = 0; i < NoeudCartes.getAttributes().getLength(); i++) {
+            switch (NoeudCartes.getAttributes().item(i).getNodeName()) {
+                case "numero":
+                    mNumeroPli = Integer.parseInt(NoeudCartes.getAttributes().item(i).getNodeValue());
+                    String titrePli = getResources().getString(R.string.pli_en_cours) + " - numéro " + mNumeroPli;
+                    mTitrePli.setText(titrePli);
+                    break;
+                case "score":
+                    break;
+                case "joueur":
+                    mJoueurQuiRemporteLePli = NoeudCartes.getAttributes().item(i).getNodeValue();
+                    break;
             }
         }
 
         return parseNoeudsPlis(NoeudCartes);
-    }
-
-    private Node getNoeudUnique(Document doc, String nomDuNoeud) {
-        NodeList listeNoeudsMission  = doc.getElementsByTagName(nomDuNoeud);
-        Node noeud = null;
-        if (listeNoeudsMission.getLength() > 0) {
-            noeud = listeNoeudsMission.item(0);
-        }
-
-        return noeud;
     }
 
     /**
