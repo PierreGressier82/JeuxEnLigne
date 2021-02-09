@@ -33,15 +33,14 @@ public class outilsXML {
             Log.d("PGR-XML-Joueur", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
                     case "pseudo":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
                     case "admin":
-                        if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
-                            admin = 0;
-                        else
-                            admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
                 }
             }

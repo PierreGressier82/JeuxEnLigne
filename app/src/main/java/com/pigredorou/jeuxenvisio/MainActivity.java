@@ -42,11 +42,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    public static final String urlGetJoueurs = url + "getJoueurs.php";
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -83,14 +85,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil + Détection mise à jour application
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.13 - B";
-    public static final String urlGetJoueurs = url + "getJoueurs.php?salon=";
+    private static final String mNumVersion = "3.0.14 - B";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
-    private static final String urlGetSalons = url + "getSalons.php";
-    private static final String urlGetJeux = url + "getJeux.php?salon=";
+    private static final String urlGetSalons = url + "getSalons.php?joueur=";
+    private static final String urlGetJeux = url + "getJeux.php?joueur=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
     private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
     private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdGambit7 = 4;
     private static final int mIdBelote = 5;
     private static final int mIdTopTen = 6;
+
     // Chargement de l'application
     private boolean chargementOK = false;
     private TextView mTexteNouvelleVersion;
@@ -163,28 +165,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Listes
     private SharedPreferences mPreferences;
-    private ArrayList<Salon> mListeSalons = new ArrayList<>();
-    private ArrayList<Joueur> mListeJoueurs = new ArrayList<>();
-    private ArrayList<Jeu> mListeJeux = new ArrayList<>();
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar
-        // if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    private ArrayList<Salon> mListeSalons;
+    private ArrayList<Joueur> mListeJoueurs;
+    private ArrayList<Jeu> mListeJeux;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,19 +194,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Liste des joueurs du salon
         // TODO : premier lancement, demander de sélectionner un joueur
-        // TODO : faire évoluer le php pour récupérer la liste de tous les joueurs
         // TODO : Faut-il prévoir une recherche par filtre ? (filtrer automatiquement le résultat en temps réel selon le début de la saisie)
         if (mPseudo.isEmpty()) {
             Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
-            new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
         }
+        new TacheGetXML().execute(urlGetJoueurs);
 
         // Liste des jeux disponibles pour le joueur
-        new TacheGetJeuxSalon().execute(urlGetJeux + mIdSalon);
+        new TacheGetXML().execute(urlGetJeux + mPseudo);
         chargementJeux();
-
-        // Liste des salons de jeu
-        new TacheGetSalons().execute(urlGetSalons);
 
         // Bouton valider
         Button boutonValider = findViewById(R.id.boutonValider);
@@ -233,9 +212,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         chargementOptions();
 
         // Nouvelle version ?
-        new TacheGetVersion().execute(urlGetVersion);
+        new TacheGetXML().execute(urlGetVersion);
         mTexteNouvelleVersion = findViewById(R.id.newVersion);
         mTexteNouvelleVersion.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar
+        // if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void chargementJeux() {
@@ -363,138 +361,86 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_salon6:
             case R.id.ligne_salon7:
             case R.id.ligne_salon8:
+                // TODO : Revoir la logique du clic d'un salon
                 afficheSalonEnBlanc(v.getId());
                 // Chargement des joueurs de ce salon
-                new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
-                mJoueurChoisi=false;
+                //new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
+                mJoueurChoisi = false;
                 afficheOptionAdmin();
+                // Mise à jour du numéro de mission
+                TextView tv = findViewById(R.id.numMission);
+                // TODO : Chargement des options selon le contexte
+                //tv.setText(String.valueOf(mListeJeux.get(index).getNumMission()));
                 // Chargement des jeux de ce salon
-                new TacheGetJeuxSalon().execute(urlGetJeux + mIdSalon);
-                mJeuChoisi=false;
+                //new TacheGetJeuxSalon().execute(urlGetJeux + mIdSalon);
+                mJeuChoisi = false;
                 break;
 
             // Sélection d'un joueur
-            case R.id.ligne_pseudo_j1 :
-            case R.id.ligne_pseudo_j2 :
-            case R.id.ligne_pseudo_j3 :
-            case R.id.ligne_pseudo_j4 :
+            case R.id.ligne_pseudo_j1:
+            case R.id.ligne_pseudo_j2:
+            case R.id.ligne_pseudo_j3:
+            case R.id.ligne_pseudo_j4:
             case R.id.ligne_pseudo_j5 :
             case R.id.ligne_pseudo_j6 :
             case R.id.ligne_pseudo_j7 :
             case R.id.ligne_pseudo_j8 :
+                // TODO : Revoir la logique du clic d'un joueur
                 affichePseudoEnBlanc(v.getId());
                 afficheOptionAdmin();
                 break;
 
             // Jeux
-            case R.id.jeu_1 :
-            case R.id.jeu_2 :
-            case R.id.jeu_3 :
-            case R.id.jeu_4 :
+            case R.id.jeu_1:
+            case R.id.jeu_2:
+            case R.id.jeu_3:
+            case R.id.jeu_4:
             case R.id.jeu_5:
             case R.id.jeu_6:
                 afficheJeux(mListeJeux);
                 ImageView iv = findViewById(v.getId());
                 TextView titre = findViewById(R.id.titre_jeu);
-                if (iv.getTag().toString().equals("NO")) {
-                    iv.setBackgroundColor(getResources().getColor(R.color.blanc));
-                    iv.setTag("YES");
-                    int index=0;
-                    for (int i=0;i<tableIdImageJeux.length;i++) {
-                        if (tableIdImageJeux[i]==iv.getId()) {
-                            index=i;
-                            break;
-                        }
+                iv.setBackgroundColor(getResources().getColor(R.color.blanc));
+                iv.setTag("YES");
+                int index = 0;
+                for (int i = 0; i < tableIdImageJeux.length; i++) {
+                    if (tableIdImageJeux[i] == iv.getId()) {
+                        index = i;
+                        break;
                     }
-                    // Mise à jour du numéro de mission
-                    TextView tv = findViewById(R.id.numMission);
-                    tv.setText(String.valueOf(mListeJeux.get(index).getNumMission()));
-                    // Titre
-                    titre.setText(mListeJeux.get(index).getNom());
-                    // Id du jeu en BDD
-                    mIdJeu = mListeJeux.get(index).getId();
-                    mIdPartie = mListeJeux.get(index).getIdPartie();
-                    mJeuChoisi=true;
                 }
-                else {
-                    titre.setText("");
-                    iv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    iv.setTag("NO");
-                    mJeuChoisi=false;
-                }
+                // Titre
+                titre.setText(mListeJeux.get(index).getNom());
+                // Id du jeu en BDD
+                mIdJeu = mListeJeux.get(index).getId();
+                mIdPartie = mListeJeux.get(index).getIdPartie();
+                mJeuChoisi = true;
+                new TacheGetXML().execute(urlGetSalons + mPseudo + "&jeu=" + mIdJeu);
                 afficheOptionAdmin();
                 break;
 
             // Lancer le jeu dans le salon pour le joueur demandé
             case R.id.boutonValider:
-                if (!mJoueurChoisi) {
-                    Toast.makeText(this, "Il faut choisir un joueur", Toast.LENGTH_SHORT).show();
+                // TODO : Si un seul salon, pour ce jeu et ce joueur, on lance la partie sans sélection
+                // Si 1 seul jeu, on le sélectionne automatiquement
+                if (mListeJeux.size() == 1) {
+                    mIdJeu = mListeJeux.get(0).getId();
+                    mIdPartie = mListeJeux.get(0).getIdPartie();
+                    mJeuChoisi = true;
+                }
+                if (!mJeuChoisi) {
+                    Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
                     break;
                 }
-                else {
-                    // Si 1 seul jeu, on le sélectionne automatiquement
-                    if (mListeJeux.size() == 1) {
-                        mIdJeu=mListeJeux.get(0).getId();
-                        mIdPartie=mListeJeux.get(0).getIdPartie();
-                        mJeuChoisi=true;
-                    }
-                    if (!mJeuChoisi) {
-                        Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                }
-
-                // Sauvegarde le pseudo
-                String nom_salon = mListeSalons.get(mIndexSalon).getNom();
-                // Sauvegarde des préférences
-                mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
-                mPreferences.edit().putInt(VALEUR_ID_SALON, mIdSalon).apply();
-                mPreferences.edit().putString(VALEUR_NOM_SALON, nom_salon).apply();
-
-                // Lance le jeu choisi
-                Intent JeuActivity;
-                int REQUEST_CODE;
-                switch (mIdJeu) {
-                    case 1 :
-                    default:
-                        JeuActivity = new Intent(MainActivity.this, TheCrewActivity.class);
-                        REQUEST_CODE = THE_CREW_ACTIVITY_REQUEST_CODE;
-                        break;
-                    case 2 :
-                        JeuActivity = new Intent(MainActivity.this, FiestaDeLosMuertosActivity.class);
-                        REQUEST_CODE = FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE;
-                        break;
-                    case 3 :
-                        JeuActivity = new Intent(MainActivity.this, LeRoiDesNainsActivity.class);
-                        REQUEST_CODE = ROI_NAINS_ACTIVITY_REQUEST_CODE;
-                        break;
-                    case 4 :
-                        JeuActivity = new Intent(MainActivity.this, Gambit7Activity.class);
-                        REQUEST_CODE = MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE;
-                        break;
-                    case 5:
-                        JeuActivity = new Intent(MainActivity.this, BeloteActivity.class);
-                        REQUEST_CODE = BELOTE_ACTIVITY_REQUEST_CODE;
-                        break;
-                    case 6:
-                        JeuActivity = new Intent(MainActivity.this, TopTenActivity.class);
-                        REQUEST_CODE = TOPTEN_ACTIVITY_REQUEST_CODE;
-                        break;
-                }
-                // Lance l'activité du jeu demandé avec les paramètres
-                JeuActivity.putExtra(VALEUR_PSEUDO, mPseudo);
-                JeuActivity.putExtra(VALEUR_ID_SALON, mIdSalon);
-                JeuActivity.putExtra(VALEUR_ID_PARTIE, mIdPartie);
-                JeuActivity.putExtra(VALEUR_NOM_SALON, nom_salon);
-                startActivityForResult(JeuActivity, REQUEST_CODE);
+                lancerJeu();
                 break;
 
             // Distribue les cartes dans le salon sélectionné
-            case R.id.boutonDistribue :
+            case R.id.boutonDistribue:
                 int typeCarte;
                 String nbCarteParJoueur;
                 String belote;
-                switch(mIdJeu) {
+                switch (mIdJeu) {
                     case mIdTheCrew:
                     case mIdFiestaDeLosMuertos:
                     case mIdLeRoiDesNains:
@@ -586,24 +532,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
 
-            case R.id.boutonEchangeCarte :
-                nbCarte="1";
-            case R.id.boutonEchangeJeu :
-                new TacheURLSansRetour().execute(urlEchangeCarte+mIdPartie+"&nbCarte="+nbCarte);
+            case R.id.boutonEchangeCarte:
+                nbCarte = "1";
+            case R.id.boutonEchangeJeu:
+                new TacheURLSansRetour().execute(urlEchangeCarte + mIdPartie + "&nbCarte=" + nbCarte);
                 Toast.makeText(this, "Action terminée", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void lancerJeu() {
+        // Sauvegarde le pseudo
+        String nom_salon = mListeSalons.get(mIndexSalon).getNom();
+        // Sauvegarde des préférences
+        mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
+        mPreferences.edit().putInt(VALEUR_ID_SALON, mIdSalon).apply();
+        mPreferences.edit().putString(VALEUR_NOM_SALON, nom_salon).apply();
+
+        // Lance le jeu choisi
+        Intent JeuActivity;
+        int REQUEST_CODE;
+        switch (mIdJeu) {
+            case 1:
+            default:
+                JeuActivity = new Intent(MainActivity.this, TheCrewActivity.class);
+                REQUEST_CODE = THE_CREW_ACTIVITY_REQUEST_CODE;
+                break;
+            case 2:
+                JeuActivity = new Intent(MainActivity.this, FiestaDeLosMuertosActivity.class);
+                REQUEST_CODE = FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE;
+                break;
+            case 3:
+                JeuActivity = new Intent(MainActivity.this, LeRoiDesNainsActivity.class);
+                REQUEST_CODE = ROI_NAINS_ACTIVITY_REQUEST_CODE;
+                break;
+            case 4:
+                JeuActivity = new Intent(MainActivity.this, Gambit7Activity.class);
+                REQUEST_CODE = MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE;
+                break;
+            case 5:
+                JeuActivity = new Intent(MainActivity.this, BeloteActivity.class);
+                REQUEST_CODE = BELOTE_ACTIVITY_REQUEST_CODE;
+                break;
+            case 6:
+                JeuActivity = new Intent(MainActivity.this, TopTenActivity.class);
+                REQUEST_CODE = TOPTEN_ACTIVITY_REQUEST_CODE;
+                break;
+        }
+        // Lance l'activité du jeu demandé avec les paramètres
+        JeuActivity.putExtra(VALEUR_PSEUDO, mPseudo);
+        JeuActivity.putExtra(VALEUR_ID_SALON, mIdSalon);
+        JeuActivity.putExtra(VALEUR_ID_PARTIE, mIdPartie);
+        JeuActivity.putExtra(VALEUR_NOM_SALON, nom_salon);
+        startActivityForResult(JeuActivity, REQUEST_CODE);
     }
 
     // Verifie quels sont les tâches sélectionnées
 
     /**
      * Regarde parmis les 10 boutons options les 5 premiers sélectionnés
+     *
      * @return : un tableau de chaine de taille 5 avec les options
      */
     private String[] checkOptionsTaches() {
-        int nbOption=0;
-        String[] optionsDemandees = {"","","","",""};
+        int nbOption = 0;
+        String[] optionsDemandees = {"", "", "", "", ""};
 
         if (mBoutonOptionTache1.getTag().equals("YES"))
             optionsDemandees[nbOption++]=mBoutonOptionTache1.getText().toString();
@@ -678,13 +671,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void afficheOptionAdmin () {
-        int indexJoueur= -1;
+    private void afficheOptionAdmin() {
+        int indexJoueur = -1;
 
         // Récupère l'index du joueur
-        for(int i=0;i<mListeJoueurs.size();i++) {
-            if(mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
-                indexJoueur=i;
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
+                indexJoueur = i;
                 break;
             }
         }
@@ -745,6 +738,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheJoueurs(ArrayList<Joueur> listeJoueurs) {
+        // Masque le bloc de chargement
+        if (chargementOK)
+            findViewById(R.id.chargement).setVisibility(View.GONE);
+
         TableLayout tl = findViewById(R.id.liste_joueurs_TL);
         TableRow.LayoutParams paramsRow;
         TableRow.LayoutParams paramsIV;
@@ -759,7 +756,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Affiche les joueurs dans la liste
         if (listeJoueurs != null) {
             String[] listePseudoJoueurs = new String[listeJoueurs.size()];
-            for (int i=0; i<listeJoueurs.size(); i++) {
+            for (int i = 0; i<listeJoueurs.size(); i++) {
                 listePseudoJoueurs[i] = listeJoueurs.get(i).getNomJoueur();
 
                 // Création dynamique des joueurs dans des lignes du tableau
@@ -796,7 +793,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheJeux(ArrayList<Jeu> listeJeux) {
-        int index=0;
+        // Masque le bloc de chargement
+        if (chargementOK)
+            findViewById(R.id.chargement).setVisibility(View.GONE);
+
+        int index = 0;
         // Affiche les jeux
         if (listeJeux != null) {
             for (int i = 0; i < listeJeux.size(); i++) {
@@ -811,21 +812,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         // Masque les ImageView non utilisées
-        for(int i=index;i<tableIdImageJeux.length;i++) {
+        for(int i = index; i<tableIdImageJeux.length; i++) {
             ImageView iv = findViewById(tableIdImageJeux[i]);
             // Image
             iv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             iv.setTag("NO");
             iv.setVisibility(View.GONE);
-            index=i;
         }
     }
 
     private void afficheSalons(ArrayList<Salon> listeSalons) {
-        // Masque le bloc de chargement
-        if (chargementOK)
-            findViewById(R.id.chargement).setVisibility(View.GONE);
-
+        // TODO : si 1 seul salon, ne pas afficher la liste
         // Affiche la liste des salons de jeu de manière dynamique
         TableLayout tl = findViewById(R.id.liste_salons_TL);
         TableRow.LayoutParams paramsRow;
@@ -876,27 +873,91 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void parseXMLGetVersion(Document doc) {
+    private ArrayList<Salon> parseXMLSalons(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
 
-        Node noeudMission = getNoeudUnique(doc, "numero");
-        for (int i = 0; i < noeudMission.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud
-            Log.d("PGR-XML-Version", noeudMission.getAttributes().item(i).getNodeName() + "_" + noeudMission.getAttributes().item(i).getNodeValue());
-            if ("num".equals(noeudMission.getAttributes().item(i).getNodeName())) {
-                mNumeroVersionDispo = noeudMission.getAttributes().item(i).getNodeValue();
+        ArrayList<Salon> listeSalons = new ArrayList<>();
+
+        Node noeudSalons = getNoeudUnique(doc, "Salons");
+        int idSalon = 0;
+        String nomSalon = "";
+        for (int i = 0; i < noeudSalons.getChildNodes().getLength(); i++) { // Parcours toutes les salons
+            Node noeudSalon = noeudSalons.getChildNodes().item(i);
+            Log.d("PGR-XML-Salon", noeudSalon.getNodeName());
+            for (int j = 0; j < noeudSalon.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud salon
+                Log.d("PGR-XML-Salon", noeudSalon.getAttributes().item(j).getNodeName() + "_" + noeudSalon.getAttributes().item(j).getNodeValue());
+                if (noeudSalon.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
+                switch (noeudSalon.getAttributes().item(j).getNodeName()) {
+                    case "id_jeu":
+                        idSalon = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "nom":
+                        nomSalon = noeudSalon.getAttributes().item(j).getNodeValue();
+                        break;
+                }
+            }
+            Salon salon = new Salon(idSalon, nomSalon);
+            listeSalons.add(salon);
+        }
+
+        return listeSalons;
+    }
+
+    private ArrayList<Jeu> parseXMLJeux(Document doc) {
+        Element element = doc.getDocumentElement();
+        element.normalize();
+
+        ArrayList<Jeu> listeJeux = new ArrayList<>();
+
+        Node noeudJeux = getNoeudUnique(doc, "Jeux");
+        int idJeu = 0;
+        String nomJeu = "";
+        for (int i = 0; i < noeudJeux.getChildNodes().getLength(); i++) { // Parcours toutes les jeux
+            Node noeudJeu = noeudJeux.getChildNodes().item(i);
+            Log.d("PGR-XML-Jeu", noeudJeu.getNodeName());
+            for (int j = 0; j < noeudJeu.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud jeu
+                Log.d("PGR-XML-Jeu", noeudJeu.getAttributes().item(j).getNodeName() + "_" + noeudJeu.getAttributes().item(j).getNodeValue());
+                if (noeudJeu.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
+                switch (noeudJeu.getAttributes().item(j).getNodeName()) {
+                    case "id_jeu":
+                        idJeu = Integer.parseInt(noeudJeu.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "nom":
+                        nomJeu = noeudJeu.getAttributes().item(j).getNodeValue();
+                        break;
+                }
+            }
+            Jeu jeu = new Jeu(idJeu, nomJeu);
+            listeJeux.add(jeu);
+        }
+
+        return listeJeux;
+    }
+
+    private void parseXMLVersion(Document doc) {
+        Element element = doc.getDocumentElement();
+        element.normalize();
+
+        Node noeud = getNoeudUnique(doc, "numero");
+        for (int i = 0; i < noeud.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud
+            Log.d("PGR-XML-Version", noeud.getAttributes().item(i).getNodeName() + "_" + noeud.getAttributes().item(i).getNodeValue());
+            if ("num".equals(noeud.getAttributes().item(i).getNodeName())) {
+                mNumeroVersionDispo = noeud.getAttributes().item(i).getNodeValue();
             } else {
-                throw new IllegalStateException("Unexpected value: " + noeudMission.getAttributes().item(i).getNodeName());
+                throw new IllegalStateException("Unexpected value: " + noeud.getAttributes().item(i).getNodeName());
             }
         }
 
-        noeudMission = getNoeudUnique(doc, "lien");
-        for (int i = 0; i < noeudMission.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud
-            Log.d("PGR-XML-Version", noeudMission.getAttributes().item(i).getNodeName() + "_" + noeudMission.getAttributes().item(i).getNodeValue());
-            if ("url".equals(noeudMission.getAttributes().item(i).getNodeName())) {
-                mUrlNewVersion = noeudMission.getAttributes().item(i).getNodeValue();
+        noeud = getNoeudUnique(doc, "lien");
+        for (int i = 0; i < noeud.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud
+            Log.d("PGR-XML-Version", noeud.getAttributes().item(i).getNodeName() + "_" + noeud.getAttributes().item(i).getNodeValue());
+            if ("url".equals(noeud.getAttributes().item(i).getNodeName())) {
+                mUrlNewVersion = noeud.getAttributes().item(i).getNodeValue();
             } else {
-                throw new IllegalStateException("Unexpected value: " + noeudMission.getAttributes().item(i).getNodeName());
+                throw new IllegalStateException("Unexpected value: " + noeud.getAttributes().item(i).getNodeName());
             }
         }
 
@@ -907,148 +968,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTexteNouvelleVersion.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Classe qui permet de récupérer la liste des joueurs du salon et de l'afficher dans une liste déroulante
-     * -> Retourne la liste des joeurs du salon
-     */
-    private class TacheGetSalons extends AsyncTask<String, Void, ArrayList<Salon>> {
-        String result;
-
-        @Override
-        protected ArrayList<Salon> doInBackground(String... strings) {
-            URL url;
-            chargementOK = true;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null){
-                    String[] chaine = stringBuffer.split("_");
-                    // Salon : id, nom, numero de mission
-                    //Salon salon = new Salon(Integer.parseInt(chaine[0]), chaine[1], Integer.parseInt(chaine[2]));
-                    Salon salon = new Salon(Integer.parseInt(chaine[0]), chaine[1]);
-                    mListeSalons.add(salon);
-                    string = String.format("%s%s", string, stringBuffer);
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e){
-                e.printStackTrace();
-                result = e.toString();
-                chargementOK = false;
-            }
-
-            return mListeSalons;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Salon> listeSalons) {
-            afficheSalons(listeSalons);
-            for(int i=0;i<mListeSalons.size();i++) {
-                if (mListeSalons.get(i).getNom().equals(mNomSalon)) {
-                    mIndexSalon=i;
-                    break;
-                }
-            }
-            afficheSalonEnBlanc(tableIdLigneSalon[mIndexSalon]);
-            super.onPostExecute(listeSalons);
-        }
-
-
-    }
-
-    /**
-     * Classe qui permet de récupérer la liste des joueurs du salon et de l'afficher
-     * -> Retourne la liste des joueurs du salon
-     */
-    private class TacheGetJoueursSalon extends AsyncTask<String, Void, ArrayList<Joueur>> {
-        String result;
-        @Override
-        protected ArrayList<Joueur> doInBackground(String... strings) {
-            URL url;
-            mListeJoueurs.clear();
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null){
-                    String[] chaine = stringBuffer.split("_");
-                    Joueur joueur = new Joueur(chaine[1], chaine[0], Integer.parseInt(chaine[2]));
-                    mListeJoueurs.add(joueur);
-                    string = String.format("%s%s", string, stringBuffer);
-                }
-                bufferedReader.close();
-                result = string;
-            } catch (IOException e) {
-                e.printStackTrace();
-                result = e.toString();
-                TextView tv = findViewById(R.id.texteChargement);
-                tv.setText(getResources().getString(R.string.chargement_impossible));
-            }
-
-            return mListeJoueurs;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Joueur> listeJoueurs) {
-            afficheJoueurs(listeJoueurs);
-            for(int i=0;i<mListeJoueurs.size();i++) {
-                if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
-                    affichePseudoEnBlanc(tableIdLignePseudo[i]);
-                    break;
-                }
-            }
-            super.onPostExecute(listeJoueurs);
-        }
-    }
-
-    /**
-     * Classe qui permet de récupérer la liste des jeux du salon et de l'afficher
-     * -> Retourne la liste des jeux du salon (ayant une partie)
-     */
-    private class TacheGetJeuxSalon extends AsyncTask<String, Void, ArrayList<Jeu>> {
-        @Override
-        protected ArrayList<Jeu> doInBackground(String... strings) {
-            URL url;
-            mListeJeux.clear();
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String stringBuffer;
-                String string = "";
-                while ((stringBuffer = bufferedReader.readLine()) != null){
-                    String[] chaine = stringBuffer.split("_");
-                    // Id BDD, id partie, nom du jeu, numéro de mission
-                    Jeu jeu = new Jeu(Integer.parseInt(chaine[0]), Integer.parseInt(chaine[1]), chaine[2], Integer.parseInt(chaine[3]));
-                    mListeJeux.add(jeu);
-                    string = String.format("%s%s", string, stringBuffer);
-                }
-                bufferedReader.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-
-            return mListeJeux;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Jeu> listeJeux) {
-            afficheJeux(listeJeux);
-            super.onPostExecute(listeJeux);
-        }
-    }
-
-    private class TacheGetVersion extends AsyncTask<String, Void, Document> {
+    private class TacheGetXML extends AsyncTask<String, Void, Document> {
 
         @Override
         protected Document doInBackground(String... strings) {
             URL url;
             Document doc = null;
+            chargementOK = true;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
                 url = new URL(strings[0]);
@@ -1059,6 +985,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 doc = dBuilder.parse(is);
             } catch (IOException | ParserConfigurationException | SAXException e) {
                 e.printStackTrace();
+                chargementOK=false;
             }
 
             return doc;
@@ -1066,7 +993,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(Document doc) {
-            parseXMLGetVersion(doc);
+            if (doc != null && doc.getChildNodes().getLength() > 0) {
+                Node noeudParent = doc.getChildNodes().item(0);
+                Log.d("PGR", noeudParent.getNodeName());
+                switch (noeudParent.getNodeName()) {
+                    case "Salons":
+                        mListeSalons = parseXMLSalons(doc);
+                        afficheSalons(mListeSalons);
+                        break;
+                    case "Version":
+                        parseXMLVersion(doc);
+                        break;
+                    case "Joueurs":
+                        mListeJoueurs = parseNoeudsJoueur(doc);
+                        break;
+                    case "Jeux":
+                        mListeJeux = parseXMLJeux(doc);
+                        afficheJeux(mListeJeux);
+                        break;
+                }
+            }
             super.onPostExecute(doc);
         }
     }

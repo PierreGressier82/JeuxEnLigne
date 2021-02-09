@@ -13,6 +13,11 @@ public class Jeu {
         mNumMission = numMission;
     }
 
+    public Jeu(int id, String nom) {
+        mId = id;
+        mNom = nom;
+    }
+
     public int getIdPartie() {
         return mIdPartie;
     }
