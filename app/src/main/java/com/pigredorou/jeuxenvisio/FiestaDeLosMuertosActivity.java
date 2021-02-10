@@ -513,6 +513,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 Log.d("PGR-XML-Deduction", noeudCrane.getNodeName());
                 for (int k = 0; k < noeudCrane.getAttributes().getLength(); k++) { // Parcours tous les attributs du noeud Crane
                     Log.d("PGR-XML-TourDeJeu", noeudCrane.getAttributes().item(k).getNodeName() + "_" + noeudCrane.getAttributes().item(k).getNodeValue());
+                    if (noeudCrane.getAttributes().item(k).getNodeValue().isEmpty())
+                        continue;
                     switch (noeudCrane.getAttributes().item(k).getNodeName()) {
                         case "idCrane":
                             idCrane = Integer.parseInt(noeudCrane.getAttributes().item(k).getNodeValue());
@@ -592,6 +594,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 Log.d("PGR-XML-TourDeJeu", noeudMot.getNodeName());
                 for (int k = 0; k < noeudMot.getAttributes().getLength(); k++) { // Parcours tous les attributs du noeud Mot
                     Log.d("PGR-XML-TourDeJeu", noeudMot.getAttributes().item(k).getNodeName() + "_" + noeudMot.getAttributes().item(k).getNodeValue());
+                    if (noeudMot.getAttributes().item(k).getNodeValue().isEmpty())
+                        continue;
                     switch (noeudMot.getAttributes().item(k).getNodeName()) {
                         case "mot":
                             mot = noeudMot.getAttributes().item(k).getNodeValue();
@@ -628,6 +632,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             Log.d("PGR-XML-Crane", noeudCrane.getNodeName());
             for (int j = 0; j < noeudCrane.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud Crane
                 Log.d("PGR-XML-Crane", noeudCrane.getAttributes().item(j).getNodeName() + "_" + noeudCrane.getAttributes().item(j).getNodeValue());
+                if (noeudCrane.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
                 switch (noeudCrane.getAttributes().item(j).getNodeName()) {
                     case "id":
                         idCrane = Integer.parseInt(noeudCrane.getAttributes().item(j).getNodeValue());
@@ -690,6 +696,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             Log.d("PGR-XML-Personnage", noeudPerso.getNodeName());
             for (int j = 0; j < noeudPerso.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud Personnage
                 Log.d("PGR-XML-Personnage", noeudPerso.getAttributes().item(j).getNodeName() + "_" + noeudPerso.getAttributes().item(j).getNodeValue());
+                if (noeudPerso.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
                 switch (noeudPerso.getAttributes().item(j).getNodeName()) {
                     case "id":
                         idPerso = Integer.parseInt(noeudPerso.getAttributes().item(j).getNodeValue());
@@ -726,6 +734,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             Log.d("PGR-XML-Joueur", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
                     case "pseudo":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
@@ -750,6 +760,8 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
 
         for (int j = 0; j < noeudMonCrane.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud MonCrane
             Log.d("PGR-XML-Crane", noeudMonCrane.getAttributes().item(j).getNodeName() + "_" + noeudMonCrane.getAttributes().item(j).getNodeValue());
+            if (noeudMonCrane.getAttributes().item(j).getNodeValue().isEmpty())
+                continue;
             switch (noeudMonCrane.getAttributes().item(j).getNodeName()) {
                 case "tourDeJeu":
                     mTourDeJeu = Integer.parseInt(noeudMonCrane.getAttributes().item(j).getNodeValue());

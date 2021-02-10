@@ -19,6 +19,7 @@
 
         <ImageView
             android:id="@+id/bouton_quitter"
+            android:tag="bouton_quitter"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
@@ -53,6 +54,7 @@
 
     <TextView
         android:id="@+id/newVersion"
+        android:tag="newVersion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/une_nouvelle_version_est_disponible"
@@ -65,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/texteChargement"
@@ -151,24 +153,71 @@
         </TableRow>
     </HorizontalScrollView>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/bloc_joueurs"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/salons"
+                android:text="@string/joueurs"
+                android:textAlignment="textStart"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TableLayout
+                android:id="@+id/liste_joueurs_TL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TableRow
+                    android:id="@+id/ligne_pseudo_j1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_pseudo_joueur1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/icone_check" />
+
+                    <TextView
+                        android:id="@+id/pseudo_text_joueur1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Chargement"
+                        android:textAlignment="textStart" />
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bloc_salons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/salons"
                 android:textAlignment="textStart"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -362,194 +411,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:text="@string/joueurs"
-                android:textAlignment="textStart"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TableLayout
-                android:id="@+id/liste_joueurs_TL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur7"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-
-                <TableRow
-                    android:id="@+id/ligne_pseudo_j8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/image_pseudo_joueur8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/icone_check" />
-
-                    <TextView
-                        android:id="@+id/pseudo_text_joueur8"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Chargement"
-                        android:textAlignment="textStart" />
-                </TableRow>
-            </TableLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -561,6 +422,7 @@
 
             <Button
                 android:id="@+id/boutonValider"
+                android:tag="boutonValider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -578,6 +440,7 @@
 
                 <Button
                     android:id="@+id/boutonRAZ"
+                    android:tag="boutonRAZ"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -591,6 +454,7 @@
 
                 <Button
                     android:id="@+id/boutonDistribue"
+                    android:tag="boutonDistribue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"

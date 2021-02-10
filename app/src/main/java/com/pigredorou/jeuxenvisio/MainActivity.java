@@ -46,8 +46,8 @@ import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String urlGetVersion = url + "getVersion.php";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
     /**
      * 1.02 : Version finale The Crew
@@ -78,14 +78,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.17 : Fiesta de los muertos : Correction couleur nom perso deduction (si plusieurs parties de suite) + Manchots barjot : test de drag&drop pour The Crew
      * 2.18 : Fiesta de los muertos : Phase déduction, on grise les personnages déjà placés + scroll sur ardoise pour petits écrans
      * 2.19 : The Crew : Gestion de la distribution des tâches 1 à 1 (Ajout sans suppression)
-     * 2.20: Fiesta de los muertos : Correction affichage des mots à déduire et de la couleur des personnages sélectionnés
-     * 2.21: Fiesta de los muertos : Ajout d'un sablier + correction couleurs des noms de perso en phase 2 (déduction)
-     * 2.22: TopTen : Ajout du jeu
-     * 2.23: TopTen : Correction bouton manche suivante désativé à tort + nombre caca en gras
+     * 2.20 : Fiesta de los muertos : Correction affichage des mots à déduire et de la couleur des personnages sélectionnés
+     * 2.21 : Fiesta de los muertos : Ajout d'un sablier + correction couleurs des noms de perso en phase 2 (déduction)
+     * 2.22 : TopTen : Ajout du jeu
+     * 2.23 : TopTen : Correction bouton manche suivante désativé à tort + nombre caca en gras
      * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil + Détection mise à jour application
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.14 - B";
+    private static final String mNumVersion = "3.0.15 - B";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
-    private static final int[] tableIdLignePseudo = {R.id.ligne_pseudo_j1, R.id.ligne_pseudo_j2, R.id.ligne_pseudo_j3, R.id.ligne_pseudo_j4, R.id.ligne_pseudo_j5, R.id.ligne_pseudo_j6, R.id.ligne_pseudo_j7, R.id.ligne_pseudo_j8};
-    private static final int[] tableIdImagePseudo = {R.id.image_pseudo_joueur1, R.id.image_pseudo_joueur2, R.id.image_pseudo_joueur3, R.id.image_pseudo_joueur4, R.id.image_pseudo_joueur5, R.id.image_pseudo_joueur6, R.id.image_pseudo_joueur7, R.id.image_pseudo_joueur8};
-    private static final int[] tableIdPseudo = {R.id.pseudo_text_joueur1, R.id.pseudo_text_joueur2, R.id.pseudo_text_joueur3, R.id.pseudo_text_joueur4, R.id.pseudo_text_joueur5, R.id.pseudo_text_joueur6, R.id.pseudo_text_joueur7, R.id.pseudo_text_joueur8};
+    //private static final int[] tableIdLignePseudo = {R.id.ligne_pseudo_j1, R.id.ligne_pseudo_j2, R.id.ligne_pseudo_j3, R.id.ligne_pseudo_j4, R.id.ligne_pseudo_j5, R.id.ligne_pseudo_j6, R.id.ligne_pseudo_j7, R.id.ligne_pseudo_j8};
+    //private static final int[] tableIdImagePseudo = {R.id.image_pseudo_joueur1, R.id.image_pseudo_joueur2, R.id.image_pseudo_joueur3, R.id.image_pseudo_joueur4, R.id.image_pseudo_joueur5, R.id.image_pseudo_joueur6, R.id.image_pseudo_joueur7, R.id.image_pseudo_joueur8};
+    //private static final int[] tableIdPseudo = {R.id.pseudo_text_joueur1, R.id.pseudo_text_joueur2, R.id.pseudo_text_joueur3, R.id.pseudo_text_joueur4, R.id.pseudo_text_joueur5, R.id.pseudo_text_joueur6, R.id.pseudo_text_joueur7, R.id.pseudo_text_joueur8};
     private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3, R.id.ligne_salon4, R.id.ligne_salon5, R.id.ligne_salon6, R.id.ligne_salon7, R.id.ligne_salon8};
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mIndexSalon; // Index du salon (numéro de la liste)
     private String mNomSalon;
     private String mPseudo;
-    private boolean mJoueurChoisi = false;
+    private boolean mSalonChoisi = false;
     private boolean mJeuChoisi = false;
     // Administration
     private Button mBoutonRAZ;
@@ -192,17 +192,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView boutonQuitter = findViewById(R.id.bouton_quitter);
         boutonQuitter.setOnClickListener(this);
 
-        // Liste des joueurs du salon
-        // TODO : premier lancement, demander de sélectionner un joueur
-        // TODO : Faut-il prévoir une recherche par filtre ? (filtrer automatiquement le résultat en temps réel selon le début de la saisie)
-        if (mPseudo.isEmpty()) {
-            Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
-        }
-        new TacheGetXML().execute(urlGetJoueurs);
+        // Affiche le message de chargement
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
 
-        // Liste des jeux disponibles pour le joueur
-        new TacheGetXML().execute(urlGetJeux + mPseudo);
+        // Liste des joueurs du salon
+        // TODO : Faut-il prévoir une recherche par filtre ? (filtrer automatiquement le résultat en temps réel selon le début de la saisie)
+        new TacheGetXML().execute(urlGetJoueurs);
+        if (mPseudo.isEmpty()) {
+            findViewById(R.id.bloc_joueurs).setVisibility(View.VISIBLE);
+            findViewById(R.id.bloc_salons).setVisibility(View.GONE);
+            findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
+            Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
+        } else {
+            findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
+            // Liste des jeux disponibles pour le joueur
+            new TacheGetXML().execute(urlGetJeux + mPseudo);
+        }
+
+        // Charge les élements des jeux
         chargementJeux();
+
+        // Masque les salons
+        findViewById(R.id.bloc_salons).setVisibility(View.GONE);
 
         // Bouton valider
         Button boutonValider = findViewById(R.id.boutonValider);
@@ -339,18 +350,101 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        String nbCarte="";
-        switch (v.getId()) {
-            // Quitte l'application
-            case R.id.bouton_quitter:
-                finish();
-                break;
+        String nbCarte = "";
 
-            case R.id.newVersion:
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(mUrlNewVersion));
-                startActivity(intent);
-                break;
+        if (v.getTag() != null)
+            switch (v.getTag().toString()) {
+                case "bouton_quitter":
+                    // Quitte l'application
+                    finish();
+                    break;
+
+                case "newVersion":
+                    // Lien vers le téléchargement de la nouvelle version
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(mUrlNewVersion));
+                    startActivity(intent);
+                    break;
+
+                case "boutonValider":
+                    // Si 1 seul jeu, on le sélectionne automatiquement
+                    if (mListeJeux.size() == 1) {
+                        mIdJeu = mListeJeux.get(0).getId();
+                        mJeuChoisi = true;
+                    }
+                    if (!mJeuChoisi) {
+                        Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    if (mListeSalons.size() == 1) {
+                        mIdPartie = mListeSalons.get(0).getIdPartie();
+                        mSalonChoisi = true;
+                    }
+                    if (!mSalonChoisi) {
+                        Toast.makeText(this, "Il faut choisir un salon de jeu", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    // Lancer le jeu dans le salon pour le joueur demandé
+                    lancerJeu();
+                    break;
+
+                // Remise à zéro de la dernière distribution
+                case "boutonRAZ":
+                    switch (mIdJeu) {
+                        case mIdTheCrew:
+                        case mIdBelote:
+                            new TacheURLSansRetour().execute(urlRAZDistribution + mIdPartie);
+                            Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
+                            break;
+                        case mIdFiestaDeLosMuertos:
+                            new TacheURLSansRetour().execute(urlInitFiesta + mIdPartie);
+                            Toast.makeText(this, "Personnages attribués", Toast.LENGTH_SHORT).show();
+                            break;
+                        case mIdTopTen:
+                            new TacheURLSansRetour().execute(urlInitTopTen + mIdPartie);
+                            Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    break;
+
+                // Distribue les cartes dans le salon sélectionné
+                case "boutonDistribue":
+                    int typeCarte;
+                    String nbCarteParJoueur;
+                    String belote;
+                    switch (mIdJeu) {
+                        case mIdTheCrew:
+                        default:
+                            typeCarte = 1;
+                            nbCarteParJoueur = "";
+                            belote = "";
+                            break;
+                        case mIdBelote:
+                            typeCarte = 4;
+                            nbCarteParJoueur = "5";
+                            belote = "Table";
+                            break;
+                    }
+                    new TacheURLSansRetour().execute(urlDistribueCartes + mIdPartie + "&typeCarte=" + typeCarte + "&nbCarteParJoueur=" + nbCarteParJoueur + "&belote=" + belote);
+                    Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
+                    // Sélectionne un joueur
+                    if (v.getTag().toString().startsWith("pseudo_")) {
+                        // TODO : Faut-il valider l'action ?
+                        String[] tag = v.getTag().toString().split("_");
+                        mPseudo = mListeJoueurs.get(Integer.parseInt(tag[1])).getNomJoueur();
+                        // Sauvegarde le pseudo du joueur
+                        mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
+                        // Masque les joueurs, affiche les jeux
+                        findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
+                        findViewById(R.id.tableau_jeux).setVisibility(View.VISIBLE);
+                        new TacheGetXML().execute(urlGetJeux + mPseudo);
+                    }
+            }
+
+        switch (v.getId()) {
 
             // Sélection d'un salon
             case R.id.ligne_salon1:
@@ -361,33 +455,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_salon6:
             case R.id.ligne_salon7:
             case R.id.ligne_salon8:
-                // TODO : Revoir la logique du clic d'un salon
-                afficheSalonEnBlanc(v.getId());
-                // Chargement des joueurs de ce salon
-                //new TacheGetJoueursSalon().execute(urlGetJoueurs + mIdSalon);
-                mJoueurChoisi = false;
+                afficheSalonEnBlanc(Integer.parseInt(v.getTag().toString()));
                 afficheOptionAdmin();
+                mSalonChoisi = true;
                 // Mise à jour du numéro de mission
-                TextView tv = findViewById(R.id.numMission);
                 // TODO : Chargement des options selon le contexte
+                //TextView tv = findViewById(R.id.numMission);
                 //tv.setText(String.valueOf(mListeJeux.get(index).getNumMission()));
-                // Chargement des jeux de ce salon
-                //new TacheGetJeuxSalon().execute(urlGetJeux + mIdSalon);
-                mJeuChoisi = false;
-                break;
-
-            // Sélection d'un joueur
-            case R.id.ligne_pseudo_j1:
-            case R.id.ligne_pseudo_j2:
-            case R.id.ligne_pseudo_j3:
-            case R.id.ligne_pseudo_j4:
-            case R.id.ligne_pseudo_j5 :
-            case R.id.ligne_pseudo_j6 :
-            case R.id.ligne_pseudo_j7 :
-            case R.id.ligne_pseudo_j8 :
-                // TODO : Revoir la logique du clic d'un joueur
-                affichePseudoEnBlanc(v.getId());
-                afficheOptionAdmin();
                 break;
 
             // Jeux
@@ -400,6 +474,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 afficheJeux(mListeJeux);
                 ImageView iv = findViewById(v.getId());
                 TextView titre = findViewById(R.id.titre_jeu);
+                // Sélectionne le jeu
                 iv.setBackgroundColor(getResources().getColor(R.color.blanc));
                 iv.setTag("YES");
                 int index = 0;
@@ -409,75 +484,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 }
-                // Titre
+                // Met à jour le titre
                 titre.setText(mListeJeux.get(index).getNom());
-                // Id du jeu en BDD
+                // Sauvegarde le contexte
                 mIdJeu = mListeJeux.get(index).getId();
-                mIdPartie = mListeJeux.get(index).getIdPartie();
                 mJeuChoisi = true;
+                // Affiches les salons associés
+                findViewById(R.id.bloc_salons).setVisibility(View.VISIBLE);
                 new TacheGetXML().execute(urlGetSalons + mPseudo + "&jeu=" + mIdJeu);
                 afficheOptionAdmin();
-                break;
-
-            // Lancer le jeu dans le salon pour le joueur demandé
-            case R.id.boutonValider:
-                // TODO : Si un seul salon, pour ce jeu et ce joueur, on lance la partie sans sélection
-                // Si 1 seul jeu, on le sélectionne automatiquement
-                if (mListeJeux.size() == 1) {
-                    mIdJeu = mListeJeux.get(0).getId();
-                    mIdPartie = mListeJeux.get(0).getIdPartie();
-                    mJeuChoisi = true;
-                }
-                if (!mJeuChoisi) {
-                    Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                lancerJeu();
-                break;
-
-            // Distribue les cartes dans le salon sélectionné
-            case R.id.boutonDistribue:
-                int typeCarte;
-                String nbCarteParJoueur;
-                String belote;
-                switch (mIdJeu) {
-                    case mIdTheCrew:
-                    case mIdFiestaDeLosMuertos:
-                    case mIdLeRoiDesNains:
-                    case mIdGambit7:
-                    case mIdTopTen:
-                    default:
-                        typeCarte = 1;
-                        nbCarteParJoueur = "";
-                        belote = "";
-                        break;
-                    case mIdBelote:
-                        typeCarte = 4;
-                        nbCarteParJoueur = "5";
-                        belote = "Table";
-                        break;
-                }
-                new TacheURLSansRetour().execute(urlDistribueCartes + mIdPartie + "&typeCarte=" + typeCarte + "&nbCarteParJoueur=" + nbCarteParJoueur + "&belote=" + belote);
-                Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
-                break;
-
-            // Remise à zéro de la dernière distribution
-            case R.id.boutonRAZ:
-                switch (mIdJeu) {
-                    case mIdTheCrew:
-                    case mIdBelote:
-                        new TacheURLSansRetour().execute(urlRAZDistribution + mIdPartie);
-                        Toast.makeText(this, "Distribution réinitialisée", Toast.LENGTH_SHORT).show();
-                        break;
-                    case mIdFiestaDeLosMuertos:
-                        new TacheURLSansRetour().execute(urlInitFiesta + mIdPartie);
-                        Toast.makeText(this, "Personnages attribués", Toast.LENGTH_SHORT).show();
-                        break;
-                    case mIdTopTen:
-                        new TacheURLSansRetour().execute(urlInitTopTen + mIdPartie);
-                        Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
-                        break;
-                }
                 break;
 
             // Distribue les n tâches dans la salon sélectionné
@@ -522,11 +537,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.option_tache_10:
             case R.id.boutonOptionTacheAjout:
                 Button b = findViewById(v.getId());
-                if(v.getTag().equals("NO")) {
+                if (v.getTag().equals("NO")) {
                     b.setTextColor(getResources().getColor(R.color.blanc));
                     b.setTag("YES");
-                }
-                else {
+                } else {
                     b.setTextColor(getResources().getColor(R.color.noir));
                     b.setTag("NO");
                 }
@@ -591,7 +605,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Regarde parmis les 10 boutons options les 5 premiers sélectionnés
-     *
      * @return : un tableau de chaine de taille 5 avec les options
      */
     private String[] checkOptionsTaches() {
@@ -599,13 +612,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String[] optionsDemandees = {"", "", "", "", ""};
 
         if (mBoutonOptionTache1.getTag().equals("YES"))
-            optionsDemandees[nbOption++]=mBoutonOptionTache1.getText().toString();
+            optionsDemandees[nbOption++] = mBoutonOptionTache1.getText().toString();
         if (mBoutonOptionTache2.getTag().equals("YES"))
-            optionsDemandees[nbOption++]=mBoutonOptionTache2.getText().toString();
+            optionsDemandees[nbOption++] = mBoutonOptionTache2.getText().toString();
         if (mBoutonOptionTache3.getTag().equals("YES"))
-            optionsDemandees[nbOption++]=mBoutonOptionTache3.getText().toString();
+            optionsDemandees[nbOption++] = mBoutonOptionTache3.getText().toString();
         if (mBoutonOptionTache4.getTag().equals("YES"))
-            optionsDemandees[nbOption++]=mBoutonOptionTache4.getText().toString();
+            optionsDemandees[nbOption++] = mBoutonOptionTache4.getText().toString();
         if (mBoutonOptionTache5.getTag().equals("YES"))
             optionsDemandees[nbOption++]=mBoutonOptionTache5.getText().toString();
         if (mBoutonOptionTache6.getTag().equals("YES") && nbOption<=5)
@@ -625,46 +638,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Affiche l'ID du salon en blanc (et les autres en noir)
-     * @param ressourceIdSalon : ID ressource de la ligne voulue
+     *
+     * @param indexSalon : index de position du salon dans la liste
      */
-    private void afficheSalonEnBlanc(int ressourceIdSalon) {
+    private void afficheSalonEnBlanc(int indexSalon) {
         ImageView iv;
         TextView tv;
 
-        for(int i=0;i<mListeSalons.size();i++) {
+        mIdPartie = mListeSalons.get(mIndexSalon).getIdPartie();
+        for (int i = 0; i < mListeSalons.size(); i++) {
             iv = findViewById(tableIdImageSalon[i]);
             tv = findViewById(tableIdNomSalon[i]);
-            if (ressourceIdSalon == tableIdLigneSalon[i]) {
+            if (i == indexSalon) {
                 iv.setImageResource(R.drawable.icone_check_blanc);
                 tv.setTextColor(getResources().getColor(R.color.blanc));
-                mIdSalon = Integer.parseInt(iv.getTag().toString());
-                mIndexSalon = Integer.parseInt(tv.getTag().toString());
-            }
-            else {
-                iv.setImageResource(R.drawable.icone_check);
-                tv.setTextColor(getResources().getColor(R.color.noir));
-            }
-        }
-    }
-
-    /**
-     * Affiche l'ID du pseudo en blanc (et les autres en noir)
-     * @param ressourceIdPseudo : ID ressource de la ligne voulue
-     */
-    private void affichePseudoEnBlanc(int ressourceIdPseudo) {
-        ImageView iv;
-        TextView tv;
-
-        for(int i=0;i<mListeJoueurs.size();i++) {
-            iv = findViewById(tableIdImagePseudo[i]);
-            tv = findViewById(tableIdPseudo[i]);
-            if (ressourceIdPseudo == tableIdLignePseudo[i]) {
-                iv.setImageResource(R.drawable.icone_check_blanc);
-                tv.setTextColor(getResources().getColor(R.color.blanc));
-                mPseudo = iv.getTag().toString();
-                mJoueurChoisi = true;
-            }
-            else {
+                mIndexSalon = indexSalon;
+                mIdPartie = mListeSalons.get(mIndexSalon).getIdPartie();
+                mIdSalon = mListeSalons.get(mIndexSalon).getId();
+            } else {
                 iv.setImageResource(R.drawable.icone_check);
                 tv.setTextColor(getResources().getColor(R.color.noir));
             }
@@ -756,7 +747,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Affiche les joueurs dans la liste
         if (listeJoueurs != null) {
             String[] listePseudoJoueurs = new String[listeJoueurs.size()];
-            for (int i = 0; i<listeJoueurs.size(); i++) {
+            for (int i = 0; i < listeJoueurs.size(); i++) {
                 listePseudoJoueurs[i] = listeJoueurs.get(i).getNomJoueur();
 
                 // Création dynamique des joueurs dans des lignes du tableau
@@ -770,13 +761,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 paramsRow.setMargins(10, 10, 0, 0);
                 tr.setLayoutParams(paramsRow);
                 tr.setOnClickListener(this);
-                tr.setId(tableIdLignePseudo[i]);
+                tr.setTag("pseudo_"+i);
                 // Image
                 paramsIV.setMargins(10, 30, 30, 0);
                 iv.setLayoutParams(paramsIV);
                 iv.setImageResource(R.drawable.icone_check);
                 iv.setTag(listePseudoJoueurs[i]);
-                iv.setId(tableIdImagePseudo[i]);
                 tr.addView(iv);
                 // Texte
                 paramsTV.setMargins(0, 30, 0, 0);
@@ -784,7 +774,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv.setText(listePseudoJoueurs[i]);
                 tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 tv.setTag(listePseudoJoueurs[i]);
-                tv.setId(tableIdPseudo[i]);
                 tr.addView(tv);
                 // Ajout de la ligne dans la vue table
                 tl.addView(tr);
@@ -797,7 +786,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (chargementOK)
             findViewById(R.id.chargement).setVisibility(View.GONE);
 
-        int index = 0;
+        int index=0;
         // Affiche les jeux
         if (listeJeux != null) {
             for (int i = 0; i < listeJeux.size(); i++) {
@@ -812,7 +801,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         // Masque les ImageView non utilisées
-        for(int i = index; i<tableIdImageJeux.length; i++) {
+        for (int i = index; i < tableIdImageJeux.length; i++) {
             ImageView iv = findViewById(tableIdImageJeux[i]);
             // Image
             iv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -851,6 +840,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 paramsRow.setMargins(30, 10, 0, 0);
                 tr.setLayoutParams(paramsRow);
                 tr.setOnClickListener(this);
+                tr.setTag(String.valueOf(i)); // Index salon en tag du texte
                 tr.setId(tableIdLigneSalon[i]);
                 // Image
                 paramsIV.setMargins(30, 30, 30, 0);
@@ -881,6 +871,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Node noeudSalons = getNoeudUnique(doc, "Salons");
         int idSalon = 0;
+        int idPartie = 0;
         String nomSalon = "";
         for (int i = 0; i < noeudSalons.getChildNodes().getLength(); i++) { // Parcours toutes les salons
             Node noeudSalon = noeudSalons.getChildNodes().item(i);
@@ -896,9 +887,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case "nom":
                         nomSalon = noeudSalon.getAttributes().item(j).getNodeValue();
                         break;
+                    case "id_partie":
+                        idPartie = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
                 }
             }
-            Salon salon = new Salon(idSalon, nomSalon);
+            Salon salon = new Salon(idSalon, nomSalon, idPartie);
             listeSalons.add(salon);
         }
 
@@ -925,7 +919,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case "id_jeu":
                         idJeu = Integer.parseInt(noeudJeu.getAttributes().item(j).getNodeValue());
                         break;
-                    case "nom":
+                    case "nom" :
                         nomJeu = noeudJeu.getAttributes().item(j).getNodeValue();
                         break;
                 }
@@ -974,7 +968,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected Document doInBackground(String... strings) {
             URL url;
             Document doc = null;
-            chargementOK = true;
+            chargementOK=true;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
                 url = new URL(strings[0]);
@@ -1000,12 +994,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case "Salons":
                         mListeSalons = parseXMLSalons(doc);
                         afficheSalons(mListeSalons);
+                        // Affiche les salons si plusieurs
+                        if (mListeSalons.size() > 1)
+                            findViewById(R.id.bloc_salons).setVisibility(View.VISIBLE);
                         break;
                     case "Version":
                         parseXMLVersion(doc);
                         break;
                     case "Joueurs":
                         mListeJoueurs = parseNoeudsJoueur(doc);
+                        afficheJoueurs(mListeJoueurs);
                         break;
                     case "Jeux":
                         mListeJeux = parseXMLJeux(doc);
