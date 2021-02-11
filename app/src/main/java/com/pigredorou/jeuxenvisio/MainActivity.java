@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,22 +48,14 @@ import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // Variables statiques
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
     public static final String urlValideJoueur = url + "valideJoueur.php?joueur=";
-    public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
-    private static final String urlGetSalons = url + "getSalons.php?joueur=";
-    private static final String urlGetJeux = url + "getJeux.php?joueur=";
-    private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
-    private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
-    private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
-    private static final String urlEchangeCarte = url + "echangeCarte.php?partie=";
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
@@ -73,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
+    public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -110,7 +104,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.16 : Affichage des joueurs qui n'ont pas encore installé l'application
      * 3.0.17 : Correctif Fiesta (bug affichage du nb de joueur et des résultats) + bug joueur admin + init activité Majority à vide
      */
+    // Variables statiques
     private static final String mNumVersion = "3.0.17";
+    private static final String urlGetSalons = url + "getSalons.php?joueur=";
+    private static final String urlGetJeux = url + "getJeux.php?joueur=";
+    private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
+    private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
+    private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
+    private static final String urlEchangeCarte = url + "echangeCarte.php?partie=";
+    private static final String urlVerifInit = url + "verifInitJeux.php?partie=";
     private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3, R.id.ligne_salon4, R.id.ligne_salon5, R.id.ligne_salon6, R.id.ligne_salon7, R.id.ligne_salon8};
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
@@ -187,6 +189,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mNomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         // Entete
         TextView version1 = findViewById(R.id.version);
         String version = version1.getText() + " " + mNumVersion;
@@ -205,14 +210,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.bloc_salons).setVisibility(View.GONE);
             findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
             Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
-            // Nouvelle version ?
-            new TacheGetXML().execute(urlGetVersion);
-            mTexteNouvelleVersion = findViewById(R.id.newVersion);
-            mTexteNouvelleVersion.setOnClickListener(this);
         } else {
             findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
             // Liste des jeux disponibles pour le joueur
             new TacheGetXML().execute(urlGetJeux + mPseudo);
+            // Nouvelle version ?
+            new TacheGetXML().execute(urlGetVersion);
+            mTexteNouvelleVersion = findViewById(R.id.newVersion);
+            mTexteNouvelleVersion.setOnClickListener(this);
         }
 
         // Charge les élements des jeux
@@ -368,24 +373,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case "boutonValider":
-                    // Si 1 seul jeu, on le sélectionne automatiquement
+                    // Si 1 seul jeu ou un 1 seul salon, on le sélectionne automatiquement
+                    selectionAuto();
+                    // Si un jeu et un salon ne sont pas sélectionné, on ne lance pas le jeu
+                    if (!verificationSelection())
+                        break;
                     // TODO : Verifier que le jeu est prêt (mettre en place une salle d'attente)
-                    if (mListeJeux.size() == 1) {
-                        mIdJeu = mListeJeux.get(0).getId();
-                        mJeuChoisi = true;
-                    }
-                    if (!mJeuChoisi) {
-                        Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
+                    if (!verificationJeuInitialise())
                         break;
-                    }
-                    if (mListeSalons.size() == 1) {
-                        mIdPartie = mListeSalons.get(0).getIdPartie();
-                        mSalonChoisi = true;
-                    }
-                    if (!mSalonChoisi) {
-                        Toast.makeText(this, "Il faut choisir un salon de jeu", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
                     // Lancer le jeu dans le salon pour le joueur demandé
                     lancerJeu();
                     break;
@@ -460,6 +455,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_salon7:
             case R.id.ligne_salon8:
                 afficheSalonEnBlanc(Integer.parseInt(v.getTag().toString()));
+                // TODO : contexte des missions de jeu
                 afficheOptionAdmin();
                 mSalonChoisi = true;
                 // Mise à jour du numéro de mission
@@ -557,6 +553,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Action terminée", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private boolean verificationJeuInitialise() {
+        boolean verifOK = false;
+        String result = "";
+
+        try {
+            URL url = new URL(urlVerifInit + mIdPartie);
+            // Lecture du flux
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+            String stringBuffer;
+            String string = "";
+            while ((stringBuffer = bufferedReader.readLine()) != null) {
+                string = String.format("%s%s", string, stringBuffer);
+            }
+            bufferedReader.close();
+            result = string;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (result.isEmpty())
+            verifOK = true;
+        else
+            Toast.makeText(this, "Patiente, le jeu n'est pas encore initialisé", Toast.LENGTH_SHORT).show();
+
+        return verifOK;
+    }
+
+    private void selectionAuto() {
+        if (mListeJeux.size() == 1) {
+            mIdJeu = mListeJeux.get(0).getId();
+            mJeuChoisi = true;
+        }
+        if (mListeSalons.size() == 1) {
+            mIdPartie = mListeSalons.get(0).getIdPartie();
+            mSalonChoisi = true;
+        }
+    }
+
+    private boolean verificationSelection() {
+        boolean verifOK = true;
+        if (!mJeuChoisi) {
+            Toast.makeText(this, "Il faut choisir un jeu", Toast.LENGTH_SHORT).show();
+            verifOK = false;
+        }
+        if (!mSalonChoisi) {
+            Toast.makeText(this, "Il faut choisir un salon de jeu", Toast.LENGTH_SHORT).show();
+            verifOK = false;
+        }
+        return verifOK;
     }
 
     private void lancerJeu() {
