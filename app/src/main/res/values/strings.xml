@@ -14,7 +14,7 @@
     <string name="tachesAAtribuer">Tâches à attributer</string>
     <string name="jouer">Jouer</string>
     <string name="mes_cartes">Mes cartes</string>
-    <string name="joueurs">Joueurs :</string>
+    <string name="joueurs">Sélectionne ton joueur :</string>
     <string name="moins">-</string>
     <string name="plus">+</string>
     <string name="communications">Communications</string>
@@ -22,7 +22,7 @@
     <string name="maj_num_ro_mission">Mission suivante</string>
     <string name="echange_carte">Echange carte</string>
     <string name="echange_jeu">Echange jeu</string>
-    <string name="salons">Salons :</string>
+    <string name="salons"><u>Salons :</u></string>
     <string name="the_crew">THE CREW</string>
     <string name="version">Version </string>
     <string name="_1">1</string>

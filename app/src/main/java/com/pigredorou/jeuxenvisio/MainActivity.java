@@ -18,6 +18,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
+    public static final String urlValideJoueur = url + "valideJoueur.php?joueur=";
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -83,9 +85,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.22 : TopTen : Ajout du jeu
      * 2.23 : TopTen : Correction bouton manche suivante désativé à tort + nombre caca en gras
      * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil + Détection mise à jour application
+     * 3.0.16 : Affichage des joueurs qui n'ont pas encore installé l'application
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.15 - B";
+    private static final String mNumVersion = "3.0.16 - B";
     public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
@@ -106,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
-    //private static final int[] tableIdLignePseudo = {R.id.ligne_pseudo_j1, R.id.ligne_pseudo_j2, R.id.ligne_pseudo_j3, R.id.ligne_pseudo_j4, R.id.ligne_pseudo_j5, R.id.ligne_pseudo_j6, R.id.ligne_pseudo_j7, R.id.ligne_pseudo_j8};
-    //private static final int[] tableIdImagePseudo = {R.id.image_pseudo_joueur1, R.id.image_pseudo_joueur2, R.id.image_pseudo_joueur3, R.id.image_pseudo_joueur4, R.id.image_pseudo_joueur5, R.id.image_pseudo_joueur6, R.id.image_pseudo_joueur7, R.id.image_pseudo_joueur8};
-    //private static final int[] tableIdPseudo = {R.id.pseudo_text_joueur1, R.id.pseudo_text_joueur2, R.id.pseudo_text_joueur3, R.id.pseudo_text_joueur4, R.id.pseudo_text_joueur5, R.id.pseudo_text_joueur6, R.id.pseudo_text_joueur7, R.id.pseudo_text_joueur8};
     private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3, R.id.ligne_salon4, R.id.ligne_salon5, R.id.ligne_salon6, R.id.ligne_salon7, R.id.ligne_salon8};
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
@@ -432,7 +432,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 default:
                     // Sélectionne un joueur
                     if (v.getTag().toString().startsWith("pseudo_")) {
-                        // TODO : Faut-il valider l'action ?
                         String[] tag = v.getTag().toString().split("_");
                         mPseudo = mListeJoueurs.get(Integer.parseInt(tag[1])).getNomJoueur();
                         // Sauvegarde le pseudo du joueur
@@ -441,6 +440,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
                         findViewById(R.id.tableau_jeux).setVisibility(View.VISIBLE);
                         new TacheGetXML().execute(urlGetJeux + mPseudo);
+                        // Valide le joueur en base
+                        new TacheURLSansRetour().execute(urlValideJoueur + mPseudo);
                     }
             }
 
@@ -490,7 +491,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mIdJeu = mListeJeux.get(index).getId();
                 mJeuChoisi = true;
                 // Affiches les salons associés
-                findViewById(R.id.bloc_salons).setVisibility(View.VISIBLE);
                 new TacheGetXML().execute(urlGetSalons + mPseudo + "&jeu=" + mIdJeu);
                 afficheOptionAdmin();
                 break;
@@ -735,7 +735,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         TableLayout tl = findViewById(R.id.liste_joueurs_TL);
         TableRow.LayoutParams paramsRow;
-        TableRow.LayoutParams paramsIV;
         TableRow.LayoutParams paramsTV;
         tl.removeAllViewsInLayout();
         TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 0);
@@ -753,27 +752,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Création dynamique des joueurs dans des lignes du tableau
                 TableRow tr = new TableRow(this);
                 TextView tv = new CheckedTextView(this);
-                ImageView iv = new ImageView(this);
                 paramsRow = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
-                paramsIV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
                 paramsTV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
                 // Ligne
                 paramsRow.setMargins(10, 10, 0, 0);
                 tr.setLayoutParams(paramsRow);
                 tr.setOnClickListener(this);
                 tr.setTag("pseudo_"+i);
-                // Image
-                paramsIV.setMargins(10, 30, 30, 0);
-                iv.setLayoutParams(paramsIV);
-                iv.setImageResource(R.drawable.icone_check);
-                iv.setTag(listePseudoJoueurs[i]);
-                tr.addView(iv);
                 // Texte
-                paramsTV.setMargins(0, 30, 0, 0);
+                paramsTV.setMargins(20, 30, 0, 0);
                 tv.setLayoutParams(paramsTV);
                 tv.setText(listePseudoJoueurs[i]);
                 tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 tv.setTag(listePseudoJoueurs[i]);
+                tv.setTextSize(Dimension.SP, 30);
                 tr.addView(tv);
                 // Ajout de la ligne dans la vue table
                 tl.addView(tr);
@@ -957,9 +949,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (mNumeroVersionDispo.equals(mNumVersion)) {
             mTexteNouvelleVersion.setVisibility(View.GONE);
-            Toast.makeText(this, "Tu as déjà la dernière version", Toast.LENGTH_SHORT).show();
-        } else
+            Toast.makeText(this, "Bienvenue " + mPseudo, Toast.LENGTH_SHORT).show();
+        } else {
             mTexteNouvelleVersion.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Une nouvelle version est disponible", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class TacheGetXML extends AsyncTask<String, Void, Document> {
@@ -997,6 +991,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Affiche les salons si plusieurs
                         if (mListeSalons.size() > 1)
                             findViewById(R.id.bloc_salons).setVisibility(View.VISIBLE);
+                        else
+                            findViewById(R.id.bloc_salons).setVisibility(View.GONE);
                         break;
                     case "Version":
                         parseXMLVersion(doc);

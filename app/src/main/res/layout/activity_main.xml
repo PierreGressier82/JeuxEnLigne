@@ -218,9 +218,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:text="@string/salons"
-                android:textAlignment="textStart"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
             <TableLayout
                 android:id="@+id/liste_salons_TL"
