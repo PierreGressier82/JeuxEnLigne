@@ -196,13 +196,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.chargement).setVisibility(View.VISIBLE);
 
         // Liste des joueurs du salon
-        // TODO : Faut-il prévoir une recherche par filtre ? (filtrer automatiquement le résultat en temps réel selon le début de la saisie)
         new TacheGetXML().execute(urlGetJoueurs);
         if (mPseudo.isEmpty()) {
             findViewById(R.id.bloc_joueurs).setVisibility(View.VISIBLE);
             findViewById(R.id.bloc_salons).setVisibility(View.GONE);
             findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
             Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
+            // Nouvelle version ?
+            new TacheGetXML().execute(urlGetVersion);
+            mTexteNouvelleVersion = findViewById(R.id.newVersion);
+            mTexteNouvelleVersion.setOnClickListener(this);
         } else {
             findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
             // Liste des jeux disponibles pour le joueur
@@ -221,11 +224,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Options
         chargementOptions();
-
-        // Nouvelle version ?
-        new TacheGetXML().execute(urlGetVersion);
-        mTexteNouvelleVersion = findViewById(R.id.newVersion);
-        mTexteNouvelleVersion.setOnClickListener(this);
     }
 
     @Override
@@ -446,6 +444,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         switch (v.getId()) {
+            // TODO : basculer les id vers les tags
 
             // Sélection d'un salon
             case R.id.ligne_salon1:
@@ -460,7 +459,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 afficheOptionAdmin();
                 mSalonChoisi = true;
                 // Mise à jour du numéro de mission
-                // TODO : Chargement des options selon le contexte
                 //TextView tv = findViewById(R.id.numMission);
                 //tv.setText(String.valueOf(mListeJeux.get(index).getNumMission()));
                 break;
@@ -477,6 +475,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView titre = findViewById(R.id.titre_jeu);
                 // Sélectionne le jeu
                 iv.setBackgroundColor(getResources().getColor(R.color.blanc));
+                // TODO : mettre "jeu_x" avec l'ID du jeu en tag pour le retrouver via le tag
                 iv.setTag("YES");
                 int index = 0;
                 for (int i = 0; i < tableIdImageJeux.length; i++) {
@@ -490,6 +489,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Sauvegarde le contexte
                 mIdJeu = mListeJeux.get(index).getId();
                 mJeuChoisi = true;
+                mSalonChoisi = false;
                 // Affiches les salons associés
                 new TacheGetXML().execute(urlGetSalons + mPseudo + "&jeu=" + mIdJeu);
                 afficheOptionAdmin();
