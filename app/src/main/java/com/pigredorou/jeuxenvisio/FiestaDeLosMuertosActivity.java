@@ -490,6 +490,11 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             tv.setText("");
             tv.setTag("");
         }
+
+        for (int value : mListeIdPersonnage) {
+            TextView tv = findViewById(value);
+            tv.setTextColor(getResources().getColor(color.couleurFondFiestaMuertos));
+        }
     }
 
     private void parseNoeudsDeduction(Document doc) {

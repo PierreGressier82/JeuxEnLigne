@@ -24,7 +24,7 @@
     <string name="echange_jeu">Echange jeu</string>
     <string name="salons"><u>Salons :</u></string>
     <string name="the_crew">THE CREW</string>
-    <string name="version">Version </string>
+    <string name="version">V</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
@@ -76,4 +76,5 @@
     <string name="manche_suivante">Manche suivante</string>
     <string name="perdu">PERDU</string>
     <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible <a href="https://drive.google.com/file/d/1Pis2WFiyqv6IWABW9RMT608-hRK9e5rh/view?usp=sharing">ici</a></string>
+    <string name="majority">Majority</string>
 </resources>

@@ -2,10 +2,12 @@ package com.pigredorou.jeuxenvisio.objets;
 
 public class Joueur {
 
+    private int mId;
     private String mNomJoueur;
     private String mNomEquipe;
     private int mScoreEquipe;
     private int mAdmin;
+    private int mNew;
 
     public Joueur(String nomJoueur, String nomEquipe, int scoreEquipe, int admin) {
         mNomJoueur = nomJoueur;
@@ -14,15 +16,11 @@ public class Joueur {
         mAdmin = admin;
     }
 
-    public Joueur(String nomJoueur, String nomEquipe, int admin) {
-        this.mNomJoueur=nomJoueur;
-        this.mNomEquipe=nomEquipe;
-        this.mAdmin=admin;
-    }
-
-    public Joueur(String nomJoueur, int admin) {
+    public Joueur(int id, String nomJoueur, int admin, int aNew) {
+        mId = id;
         mNomJoueur = nomJoueur;
         mAdmin = admin;
+        mNew = aNew;
     }
 
     public int getScoreEquipe() {
@@ -43,5 +41,9 @@ public class Joueur {
 
     public int getAdmin() {
         return mAdmin;
+    }
+
+    public int getNew() {
+        return mNew;
     }
 }

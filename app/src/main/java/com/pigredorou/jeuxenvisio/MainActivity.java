@@ -47,10 +47,32 @@ import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // Variables statiques
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
     public static final String urlValideJoueur = url + "valideJoueur.php?joueur=";
+    public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
+    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
+    public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
+    public static final String urlInitFiesta = url + "initFiesta.php?partie=";
+    public static final String urlInitTopTen = url + "initTopTen.php?partie=";
+    private static final String urlGetSalons = url + "getSalons.php?joueur=";
+    private static final String urlGetJeux = url + "getJeux.php?joueur=";
+    private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
+    private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
+    private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
+    private static final String urlEchangeCarte = url + "echangeCarte.php?partie=";
+    public static final String VALEUR_PSEUDO = "Pseudo";
+    public static final String VALEUR_ID_SALON = "idSalon";
+    public static final String VALEUR_ID_PARTIE = "idPartie";
+    public static final String VALEUR_NOM_SALON = "NomSalon";
+    public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
+    public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
+    public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
+    public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
+    public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
+    public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -86,29 +108,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 2.23 : TopTen : Correction bouton manche suivante désativé à tort + nombre caca en gras
      * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil + Détection mise à jour application
      * 3.0.16 : Affichage des joueurs qui n'ont pas encore installé l'application
+     * 3.0.17 : Correctif Fiesta (bug affichage du nb de joueur et des résultats) + bug joueur admin + init activité Majority à vide
      */
-    // Variables statiques
-    private static final String mNumVersion = "3.0.16 - B";
-    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
-    public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
-    public static final String urlInitFiesta = url + "initFiesta.php?partie=";
-    public static final String urlInitTopTen = url + "initTopTen.php?partie=";
-    private static final String urlGetSalons = url + "getSalons.php?joueur=";
-    private static final String urlGetJeux = url + "getJeux.php?joueur=";
-    private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
-    private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
-    private static final String urlMAJNumMission = url + "majNumeroMission.php?partie=";
-    private static final String urlEchangeCarte = url + "echangeCarte.php?partie=";
-    public static final String VALEUR_PSEUDO = "Pseudo";
-    public static final String VALEUR_ID_SALON = "idSalon";
-    public static final String VALEUR_ID_PARTIE = "idPartie";
-    public static final String VALEUR_NOM_SALON = "NomSalon";
-    public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
-    public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
-    public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
-    public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
-    public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
-    public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
+    private static final String mNumVersion = "3.0.17";
     private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3, R.id.ligne_salon4, R.id.ligne_salon5, R.id.ligne_salon6, R.id.ligne_salon7, R.id.ligne_salon8};
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdGambit7 = 4;
     private static final int mIdBelote = 5;
     private static final int mIdTopTen = 6;
+    private static final int mIdMajority = 7;
 
     // Chargement de l'application
     private boolean chargementOK = false;
@@ -366,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 case "boutonValider":
                     // Si 1 seul jeu, on le sélectionne automatiquement
+                    // TODO : Verifier que le jeu est prêt (mettre en place une salle d'attente)
                     if (mListeJeux.size() == 1) {
                         mIdJeu = mListeJeux.get(0).getId();
                         mJeuChoisi = true;
@@ -747,28 +751,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (listeJoueurs != null) {
             String[] listePseudoJoueurs = new String[listeJoueurs.size()];
             for (int i = 0; i < listeJoueurs.size(); i++) {
-                listePseudoJoueurs[i] = listeJoueurs.get(i).getNomJoueur();
+                if (listeJoueurs.get(i).getNew() == 1 || listeJoueurs.get(i).getAdmin() == 1) {
+                    listePseudoJoueurs[i] = listeJoueurs.get(i).getNomJoueur();
 
-                // Création dynamique des joueurs dans des lignes du tableau
-                TableRow tr = new TableRow(this);
-                TextView tv = new CheckedTextView(this);
-                paramsRow = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
-                paramsTV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
-                // Ligne
-                paramsRow.setMargins(10, 10, 0, 0);
-                tr.setLayoutParams(paramsRow);
-                tr.setOnClickListener(this);
-                tr.setTag("pseudo_"+i);
-                // Texte
-                paramsTV.setMargins(20, 30, 0, 0);
-                tv.setLayoutParams(paramsTV);
-                tv.setText(listePseudoJoueurs[i]);
-                tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-                tv.setTag(listePseudoJoueurs[i]);
-                tv.setTextSize(Dimension.SP, 30);
-                tr.addView(tv);
-                // Ajout de la ligne dans la vue table
-                tl.addView(tr);
+                    // Création dynamique des joueurs dans des lignes du tableau
+                    TableRow tr = new TableRow(this);
+                    TextView tv = new CheckedTextView(this);
+                    paramsRow = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+                    paramsTV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
+                    // Ligne
+                    paramsRow.setMargins(10, 10, 0, 0);
+                    tr.setLayoutParams(paramsRow);
+                    tr.setOnClickListener(this);
+                    tr.setTag("pseudo_" + i);
+                    // Texte
+                    paramsTV.setMargins(20, 30, 0, 0);
+                    tv.setLayoutParams(paramsTV);
+                    tv.setText(listePseudoJoueurs[i]);
+                    tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                    tv.setTag(listePseudoJoueurs[i]);
+                    tv.setTextSize(Dimension.SP, 30);
+                    tr.addView(tv);
+                    // Ajout de la ligne dans la vue table
+                    tl.addView(tr);
+                }
             }
         }
     }

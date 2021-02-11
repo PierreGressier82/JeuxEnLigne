@@ -26,25 +26,32 @@ public class outilsXML {
 
         String pseudo = "";
         int admin = 0;
+        int nv = 0;
+        int id = 0;
         ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
         for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
             Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
-            Log.d("PGR-XML-Joueur", noeudCarte.getNodeName());
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
                 if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
                     continue;
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "id":
+                        id = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                     case "pseudo":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
                     case "admin":
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
+                    case "new":
+                        nv = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                 }
             }
-            Joueur joueur = new Joueur(pseudo, admin);
+            Joueur joueur = new Joueur(id, pseudo, admin, nv);
             listeJoueurs.add(joueur);
         }
 
