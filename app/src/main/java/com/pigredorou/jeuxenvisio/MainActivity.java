@@ -48,25 +48,6 @@ import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
-    public static final String urlGetVersion = url + "getVersion.php";
-    public static final String urlGetJoueurs = url + "getJoueurs.php";
-    public static final String urlValideJoueur = url + "valideJoueur.php?joueur=";
-    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
-    public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
-    public static final String urlInitFiesta = url + "initFiesta.php?partie=";
-    public static final String urlInitTopTen = url + "initTopTen.php?partie=";
-    public static final String VALEUR_PSEUDO = "Pseudo";
-    public static final String VALEUR_ID_SALON = "idSalon";
-    public static final String VALEUR_ID_PARTIE = "idPartie";
-    public static final String VALEUR_NOM_SALON = "NomSalon";
-    public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
-    public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
-    public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
-    public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
-    public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
-    public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
-    public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     /**
      * 1.02 : Version finale The Crew
      * 1.10 : Ajout du choix d'un jeu (seul jeu dispo : The Crew)
@@ -103,9 +84,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.0 : The Crew : Drag & drop pour jouer les cartes + Gambit 7 + Ajout préférence + Refonte page accueil + Détection mise à jour application
      * 3.0.16 : Affichage des joueurs qui n'ont pas encore installé l'application
      * 3.0.17 : Correctif Fiesta (bug affichage du nb de joueur et des résultats) + bug joueur admin + init activité Majority à vide
+     * 3.0.18 : Correctif numero mission pour The Crew
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.17";
+    private static final String mNumVersion = "3.0.18";
+    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    public static final String urlGetVersion = url + "getVersion.php";
+    public static final String urlGetJoueurs = url + "getJoueurs.php";
+    public static final String urlValideJoueur = url + "valideJoueur.php?joueur=";
+    public static final String urlDistribueCartes = url + "distribueCartes.php?partie=";
+    public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
+    public static final String urlInitFiesta = url + "initFiesta.php?partie=";
+    public static final String urlInitTopTen = url + "initTopTen.php?partie=";
+    public static final String VALEUR_PSEUDO = "Pseudo";
+    public static final String VALEUR_ID_SALON = "idSalon";
+    public static final String VALEUR_ID_PARTIE = "idPartie";
+    public static final String VALEUR_NOM_SALON = "NomSalon";
     private static final String urlGetSalons = url + "getSalons.php?joueur=";
     private static final String urlGetJeux = url + "getJeux.php?joueur=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -118,6 +112,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
     private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote, R.drawable.top_ten};
+    public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
+    public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
+    public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
+    public static final int MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE = 14;
+    public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
+    public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
+    public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     private static final int mIdTheCrew = 1;
     private static final int mIdFiestaDeLosMuertos = 2;
     private static final int mIdLeRoiDesNains = 3;
@@ -454,13 +455,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_salon6:
             case R.id.ligne_salon7:
             case R.id.ligne_salon8:
-                afficheSalonEnBlanc(Integer.parseInt(v.getTag().toString()));
+                int indexSalon = Integer.parseInt(v.getTag().toString());
+                afficheSalonEnBlanc(indexSalon);
                 // TODO : contexte des missions de jeu
                 afficheOptionAdmin();
                 mSalonChoisi = true;
                 // Mise à jour du numéro de mission
-                //TextView tv = findViewById(R.id.numMission);
-                //tv.setText(String.valueOf(mListeJeux.get(index).getNumMission()));
+                TextView tv = findViewById(R.id.numMission);
+                tv.setText(String.valueOf(mListeSalons.get(indexSalon).getNumMission()));
                 break;
 
             // Jeux
@@ -590,6 +592,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mListeSalons.size() == 1) {
             mIdPartie = mListeSalons.get(0).getIdPartie();
             mSalonChoisi = true;
+            mIndexSalon = 0;
         }
     }
 
@@ -917,6 +920,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Node noeudSalons = getNoeudUnique(doc, "Salons");
         int idSalon = 0;
         int idPartie = 0;
+        int numMission = 0;
         String nomSalon = "";
         for (int i = 0; i < noeudSalons.getChildNodes().getLength(); i++) { // Parcours toutes les salons
             Node noeudSalon = noeudSalons.getChildNodes().item(i);
@@ -926,7 +930,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (noeudSalon.getAttributes().item(j).getNodeValue().isEmpty())
                     continue;
                 switch (noeudSalon.getAttributes().item(j).getNodeName()) {
-                    case "id_jeu":
+                    case "id_salon":
                         idSalon = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
                         break;
                     case "nom":
@@ -935,9 +939,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case "id_partie":
                         idPartie = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
                         break;
+                    case "num_mission":
+                        numMission = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
                 }
             }
-            Salon salon = new Salon(idSalon, nomSalon, idPartie);
+            Salon salon = new Salon(idSalon, nomSalon, idPartie, numMission);
             listeSalons.add(salon);
         }
 

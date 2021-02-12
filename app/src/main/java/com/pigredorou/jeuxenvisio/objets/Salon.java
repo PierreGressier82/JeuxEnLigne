@@ -1,14 +1,20 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Salon {
+    private int mId;
     private final String mNom;
     private final int mIdPartie;
-    private int mId;
+    private final int mNumMission;
 
-    public Salon(int id, String nom, int idPartie) {
+    public Salon(int id, String nom, int idPartie, int numMission) {
         mId = id;
         mNom = nom;
         mIdPartie = idPartie;
+        mNumMission = numMission;
+    }
+
+    public int getNumMission() {
+        return mNumMission;
     }
 
     public int getId() {
