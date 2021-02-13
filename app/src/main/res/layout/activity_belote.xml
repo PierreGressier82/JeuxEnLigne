@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/couleurBelote"
+    android:background="@drawable/tissu_feutrine_vert"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context="com.pigredorou.jeuxenvisio.BeloteActivity">
@@ -308,7 +308,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/pli_en_cours"
                 android:textAlignment="center"
-                android:textColor="@color/noir"
+                android:textColor="@color/gris"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -498,13 +498,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="@string/refresh"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/gris"
+                        android:visibility="invisible"
                         android:textColorHint="@color/blanc" />
 
                     <TextView
                         android:id="@+id/heure_refresh"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
