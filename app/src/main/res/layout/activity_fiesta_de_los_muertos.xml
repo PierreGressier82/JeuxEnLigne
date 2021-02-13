@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/couleurFondFiestaMuertos"
+    android:background="@drawable/fond_bleu"
     android:orientation="vertical"
     tools:context="com.pigredorou.jeuxenvisio.FiestaDeLosMuertosActivity">
 
@@ -70,7 +70,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/image_crane"
@@ -683,7 +683,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -942,7 +942,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.4"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <LinearLayout
@@ -1132,7 +1132,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/noir"
+        android:background="@color/black_overlay"
         android:text="@string/valider"
         android:textColor="@color/blanc" />
 
@@ -1143,7 +1143,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/noir"
+        android:background="@color/black_overlay"
         android:text="@string/initialiser"
         android:textColor="@color/blanc"
         android:visibility="gone" />

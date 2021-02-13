@@ -86,6 +86,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
     private int mIdSalon;
     private int mIdPartie;
+    private int mMethodeSelection;
     private boolean mAdmin = false; // Suis-je admin ?
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
@@ -151,6 +152,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // ENTETE
         TextView titre = findViewById(R.id.titre_jeu);
+
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
         TextView tvNomSalon = findViewById(R.id.nom_salon);
@@ -159,6 +161,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
         mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
+        mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
         // Bouton retour
@@ -424,10 +427,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 if (mNbTacheAAtribuer == 0 && (mZoneSilence < 2 || mNumeroPli >= mZoneSilence)) {
                     if (!mCommunicationFaite) {
                         if (mCommunicationAChoisir) {
-                            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                            mBoutonComm.setBackgroundColor(0);
                             mCommunicationAChoisir = false;
                         } else {
-                            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.blanc));
+                            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                             Toast.makeText(this, "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
                             mCommunicationAChoisir = true;
                         }
@@ -878,10 +881,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 tva.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
                 String tag = "tache_" + taches.get(i).getCarte().getCouleur() + "_" + taches.get(i).getCarte().getValeur();
                 if (taches.get(i).isRealise()) {
-                    tva.setBackgroundColor(getResources().getColor(R.color.blanc));
+                    tva.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     tag += "_1";
                 } else {
-                    tva.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    tva.setBackgroundColor(0);
                     tag += "_0";
                 }
                 tva.setTag(tag);
@@ -928,7 +931,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         if (!pseudoTrouve && !mCommunicationAChoisir) {
             mCommunicationFaite = false;
             mBoutonComm.setImageResource(R.drawable.jeton_communication_off);
-            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            mBoutonComm.setBackgroundColor(0);
             mTableauCommunication.setVisibility(View.GONE);
         }
         if (nbPlis > 0)
@@ -1260,9 +1263,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         String couleurCarteActive = chaine[1];
         String valeurCarteActive = chaine[2];
 
+        // Est-ce que toutes les taches sont attribuées ?
+        if (mNbTacheAAtribuer > 0) {
+            Toast.makeText(this, "Il reste des tâches à attribuer", Toast.LENGTH_SHORT).show();
+        }
         // Si c'est pour communiquer
         // -------------------------
-        if (mCommunicationAChoisir) {
+        else if (mCommunicationAChoisir) {
             communiqueCarte(couleurCarteActive, valeurCarteActive);
         }
         // Joue la carte si c'est mon tour
@@ -1285,7 +1292,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private void startAnimationErreur(String messageErreur) {
         Toast.makeText(getBaseContext(), messageErreur, Toast.LENGTH_SHORT).show();
         stopRefreshAuto(); // Stop le refresh auto pour laisse l'animation se faire
-        Animation animation = new AlphaAnimation((float) 0.8, 0);
+        Animation animation = new AlphaAnimation(1, 0);
         animation.setDuration(200);
         animation.setInterpolator(new LinearInterpolator()); //do not alter
         animation.setRepeatCount(6);

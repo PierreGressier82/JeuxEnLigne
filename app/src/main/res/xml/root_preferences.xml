@@ -6,7 +6,7 @@
             app:defaultValue="Drag &amp; drop"
             app:entries="@array/selelections_entries"
             app:entryValues="@array/selelections_values"
-            app:key="selection"
+            app:key="@string/selection"
             app:title="Méthode de sélection"
             app:useSimpleSummaryProvider="true" />
 

@@ -9,6 +9,8 @@
     <color name="couleurBelote">#14471D</color>
     <color name="colorAccent">#FF0000</color>
     <color name="blanc">#FFFFFF</color>
+    <color name="gris">#9F9F9F</color>
+    <color name="grisTransparent">#809F9F9F</color>
     <color name="noir">#000000</color>
     <color name="jaune">#C18C46</color>
     <color name="jaune_clair">#FFC107</color>

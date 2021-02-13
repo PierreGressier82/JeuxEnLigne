@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/fond_sombre_motif"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context="com.pigredorou.jeuxenvisio.MainActivity">
@@ -36,6 +36,7 @@
             android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@color/gris"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:text="@string/version"
+            android:textColor="@color/gris"
             android:textAlignment="textEnd"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,9 +93,10 @@
 
         <TableRow
             android:id="@+id/tableau_jeux"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="fill_horizontal">
             android:gravity="fill_horizontal">
 
             <ImageView
@@ -218,6 +221,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:text="@string/salons"
+            android:textColor="@color/gris"
             android:textAlignment="textStart"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -240,6 +244,7 @@
                         android:id="@+id/image_salon1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryDark"
                         android:layout_marginEnd="5dp"
                         android:src="@drawable/icone_check" />
 
@@ -488,7 +493,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/_1"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -500,7 +505,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/_2"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -512,7 +517,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/_3"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -524,7 +529,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/_4"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -536,7 +541,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/_5"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -548,7 +553,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/sup1"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -560,7 +565,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/sup2"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -572,7 +577,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/sup3"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -584,7 +589,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/sup4"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
 
                     <Button
@@ -596,7 +601,7 @@
                         android:background="@color/black_overlay"
                         android:tag="NO"
                         android:text="@string/d"
-                        android:textColor="@color/noir"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="15sp" />
                 </TableRow>
             </TableLayout>
@@ -649,7 +654,7 @@
                     android:background="@color/black_overlay"
                     android:tag="NO"
                     android:text="@string/ajout"
-                    android:textColor="@color/noir"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp" />
 
                 <Button

@@ -85,9 +85,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.16 : Affichage des joueurs qui n'ont pas encore installé l'application
      * 3.0.17 : Correctif Fiesta (bug affichage du nb de joueur et des résultats) + bug joueur admin + init activité Majority à vide
      * 3.0.18 : Correctif numero mission pour The Crew
+     * 3.0.19 : Ajout image de fond pour accueil, Crew et Fiesta
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.18";
+    private static final String mNumVersion = "3.0.19";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
     public static final String VALEUR_NOM_SALON = "NomSalon";
+    public static final String VALEUR_METHODE_SELECTION = "MethodeSelection";
     private static final String urlGetSalons = url + "getSalons.php?joueur=";
     private static final String urlGetJeux = url + "getJeux.php?joueur=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
@@ -119,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
     public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
+    public static final int mSelectionDoucleClic = 1;
+    public static final int mSelectionDragAndDrop = 2;
+    public static final int mSelectionDragAndDropLongTouch = 3;
     private static final int mIdTheCrew = 1;
     private static final int mIdFiestaDeLosMuertos = 2;
     private static final int mIdLeRoiDesNains = 3;
@@ -476,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ImageView iv = findViewById(v.getId());
                 TextView titre = findViewById(R.id.titre_jeu);
                 // Sélectionne le jeu
-                iv.setBackgroundColor(getResources().getColor(R.color.blanc));
+                iv.setBackgroundColor(getResources().getColor(R.color.grisTransparent));
                 // TODO : mettre "jeu_x" avec l'ID du jeu en tag pour le retrouver via le tag
                 iv.setTag("YES");
                 int index = 0;
@@ -543,7 +548,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     b.setTextColor(getResources().getColor(R.color.blanc));
                     b.setTag("YES");
                 } else {
-                    b.setTextColor(getResources().getColor(R.color.noir));
+                    b.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                     b.setTag("NO");
                 }
                 break;
@@ -699,7 +704,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView iv;
         TextView tv;
 
-        mIdPartie = mListeSalons.get(mIndexSalon).getIdPartie();
         for (int i = 0; i < mListeSalons.size(); i++) {
             iv = findViewById(tableIdImageSalon[i]);
             tv = findViewById(tableIdNomSalon[i]);
@@ -711,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mIdSalon = mListeSalons.get(mIndexSalon).getId();
             } else {
                 iv.setImageResource(R.drawable.icone_check);
-                tv.setTextColor(getResources().getColor(R.color.noir));
+                tv.setTextColor(getResources().getColor(R.color.gris));
             }
         }
     }
@@ -841,7 +845,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ImageView iv = findViewById(tableIdImageJeux[i]);
                 // Image
                 iv.setImageResource(tableIdResourceImageJeux[listeJeux.get(i).getId()]);
-                iv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                iv.setBackgroundColor(0);
                 iv.setTag("NO");
                 iv.setVisibility(View.VISIBLE);
                 index++;
@@ -852,7 +856,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = index; i < tableIdImageJeux.length; i++) {
             ImageView iv = findViewById(tableIdImageJeux[i]);
             // Image
-            iv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            iv.setBackgroundColor(0);
             iv.setTag("NO");
             iv.setVisibility(View.GONE);
         }
@@ -904,6 +908,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                 tv.setTag(String.valueOf(i)); // Index salon en tag du texte
                 tv.setId(tableIdNomSalon[i]);
+                tv.setTextColor(getResources().getColor(R.color.gris));
                 tr.addView(tv);
                 // Ajout de la ligne dans la vue table
                 tl.addView(tr);
