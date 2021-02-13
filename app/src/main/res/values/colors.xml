@@ -20,6 +20,7 @@
     <color name="rose">#C75378</color>
     <color name="orange">#C34415</color>
     <color name="rouge">#B40404</color>
+    <color name="rougeTransparent">#80FF0000</color>
     <color name="violet">#990099</color>
     <color name="black_overlay">#66000000</color>
 </resources>

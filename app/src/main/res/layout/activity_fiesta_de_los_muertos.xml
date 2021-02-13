@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fond_bleu"
+    android:background="@drawable/fond_tete_mort"
     android:orientation="vertical"
     tools:context="com.pigredorou.jeuxenvisio.FiestaDeLosMuertosActivity">
 
@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:background="@color/black_overlay"
         android:orientation="horizontal">
 
         <ImageView

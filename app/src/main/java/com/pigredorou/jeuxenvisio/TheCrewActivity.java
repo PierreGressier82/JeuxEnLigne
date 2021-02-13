@@ -414,7 +414,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.blanc));
                     stopRefreshAuto();
                 } else {
-                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.noir));
+                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.gris));
                     startRefreshAuto();
                 }
                 break;
@@ -769,7 +769,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 // Si le joueur est le commmandant, on affiche le nom en noir
                 String pseudoTexte = mListePseudo[positionJoueur];
                 if (mListePseudo[positionJoueur].equals(mCommandant)) {
-                    pseudo.setTextColor(getResources().getColor(R.color.noir));
+                    pseudo.setTextColor(getResources().getColor(R.color.rouge));
                 } else
                     pseudo.setTextColor(getResources().getColor(R.color.blanc));
                 pseudo.setText(pseudoTexte);
