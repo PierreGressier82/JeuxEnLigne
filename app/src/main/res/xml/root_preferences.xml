@@ -10,7 +10,12 @@
             app:title="Méthode de sélection"
             app:useSimpleSummaryProvider="true" />
 
+        <Preference
+            app:title="Oublier mon pseudo et relancer l'application"
+            app:key="pseudo" />
+
         <ListPreference
+            app:isPreferenceVisible="false"
             app:defaultValue="Gris"
             app:entries="@array/liste_couleurs"
             app:entryValues="@array/liste_couleurs"
@@ -40,6 +45,7 @@
             app:title="Mode admin" />
 
         <ListPreference
+            app:isPreferenceVisible="false"
             app:defaultValue="Gris"
             app:entries="@array/liste_couleurs"
             app:entryValues="@array/liste_couleurs"

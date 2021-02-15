@@ -86,9 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.17 : Correctif Fiesta (bug affichage du nb de joueur et des résultats) + bug joueur admin + init activité Majority à vide
      * 3.0.18 : Correctif numero mission pour The Crew
      * 3.0.19 : Ajout image de fond pour accueil, Crew et Fiesta
+     * 3.0.20 : Préférences : implémentation suppression pseudo et relance auto de l'application
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.19";
+    private static final String mNumVersion = "3.0.20";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -97,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
+    public static final String urlNewJoueur = url + "newJoueur.php?joueur=";
+    public static final String urlMajAdmin = url + "majAdminJoueur.php?joueur=";
+    public static final String KEY_PREFERENCES = "MesPreferences";
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
@@ -190,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // On recupère les préférences du joueur
-        mPreferences = getPreferences(MODE_PRIVATE);
+        mPreferences = getSharedPreferences(KEY_PREFERENCES, MODE_PRIVATE);
         mIdSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
         mNomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
@@ -462,7 +466,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.ligne_salon8:
                 int indexSalon = Integer.parseInt(v.getTag().toString());
                 afficheSalonEnBlanc(indexSalon);
-                // TODO : contexte des missions de jeu
                 afficheOptionAdmin();
                 mSalonChoisi = true;
                 // Mise à jour du numéro de mission
@@ -825,6 +828,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tv.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
                     tv.setTag(listePseudoJoueurs[i]);
                     tv.setTextSize(Dimension.SP, 30);
+                    tv.setTextColor(getResources().getColor(R.color.gris));
                     tr.addView(tv);
                     // Ajout de la ligne dans la vue table
                     tl.addView(tr);
