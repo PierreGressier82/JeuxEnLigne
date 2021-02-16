@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Dimension;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
@@ -65,6 +66,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private static final int[] tableIdPseudo = {R.id.table_pseudo_joueur1, R.id.table_pseudo_joueur2, R.id.table_pseudo_joueur3, R.id.table_pseudo_joueur4, R.id.table_pseudo_joueur5};
     private static final int[] tableIdImageCarteMain = {R.id.carte_1, R.id.carte_2, R.id.carte_3, R.id.carte_4, R.id.carte_5, R.id.carte_6, R.id.carte_7, R.id.carte_8, R.id.carte_9, R.id.carte_10, R.id.carte_11, R.id.carte_12, R.id.carte_13, R.id.carte_14, R.id.carte_15, R.id.carte_16, R.id.carte_17, R.id.carte_18, R.id.carte_19, R.id.carte_20};
     private static final int[] tableIdImageCartePli = {R.id.table_carte_image_joueur1, R.id.table_carte_image_joueur2, R.id.table_carte_image_joueur3, R.id.table_carte_image_joueur4, R.id.table_carte_image_joueur5};
+    private static final int[] tableIdTachesAAtribuer = {R.id.tacheAAtribuer1, R.id.tacheAAtribuer2, R.id.tacheAAtribuer3, R.id.tacheAAtribuer4, R.id.tacheAAtribuer5, R.id.tacheAAtribuer6, R.id.tacheAAtribuer7, R.id.tacheAAtribuer8, R.id.tacheAAtribuer9, R.id.tacheAAtribuer10};
     private static final int[] tableLignesTaches = {R.id.ligne_tache1, R.id.ligne_tache2, R.id.ligne_tache3, R.id.ligne_tache4};
     private static final int[] tableTaches1 = {R.id.tache_joueur1, R.id.tache_joueur2, R.id.tache_joueur3, R.id.tache_joueur4, R.id.tache_joueur5};
     private static final int[] tableTaches2 = {R.id.tache2_joueur1, R.id.tache2_joueur2, R.id.tache2_joueur3, R.id.tache2_joueur4, R.id.tache2_joueur5};
@@ -84,7 +86,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
-    private int mIdSalon;
     private int mIdPartie;
     private int mMethodeSelection;
     private boolean mAdmin = false; // Suis-je admin ?
@@ -150,16 +151,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Affiche la vue
         setContentView(R.layout.activity_the_crew);
 
-        // ENTETE
-        TextView titre = findViewById(R.id.titre_jeu);
-
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
         TextView tvNomSalon = findViewById(R.id.nom_salon);
         final Intent intent = getIntent();
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
+        int idSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
         mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
         tvPseudo.setText(mPseudo);
@@ -235,7 +233,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mTaches3Joueur5 = findViewById(R.id.tache3_joueur5);
         mTaches4Joueur4 = findViewById(R.id.tache4_joueur4);
         mTaches4Joueur5 = findViewById(R.id.tache4_joueur5);
-        mTitreTachesAAtribuer.setVisibility(View.GONE);
+        //mTitreTachesAAtribuer.setVisibility(View.GONE);
     }
 
     private void affichePseudos(ArrayList<Joueur> listeJoueurs) {
@@ -408,109 +406,134 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bouton_refresh:
-                if (mRefreshAuto) {
-                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.blanc));
-                    stopRefreshAuto();
+        if (v.getTag() != null) {
+            if (v.getTag().toString().startsWith("carte_")) {
+                String messageErreur = verifieSiJePeuxJouer(v.getTag().toString().split("_")[1]);
+                if (messageErreur.isEmpty()) {
+                    selectionneCarte(v);
+                    //startAnimation(v);
                 } else {
-                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.gris));
-                    startRefreshAuto();
+                    mCarteActive = findViewById(v.getId());
+                    // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
+                    startAnimationErreur(messageErreur);
                 }
-                break;
-
-            case R.id.bouton_retour:
-                finish();
-                break;
-
-            case R.id.bouton_communication:
-                if (mNbTacheAAtribuer == 0 && (mZoneSilence < 2 || mNumeroPli >= mZoneSilence)) {
-                    if (!mCommunicationFaite) {
-                        if (mCommunicationAChoisir) {
-                            mBoutonComm.setBackgroundColor(0);
-                            mCommunicationAChoisir = false;
-                        } else {
-                            mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                            Toast.makeText(this, "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
-                            mCommunicationAChoisir = true;
-                        }
-                    }
-                } else if (mNbTacheAAtribuer > 0)
-                    Toast.makeText(this, "Communication après attribution des tâches", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(this, "Communication possible à partir du pli " + mZoneSilence, Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.titre_pli:
-                if (mTable.getVisibility() == View.GONE)
-                    mTable.setVisibility(View.VISIBLE);
-                else
-                    mTable.setVisibility(View.GONE);
-                break;
-
-            case R.id.titre_communication:
-                if (mTableauCommunication.getVisibility() == View.GONE)
-                    mTableauCommunication.setVisibility(View.VISIBLE);
-                else
-                    mTableauCommunication.setVisibility(View.GONE);
-                break;
-
-            case R.id.titre_objectif:
-                if (mTableauTaches.getVisibility() == View.GONE)
-                    mTableauTaches.setVisibility(View.VISIBLE);
-                else
-                    mTableauTaches.setVisibility(View.GONE);
-                break;
-
-            case R.id.tache_joueur1:
-            case R.id.tache_joueur2:
-            case R.id.tache_joueur3:
-            case R.id.tache_joueur4:
-            case R.id.tache_joueur5:
-            case R.id.tache2_joueur1:
-            case R.id.tache2_joueur2:
-            case R.id.tache2_joueur3:
-            case R.id.tache2_joueur4:
-            case R.id.tache2_joueur5:
-            case R.id.tache3_joueur1:
-            case R.id.tache3_joueur2:
-            case R.id.tache3_joueur3:
-            case R.id.tache3_joueur4:
-            case R.id.tache3_joueur5:
-            case R.id.tache4_joueur1:
-            case R.id.tache4_joueur2:
-            case R.id.tache4_joueur3:
-            case R.id.tache4_joueur4:
-            case R.id.tache4_joueur5:
+            } else if (v.getTag().toString().startsWith("tacheAAttribuer_"))
+                selectionneTacheAAtribuer(v);
+                // Tâche attribuée
+            else if (v.getTag().toString().startsWith("tache_"))
                 clicTache(v);
-                break;
+                // Annulation dernière carte jouée
+            else if (v.getTag().toString().startsWith("pli_"))
+                clicAnnulCarte(v);
+            else
+                switch (v.getTag().toString()) {
+                    case "bouton_retour":
+                        finish();
+                        break;
+                    case "bouton_refresh":
+                        if (mRefreshAuto) {
+                            mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.blanc));
+                            stopRefreshAuto();
+                        } else {
+                            mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.gris));
+                            startRefreshAuto();
+                        }
+                        break;
+                    case "titre_pli":
+                        if (mTable.getVisibility() == View.GONE)
+                            mTable.setVisibility(View.VISIBLE);
+                        else
+                            mTable.setVisibility(View.GONE);
+                        break;
 
-            case R.id.bouton_detresse:
-                if (mDetresseUtilise) {
-                    mImageDetresse.setImageResource(R.drawable.detresse_noir);
-                    mDetresseUtilise = false;
-                } else {
-                    mImageDetresse.setImageResource(R.drawable.detresse);
-                    mDetresseUtilise = true;
-                    // Affichage des fleches pour passer une carte au voisin de droite ou gauche
+                    case "titre_communication":
+                        if (mTableauCommunication.getVisibility() == View.GONE)
+                            mTableauCommunication.setVisibility(View.VISIBLE);
+                        else
+                            mTableauCommunication.setVisibility(View.GONE);
+                        break;
+
+                    case "titre_objectif":
+                        if (mTableauTaches.getVisibility() == View.GONE)
+                            mTableauTaches.setVisibility(View.VISIBLE);
+                        else
+                            mTableauTaches.setVisibility(View.GONE);
+                        break;
+
+                    case "bouton_detresse":
+                        if (mDetresseUtilise) {
+                            mImageDetresse.setImageResource(R.drawable.detresse_noir);
+                            mDetresseUtilise = false;
+                        } else {
+                            mImageDetresse.setImageResource(R.drawable.detresse);
+                            mDetresseUtilise = true;
+                            // Affichage des fleches pour passer une carte au voisin de droite ou gauche
+                        }
+                        break;
+
+                    case "bouton_communication":
+                        if (mNbTacheAAtribuer == 0 && (mZoneSilence < 2 || mNumeroPli >= mZoneSilence)) {
+                            if (!mCommunicationFaite) {
+                                if (mCommunicationAChoisir) {
+                                    mBoutonComm.setBackgroundColor(0);
+                                    mCommunicationAChoisir = false;
+                                } else {
+                                    mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                                    Toast.makeText(this, "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
+                                    mCommunicationAChoisir = true;
+                                }
+                            }
+                        } else if (mNbTacheAAtribuer > 0)
+                            Toast.makeText(this, "Communication après attribution des tâches", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "Communication possible à partir du pli " + mZoneSilence, Toast.LENGTH_SHORT).show();
+                        break;
+
                 }
-                break;
-            default:
-                if (v.getTag().toString().startsWith("tacheAAttribuer")) {
-                    clicTacheAAttribuer(v);
-                }
-                if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-                    String messageErreur = verifieSiJePeuxJouer(v.getTag().toString().split("_")[1]);
-                    if (messageErreur.isEmpty()) {
-                        startAnimation(v);
-                    } else {
-                        mCarteActive = findViewById(v.getId());
-                        // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
-                        startAnimationErreur(messageErreur);
-                    }
-                }
-                break;
         }
+    }
+
+    private void selectionneCarte(View v) {
+        stopRefreshAuto();
+        // Retire le fond rouge et la transparence des autres cartes
+        deselectionneCartes();
+        ImageView iv = findViewById(v.getId());
+        // Met le fond en rouge
+        iv.setBackgroundColor(getResources().getColor(R.color.rouge));
+        // Met de la transparence sur l'image car le fond est rouge
+        iv.setImageAlpha(100);
+        iv.setOnTouchListener(this);
+    }
+
+    private void deselectionneCartes() {
+        for (int value : tableIdImageCarteMain) {
+            ImageView iv = findViewById(value);
+            if (iv != null) {
+                iv.setBackgroundColor(0);
+                iv.setImageAlpha(255);
+                iv.setOnTouchListener(null);
+            }
+        }
+    }
+
+    private void selectionneTacheAAtribuer(View v) {
+        stopRefreshAuto();
+        // Retire le fond rouge et la transparence des autres cartes
+        deselectionneTaches();
+        TextView tv = findViewById(v.getId());
+        // Met le fond en rouge
+        tv.setBackgroundColor(getResources().getColor(R.color.rougeTransparent));
+        tv.setOnTouchListener(this);
+    }
+
+    private void deselectionneTaches() {
+        //for (int value : tableTaches1) {
+        //    TextView tv = findViewById(value);
+        //    if (tv != null) {
+        //        tv.setBackgroundColor(0);
+        //        tv.setOnTouchListener(null);
+        //    }
+        //}
     }
 
     private void startAnimation(View v) {
@@ -582,11 +605,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
             // Appuie sur l'écran
             case MotionEvent.ACTION_DOWN:
-                if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-                    findViewById(v.getId()).clearAnimation();
-                    jourCarteFromMainJoueur(v);
-                    retour = false;
-                } else {
+                if (mMethodeSelection == MainActivity.mSelectionDragAndDrop)
+                    validAction(v);
+                else {
                     time = System.currentTimeMillis();
 
                     if (mClickCount > 2)
@@ -613,7 +634,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 if (mClickCount == 2) {
                     if (mDurationClick <= MAX_DURATION_CLICK) {
                         // On a un double clic !
-                        doublicClic(v);
+                        validAction(v);
                         Log.d("PGR-onTouch", "ACTION_UP -> Double clic");
                     }
                     mClickCount = 0;
@@ -632,44 +653,28 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
-     * Gestion des actions liées à un double clic
+     * Gestion des actions liées à une action selon le tag de l'objet
      *
-     * @param v : la vue sur laquelle le double clic a été réalisé
+     * @param v : la vue sur laquelle l'action a été réalisé
      */
-    private void doublicClic(View v) {
-        // Cartes de la main du joueur
-        if (v.getTag() != null && v.getTag().toString().startsWith("carte_"))
-            jourCarteFromMainJoueur(v);
-        else if (v.getTag() != null && v.getTag().toString().startsWith("tacheAAttribuer")) {
-            clicTacheAAttribuer(v);
-        } else {
-            switch (v.getId()) {
-                case R.id.tache_joueur1:
-                case R.id.tache_joueur2:
-                case R.id.tache_joueur3:
-                case R.id.tache_joueur4:
-                case R.id.tache_joueur5:
-                case R.id.tache2_joueur1:
-                case R.id.tache2_joueur2:
-                case R.id.tache2_joueur3:
-                case R.id.tache2_joueur4:
-                case R.id.tache2_joueur5:
-                case R.id.tache3_joueur1:
-                case R.id.tache3_joueur2:
-                case R.id.tache3_joueur3:
-                case R.id.tache3_joueur4:
-                case R.id.tache3_joueur5:
-                    clicTache(v);
-                    break;
-                case R.id.table_carte_image_joueur1:
-                case R.id.table_carte_image_joueur2:
-                case R.id.table_carte_image_joueur3:
-                case R.id.table_carte_image_joueur4:
-                case R.id.table_carte_image_joueur5:
-                    clicAnnulCarte(v);
-                    break;
-            }
+    private boolean validAction(View v) {
+        if (v.getTag() != null) {
+            // Cartes de la main du joueur
+            if (v.getTag().toString().startsWith("carte_"))
+                jourCarteFromMainJoueur(v);
+                // Tâche non attribuée
+            else if (v.getTag().toString().startsWith("tacheAAttribuer_"))
+                clicTacheAAttribuer(v);
+                // Tâche attribuée
+            else if (v.getTag().toString().startsWith("tache_"))
+                clicTache(v);
+                // Annulation dernière carte jouée
+            else if (v.getTag().toString().startsWith("pli_"))
+                clicAnnulCarte(v);
+            else
+                return false;
         }
+        return true;
     }
 
     private void clicAnnulCarte(View v) {
@@ -720,7 +725,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             for (int i = 0; i < cartes.size(); i++) {
                 ImageView carte = new ImageView(this);
                 String nomCarte = cartes.get(i).getCouleur() + "_" + cartes.get(i).getValeur();
-                params = new TableRow.LayoutParams(250, 450, 0);
+                params = new TableRow.LayoutParams(250, 380, 0);
                 params.setMargins(5, 0, 0, 0);
                 carte.setLayoutParams(params);
                 carte.setImageResource(getImageCarte(cartes.get(i).getCouleur(), cartes.get(i).getValeur()));
@@ -823,7 +828,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 params.setMargins(50, 0, 0, 0);
                 tv.setLayoutParams(params);
                 tv.setTag("tacheAAttribuer_" + taches.get(i).getCarte().getCouleur() + "_" + taches.get(i).getCarte().getValeur());
-                tv.setOnTouchListener(this);
+                tv.setId(tableIdTachesAAtribuer[i]);
+                activeListener(tv);
                 trTacheAAttribuer.addView(tv);
 
             }
@@ -904,6 +910,19 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         for (int i = ligneTache; i < tableLignesTaches.length; i++) {
             TableRow tr = findViewById(tableLignesTaches[i]);
             tr.setVisibility(View.GONE);
+        }
+    }
+
+    private void activeListener(TextView tv) {
+        switch (mMethodeSelection) {
+            case MainActivity.mSelectionDragAndDrop:
+                tv.setOnClickListener(this);
+                break;
+            case MainActivity.mSelectionDoucleClic:
+                tv.setOnTouchListener(this);
+                break;
+            default:
+                break;
         }
     }
 
@@ -1151,8 +1170,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-        Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
-        Drawable normalShape = getResources().getDrawable(R.drawable.shape);
+        Drawable enterShape = ResourcesCompat.getDrawable(getResources(), R.drawable.shape_droptarget, null);
+        Drawable normalShape = ResourcesCompat.getDrawable(getResources(), R.drawable.shape, null);
         String[] chaine = mCarteActive.getTag().toString().split("_"); // ex : carte_bleu_2
         String couleurCarteActive = chaine[1];
         String valeurCarteActive = chaine[2];
@@ -1195,11 +1214,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onLongClick(View v) {
-        if (v.getTag() != null && v.getTag().toString().startsWith("carte_")) {
-            jourCarteFromMainJoueur(v);
-        }
-
-        return true;
+        return validAction(v);
     }
 
     private void communiqueCarte(String couleurCarteActive, String valeurCarteActive) {

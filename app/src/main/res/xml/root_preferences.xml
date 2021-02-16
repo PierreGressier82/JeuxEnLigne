@@ -3,6 +3,7 @@
     <PreferenceCategory app:title="Préférences">
 
         <ListPreference
+            app:dependency="admin"
             app:defaultValue="Drag &amp; drop"
             app:entries="@array/selelections_entries"
             app:entryValues="@array/selelections_values"
@@ -15,6 +16,7 @@
             app:key="pseudo" />
 
         <ListPreference
+            app:icon="@drawable/gambit_violet_1"
             app:isPreferenceVisible="false"
             app:defaultValue="Gris"
             app:entries="@array/liste_couleurs"
@@ -23,18 +25,12 @@
             app:title="Couleur par défaut"
             app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
-            app:isPreferenceVisible="false"
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:isPreferenceVisible="false"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <EditTextPreference
+            app:dependency="admin"
+            app:icon="@color/rougeTransparent"
+            app:key="@string/pseudo"
+            app:title="Modifier mon pseudo"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

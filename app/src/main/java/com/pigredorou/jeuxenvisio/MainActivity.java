@@ -87,9 +87,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.18 : Correctif numero mission pour The Crew
      * 3.0.19 : Ajout image de fond pour accueil, Crew et Fiesta
      * 3.0.20 : Préférences : implémentation suppression pseudo et relance auto de l'application
+     * 3.0.21 : The Crew implementation drag&drop cartes + taches
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.20";
+    private static final String mNumVersion = "3.0.21";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

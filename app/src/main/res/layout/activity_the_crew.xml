@@ -19,6 +19,7 @@
 
         <ImageView
             android:id="@+id/bouton_retour"
+            android:tag="bouton_retour"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
@@ -45,10 +46,10 @@
             android:layout_height="wrap_content"
             android:text="@string/the_crew"
             android:textAlignment="center"
+            android:textColor="@color/blanc"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/blanc"
-            app:layout_constraintStart_toEndOf="@id/bouton_retour"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -274,6 +275,7 @@
 
             <TextView
                 android:id="@+id/titre_pli"
+                android:tag="titre_pli"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pli_en_cours"
@@ -428,6 +430,7 @@
 
                     <ImageView
                         android:id="@+id/bouton_detresse"
+                        android:tag="bouton_detresse"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_weight="0.2"
@@ -436,6 +439,7 @@
 
                     <ImageView
                         android:id="@+id/bouton_communication"
+                        android:tag="bouton_communication"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_weight="0.2"
@@ -452,6 +456,7 @@
 
                 <TextView
                     android:id="@+id/titre_communication"
+                    android:tag="titre_communication"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/communications"
@@ -609,7 +614,29 @@
                     <TableRow
                         android:id="@+id/taches_a_attribuer"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content">
+
+                        <TextView android:id="@+id/tacheAAtribuer1" />
+
+                        <TextView android:id="@+id/tacheAAtribuer2" />
+
+                        <TextView android:id="@+id/tacheAAtribuer3" />
+
+                        <TextView android:id="@+id/tacheAAtribuer4" />
+
+                        <TextView android:id="@+id/tacheAAtribuer5" />
+
+                        <TextView android:id="@+id/tacheAAtribuer6" />
+
+                        <TextView android:id="@+id/tacheAAtribuer7" />
+
+                        <TextView android:id="@+id/tacheAAtribuer8" />
+
+                        <TextView android:id="@+id/tacheAAtribuer9" />
+
+                        <TextView android:id="@+id/tacheAAtribuer10" />
+
+                    </TableRow>
                 </TableLayout>
             </HorizontalScrollView>
 
@@ -620,6 +647,7 @@
 
                 <TextView
                     android:id="@+id/titre_objectif"
+                    android:tag="titre_objectif"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -947,6 +975,7 @@
 
                 <Button
                     android:id="@+id/bouton_refresh"
+                    android:tag="bouton_refresh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
