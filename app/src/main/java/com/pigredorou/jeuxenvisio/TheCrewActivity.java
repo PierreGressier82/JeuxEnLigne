@@ -197,6 +197,8 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Drag & drop
         findViewById(R.id.tableau_cartes).setOnDragListener(this);
         findViewById(R.id.tableau_table).setOnDragListener(this);
+        findViewById(R.id.HS_taches_a_attribuer).setOnDragListener(this);
+        findViewById(R.id.tableau_taches).setOnDragListener(this);
     }
 
     private void chargeVuesCommunication() {
@@ -212,7 +214,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mCommJoueur4 = findViewById(R.id.communication_joueur4);
         mCommJoueur5 = findViewById(R.id.communication_joueur5);
         mBoutonComm = findViewById(R.id.bouton_communication);
-        mBoutonComm.setOnClickListener(this);
+        mBoutonComm.setOnDragListener(this);
     }
 
     private void chargeVuesTaches() {
@@ -417,9 +419,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
                     startAnimationErreur(messageErreur);
                 }
-            } else if (v.getTag().toString().startsWith("tacheAAttribuer_"))
+            } else if (v.getTag().toString().startsWith("tacheAAttribuer_")) {
+                TableRow tr = findViewById(R.id.ligne_tache_pseudo);
+                tr.setVisibility(View.VISIBLE);
+                // TODO activer reception drag & drop des pseudos du tableau des taches
                 selectionneTacheAAtribuer(v);
-                // Tâche attribuée
+            }
+            // Tâche attribuée
             else if (v.getTag().toString().startsWith("tache_"))
                 clicTache(v);
                 // Annulation dernière carte jouée
@@ -478,7 +484,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                     mBoutonComm.setBackgroundColor(0);
                                     mCommunicationAChoisir = false;
                                 } else {
-                                    mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                                    mBoutonComm.setBackgroundColor(getResources().getColor(R.color.grisTransparent));
                                     Toast.makeText(this, "Choisi la carte à communiquer", Toast.LENGTH_SHORT).show();
                                     mCommunicationAChoisir = true;
                                 }
@@ -527,13 +533,13 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void deselectionneTaches() {
-        //for (int value : tableTaches1) {
-        //    TextView tv = findViewById(value);
-        //    if (tv != null) {
-        //        tv.setBackgroundColor(0);
-        //        tv.setOnTouchListener(null);
-        //    }
-        //}
+        for (int value : tableIdTachesAAtribuer) {
+            TextView tv = findViewById(value);
+            if (tv != null) {
+                tv.setBackgroundColor(0);
+                tv.setOnTouchListener(null);
+            }
+        }
     }
 
     private void startAnimation(View v) {
@@ -670,7 +676,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 clicTache(v);
                 // Annulation dernière carte jouée
             else if (v.getTag().toString().startsWith("pli_"))
-                clicAnnulCarte(v);
+                startDrag(v);
             else
                 return false;
         }
@@ -786,7 +792,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     imageCarte.setVisibility(View.VISIBLE);
                     // Rend clicable uniquement la dernière carte posée si c'est ma carte
                     if ((i + 1) == plis.size() && mPseudo.equals(pseudoTexte))
-                        imageCarte.setOnTouchListener(this);
+                        imageCarte.setOnTouchListener(this); // Permet de pouvoir annuler la dernière carte jouée
                     else
                         imageCarte.setOnTouchListener(null);
                 } else {
@@ -887,7 +893,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 tva.setTextColor(getResources().getColor(getCouleurCarte(taches.get(i).getCarte().getCouleur())));
                 String tag = "tache_" + taches.get(i).getCarte().getCouleur() + "_" + taches.get(i).getCarte().getValeur();
                 if (taches.get(i).isRealise()) {
-                    tva.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                    tva.setBackgroundColor(getResources().getColor(R.color.grisTransparent));
                     tag += "_1";
                 } else {
                     tva.setBackgroundColor(0);
@@ -937,9 +943,12 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Affiche les nouvelles com
         for (int i = 0; i < nbPlis; i++) {
+            // J'ai déjà communiqué
             if (plis.get(i).getNomJoueur().equals(mPseudo)) {
                 mCommunicationFaite = true;
                 mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
+                mBoutonComm.setBackgroundColor(0);
+                mBoutonComm.setOnDragListener(null);
                 pseudoTrouve = true;
             }
             String texte = plis.get(i).getCarte().getValeur() + " " + plis.get(i).getCommunication();
@@ -947,6 +956,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             tva.setText(texte);
             tva.setTextColor(getResources().getColor(getCouleurCarte(plis.get(i).getCarte().getCouleur())));
         }
+        // Je n'ai pas encore communiqué
         if (!pseudoTrouve && !mCommunicationAChoisir) {
             mCommunicationFaite = false;
             mBoutonComm.setImageResource(R.drawable.jeton_communication_off);
@@ -1178,10 +1188,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                // Sauvegarde du contexte de départ
                 Log.d("PGR-OnDrag", "ACTION_DRAG_STARTED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
+                // TODO : ajouter un controle de quelle vue on démarre pour différencier les cartes jouées des tachés à attribuer
                 stopAnimation();
-                vueArrivee = null;
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 Log.d("PGR-OnDrag", "ACTION_DRAG_ENTERED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
@@ -1191,21 +1200,31 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d("PGR-OnDrag", "ACTION_DRAG_EXITED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
                 v.setBackground(normalShape);
                 break;
-            case DragEvent.ACTION_DROP:
+            case DragEvent.ACTION_DROP: // Evenement qui informe du laché dans une vue en écoute (N'est pas appeler si le drop est fait en dehors)
                 Log.d("PGR-OnDrag", "ACTION_DROP " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
-                if (v.getId() == R.id.tableau_table)
-                    vueArrivee = v;
+
+                if (v.getTag() != null) {
+                    Log.d("PGR-Drag&Drop", v.getTag().toString() + "couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
+                    switch (v.getTag().toString()) {
+                        // Carte jouée
+                        case "tableau_table":
+                            new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
+                            break;
+                        // Communique carte
+                        case "bouton_communication":
+                            communiqueCarte(couleurCarteActive, valeurCarteActive);
+                            break;
+                        // Permet d'annuler la dernière carte jouée
+                        case "tableau_cartes":
+                            clicAnnulCarte(v);
+                            break;
+                    }
+                }
+
                 break;
-            case DragEvent.ACTION_DRAG_ENDED:
+            case DragEvent.ACTION_DRAG_ENDED: // Evement qui informe de la fin du drag (se produit pour toutes les vues en écoute)
                 Log.d("PGR-OnDrag", "ACTION_DRAG_ENDED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
                 v.setBackground(normalShape);
-                if (event.getResult() && vueArrivee != null && vueArrivee.getId() == R.id.tableau_table && v.getId() == R.id.tableau_table) {
-                    // Carte jouée
-                    Log.d("PGR-Drag&Drop", urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
-                    new TacheJoueCarte().execute(urlJoueCarte + mIdPartie + "&couleur_carte=" + couleurCarteActive + "&valeur_carte=" + valeurCarteActive + "&joueur=" + mPseudo);
-                } else {
-                    Log.d("PGR-Drag&Drop", "Drop ignoré");
-                }
                 startRefreshAuto();
                 break;
         }
@@ -1405,7 +1424,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 mCommunicationFaite = true;
                 mCommunicationAChoisir = false;
                 mBoutonComm.setImageResource(R.drawable.jeton_communication_on);
-                mBoutonComm.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                mBoutonComm.setBackgroundColor(getResources().getColor(R.color.grisTransparent));
             }
             super.onPostExecute(integer);
         }

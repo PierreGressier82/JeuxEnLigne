@@ -598,7 +598,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mIdJeu = mListeJeux.get(0).getId();
             mJeuChoisi = true;
         }
-        if (mListeSalons.size() == 1) {
+        if (mListeSalons == null) {
+            mSalonChoisi = true;
+            mIndexSalon = 0;
+        } else if (mListeSalons.size() == 1) {
             mIdPartie = mListeSalons.get(0).getIdPartie();
             mSalonChoisi = true;
             mIndexSalon = 0;

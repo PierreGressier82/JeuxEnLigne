@@ -66,4 +66,5 @@
     <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible <u>ici</u></string>
     <string name="majority">Majority</string>
     <string name="selection">methodeSelection</string>
+    <string name="passer_au_tour_suivant">Passer au tour suivant</string>
 </resources>

@@ -190,6 +190,7 @@
 
                     <ImageView
                         android:id="@+id/table_carte_image_atout"
+                        android:tag="table_carte_image_atout"
                         android:layout_width="80dp"
                         android:layout_height="110dp"
                         android:contentDescription="@string/carte"
@@ -197,6 +198,7 @@
 
                     <Button
                         android:id="@+id/bouton_passer"
+                        android:tag="bouton_passer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -549,12 +551,13 @@
 
             <Button
                 android:id="@+id/bouton_tour_suivant"
+                android:tag="bouton_tour_suivant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="20sp"
                 android:textColor="@color/blanc"
-                android:text="Passer au tour suivant"
+                android:text="@string/passer_au_tour_suivant"
                 android:background="@color/vert"/>
 
             <LinearLayout

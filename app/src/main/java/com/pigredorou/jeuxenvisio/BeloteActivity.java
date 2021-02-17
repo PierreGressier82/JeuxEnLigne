@@ -75,6 +75,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mPseudo; // Pseudo du joueur
+    private int mAdmin; // Pseudo du joueur
     private String mJoueurQuiAPris; // Pseudo du joueur qui a décidé de l'atout
     private String mJoueurQuiRemporteLePli; // Pseudo du joueur qui a remporté le pli
     private String mAtoutChoisi; // Atout de la partie
@@ -201,10 +202,10 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                                 public void run() {
                                     updateTextView();
                                     // Mise à jour complète
-                                    new TacheGetInfoBelote().execute(urlBelote+mIdPartie+"&joueur="+mPseudo);
+                                    new TacheGetInfoBelote().execute(urlBelote + mIdPartie + "&joueur=" + mPseudo);
                                 }
                             });
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         }
                     } catch (InterruptedException ignored) {
                     }
@@ -293,8 +294,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 else
                     tag = v.getTag().toString();
                 afficheCouleurAtout(R.id.table_carte_image_couleur_atout, tag);
-                new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote+mIdPartie+"&joueur="+mPseudo+"&couleur="+tag);
-                MasqueChoixAtout();
+                new MainActivity.TacheURLSansRetour().execute(urlDistribueBelote + mIdPartie + "&joueur=" + mPseudo + "&couleur=" + tag);
+                masqueChoixAtout();
                 break;
 
             case R.id.bouton_passer:
@@ -311,6 +312,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
             case R.id.bouton_tour_suivant:
+                mBoutonTourSuivant.setOnClickListener(null);
                 passerTourSuivant();
                 break;
             default:
@@ -337,7 +339,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void MasqueChoixAtout() {
+    private void masqueChoixAtout() {
         // Masque le choix de l'atout
         LinearLayout ll = findViewById(R.id.layout_choix_atout);
         ll.setVisibility(View.GONE);
@@ -559,7 +561,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         // Cache la zone du choix l'atout
         else {
             afficheCouleurAtout(R.id.table_carte_image_couleur_atout, mAtoutChoisi);
-            MasqueChoixAtout();
+            masqueChoixAtout();
             mTable.setVisibility(View.VISIBLE);
         }
     }
@@ -874,7 +876,10 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             // Affiche l'histotiques des plis en fin de partie
             if (mListeCartesPliEnCours.size() == 4) {
                 afficheHistoriquePlis(mHistoriquePlis);
-                mBoutonTourSuivant.setVisibility(View.VISIBLE);
+                if (mAdmin == 1) {
+                    mBoutonTourSuivant.setVisibility(View.VISIBLE);
+                    mBoutonTourSuivant.setOnClickListener(this);
+                }
             } else {
                 // Masque l'historique
                 masqueHistorique();
@@ -984,23 +989,25 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
                 Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
                 switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "pseudo" :
+                    case "pseudo":
                         pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
                         tvPseudo = findViewById(tableIdPseudoChoixAtout[i]);
                         tvPseudo.setText(pseudo);
-                        if(pseudo.equals(mPseudo))
-                            maPostion=i;
+                        if (pseudo.equals(mPseudo))
+                            maPostion = i;
                         break;
-                    case "admin" :
+                    case "admin":
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        if (pseudo.equals(mPseudo))
+                            mAdmin = admin;
                         break;
-                    case "equipe" :
+                    case "equipe":
                         equipe = noeudCarte.getAttributes().item(j).getNodeValue();
                         break;
-                    case "scoreEquipe" :
+                    case "scoreEquipe":
                         scoreEquipe = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
-                    case "contrat" :
+                    case "contrat":
                         String contrat = noeudCarte.getAttributes().item(j).getNodeValue();
                         switch (contrat) {
                             case "pique" :
@@ -1042,9 +1049,10 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         else
             mEstCeMonTourDeChoisir=0;
 
-        if (estCeLe2EmeTour && nbJoueurQuiPassent==4)
+        if (estCeLe2EmeTour && nbJoueurQuiPassent == 4) {
             mBoutonTourSuivant.setVisibility(View.VISIBLE);
-        else
+            mBoutonTourSuivant.setOnClickListener(this);
+        } else
             mBoutonTourSuivant.setVisibility(View.GONE);
 
         // Si tout le monde a répondu pour le premier tour, affichage des couleurs pour le second tour
