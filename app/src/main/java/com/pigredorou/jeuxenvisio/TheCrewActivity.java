@@ -404,25 +404,38 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
             // Cartes de mon jeu -> joue
             // -----------------
             if (v.getTag().toString().startsWith("carte_")) {
-                String messageErreur = verifieSiJePeuxJouer(v.getTag().toString().split("_")[1]);
+                boolean puisJeJouerUneCarte = false;
                 // Est-ce que toutes les taches sont attribuées ?
                 if (mNbTacheAAtribuer > 0) {
-                    Toast.makeText(this, "Il reste des tâches à attribuer", Toast.LENGTH_SHORT).show();
-                } else if (messageErreur.isEmpty() || !mCommunicationFaite) {
-                    // Activer les zones de destination (drop) selon le contexte
-                    if (messageErreur.isEmpty())
-                        findViewById(R.id.tableau_table).setOnDragListener(this);
-                    if (!mCommunicationFaite)
-                        findViewById(R.id.bouton_communication).setOnDragListener(this);
-                    // Met la carte en rouge
-                    selectionneCarte(v);
-                } else {
-                    mCarteActive = findViewById(v.getId());
                     // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
-                    startAnimationErreur(messageErreur);
+                    startAnimationErreur("Il reste des tâches à attribuer");
+                } else {
+                    // Est-ce mon tour ?
+                    String messageErreur = verifieSiJePeuxJouer(v.getTag().toString().split("_")[1]);
+                    if (messageErreur.isEmpty()) {
+                        puisJeJouerUneCarte = true;
+                        // Activer les zones de destination (drop) selon le contexte
+                        findViewById(R.id.tableau_table).setOnDragListener(this);
+                    }
+                    // Puis-je communiquer ?
+                    if (!mCommunicationFaite && (mZoneSilence < 2 || mNumeroPli >= mZoneSilence)) {
+                        puisJeJouerUneCarte = true;
+                        // Activer les zones de destination (drop) selon le contexte
+                        findViewById(R.id.bouton_communication).setOnDragListener(this);
+                    } else if (messageErreur.isEmpty())
+                        messageErreur = "Communication possible à partir du pli " + mZoneSilence;
+
+                    if (puisJeJouerUneCarte) {
+                        // Met la carte en rouge
+                        selectionneCarte(v);
+                    } else {
+                        mCarteActive = findViewById(v.getId());
+                        // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
+                        startAnimationErreur(messageErreur);
+                    }
                 }
                 // Tâches à attribuer -> me l'affecte
-                // -----------------
+                // ------------------
             } else if (v.getTag().toString().startsWith("tacheAAttribuer_")) {
                 TableRow tr = findViewById(R.id.ligne_tache_pseudo);
                 tr.setVisibility(View.VISIBLE);
@@ -1331,7 +1344,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Joue la carte si c'est mon tour
         // -------------------------------
         else {
-            boolean jeJoueUneCarteAutorisee = false;
             // A qui est-ce le tour ?
             String messageErreur = verifieSiJePeuxJouer(couleurCarteActive);
             // Si je peux jouer la couleur ou si tout le monde a joué le pli
