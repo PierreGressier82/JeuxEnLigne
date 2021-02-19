@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdLigneSalon = {R.id.ligne_salon1, R.id.ligne_salon2, R.id.ligne_salon3, R.id.ligne_salon4, R.id.ligne_salon5, R.id.ligne_salon6, R.id.ligne_salon7, R.id.ligne_salon8};
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
-    private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6};
+    private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6, R.id.jeu_7, R.id.jeu_8, R.id.jeu_9, R.id.jeu_10};
     private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote, R.drawable.top_ten};
     public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
     public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
     public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
+    public static final int TIMELINE_ACTIVITY_REQUEST_CODE = 17;
     public static final int mSelectionDoucleClic = 1;
     public static final int mSelectionDragAndDrop = 2;
     public static final int mSelectionDragAndDropLongTouch = 3;
@@ -136,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdBelote = 5;
     private static final int mIdTopTen = 6;
     private static final int mIdMajority = 7;
+    private static final int mIdTimeLine = 7;
 
     // Chargement de l'application
     private boolean chargementOK = false;
@@ -871,7 +873,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheSalons(ArrayList<Salon> listeSalons) {
-        // TODO : si 1 seul salon, ne pas afficher la liste
         // Affiche la liste des salons de jeu de manière dynamique
         TableLayout tl = findViewById(R.id.liste_salons_TL);
         TableRow.LayoutParams paramsRow;

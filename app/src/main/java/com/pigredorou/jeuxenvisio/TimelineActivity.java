@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-public class MajorityActivity extends AppCompatActivity implements View.OnClickListener {
+public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +19,12 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         // Bloque la mise en veille
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
-        setContentView(R.layout.activity_majority);
+        setContentView(R.layout.activity_timeline);
 
         // Bouton retour
         ImageView boutonRetour = findViewById(R.id.bouton_retour);
         boutonRetour.setOnClickListener(this);
         boutonRetour.setImageResource(R.drawable.bouton_quitter);
-
     }
 
     @Override

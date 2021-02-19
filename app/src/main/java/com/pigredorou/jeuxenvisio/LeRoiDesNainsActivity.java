@@ -48,8 +48,10 @@ public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.bouton_retour) {
-            finish();
+        switch (v.getTag().toString()) {
+            case "bouton_retour":
+                finish();
+                break;
         }
     }
 

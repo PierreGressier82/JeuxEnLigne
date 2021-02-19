@@ -153,6 +153,41 @@
                 android:padding="5dp"
                 android:src="@drawable/top_ten" />
 
+            <ImageView
+                android:id="@+id/jeu_7"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/top_ten" />
+
+            <ImageView
+                android:id="@+id/jeu_8"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/top_ten" />
+
+            <ImageView
+                android:id="@+id/jeu_9"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/top_ten" />
+
+            <ImageView
+                android:id="@+id/jeu_10"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/carte"
+                android:padding="5dp"
+                android:src="@drawable/top_ten" />
         </TableRow>
     </HorizontalScrollView>
 
