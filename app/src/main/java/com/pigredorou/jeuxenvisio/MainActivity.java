@@ -88,9 +88,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.19 : Ajout image de fond pour accueil, Crew et Fiesta
      * 3.0.20 : Préférences : implémentation suppression pseudo et relance auto de l'application
      * 3.0.21 : The Crew implementation drag&drop cartes + annulation et tâches via sélection + touch
+     * 3.0.22 : Creation Majority + Timeline, début mise en page de Majority
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.21";
+    private static final String mNumVersion = "3.0.22";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6, R.id.jeu_7, R.id.jeu_8, R.id.jeu_9, R.id.jeu_10};
-    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote, R.drawable.top_ten};
+    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote, R.drawable.top_ten, R.drawable.majority, R.drawable.timeline};
     public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
     public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
     public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int BELOTE_ACTIVITY_REQUEST_CODE = 15;
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
     public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
-    public static final int TIMELINE_ACTIVITY_REQUEST_CODE = 17;
+    public static final int TIMELINE_ACTIVITY_REQUEST_CODE = 18;
     public static final int mSelectionDoucleClic = 1;
     public static final int mSelectionDragAndDrop = 2;
     public static final int mSelectionDragAndDropLongTouch = 3;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdBelote = 5;
     private static final int mIdTopTen = 6;
     private static final int mIdMajority = 7;
-    private static final int mIdTimeLine = 7;
+    private static final int mIdTimeLine = 8;
 
     // Chargement de l'application
     private boolean chargementOK = false;
@@ -632,33 +633,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPreferences.edit().putString(VALEUR_NOM_SALON, nom_salon).apply();
 
         // Lance le jeu choisi
-        Intent JeuActivity;
-        int REQUEST_CODE;
+        Intent JeuActivity = null;
+        int REQUEST_CODE = 0;
         switch (mIdJeu) {
-            case 1:
-            default:
+            case mIdTheCrew:
                 JeuActivity = new Intent(MainActivity.this, TheCrewActivity.class);
                 REQUEST_CODE = THE_CREW_ACTIVITY_REQUEST_CODE;
                 break;
-            case 2:
+            case mIdFiestaDeLosMuertos:
                 JeuActivity = new Intent(MainActivity.this, FiestaDeLosMuertosActivity.class);
                 REQUEST_CODE = FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE;
                 break;
-            case 3:
+            case mIdLeRoiDesNains:
                 JeuActivity = new Intent(MainActivity.this, LeRoiDesNainsActivity.class);
                 REQUEST_CODE = ROI_NAINS_ACTIVITY_REQUEST_CODE;
                 break;
-            case 4:
+            case mIdGambit7:
                 JeuActivity = new Intent(MainActivity.this, Gambit7Activity.class);
                 REQUEST_CODE = MANCHOTS_BARJOTS_ACTIVITY_REQUEST_CODE;
                 break;
-            case 5:
+            case mIdBelote:
                 JeuActivity = new Intent(MainActivity.this, BeloteActivity.class);
                 REQUEST_CODE = BELOTE_ACTIVITY_REQUEST_CODE;
                 break;
-            case 6:
+            case mIdTopTen:
                 JeuActivity = new Intent(MainActivity.this, TopTenActivity.class);
                 REQUEST_CODE = TOPTEN_ACTIVITY_REQUEST_CODE;
+                break;
+            case mIdMajority:
+                JeuActivity = new Intent(MainActivity.this, MajorityActivity.class);
+                REQUEST_CODE = MAJORITY_ACTIVITY_REQUEST_CODE;
+                break;
+            case mIdTimeLine:
+                JeuActivity = new Intent(MainActivity.this, TimelineActivity.class);
+                REQUEST_CODE = TIMELINE_ACTIVITY_REQUEST_CODE;
                 break;
         }
         // Lance l'activité du jeu demandé avec les paramètres
