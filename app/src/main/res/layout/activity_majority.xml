@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:padding="5dp"
-                android:background="@color/blanc"
+                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -146,7 +146,7 @@
             android:layout_marginTop="5dp"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:background="@color/blanc"
+            android:background="@drawable/fond_carte_blanc"
             android:src="@drawable/majority_carte_interrogation" />
 
         <ImageView
@@ -176,7 +176,7 @@
             android:layout_marginEnd="5dp"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:background="@color/blanc"
+            android:background="@drawable/fond_carte_blanc"
             android:src="@drawable/majority_carte_a" />
 
         <ImageView
@@ -192,7 +192,7 @@
             android:layout_marginTop="5dp"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:background="@color/blanc"
+            android:background="@drawable/fond_carte_blanc"
             android:src="@drawable/majority_carte_b" />
 
         <ImageView
@@ -209,7 +209,7 @@
             android:layout_marginEnd="5dp"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:background="@color/blanc"
+            android:background="@drawable/fond_carte_blanc"
             android:src="@drawable/majority_carte_c" />
 
         <ImageView
@@ -236,7 +236,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="@color/blanc"
+                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -270,7 +270,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="@color/blanc"
+                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -305,7 +305,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="@color/blanc"
+                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"

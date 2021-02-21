@@ -150,6 +150,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         // Affiche la vue
         setContentView(R.layout.activity_the_crew);
 
+        // Chargement
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
         TextView tvNomSalon = findViewById(R.id.nom_salon);
@@ -408,6 +411,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 // Est-ce que toutes les taches sont attribuées ?
                 if (mNbTacheAAtribuer > 0) {
                     // Fait clignoter la carte car ce n'est pas la bonne carte ou pas mon tour
+                    mCarteActive = findViewById(v.getId());
                     startAnimationErreur("Il reste des tâches à attribuer");
                 } else {
                     // Est-ce mon tour ?
@@ -434,9 +438,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                         startAnimationErreur(messageErreur);
                     }
                 }
-                // Tâches à attribuer -> me l'affecte
-                // ------------------
-            } else if (v.getTag().toString().startsWith("tacheAAttribuer_")) {
+            }
+            // Tâches à attribuer -> me l'affecte
+            // ------------------
+            else if (v.getTag().toString().startsWith("tacheAAttribuer_")) {
                 TableRow tr = findViewById(R.id.ligne_tache_pseudo);
                 tr.setVisibility(View.VISIBLE);
                 // TODO activer reception drag & drop des pseudos du tableau des taches
@@ -526,7 +531,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         deselectionneCartes();
         ImageView iv = findViewById(v.getId());
         // Met le fond en rouge
-        iv.setBackgroundColor(getResources().getColor(R.color.rouge));
+        iv.setBackgroundResource(R.drawable.fond_carte_rouge);
         // Met de la transparence sur l'image car le fond est rouge
         iv.setImageAlpha(100); // Valeur entre 0 et 255
         iv.setOnTouchListener(this);
@@ -1504,6 +1509,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(Document doc) {
             parseXML(doc);
             mMajTerminee = true;
+            findViewById(R.id.chargement).setVisibility(View.GONE);
             super.onPostExecute(doc);
         }
     }
