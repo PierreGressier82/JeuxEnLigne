@@ -132,12 +132,12 @@
                 android:id="@+id/nb_mot_trouves"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="13dp"
                 android:text="@string/_1"
                 android:textAlignment="textEnd"
                 android:textColor="@color/noir"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -360,30 +360,84 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/bouton_valider"
+        <ImageView
+            android:id="@+id/carte_vote_a"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:tag="bouton_valider"
-            android:text="@string/valider"
-            android:textColor="@color/blanc" />
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight=".25"
+            android:adjustViewBounds="true"
+            android:background="@drawable/fond_carte_blanc"
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_vote_a"
+            android:tag="carte_vote_a" />
 
-        <Button
-            android:id="@+id/bouton_majorite"
+        <ImageView
+            android:id="@+id/carte_vote_b"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight=".25"
+            android:adjustViewBounds="true"
+            android:background="@drawable/fond_carte_blanc"
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_vote_b"
+            android:tag="carte_vote_b" />
+
+        <ImageView
+            android:id="@+id/carte_vote_c"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight=".25"
+            android:adjustViewBounds="true"
+            android:background="@drawable/fond_carte_blanc"
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_vote_c"
+            android:tag="carte_vote_c" />
+
+        <ImageView
+            android:id="@+id/carte_vote_majority"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight="0.5"
-            android:background="@color/black_overlay"
-            android:tag="bouton_majorite"
-            android:text="@string/majorit"
-            android:textColor="@color/blanc" />
+            android:layout_weight=".25"
+            android:adjustViewBounds="true"
+            android:background="@drawable/fond_carte_blanc"
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_etoiles"
+            android:tag="carte_vote_majority" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/nb_joueurs_valides"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/blanc"
+        android:textAlignment="center"
+        android:text="@string/Chargement" />
+
+    <Button
+        android:id="@+id/bouton_valider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/black_overlay"
+        android:tag="bouton_valider"
+        android:text="@string/valider"
+        android:textColor="@color/blanc" />
+
 </LinearLayout>
