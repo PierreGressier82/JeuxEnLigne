@@ -405,7 +405,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // Si un jeu et un salon ne sont pas sélectionné, on ne lance pas le jeu
                     if (!verificationSelection())
                         break;
-                    // TODO : Verifier que le jeu est prêt (mettre en place une salle d'attente)
                     if (!verificationJeuInitialise())
                         break;
                     // Lancer le jeu dans le salon pour le joueur demandé
@@ -511,12 +510,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 }
-                // Met à jour le titre
-                titre.setText(mListeJeux.get(index).getNom());
-                // Sauvegarde le contexte
-                mIdJeu = mListeJeux.get(index).getId();
-                mJeuChoisi = true;
-                mSalonChoisi = false;
+                if (mListeJeux != null) {
+                    // Met à jour le titre
+                    titre.setText(mListeJeux.get(index).getNom());
+                    // Sauvegarde le contexte
+                    mIdJeu = mListeJeux.get(index).getId();
+                    mJeuChoisi = true;
+                    mSalonChoisi = false;
+                }
                 // Affiches les salons associés
                 new TacheGetXML().execute(urlGetSalons + mPseudo + "&jeu=" + mIdJeu);
                 afficheOptionAdmin();
@@ -638,8 +639,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void lancerJeu() {
+        if (mListeSalons == null) {
+            Toast.makeText(this, "Erreur au lancement du jeu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Sauvegarde le pseudo
-        String nom_salon = mListeSalons.get(mIndexSalon).getNom();
+        String nom_salon = "";
+        nom_salon = mListeSalons.get(mIndexSalon).getNom();
         // Sauvegarde des préférences
         mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
         mPreferences.edit().putInt(VALEUR_ID_SALON, mIdSalon).apply();
@@ -1077,8 +1084,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 break;
                                         }
                                         majTexteChargement();
-                                    } else
+                                    } else {
+                                        mTexteChargement.setText(getResources().getText(R.string.chargement_impossible));
+                                        findViewById(R.id.barreDeChargement).setVisibility(View.INVISIBLE);
                                         t.interrupt();
+                                    }
                                 }
                             });
                             // Attend 1sec pour la tentative suivante

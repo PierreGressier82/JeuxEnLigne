@@ -261,13 +261,16 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                 mTaches2Joueur4.setVisibility(View.VISIBLE);
                 mTaches3Joueur4.setVisibility(View.VISIBLE);
                 mTaches4Joueur4.setVisibility(View.VISIBLE);
-            default:
+            case 3:
                 mCommPseudoJoueur3.setText(mListePseudo[2]);
                 mTachePseudoJoueur3.setText(mListePseudo[2]);
                 mCommPseudoJoueur2.setText(mListePseudo[1]);
                 mTachePseudoJoueur2.setText(mListePseudo[1]);
                 mCommPseudoJoueur1.setText(mListePseudo[0]);
                 mTachePseudoJoueur1.setText(mListePseudo[0]);
+                break;
+            default:
+                Toast.makeText(this, "Problème lors du chargement", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -646,10 +649,10 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                     // Cartes de la main du joueur
                     startDrag(v);
                 else if (mMethodeSelection == MainActivity.mSelectionDragAndDrop && v.getTag().toString().startsWith("tacheAAttribuer_")) {
-                    // Relance le refresh car l'action est validée
-                    startRefreshAuto();
                     // Attribue la tâche
                     clicTacheAAttribuer(v);
+                    // Relance le refresh car l'action est validée
+                    startRefreshAuto();
                 } else {
                     time = System.currentTimeMillis();
 
