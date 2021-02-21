@@ -337,6 +337,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
                                         mMajTerminee = false;
                                         updateTextView();
                                         // Mise à jour complète
+                                        debug("refresh MAJ");
                                         new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
                                     }
                                 }
@@ -1507,9 +1508,11 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(Document doc) {
-            parseXML(doc);
             mMajTerminee = true;
-            findViewById(R.id.chargement).setVisibility(View.GONE);
+            if (doc != null) {
+                parseXML(doc);
+                findViewById(R.id.chargement).setVisibility(View.GONE);
+            }
             super.onPostExecute(doc);
         }
     }

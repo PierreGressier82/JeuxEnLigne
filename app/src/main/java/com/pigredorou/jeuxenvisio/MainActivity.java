@@ -89,9 +89,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.20 : Préférences : implémentation suppression pseudo et relance auto de l'application
      * 3.0.21 : The Crew implementation drag&drop cartes + annulation et tâches via sélection + touch
      * 3.0.22 : Creation Majority + Timeline, début mise en page de Majority
+     * 3.0.23 : Amélioration chargement et gestion des pertes de connection
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.22";
+    private static final String mNumVersion = "3.0.23";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -141,7 +142,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdTimeLine = 8;
 
     // Chargement de l'application
-    private boolean chargementOK = false;
+    private Thread t;
+    private int mNbChargement;
+    private int mEtapeChargement;
+    private final int mNbTentativeMax = 15;
+    private boolean mChargementOK = false;
+    private String mMessageErreur;
+    private TextView mTexteChargement;
     private TextView mTexteNouvelleVersion;
     private String mNumeroVersionDispo;
     private String mUrlNewVersion;
@@ -216,23 +223,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Affiche le message de chargement
         findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+        mTexteChargement = findViewById(R.id.texteChargement);
+
+        // Nouvelle version
+        mTexteNouvelleVersion = findViewById(R.id.newVersion);
+        mTexteNouvelleVersion.setOnClickListener(this);
 
         // Liste des joueurs du salon
-        new TacheGetXML().execute(urlGetJoueurs);
-        if (mPseudo.isEmpty()) {
-            findViewById(R.id.bloc_joueurs).setVisibility(View.VISIBLE);
-            findViewById(R.id.bloc_salons).setVisibility(View.GONE);
-            findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
-            Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
-        } else {
-            findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
-            // Liste des jeux disponibles pour le joueur
-            new TacheGetXML().execute(urlGetJeux + mPseudo);
-            // Nouvelle version ?
-            new TacheGetXML().execute(urlGetVersion);
-            mTexteNouvelleVersion = findViewById(R.id.newVersion);
-            mTexteNouvelleVersion.setOnClickListener(this);
-        }
+        mNbChargement = 0;
+        mEtapeChargement = 0;
+        startChargementBDD();
 
         // Charge les élements des jeux
         chargementJeux();
@@ -246,6 +246,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Options
         chargementOptions();
+    }
+
+    private void postChargementBDD() {
+        if (mPseudo.isEmpty()) {
+            findViewById(R.id.bloc_joueurs).setVisibility(View.VISIBLE);
+            findViewById(R.id.bloc_salons).setVisibility(View.GONE);
+            findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
+            Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
+        } else {
+            findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
+        }
+        findViewById(R.id.chargement).setVisibility(View.GONE);
+        t.interrupt();
     }
 
     @Override
@@ -804,10 +817,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheJoueurs(ArrayList<Joueur> listeJoueurs) {
-        // Masque le bloc de chargement
-        if (chargementOK)
-            findViewById(R.id.chargement).setVisibility(View.GONE);
-
         TableLayout tl = findViewById(R.id.liste_joueurs_TL);
         TableRow.LayoutParams paramsRow;
         TableRow.LayoutParams paramsTV;
@@ -852,10 +861,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheJeux(ArrayList<Jeu> listeJeux) {
-        // Masque le bloc de chargement
-        if (chargementOK)
-            findViewById(R.id.chargement).setVisibility(View.GONE);
-
         int index=0;
         // Affiche les jeux
         if (listeJeux != null) {
@@ -1038,13 +1043,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void startChargementBDD() {
+        if (t == null || !t.isAlive()) {
+            t = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        while (!isInterrupted()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mNbChargement < mNbTentativeMax) {
+                                        if (!mChargementOK)
+                                            mNbChargement++;
+                                        mChargementOK = false;
+
+                                        switch (mEtapeChargement) {
+                                            case 0:
+                                                // Chargement la liste des joueurs
+                                                new TacheGetXML().execute(urlGetJoueurs);
+                                                break;
+                                            case 1:
+                                                // Liste des jeux disponibles pour le joueur
+                                                new TacheGetXML().execute(urlGetJeux + mPseudo);
+                                                break;
+                                            case 2:
+                                                // Nouvelle version ?
+                                                new TacheGetXML().execute(urlGetVersion);
+                                                break;
+                                            case 3:
+                                                postChargementBDD();
+                                                break;
+                                        }
+                                        majTexteChargement();
+                                    } else
+                                        t.interrupt();
+                                }
+                            });
+                            // Attend 1sec pour la tentative suivante
+                            if (!mChargementOK)
+                                Thread.sleep(1000);
+                            else
+                                Thread.sleep(100);
+                        }
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            };
+            t.start();
+        }
+    }
+
+    private void majTexteChargement() {
+        if (mNbChargement > 1) {
+            String texte = getResources().getString(R.string.Chargement) + " tentative " + mNbChargement;
+            mTexteChargement.setText(texte);
+        }
+    }
+
     private class TacheGetXML extends AsyncTask<String, Void, Document> {
 
         @Override
         protected Document doInBackground(String... strings) {
             URL url;
             Document doc = null;
-            chargementOK=true;
+            mChargementOK = true;
             try {
                 // l'URL est en paramètre donc toujours 1 seul paramètre
                 url = new URL(strings[0]);
@@ -1055,7 +1119,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 doc = dBuilder.parse(is);
             } catch (IOException | ParserConfigurationException | SAXException e) {
                 e.printStackTrace();
-                chargementOK=false;
+                mMessageErreur = e.getMessage();
+                mChargementOK = false;
             }
 
             return doc;
@@ -1078,14 +1143,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case "Version":
                         parseXMLVersion(doc);
+                        mEtapeChargement++;
                         break;
                     case "Joueurs":
                         mListeJoueurs = parseNoeudsJoueur(doc);
                         afficheJoueurs(mListeJoueurs);
+                        mEtapeChargement++;
                         break;
                     case "Jeux":
                         mListeJeux = parseXMLJeux(doc);
                         afficheJeux(mListeJeux);
+                        mEtapeChargement++;
                         break;
                 }
             }

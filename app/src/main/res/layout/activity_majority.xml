@@ -18,12 +18,12 @@
 
         <ImageView
             android:id="@+id/bouton_retour"
-            android:tag="bouton_retour"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
             android:contentDescription="@string/retour_l_accueil"
             android:src="@drawable/bouton_quitter"
+            android:tag="bouton_retour"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,6 +65,27 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/chargement"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/texteChargement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Chargement"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="50sp" />
+
+        <ProgressBar
+            android:id="@+id/barreDeChargement"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,36 +107,37 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
-                android:padding="5dp"
-                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
+                android:id="@+id/mot_principal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textAlignment="center"
                 android:gravity="center"
-                android:textColor="@color/noir"
                 android:text="@string/pseudo"
+                android:textAlignment="center"
+                android:textColor="@color/noir"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/nb_mot_trouves"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textAlignment="textEnd"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="15dp"
-                android:textSize="10sp"
-                android:textColor="@color/noir"
                 android:text="@string/_1"
+                android:textAlignment="textEnd"
+                android:textColor="@color/noir"
+                android:textSize="10sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -142,11 +164,11 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
             android:layout_marginTop="5dp"
-            android:padding="5dp"
+            android:layout_weight=".33"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
+            android:padding="5dp"
             android:src="@drawable/majority_carte_interrogation" />
 
         <ImageView
@@ -168,16 +190,18 @@
             android:layout_weight=".05" />
 
         <ImageView
+            android:id="@+id/carte_a"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_weight=".2"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:padding="5dp"
+            android:layout_weight=".2"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
-            android:src="@drawable/majority_carte_a" />
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_a"
+            android:tag="carte_a" />
 
         <ImageView
             android:layout_width="0dp"
@@ -185,15 +209,17 @@
             android:layout_weight=".1" />
 
         <ImageView
+            android:id="@+id/carte_b"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_weight=".2"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:padding="5dp"
+            android:layout_weight=".2"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
-            android:src="@drawable/majority_carte_b" />
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_b"
+            android:tag="carte_b" />
 
         <ImageView
             android:layout_width="0dp"
@@ -201,16 +227,18 @@
             android:layout_weight=".1" />
 
         <ImageView
+            android:id="@+id/carte_c"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_weight=".2"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:padding="5dp"
+            android:layout_weight=".2"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
-            android:src="@drawable/majority_carte_c" />
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_c"
+            android:tag="carte_c" />
 
         <ImageView
             android:layout_width="0dp"
@@ -226,18 +254,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight=".33"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/image_mot_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -246,32 +274,32 @@
                 android:id="@+id/mot_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textAlignment="center"
                 android:gravity="center"
-                android:textColor="@color/noir"
                 android:text="@string/pseudo"
+                android:textAlignment="center"
+                android:textColor="@color/noir"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
+            android:layout_weight=".33"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/image_mot_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -280,33 +308,33 @@
                 android:id="@+id/mot_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textAlignment="center"
                 android:gravity="center"
-                android:textColor="@color/noir"
                 android:text="@string/pseudo"
+                android:textAlignment="center"
+                android:textColor="@color/noir"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_weight=".33"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/image_mot_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:background="@drawable/fond_carte_blanc"
                 android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
                 android:src="@drawable/majority_carte_mot"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -315,25 +343,47 @@
                 android:id="@+id/mot_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textAlignment="center"
                 android:gravity="center"
-                android:textColor="@color/noir"
                 android:text="@string/pseudo"
+                android:textAlignment="center"
+                android:textColor="@color/noir"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@color/black_overlay"
-        android:textColor="@color/blanc"
-        android:text="@string/valider" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bouton_valider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.5"
+            android:background="@color/black_overlay"
+            android:tag="bouton_valider"
+            android:text="@string/valider"
+            android:textColor="@color/blanc" />
+
+        <Button
+            android:id="@+id/bouton_majorite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.5"
+            android:background="@color/black_overlay"
+            android:tag="bouton_majorite"
+            android:text="@string/majorit"
+            android:textColor="@color/blanc" />
+    </LinearLayout>
 </LinearLayout>

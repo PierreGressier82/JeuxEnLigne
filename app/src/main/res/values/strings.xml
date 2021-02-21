@@ -68,4 +68,5 @@
     <string name="selection">methodeSelection</string>
     <string name="passer_au_tour_suivant">Passer au tour suivant</string>
     <string name="timeline">Timeline</string>
+    <string name="majorit">Majorité</string>
 </resources>
