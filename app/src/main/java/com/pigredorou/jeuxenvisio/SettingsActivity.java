@@ -8,8 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import static com.pigredorou.jeuxenvisio.MainActivity.url;
+
 public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_PREF_ADMIN = "admin";
+    private static final String urlGetSalons = url + "getAllSalons.php";
+
 
     /**
      * Replaces the content with the Fragment to display it.
@@ -39,7 +43,6 @@ public class SettingsActivity extends AppCompatActivity {
             editor.putString("url", MainActivity.url);
             editor.apply();
         }
-
     }
 
     @Override
@@ -48,11 +51,6 @@ public class SettingsActivity extends AppCompatActivity {
             onBackPressed();
         }
 
-        // Lecture de la valeur modifiée
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //Toast.makeText(this, "Admin : " + sharedPref.getBoolean(KEY_PREF_ADMIN, false), Toast.LENGTH_SHORT).show();
-
         return super.onOptionsItemSelected(item);
     }
-
 }

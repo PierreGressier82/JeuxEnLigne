@@ -45,6 +45,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseXMLSalons;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -90,9 +91,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.21 : The Crew implementation drag&drop cartes + annulation et tâches via sélection + touch
      * 3.0.22 : Creation Majority + Timeline, début mise en page de Majority
      * 3.0.23 : Amélioration chargement et gestion des pertes de connection
+     * 3.0.24 : Ajout des salons et des joueurs de chaque dans les préférences
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.23";
+    private static final String mNumVersion = "3.0.24";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String VALEUR_ID_PARTIE = "idPartie";
     public static final String VALEUR_NOM_SALON = "NomSalon";
     public static final String VALEUR_METHODE_SELECTION = "MethodeSelection";
-    private static final String urlGetSalons = url + "getSalons.php?joueur=";
+    private static final String urlGetSalonsFromJeux = url + "getSalonsFromJeu.php?joueur=";
     private static final String urlGetJeux = url + "getJeux.php?joueur=";
     private static final String urlRAZDistribution = url + "RAZDistribution.php?partie=";
     private static final String urlDistribueTaches = url + "distribueTaches.php?partie=";
@@ -519,7 +521,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mSalonChoisi = false;
                 }
                 // Affiches les salons associés
-                new TacheGetXML().execute(urlGetSalons + mPseudo + "&jeu=" + mIdJeu);
+                new TacheGetXML().execute(urlGetSalonsFromJeux + mPseudo + "&jeu=" + mIdJeu);
                 afficheOptionAdmin();
                 break;
 
@@ -945,46 +947,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private ArrayList<Salon> parseXMLSalons(Document doc) {
-        Element element = doc.getDocumentElement();
-        element.normalize();
-
-        ArrayList<Salon> listeSalons = new ArrayList<>();
-
-        Node noeudSalons = getNoeudUnique(doc, "Salons");
-        int idSalon = 0;
-        int idPartie = 0;
-        int numMission = 0;
-        String nomSalon = "";
-        for (int i = 0; i < noeudSalons.getChildNodes().getLength(); i++) { // Parcours toutes les salons
-            Node noeudSalon = noeudSalons.getChildNodes().item(i);
-            Log.d("PGR-XML-Salon", noeudSalon.getNodeName());
-            for (int j = 0; j < noeudSalon.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud salon
-                Log.d("PGR-XML-Salon", noeudSalon.getAttributes().item(j).getNodeName() + "_" + noeudSalon.getAttributes().item(j).getNodeValue());
-                if (noeudSalon.getAttributes().item(j).getNodeValue().isEmpty())
-                    continue;
-                switch (noeudSalon.getAttributes().item(j).getNodeName()) {
-                    case "id_salon":
-                        idSalon = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "nom":
-                        nomSalon = noeudSalon.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "id_partie":
-                        idPartie = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "num_mission":
-                        numMission = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-            Salon salon = new Salon(idSalon, nomSalon, idPartie, numMission);
-            listeSalons.add(salon);
-        }
-
-        return listeSalons;
-    }
-
     private ArrayList<Jeu> parseXMLJeux(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
@@ -1080,6 +1042,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 new TacheGetXML().execute(urlGetVersion);
                                                 break;
                                             case 3:
+                                            default:
                                                 postChargementBDD();
                                                 break;
                                         }
@@ -1153,22 +1116,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case "Version":
                         parseXMLVersion(doc);
-                        mEtapeChargement++;
+                        chargementEtapeSuivante();
                         break;
                     case "Joueurs":
                         mListeJoueurs = parseNoeudsJoueur(doc);
                         afficheJoueurs(mListeJoueurs);
-                        mEtapeChargement++;
+                        chargementEtapeSuivante();
                         break;
                     case "Jeux":
                         mListeJeux = parseXMLJeux(doc);
                         afficheJeux(mListeJeux);
-                        mEtapeChargement++;
+                        chargementEtapeSuivante();
                         break;
                 }
             }
             super.onPostExecute(doc);
         }
+    }
+
+    private void chargementEtapeSuivante() {
+        mEtapeChargement++;
+        TextView tv = findViewById(R.id.etapeChargement);
+        tv.setText("Etape " + mEtapeChargement);
+
     }
 
     /**
