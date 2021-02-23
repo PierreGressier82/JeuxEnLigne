@@ -224,9 +224,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     listePseudo[j] = listeJoueurs.get(j).getNomJoueur();
                     listeIdJoueur[j] = listeJoueurs.get(j).getId();
                 }
-                listPref.setSummary(listeJoueurs.size() + " joueurs dont " + nbJoueursActif + " actifs"); // TODO : Metre le nombre de joueurs = DONT X ACTIFS
+                if (listeJoueurs.size() == nbJoueursActif)
+                    listPref.setSummary(listeJoueurs.size() + " joueurs (tous actifs)");
+                else
+                    listPref.setSummary(listeJoueurs.size() + " joueurs dont " + nbJoueursActif + " actifs");
                 listPref.setEntries(listePseudo);
                 listPref.setEntryValues(listePseudo);
+                // TODO : charger les joueurs non actif => trouver comment faire !
                 final Set<String> result = new HashSet<>();
                 Collections.addAll(result, listePseudoActif);
                 listPref.setDefaultValue(result);
