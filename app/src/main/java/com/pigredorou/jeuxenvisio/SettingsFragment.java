@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -99,7 +99,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 // Ne rien faire
                 break;
             default:
-                Toast.makeText(getContext(), "Autre pref" + preference.getKey(), Toast.LENGTH_SHORT).show();
+                if (preference.getKey().startsWith("salon_")) {
+                    MultiSelectListPreference prefSalon = findPreference(preference.getKey());
+                    String toast = "";
+                    for (int i = 0; i < prefSalon.getValues().size(); i++) {
+                        toast += prefSalon.getEntries()[i] + "-";
+                    }
+                    Toast.makeText(getContext(), "Toast " + toast + " New " + newValue.toString(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getContext(), "Autre pref" + preference.getKey(), Toast.LENGTH_SHORT).show();
+
+
                 break;
         }
         return true;
@@ -194,7 +204,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         return listeSalons;
     }
 
-    private void creationListeSalons(ArrayList<Salon> listeSalons) {
+    private void chargeEtAfficheListeSalons(ArrayList<Salon> listeSalons) {
         // Affiche les salons dans la liste
         if (listeSalons != null) {
 
@@ -210,76 +220,36 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 listPref.setOrder(i);
                 listPref.setDialogTitle(listeSalons.get(i).getNom());
                 listPref.setTitle(listeSalons.get(i).getNom());
-                listPref.setKey(listeSalons.get(i).getNom());
+                listPref.setKey("salon_" + listeSalons.get(i).getNom());
+                listPref.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.icone_salon, null));
                 ArrayList<Joueur> listeJoueurs = listeSalons.get(i).getListeJoueurs();
                 int nbJoueursActif = 0;
                 String[] listePseudo = new String[listeJoueurs.size()];
-                String[] listePseudoActif = new String[listeJoueurs.size()];
-                Integer[] listeIdJoueur = new Integer[listeJoueurs.size()];
+                String[] listeIdJoueur = new String[listeJoueurs.size()];
+                final HashSet<String> result = new HashSet<>();
                 for (int j = 0; j < listeJoueurs.size(); j++) {
                     if (listeJoueurs.get(j).getActif() == 1) {
                         nbJoueursActif++;
-                        listePseudoActif[j] = listeJoueurs.get(j).getNomJoueur();
+                        result.add(listeJoueurs.get(j).getNomJoueur());
                     }
                     listePseudo[j] = listeJoueurs.get(j).getNomJoueur();
-                    listeIdJoueur[j] = listeJoueurs.get(j).getId();
+                    listeIdJoueur[j] = String.valueOf(listeJoueurs.get(j).getId());
                 }
                 if (listeJoueurs.size() == nbJoueursActif)
                     listPref.setSummary(listeJoueurs.size() + " joueurs (tous actifs)");
                 else
                     listPref.setSummary(listeJoueurs.size() + " joueurs dont " + nbJoueursActif + " actifs");
                 listPref.setEntries(listePseudo);
-                listPref.setEntryValues(listePseudo);
+                listPref.setEntryValues(listeIdJoueur);
                 // TODO : charger les joueurs non actif => trouver comment faire !
-                final Set<String> result = new HashSet<>();
-                Collections.addAll(result, listePseudoActif);
+                Collections.addAll(result, listePseudo);
                 listPref.setDefaultValue(result);
+                listPref.setOnPreferenceChangeListener(this);
                 prefSalons.addPreference(listPref);
             }
         }
     }
 
-
-    public static ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
-        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
-
-        String pseudo = "";
-        int admin = 0;
-        int nv = 0;
-        int id = 0;
-        int actif = 1;
-        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
-
-        for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
-            Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
-            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
-                Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
-                if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
-                    continue;
-                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "id":
-                        id = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "pseudo":
-                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "admin":
-                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "new":
-                        nv = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "actif":
-                        actif = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-            Joueur joueur = new Joueur(id, pseudo, admin, nv, actif);
-            listeJoueurs.add(joueur);
-        }
-
-        return listeJoueurs;
-    }
 
     private class TacheGetXML extends AsyncTask<String, Void, Document> {
 
@@ -305,7 +275,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         @Override
         protected void onPostExecute(Document doc) {
             if (doc != null) {
-                creationListeSalons(parseXMLSalonsJeu(doc));
+                chargeEtAfficheListeSalons(parseXMLSalonsJeu(doc));
             }
             super.onPostExecute(doc);
         }

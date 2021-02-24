@@ -18,7 +18,12 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     private String mPseudo;
     private int mIdPartie;
     private int mMethodeSelection;
-    private boolean mVoteFait;
+    private int mValeurVote;
+    // Variables statiques
+    private final static int VOTE_CARTE_A = 1;
+    private final static int VOTE_CARTE_B = 2;
+    private final static int VOTE_CARTE_C = 3;
+    private final static int VOTE_CARTE_MAJORITE = 4;
     // Elements graphique
     private Button mBoutonValider;
     private ImageView mCarteVoteA;
@@ -50,6 +55,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
+
         // Bouton retour
         ImageView boutonRetour = findViewById(R.id.bouton_retour);
         boutonRetour.setOnClickListener(this);
@@ -58,6 +64,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         chargeCartesVote();
         // Boutons
         chargeBoutons();
+        desactiveBoutonValider();
 
         // Chargement
         // TODO : A déplacer après lecture de la base
@@ -66,8 +73,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
 
     private void chargeBoutons() {
         mBoutonValider = findViewById(R.id.bouton_valider);
-        mBoutonValider.setOnClickListener(this);
-        mVoteFait = false;
+        mValeurVote = 0;
     }
 
     private void chargeCartesVote() {
@@ -91,22 +97,31 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
             case "carte_vote_b":
             case "carte_vote_c":
             case "carte_vote_majority":
-                afficheCarteVote(v.getTag().toString());
-                mVoteFait = true;
+                selectionneCarteVote(v.getTag().toString());
+                activeBoutonValider();
                 break;
 
             case "bouton_valider":
-                if (mVoteFait) {
-                    mBoutonValider.setTextColor(getResources().getColor(R.color.noir));
-                    mBoutonValider.setOnClickListener(null);
+                if (mValeurVote > 0) {
+                    desactiveBoutonValider();
                 }
-                // TODO : verifier qu'une carte a été choisie
+                // TODO : Enregistrer le vote
                 break;
         }
 
     }
 
-    private void afficheCarteVote(String tag) {
+    private void activeBoutonValider() {
+        mBoutonValider.setTextColor(getResources().getColor(R.color.blanc));
+        mBoutonValider.setOnClickListener(this);
+    }
+
+    private void desactiveBoutonValider() {
+        mBoutonValider.setTextColor(getResources().getColor(R.color.noir));
+        mBoutonValider.setOnClickListener(null);
+    }
+
+    private void selectionneCarteVote(String tag) {
         mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_blanc);
         mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_blanc);
         mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_blanc);
@@ -115,15 +130,19 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         switch (tag) {
             case "carte_vote_a":
                 mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_orange);
+                mValeurVote = VOTE_CARTE_A;
                 break;
             case "carte_vote_b":
                 mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_orange);
+                mValeurVote = VOTE_CARTE_B;
                 break;
             case "carte_vote_c":
                 mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_orange);
+                mValeurVote = VOTE_CARTE_C;
                 break;
             case "carte_vote_majority":
                 mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_orange);
+                mValeurVote = VOTE_CARTE_MAJORITE;
                 break;
         }
     }

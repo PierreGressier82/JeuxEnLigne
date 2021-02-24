@@ -7,49 +7,33 @@
             app:entries="@array/selelections_entries"
             app:entryValues="@array/selelections_values"
             app:key="@string/selection"
+            app:icon="@drawable/icone_selectionner"
             app:title="Méthode de sélection" />
-
-        <Preference
-            app:title="Oublier mon pseudo et relancer l'application"
-            app:icon="@drawable/restart"
-            app:key="pseudo" />
-
-        <ListPreference
-            app:icon="@drawable/gambit_violet_1"
-            app:isPreferenceVisible="false"
-            app:defaultValue="Gris"
-            app:entries="@array/liste_couleurs"
-            app:entryValues="@array/liste_couleurs"
-            app:key="couleur"
-            app:title="Couleur par défaut"
-            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:dependency="admin"
-            app:icon="@color/rougeTransparent"
+            app:icon="@drawable/icone_editer"
             app:key="@string/pseudo"
             app:title="Modifier mon pseudo"
             app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:title="Oublier mon pseudo et relancer l'application"
+            app:icon="@drawable/icone_restart"
+            app:key="pseudo" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/Administration">
         <SwitchPreferenceCompat
             app:key="admin"
+            app:icon="@drawable/icone_admin"
             app:title="Mode admin" />
-
-        <ListPreference
-            app:isPreferenceVisible="false"
-            app:defaultValue="Gris"
-            app:entries="@array/liste_couleurs"
-            app:entryValues="@array/liste_couleurs"
-            app:key="couleur"
-            app:title="Couleur par défaut"
-            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:dependency="admin"
             app:key="url"
+            app:icon="@drawable/icone_url_bdd"
             app:title="@string/url"
             app:useSimpleSummaryProvider="true" />
 
