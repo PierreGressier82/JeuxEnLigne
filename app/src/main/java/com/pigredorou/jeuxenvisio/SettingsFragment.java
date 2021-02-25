@@ -83,6 +83,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         SharedPreferences prefParDefaut = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String pseudo = mesPref.getString(MainActivity.VALEUR_PSEUDO, "");
 
+        if (preference instanceof MultiSelectListPreference) {
+            if (preference.getKey().startsWith("salon_")) {
+                MultiSelectListPreference prefSalon = findPreference(preference.getKey());
+                String toast = "";
+                for (int i = 0; i < prefSalon.getValues().size(); i++) {
+                    toast += prefSalon.getEntries()[i] + "-";
+                }
+                Toast.makeText(getContext(), "Toast " + toast + " New " + newValue.toString(), Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(getContext(), "Autre pref" + preference.getKey(), Toast.LENGTH_SHORT).show();
+
+        }
+
         switch (preference.getKey()) {
             case "url":
                 Toast.makeText(getContext(), preference.getExtras().toString(), Toast.LENGTH_SHORT).show();
