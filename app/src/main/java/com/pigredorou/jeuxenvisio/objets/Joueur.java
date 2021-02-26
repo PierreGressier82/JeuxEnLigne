@@ -5,7 +5,7 @@ public class Joueur {
     private int mId;
     private String mNomJoueur;
     private String mNomEquipe;
-    private int mScoreEquipe;
+    private int mScore;
     private int mAdmin;
     private int mNew;
     private int mActif;
@@ -18,10 +18,10 @@ public class Joueur {
         mActif = actif;
     }
 
-    public Joueur(String nomJoueur, String nomEquipe, int scoreEquipe, int admin) {
+    public Joueur(String nomJoueur, String nomEquipe, int score, int admin) {
         mNomJoueur = nomJoueur;
         mNomEquipe = nomEquipe;
-        mScoreEquipe = scoreEquipe;
+        mScore = score;
         mAdmin = admin;
     }
 
@@ -32,12 +32,12 @@ public class Joueur {
         mActif = actif;
     }
 
-    public int getScoreEquipe() {
-        return mScoreEquipe;
+    public int getScore() {
+        return mScore;
     }
 
-    public void setScoreEquipe(int scoreEquipe) {
-        mScoreEquipe = scoreEquipe;
+    public void setScore(int score) {
+        mScore = score;
     }
 
     public String getNomEquipe() {

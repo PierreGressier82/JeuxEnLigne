@@ -589,8 +589,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         for (int i=0;i<mListeJoueurs.size();i++) {
             if (pseudoPremierJoueur.equals(mListeJoueurs.get(i).getNomJoueur())) {
                 tvScoreEquipe.setText(mListeJoueurs.get(i).getNomEquipe());
-                tvScoreTotal.setText(String.valueOf(mListeJoueurs.get(i).getScoreEquipe()));
-                posPremierJoueur=i;
+                tvScoreTotal.setText(String.valueOf(mListeJoueurs.get(i).getScore()));
+                posPremierJoueur = i;
                 break;
             }
         }
@@ -598,8 +598,8 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         tvScoreEquipe = findViewById(R.id.score_equipe2);
         tvScoreTotal = findViewById(R.id.score_total_equipe2);
 
-        tvScoreEquipe.setText(mListeJoueurs.get((posPremierJoueur+1)%2).getNomEquipe());
-        tvScoreTotal.setText(String.valueOf(mListeJoueurs.get((posPremierJoueur+1)%2).getScoreEquipe()));
+        tvScoreEquipe.setText(mListeJoueurs.get((posPremierJoueur + 1) % 2).getNomEquipe());
+        tvScoreTotal.setText(String.valueOf(mListeJoueurs.get((posPremierJoueur + 1) % 2).getScore()));
     }
 
     private void affichePliEnCours(ArrayList<Pli> plis) {
@@ -803,7 +803,7 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             // Mets à jour le score d'équipe de chaque joueur de l'équipe
             for (int index = 0; index < mListeJoueurs.size(); index++) {
                 if (mListeJoueurs.get(index).getNomEquipe().equals(nomEquipe)) {
-                    mListeJoueurs.get(index).setScoreEquipe(scoreTotal);
+                    mListeJoueurs.get(index).setScore(scoreTotal);
                 }
             }
             // On mets à jour le score de la partie en cours
