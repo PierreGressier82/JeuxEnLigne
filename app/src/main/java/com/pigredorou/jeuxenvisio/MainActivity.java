@@ -92,9 +92,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.22 : Creation Majority + Timeline, début mise en page de Majority
      * 3.0.23 : Amélioration chargement et gestion des pertes de connection
      * 3.0.24 : Ajout des salons et des joueurs de chaque dans les préférences
+     * 3.0.25 : Implémentation majority (parse XML)
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.24";
+    private static final String mNumVersion = "3.0.25";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

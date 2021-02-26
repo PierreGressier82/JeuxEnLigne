@@ -120,6 +120,35 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    protected void onPause() {
+        // Stop refresh auto
+        stopRefreshAuto();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        stopRefreshAuto();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopRefreshAuto();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        startRefreshAuto();
+        super.onResume();
+    }
+
+    private void stopRefreshAuto() {
+        t.interrupt();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getTag().toString()) {
             case "bouton_retour":
@@ -284,7 +313,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         int id_joueur = 0;
         int id_mot = 0;
         int lettre = 0;
-        Integer[] listeVotes = new Integer[4];
+        Integer[] listeVotes = {0, 0, 0, 0};
         mNbVote = 0;
         mNbVoteAttendu = 0;
 
@@ -296,6 +325,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
                 switch (noeudVote.getAttributes().item(j).getNodeName()) {
                     case "id_joueur":
                         id_joueur = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
+                        mNbVoteAttendu++;
                         break;
                     case "id_mot":
                         id_mot = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
@@ -308,7 +338,6 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
                             lettre = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
                             listeVotes[lettre]++;
                         }
-                        mNbVoteAttendu++;
                         break;
                 }
             }
