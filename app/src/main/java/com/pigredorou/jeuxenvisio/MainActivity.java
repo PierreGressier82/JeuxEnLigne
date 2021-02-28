@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String VALEUR_PSEUDO = "Pseudo";
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
+    public static final String VALEUR_ID_JOUEUR = "idJoueur";
     public static final String VALEUR_NOM_SALON = "NomSalon";
     public static final String VALEUR_METHODE_SELECTION = "MethodeSelection";
     private static final String urlGetSalonsFromJeux = url + "getSalonsFromJeu.php?joueur=";
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int[] tableIdImageSalon = {R.id.image_salon1, R.id.image_salon2, R.id.image_salon3, R.id.image_salon4, R.id.image_salon5, R.id.image_salon6, R.id.image_salon7, R.id.image_salon8};
     private static final int[] tableIdNomSalon = {R.id.salon_text_1, R.id.salon_text_2, R.id.salon_text_3, R.id.salon_text_4, R.id.salon_text_5, R.id.salon_text_6, R.id.salon_text_7, R.id.salon_text_8};
     private static final int[] tableIdImageJeux = {R.id.jeu_1, R.id.jeu_2, R.id.jeu_3, R.id.jeu_4, R.id.jeu_5, R.id.jeu_6, R.id.jeu_7, R.id.jeu_8, R.id.jeu_9, R.id.jeu_10};
-    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote, R.drawable.top_ten, R.drawable.majority, R.drawable.timeline};
+    private static final int[] tableIdResourceImageJeux = {0, R.drawable.the_crew, R.drawable.fiesta_de_los_muertos, R.drawable.le_roi_des_nains, R.drawable.gambit7, R.drawable.belote, R.drawable.top_ten, R.drawable.majority, R.drawable.timeline, R.drawable.just_one};
     public static final int THE_CREW_ACTIVITY_REQUEST_CODE = 11;
     public static final int FIESTA_MUERTOS_ACTIVITY_REQUEST_CODE = 12;
     public static final int ROI_NAINS_ACTIVITY_REQUEST_CODE = 13;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int TOPTEN_ACTIVITY_REQUEST_CODE = 16;
     public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     public static final int TIMELINE_ACTIVITY_REQUEST_CODE = 18;
+    public static final int JUSTONE_ACTIVITY_REQUEST_CODE = 19;
     public static final int mSelectionDoucleClic = 1;
     public static final int mSelectionDragAndDrop = 2;
     public static final int mSelectionDragAndDropLongTouch = 3;
@@ -144,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdTopTen = 6;
     private static final int mIdMajority = 7;
     private static final int mIdTimeLine = 8;
+    private static final int mIdJustOne = 9;
 
     // Chargement de l'application
     private Thread t;
@@ -162,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mIdPartie; // Id de la partie (en BDD)
     private int mIdJeu; // Id du jeu (en BDD)
     private int mIndexSalon; // Index du salon (numéro de la liste)
+    private int mIdJoueur; // Index du salon (numéro de la liste)
     private String mNomSalon;
     private String mPseudo;
     private boolean mSalonChoisi = false;
@@ -202,15 +206,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Masque le bar de titre de l'activité
-        //Objects.requireNonNull(getSupportActionBar()).hide();
-
         // Charge le layout
         setContentView(R.layout.activity_main);
 
         // On recupère les préférences du joueur
         mPreferences = getSharedPreferences(KEY_PREFERENCES, MODE_PRIVATE);
         mIdSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
+        mIdJoueur = mPreferences.getInt(VALEUR_ID_JOUEUR, 0);
         mNomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
 
@@ -259,10 +261,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
             Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
         } else {
+            if (mIdJoueur == 0)
+                mIdJoueur = getIdJoueurFromPseudo(mListeJoueurs);
             findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
         }
         findViewById(R.id.chargement).setVisibility(View.GONE);
         t.interrupt();
+    }
+
+    private int getIdJoueurFromPseudo(ArrayList<Joueur> listeJoueurs) {
+        int id = 0;
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            if (listeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
+                id = listeJoueurs.get(i).getId();
+                break;
+            }
+        }
+
+        return id;
     }
 
     @Override
@@ -465,8 +481,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (v.getTag().toString().startsWith("pseudo_")) {
                         String[] tag = v.getTag().toString().split("_");
                         mPseudo = mListeJoueurs.get(Integer.parseInt(tag[1])).getNomJoueur();
+                        mIdJoueur = mListeJoueurs.get(Integer.parseInt(tag[1])).getId();
                         // Sauvegarde le pseudo du joueur
                         mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
+                        mPreferences.edit().putInt(VALEUR_ID_JOUEUR, mIdJoueur).apply();
                         // Masque les joueurs, affiche les jeux
                         findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
                         findViewById(R.id.tableau_jeux).setVisibility(View.VISIBLE);
@@ -696,9 +714,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JeuActivity = new Intent(MainActivity.this, TimelineActivity.class);
                 REQUEST_CODE = TIMELINE_ACTIVITY_REQUEST_CODE;
                 break;
+            case mIdJustOne:
+                JeuActivity = new Intent(MainActivity.this, JustOneActivity.class);
+                REQUEST_CODE = JUSTONE_ACTIVITY_REQUEST_CODE;
+                break;
         }
         // Lance l'activité du jeu demandé avec les paramètres
         JeuActivity.putExtra(VALEUR_PSEUDO, mPseudo);
+        JeuActivity.putExtra(VALEUR_ID_JOUEUR, mIdJoueur);
         JeuActivity.putExtra(VALEUR_ID_SALON, mIdSalon);
         JeuActivity.putExtra(VALEUR_ID_PARTIE, mIdPartie);
         JeuActivity.putExtra(VALEUR_NOM_SALON, nom_salon);

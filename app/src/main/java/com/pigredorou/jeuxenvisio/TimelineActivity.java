@@ -37,23 +37,6 @@ public class TimelineActivity extends JeuEnVisionActivity implements View.OnClic
         // TODO : ajouter les éléments de timeline
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getTag().toString()) {
-            case "bouton_retour":
-                stopRefreshAuto();
-                finish();
-                break;
-
-            case "bouton_valider":
-                startRefreshAuto(urlJeu);
-                desactiveBouton(mBoutonValider);
-                new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
-                break;
-        }
-
-    }
-
     public void parseXML(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();

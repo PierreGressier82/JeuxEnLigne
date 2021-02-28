@@ -93,6 +93,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
+        mIdJoueur = intent.getIntExtra(MainActivity.VALEUR_ID_JOUEUR, 0);
         mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
@@ -189,11 +190,11 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case "bouton_valider":
-                startRefreshAuto();
                 if (mValeurVote > 0) {
                     desactiveBouton(mBoutonValider);
                     new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mIdMot);
                 }
+                startRefreshAuto();
                 break;
 
             case "bouton_suivant":
@@ -282,7 +283,6 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         // Joueurs
         ArrayList<Joueur> listeJoueurs = parseNoeudsJoueur(doc);
         mAdmin = suisJeAdmin(mPseudo, listeJoueurs);
-        mIdJoueur = getIdJoueurFromPseudo(listeJoueurs);
         afficheScore(listeJoueurs);
 
         // Bouton tour ou manche suivant que pour les joueurs admin
@@ -296,6 +296,8 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         afficheMots(listeMots);
 
         // Votes
+        activeCarteVote();
+        masqueResultats();
         Integer[] listeVotes = parseNoeudsVotes(doc);
         afficheVotes(listeVotes);
     }
@@ -303,13 +305,13 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     private void afficheScore(ArrayList<Joueur> listeJoueurs) {
         String textScore;
 
-        mMonScore = getSCoreJoueurId(listeJoueurs);
+        mMonScore = getScoreJoueurId(listeJoueurs);
         textScore = getResources().getString(R.string.score_quipe) + " : " + mMonScore;
         TextView tv = findViewById(R.id.score);
         tv.setText(textScore);
     }
 
-    private int getSCoreJoueurId(ArrayList<Joueur> listeJoueurs) {
+    private int getScoreJoueurId(ArrayList<Joueur> listeJoueurs) {
         int score = 0;
         for (int i = 0; i < listeJoueurs.size(); i++) {
             if (listeJoueurs.get(i).getId() == mIdJoueur) {
@@ -321,18 +323,6 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         return score;
     }
 
-    private int getIdJoueurFromPseudo(ArrayList<Joueur> listeJoueurs) {
-        int id = 0;
-        for (int i = 0; i < listeJoueurs.size(); i++) {
-            if (listeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
-                id = listeJoueurs.get(i).getId();
-                break;
-            }
-        }
-
-        return id;
-    }
-
     private void afficheVotes(Integer[] listeVotes) {
         TextView tv = findViewById(R.id.nb_vote_joueurs);
         String texteVote = mNbVote + " vote(s) sur " + mNbVoteAttendu;
@@ -342,18 +332,15 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         if (mNbVote == mNbVoteAttendu) {
             afficheResultatsVote(listeVotes);
             activeBouton(mBoutonMancheTourSuivant);
-        } else {
-            activeCarteVote(listeVotes);
-            masqueResultats();
         }
     }
 
-    private void activeCarteVote(Integer[] listeVotes) {
+    private void activeCarteVote() {
         // Détermine les cartes ayant le vote max
-        for (int i = 0; i < listeVotes.length; i++) {
-            findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
-            findViewById(tableIdRessourcesCarteVote[i]).setBackgroundResource(R.drawable.fond_carte_blanc);
-            findViewById(tableIdRessourcesCarteVote[i]).setOnClickListener(this);
+        for (int value : tableIdRessourcesCarteVote) {
+            findViewById(value).setAlpha(1);
+            findViewById(value).setBackgroundResource(R.drawable.fond_carte_blanc);
+            findViewById(value).setOnClickListener(this);
         }
     }
 
