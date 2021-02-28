@@ -203,13 +203,13 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void activeBouton(Button bouton) {
-        mBoutonValider.setTextColor(getResources().getColor(R.color.blanc));
-        mBoutonValider.setOnClickListener(this);
+        bouton.setTextColor(getResources().getColor(R.color.blanc));
+        bouton.setOnClickListener(this);
     }
 
     private void desactiveBouton(Button bouton) {
-        mBoutonValider.setTextColor(getResources().getColor(R.color.noir));
-        mBoutonValider.setOnClickListener(null);
+        bouton.setTextColor(getResources().getColor(R.color.noir));
+        bouton.setOnClickListener(null);
     }
 
     private void selectionneCarteVote(String tag) {
