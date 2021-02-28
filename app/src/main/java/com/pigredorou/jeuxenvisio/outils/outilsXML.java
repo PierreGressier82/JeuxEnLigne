@@ -117,5 +117,4 @@ public class outilsXML {
         }
         return suisAdmin;
     }
-
 }

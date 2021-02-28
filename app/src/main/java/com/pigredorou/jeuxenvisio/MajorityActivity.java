@@ -92,7 +92,6 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         final Intent intent = getIntent();
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        int idSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
         mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
         tvPseudo.setText(mPseudo);
@@ -367,25 +366,31 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
 
     private void afficheResultatsVote(Integer[] listeVotes) {
         determineVoteMajoritaire(listeVotes);
-        String texte = listeVotes[0] + " votes";
-        mResultatVoteMajority.setText(texte);
-        texte = listeVotes[1] + " votes";
-        mResultatVoteA.setText(texte);
-        texte = listeVotes[2] + " votes";
-        mResultatVoteB.setText(texte);
-        texte = listeVotes[3] + " votes";
-        mResultatVoteC.setText(texte);
+
+        mResultatVoteMajority.setText(texteVote(listeVotes[0]));
+        mResultatVoteA.setText(texteVote(listeVotes[1]));
+        mResultatVoteB.setText(texteVote(listeVotes[2]));
+        mResultatVoteC.setText(texteVote(listeVotes[3]));
 
         // TODO : afficher joueur éliminé
+        mResultatVoteMajority.setVisibility(View.VISIBLE);
         mResultatVoteA.setVisibility(View.VISIBLE);
         mResultatVoteB.setVisibility(View.VISIBLE);
         mResultatVoteC.setVisibility(View.VISIBLE);
-        mResultatVoteMajority.setVisibility(View.VISIBLE);
+    }
+
+    private String texteVote(Integer listeVote) {
+        String texte;
+        if (listeVote < 2)
+            texte = listeVote + " vote";
+        else
+            texte = listeVote + " votes";
+
+        return texte;
     }
 
     private void determineVoteMajoritaire(Integer[] listeVotes) {
         int voteMax = 0;
-        Integer[] listeVotesMajoritaire = {0, 0, 0, 0};
         // Détermine le vote max
         for (Integer listeVote : listeVotes) {
             if (listeVote > voteMax)
@@ -453,7 +458,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
 
         int id_joueur = 0;
         int id_mot = 0;
-        int lettre = 0;
+        int lettre;
         Integer[] listeVotes = {0, 0, 0, 0};
         mNbVote = 0;
         mNbVoteAttendu = 0;
