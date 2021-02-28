@@ -207,7 +207,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                             break;
                     }
                 }
-                Joueur joueur = new Joueur(idJoueur, pseudo, admin, actif);
+                Joueur joueur = new Joueur(idJoueur, pseudo, 0, admin, 0, actif);
                 listeJoueurs.add(joueur);
             }
             Salon salon = new Salon(idSalon, nomSalon, listeJoueurs);

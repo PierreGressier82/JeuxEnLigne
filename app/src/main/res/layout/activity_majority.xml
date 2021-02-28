@@ -69,7 +69,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/black_overlay" />
+        android:background="@color/noir_transparent" />
 
     <LinearLayout
         android:id="@+id/chargement"
@@ -161,6 +161,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".33"
@@ -209,7 +210,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/black_overlay" />
+        android:background="@color/noir_transparent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -369,8 +370,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight=".33"
-            android:orientation="horizontal">
+            android:layout_weight=".33">
 
             <ImageView
                 android:id="@+id/image_mot_3"
@@ -412,64 +412,172 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/black_overlay" />
+        android:background="@color/noir_transparent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/carte_vote_a"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_vote_a"
-            android:tag="carte_vote_a" />
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/carte_vote_b"
+            <ImageView
+                android:id="@+id/carte_vote_a"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_vote_a"
+                android:tag="carte_vote_a"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/resultat_vote_a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="@color/blanc"
+                android:background="@color/noir_transparent"
+                android:text="@string/_1"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_vote_b"
-            android:tag="carte_vote_b" />
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/carte_vote_c"
+            <ImageView
+                android:id="@+id/carte_vote_b"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_vote_b"
+                android:tag="carte_vote_b"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/resultat_vote_b"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="@color/blanc"
+                android:background="@color/vert_clair_transparent"
+                android:text="@string/_1"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_vote_c"
-            android:tag="carte_vote_c" />
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/carte_vote_majority"
+            <ImageView
+                android:id="@+id/carte_vote_c"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_vote_c"
+                android:tag="carte_vote_c"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/resultat_vote_c"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="@color/blanc"
+                android:background="@color/vert_clair_transparent"
+                android:text="@string/_1"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_etoiles"
-            android:tag="carte_vote_majority" />
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/carte_vote_majority"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_etoiles"
+                android:tag="carte_vote_majority"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/resultat_vote_majority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:textColor="@color/blanc"
+                android:background="@color/vert_clair_transparent"
+                android:text="@string/_3"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
@@ -490,7 +598,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
-        android:background="@color/black_overlay"
+        android:background="@color/noir_transparent"
         android:tag="bouton_valider"
         android:text="@string/valider"
         android:textColor="@color/blanc" />
@@ -502,7 +610,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
-        android:background="@color/black_overlay"
+        android:background="@color/noir_transparent"
         android:tag="bouton_suivant"
         android:text="@string/manche_suivante"
         android:textColor="@color/blanc"

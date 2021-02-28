@@ -25,11 +25,13 @@ public class Joueur {
         mAdmin = admin;
     }
 
-    public Joueur(int id, String nomJoueur, int admin, int aNew) {
+    public Joueur(int id, String nomJoueur, int score, int admin, int aNew, int actif) {
         mId = id;
         mNomJoueur = nomJoueur;
+        mScore = score;
         mAdmin = admin;
         mNew = aNew;
+        mActif = actif;
     }
 
     public int getScore() {

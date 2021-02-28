@@ -30,6 +30,8 @@ public class outilsXML {
         int admin = 0;
         int nv = 0;
         int id = 0;
+        int score = 0;
+        int actif = 0;
         ArrayList<Joueur> listeJoueurs = new ArrayList<>();
 
         for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
@@ -51,9 +53,12 @@ public class outilsXML {
                     case "new":
                         nv = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
+                    case "score":
+                        score = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                 }
             }
-            Joueur joueur = new Joueur(id, pseudo, admin, nv);
+            Joueur joueur = new Joueur(id, pseudo, score, admin, nv, actif);
             listeJoueurs.add(joueur);
         }
 
