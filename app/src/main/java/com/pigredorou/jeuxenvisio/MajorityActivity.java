@@ -184,11 +184,13 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
             case "carte_vote_b":
             case "carte_vote_c":
             case "carte_vote_majority":
+                stopRefreshAuto();
                 selectionneCarteVote(v.getTag().toString());
                 activeBouton(mBoutonValider);
                 break;
 
             case "bouton_valider":
+                startRefreshAuto();
                 if (mValeurVote > 0) {
                     desactiveBouton(mBoutonValider);
                     new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mIdMot);
@@ -342,7 +344,16 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
             afficheResultatsVote(listeVotes);
             activeBouton(mBoutonMancheTourSuivant);
         } else {
+            activeCarteVote(listeVotes);
             masqueResultats();
+        }
+    }
+
+    private void activeCarteVote(Integer[] listeVotes) {
+        // Détermine les cartes ayant le vote max
+        for (int i = 0; i < listeVotes.length; i++) {
+            findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
+            findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.blanc));
         }
     }
 
