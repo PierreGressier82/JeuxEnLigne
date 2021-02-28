@@ -353,7 +353,8 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         // Détermine les cartes ayant le vote max
         for (int i = 0; i < listeVotes.length; i++) {
             findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
-            findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.blanc));
+            findViewById(tableIdRessourcesCarteVote[i]).setBackgroundResource(R.drawable.fond_carte_blanc);
+            findViewById(tableIdRessourcesCarteVote[i]).setOnClickListener(this);
         }
     }
 
