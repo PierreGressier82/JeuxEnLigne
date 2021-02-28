@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/couleurTopTen"
+    android:background="@drawable/majority_fond"
     android:orientation="vertical"
     tools:context=".MajorityActivity">
 
@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -65,6 +64,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/black_overlay" />
+
     <LinearLayout
         android:id="@+id/chargement"
         android:layout_width="match_parent"
@@ -95,7 +101,13 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33" />
+            android:layout_weight=".33"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/fond_carte_blanc"
+            android:padding="5dp"
+            android:src="@drawable/majority_carte_interrogation" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -148,10 +160,17 @@
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33" />
+            android:layout_weight=".33"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/blanc"
+            android:text="@string/score_quipe"
+            android:layout_gravity="center"
+            android:padding="5dp" />
 
 
     </LinearLayout>
@@ -159,7 +178,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="0dp"
@@ -184,6 +204,13 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/black_overlay" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -199,7 +226,6 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:layout_weight=".2"
             android:adjustViewBounds="true"
@@ -218,7 +244,6 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:layout_weight=".2"
             android:adjustViewBounds="true"
@@ -237,7 +262,6 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:layout_weight=".2"
             android:adjustViewBounds="true"
@@ -281,6 +305,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:maxLines="1"
+                android:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:text="@string/pseudo"
                 android:textAllCaps="true"
@@ -317,11 +345,15 @@
                 android:id="@+id/mot_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:maxLines="1"
+                android:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:text="@string/pseudo"
-                android:layout_marginBottom="5dp"
-                android:textAlignment="center"
                 android:textAllCaps="true"
+                android:textAlignment="center"
                 android:textColor="@color/noir"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -356,6 +388,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:maxLines="1"
+                android:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:text="@string/pseudo"
                 android:textAllCaps="true"
@@ -364,11 +400,19 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="@id/image_mot_3"
+                app:layout_constraintStart_toStartOf="@id/image_mot_3"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UnusedAttribute" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/black_overlay" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -380,7 +424,6 @@
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
             android:adjustViewBounds="true"
@@ -394,7 +437,6 @@
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
             android:adjustViewBounds="true"
@@ -408,7 +450,6 @@
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
             android:adjustViewBounds="true"
@@ -422,7 +463,6 @@
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_weight=".25"
             android:adjustViewBounds="true"
@@ -455,4 +495,16 @@
         android:text="@string/valider"
         android:textColor="@color/blanc" />
 
+    <Button
+        android:id="@+id/bouton_tour_manchant_suivante"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/black_overlay"
+        android:tag="bouton_suivant"
+        android:text="@string/manche_suivante"
+        android:textColor="@color/blanc"
+        android:visibility="gone" />
 </LinearLayout>

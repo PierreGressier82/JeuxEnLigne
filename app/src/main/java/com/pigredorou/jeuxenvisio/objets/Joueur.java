@@ -25,11 +25,11 @@ public class Joueur {
         mAdmin = admin;
     }
 
-    public Joueur(int id, String nomJoueur, int admin, int actif) {
+    public Joueur(int id, String nomJoueur, int admin, int aNew) {
         mId = id;
         mNomJoueur = nomJoueur;
         mAdmin = admin;
-        mActif = actif;
+        mNew = aNew;
     }
 
     public int getScore() {

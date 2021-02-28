@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String urlAnnulCarte = url + "annulCarte.php?partie=";
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
+    public static final String urlInitMajority = url + "initMajority.php?partie=";
     public static final String urlNewJoueur = url + "newJoueur.php?joueur=";
     public static final String urlMajAdmin = url + "majAdminJoueur.php?joueur=";
     public static final String KEY_PREFERENCES = "MesPreferences";
@@ -428,6 +429,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         case mIdTopTen:
                             new TacheURLSansRetour().execute(urlInitTopTen + mIdPartie);
+                            Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
+                            break;
+                        case mIdMajority:
+                            new TacheURLSansRetour().execute(urlInitMajority + mIdPartie);
                             Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -800,6 +805,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case mIdTopTen:
                 case mIdFiestaDeLosMuertos:
+                case mIdMajority:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonDistribueCartes.setVisibility(View.GONE);
                     break;
