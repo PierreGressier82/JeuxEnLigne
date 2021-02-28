@@ -386,7 +386,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
                 findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
                 findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.vert_clair_transparent));
             } else {
-                findViewById(tableIdRessourcesCarteVote[i]).setAlpha((float) 0.75);
+                findViewById(tableIdRessourcesCarteVote[i]).setAlpha((float) 0.5);
                 findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.noir_transparent));
             }
         }
