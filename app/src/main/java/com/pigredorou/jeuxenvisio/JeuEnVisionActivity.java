@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -41,8 +40,9 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
     boolean mAdmin;
     ArrayList<Joueur> mListeJoueurs;
     // Variables statiques
-    private final static String urlJeu = MainActivity.url + "majority.php?partie=";
-    private final static String urlMAJ = MainActivity.url + "majority.php?partie=";
+    final static String urlJeu = MainActivity.url + "jeu.php?partie=";
+    final static String urlMAJ = MainActivity.url + "majJeu.php?partie=";
+    final static String urlTopTenDevoilCarte = MainActivity.url + "TopTenDevoileCarte.php?partie=";
     // Elements graphique
     Button mBoutonValider;
     // Refresh auto
@@ -58,6 +58,7 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Ecran de chargement
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
 
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
@@ -119,8 +120,7 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case "bouton_valider":
-                final String urlCompletJeu = urlJeu + mIdJoueur;
-                startRefreshAuto(urlCompletJeu);
+                startRefreshAuto(urlJeu);
                 desactiveBouton(mBoutonValider);
                 new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
                 break;
@@ -173,9 +173,8 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
     }
 
     void parseXML(Document doc) {
-        Element element = doc.getDocumentElement();
-        element.normalize();
-
+        // Masque l'écran de chargement
+        findViewById(R.id.chargement).setVisibility(View.GONE);
         // Joueurs
         mListeJoueurs = parseNoeudsJoueur(doc);
         mAdmin = suisJeAdmin(mPseudo, mListeJoueurs);

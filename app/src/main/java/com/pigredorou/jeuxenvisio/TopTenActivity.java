@@ -83,6 +83,9 @@ public class TopTenActivity extends AppCompatActivity implements View.OnClickLis
         // Affiche la vue
         setContentView(layout.activity_top_ten);
 
+        // Chargement
+        findViewById(id.chargement).setVisibility(View.VISIBLE);
+
         // ENTETE
         // Recupère les paramètres et affiche l'entête
         TextView tvPseudo = findViewById(id.pseudo);
@@ -148,7 +151,6 @@ public class TopTenActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void parseXML(Document doc) {
-
         Element element = doc.getDocumentElement();
         element.normalize();
 
@@ -324,7 +326,9 @@ public class TopTenActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(Document doc) {
-            parseXML(doc);
+            findViewById(id.chargement).setVisibility(View.GONE);
+            if (doc != null)
+                parseXML(doc);
             super.onPostExecute(doc);
         }
     }

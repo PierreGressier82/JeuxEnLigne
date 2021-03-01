@@ -93,9 +93,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.23 : Amélioration chargement et gestion des pertes de connection
      * 3.0.24 : Ajout des salons et des joueurs de chaque dans les préférences
      * 3.0.25 : Implémentation majority (parse XML)
+     * 3.0.26 : Implémentation classe de jeu générique
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.25";
+    private static final String mNumVersion = "3.0.26";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -301,24 +302,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void chargementJeux() {
-        ImageView jeu1 = findViewById(R.id.jeu_1);
-        ImageView jeu2 = findViewById(R.id.jeu_2);
-        ImageView jeu3 = findViewById(R.id.jeu_3);
-        ImageView jeu4 = findViewById(R.id.jeu_4);
-        ImageView jeu5 = findViewById(R.id.jeu_5);
-        ImageView jeu6 = findViewById(R.id.jeu_6);
-        jeu1.setOnClickListener(this);
-        jeu2.setOnClickListener(this);
-        jeu3.setOnClickListener(this);
-        jeu4.setOnClickListener(this);
-        jeu5.setOnClickListener(this);
-        jeu6.setOnClickListener(this);
-        jeu1.setTag("NO");
-        jeu2.setTag("NO");
-        jeu3.setTag("NO");
-        jeu4.setTag("NO");
-        jeu5.setTag("NO");
-        jeu6.setTag("NO");
+        for (int idImageJeux : tableIdImageJeux) {
+            ImageView iv = findViewById(idImageJeux);
+            iv.setOnClickListener(this);
+            iv.setTag("NO");
+        }
     }
 
     private void chargementBoutonsDistribution() {
@@ -482,13 +470,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String[] tag = v.getTag().toString().split("_");
                         mPseudo = mListeJoueurs.get(Integer.parseInt(tag[1])).getNomJoueur();
                         mIdJoueur = mListeJoueurs.get(Integer.parseInt(tag[1])).getId();
-                        // Sauvegarde le pseudo du joueur
+                        new TacheGetXML().execute(urlGetJeux + mPseudo);
+                        // Sauvegarde le joueur
                         mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
                         mPreferences.edit().putInt(VALEUR_ID_JOUEUR, mIdJoueur).apply();
                         // Masque les joueurs, affiche les jeux
                         findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
                         findViewById(R.id.tableau_jeux).setVisibility(View.VISIBLE);
-                        new TacheGetXML().execute(urlGetJeux + mPseudo);
                         // Valide le joueur en base
                         new TacheURLSansRetour().execute(urlValideJoueur + mPseudo);
                     }
@@ -522,6 +510,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.jeu_4:
             case R.id.jeu_5:
             case R.id.jeu_6:
+            case R.id.jeu_7:
+            case R.id.jeu_8:
+            case R.id.jeu_9:
+            case R.id.jeu_10:
                 afficheJeux(mListeJeux);
                 ImageView iv = findViewById(v.getId());
                 TextView titre = findViewById(R.id.titre_jeu);

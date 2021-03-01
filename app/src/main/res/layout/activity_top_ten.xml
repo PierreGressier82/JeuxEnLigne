@@ -65,6 +65,28 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/chargement"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/texteChargement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Chargement"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="50sp" />
+
+        <ProgressBar
+            android:id="@+id/barreDeChargement"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bloc_tapis"
         android:layout_width="match_parent"
@@ -81,6 +103,7 @@
             android:layout_marginTop="10dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
+            android:visibility="visible"
             android:src="@drawable/topten_tapis"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

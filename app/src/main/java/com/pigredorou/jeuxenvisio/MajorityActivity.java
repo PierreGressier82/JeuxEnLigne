@@ -84,7 +84,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_majority);
 
         // Chargement
-        //findViewById(R.id.chargement).setVisibility(View.GONE);
+        //findViewById(R.id.chargement).setVisibility(View.VISIBLE);
 
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
@@ -276,6 +276,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void parseXML(Document doc) {
+        findViewById(R.id.chargement).setVisibility(View.GONE);
 
         Element element = doc.getDocumentElement();
         element.normalize();
@@ -523,7 +524,6 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
             mMajTerminee = true;
             if (doc != null) {
                 parseXML(doc);
-                findViewById(R.id.chargement).setVisibility(View.GONE);
             }
             super.onPostExecute(doc);
         }
