@@ -30,7 +30,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
 
-public class JeuEnVisionActivity extends AppCompatActivity implements View.OnClickListener {
+public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Variables globales
     String mPseudo;
@@ -42,7 +42,6 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
     // Variables statiques
     final static String urlJeu = MainActivity.url + "jeu.php?partie=";
     final static String urlMAJ = MainActivity.url + "majJeu.php?partie=";
-    final static String urlTopTenDevoilCarte = MainActivity.url + "TopTenDevoileCarte.php?partie=";
     // Elements graphique
     Button mBoutonValider;
     // Refresh auto
@@ -67,12 +66,13 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
         mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
+
+        // Affiche le contexte de l'entête
         tvPseudo.setText(mPseudo);
         tvNomSalon.setText(nomSalon);
 
         // Bouton retour
-        ImageView boutonRetour = findViewById(R.id.bouton_retour);
-        boutonRetour.setOnClickListener(this);
+        chargeBoutons();
 
         // Refresh info jeu
         mMajTerminee = true;
@@ -80,6 +80,8 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
 
     void chargeBoutons() {
         mBoutonValider = findViewById(R.id.bouton_valider);
+        ImageView boutonRetour = findViewById(R.id.bouton_retour);
+        boutonRetour.setOnClickListener(this);
     }
 
     @Override
@@ -101,12 +103,6 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
         super.onDestroy();
     }
 
-    @Override
-    public void onResume() {
-        startRefreshAuto(urlJeu);
-        super.onResume();
-    }
-
     void stopRefreshAuto() {
         t.interrupt();
     }
@@ -120,7 +116,7 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case "bouton_valider":
-                startRefreshAuto(urlJeu);
+                //startRefreshAuto(urlJeu); -> A reprendre dans la classe fille
                 desactiveBouton(mBoutonValider);
                 new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
                 break;

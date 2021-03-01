@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 
-public class JustOneActivity extends JeuEnVisionActivity {
+public class JustOneActivity extends JeuEnVisioActivity {
 
     // URLs des actions en base
     public static String urlJeu = MainActivity.url + "TopTen.php?partie=";
@@ -53,6 +53,12 @@ public class JustOneActivity extends JeuEnVisionActivity {
         ChargeTopTen();
 
         startRefreshAuto(urlJeu);
+    }
+
+    @Override
+    protected void onResume() {
+        startRefreshAuto(urlJeu);
+        super.onResume();
     }
 
     @Override
@@ -155,6 +161,7 @@ public class JustOneActivity extends JeuEnVisionActivity {
             desactiveBouton(mBoutonMancheSuivante);
     }
 
+    // TODO : déplacer les fonctions parse dans la classe JeuEnVisio
     void parseNoeudCarte(Document doc) {
         Node noeudCarte = getNoeudUnique(doc, "Carte");
 

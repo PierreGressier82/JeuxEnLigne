@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
 
-public class TimelineActivity extends JeuEnVisionActivity implements View.OnClickListener {
+public class TimelineActivity extends JeuEnVisioActivity implements View.OnClickListener {
 
     // Variables globales
     private String mPseudo;
