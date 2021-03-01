@@ -179,28 +179,28 @@ public class JustOneActivity extends JeuEnVisionActivity {
     }
 
     void parseNoeudTapis(Document doc) {
-        Node noeudCarte = getNoeudUnique(doc, "Tapis");
+        Node noeudTapis = getNoeudUnique(doc, "Tapis");
 
         mValeurCarteTapis = 0;
-        for (int i = 0; i < noeudCarte.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud carte
-            Log.d("PGR-XML-Tapis", noeudCarte.getAttributes().item(i).getNodeName() + "_" + noeudCarte.getAttributes().item(i).getNodeValue());
-            if (noeudCarte.getAttributes().item(i).getNodeValue().isEmpty())
+        for (int i = 0; i < noeudTapis.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud tapis
+            Log.d("PGR-XML-Tapis", noeudTapis.getAttributes().item(i).getNodeName() + "_" + noeudTapis.getAttributes().item(i).getNodeValue());
+            if (noeudTapis.getAttributes().item(i).getNodeValue().isEmpty())
                 continue;
-            switch (noeudCarte.getAttributes().item(i).getNodeName()) {
+            switch (noeudTapis.getAttributes().item(i).getNodeName()) {
                 case "licorne":
-                    mNbLicorne = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                    mNbLicorne = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
                     break;
                 case "caca":
-                    mNbCaca = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                    mNbCaca = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
                     break;
                 case "manche":
-                    mNumeroManche = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                    mNumeroManche = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
                     break;
                 case "numero":
-                    mValeurCarteTapis = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                    mValeurCarteTapis = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
                     break;
                 case "nbCartes":
-                    mNbCartes = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                    mNbCartes = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
                     break;
             }
         }
