@@ -58,7 +58,7 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Ecran de chargement
-        //findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
 
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);
@@ -174,7 +174,7 @@ public class JeuEnVisionActivity extends AppCompatActivity implements View.OnCli
 
     void parseXML(Document doc) {
         // Masque l'écran de chargement
-        //findViewById(R.id.chargement).setVisibility(View.GONE);
+        findViewById(R.id.chargement).setVisibility(View.GONE);
         // Joueurs
         mListeJoueurs = parseNoeudsJoueur(doc);
         mAdmin = suisJeAdmin(mPseudo, mListeJoueurs);

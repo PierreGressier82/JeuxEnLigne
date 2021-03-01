@@ -61,13 +61,13 @@ public class JustOneActivity extends JeuEnVisionActivity {
 
         switch (v.getTag().toString()) {
             case "bouton_devoiler_carte":
-                new MainActivity.TacheURLSansRetour().execute(urlTopTenDevoilCarte + mIdPartie + "&joueur=" + mPseudo);
                 desactiveBouton(mBoutonDevoiler);
+                new MainActivity.TacheURLSansRetour().execute(urlTopTenDevoilCarte + mIdPartie + "&joueur=" + mPseudo);
                 break;
 
             case "bouton_manche_suivante":
-                new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitTopTen + mIdPartie + "&manche=suivante");
                 desactiveBouton(mBoutonMancheSuivante);
+                new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitTopTen + mIdPartie + "&manche=suivante");
                 break;
         }
     }

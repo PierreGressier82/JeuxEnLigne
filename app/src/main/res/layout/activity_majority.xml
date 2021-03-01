@@ -67,9 +67,15 @@
     <LinearLayout
         android:id="@+id/chargement"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/barreDeChargement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/texteChargement"
@@ -80,10 +86,6 @@
             android:textColor="@color/blanc"
             android:textSize="50sp" />
 
-        <ProgressBar
-            android:id="@+id/barreDeChargement"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
     <ImageView

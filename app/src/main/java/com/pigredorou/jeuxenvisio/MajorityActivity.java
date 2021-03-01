@@ -84,7 +84,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_majority);
 
         // Chargement
-        //findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
 
         // Recupère les paramètres
         TextView tvPseudo = findViewById(R.id.pseudo);

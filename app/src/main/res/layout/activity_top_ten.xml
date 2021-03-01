@@ -68,9 +68,15 @@
     <LinearLayout
         android:id="@+id/chargement"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/barreDeChargement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/texteChargement"
@@ -81,10 +87,6 @@
             android:textColor="@color/blanc"
             android:textSize="50sp" />
 
-        <ProgressBar
-            android:id="@+id/barreDeChargement"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,22 +119,6 @@
             android:rotation="270"
             android:scaleType="fitCenter"
             android:src="@drawable/topten_3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/perdu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:rotation="305"
-            android:text="@string/perdu"
-            android:textAlignment="center"
-            android:textColor="@color/rouge"
-            android:textSize="100sp"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -184,6 +170,23 @@
                 android:textColor="@color/blanc"
                 android:textSize="40sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/perdu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:rotation="305"
+            android:text="@string/perdu"
+            android:textAlignment="center"
+            android:textColor="@color/rouge"
+            android:textSize="100sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -228,7 +231,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/devoiler_ma_carte"
-                android:textColor="@color/couleurTopTen"
+                android:textColor="@color/blanc"
+                android:background="@color/noir_transparent"
                 android:textSize="20sp" />
 
             <Button
@@ -241,8 +245,9 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/manche_suivante"
-                android:textColor="@color/couleurTopTen"
+                android:textColor="@color/blanc"
                 android:textSize="20sp"
+                android:background="@color/noir_transparent"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
