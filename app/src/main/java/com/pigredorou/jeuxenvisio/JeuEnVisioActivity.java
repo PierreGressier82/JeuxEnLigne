@@ -12,9 +12,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
+import com.pigredorou.jeuxenvisio.objets.TopTen;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -27,6 +30,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
 
@@ -168,13 +172,86 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    TopTen parseNoeudTapis(Document doc) {
+        Node noeudTapis = getNoeudUnique(doc, "Tapis");
+
+        int licorne = 0;
+        int caca = 0;
+        int manche = 0;
+        int numero = 0;
+        int nbCartes = 0;
+
+        for (int i = 0; i < noeudTapis.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud tapis
+            Log.d("PGR-XML-Tapis", noeudTapis.getAttributes().item(i).getNodeName() + "_" + noeudTapis.getAttributes().item(i).getNodeValue());
+            if (noeudTapis.getAttributes().item(i).getNodeValue().isEmpty())
+                continue;
+            switch (noeudTapis.getAttributes().item(i).getNodeName()) {
+                case "licorne":
+                    licorne = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
+                    break;
+                case "caca":
+                    caca = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
+                    break;
+                case "manche":
+                    manche = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
+                    break;
+                case "numero":
+                    numero = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
+                    break;
+                case "nbCartes":
+                    nbCartes = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
+                    break;
+            }
+        }
+        return new TopTen(licorne, caca, manche, numero, nbCartes);
+    }
+
+    ArrayList<Carte> parseNoeudsCarte(Document doc, String nomNoeud) {
+        Node NoeudCartes = getNoeudUnique(doc, nomNoeud);
+
+        String couleur = "";
+        int valeur = 0;
+        boolean cartePosee = false;
+        ArrayList<Carte> listeCartes = new ArrayList<>();
+
+        for (int i = 0; i < NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
+            Log.d("PGR-XML-Carte", noeudCarte.getNodeName());
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Carte", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "couleur":
+                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "valeur":
+                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "pose":
+                        if (!noeudCarte.getAttributes().item(i).getNodeValue().isEmpty()) {
+                            int ordrePose = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                            cartePosee = ordrePose != 0;
+                        } else
+                            cartePosee = false;
+                        break;
+                }
+            }
+            Carte carte = new Carte(couleur, valeur, cartePosee);
+            listeCartes.add(carte);
+        }
+
+        return listeCartes;
+    }
+
     void parseXML(Document doc) {
+        // A surcharger dans les classes
+
         // Masque l'écran de chargement
         findViewById(R.id.chargement).setVisibility(View.GONE);
-        // Joueurs
+        // Liste des joueurs de la partie
         mListeJoueurs = parseNoeudsJoueur(doc);
         mAdmin = suisJeAdmin(mPseudo, mListeJoueurs);
-        // A surcharger dans les classes
+
+
     }
 
     void afficheScore(ArrayList<Joueur> listeJoueurs) {

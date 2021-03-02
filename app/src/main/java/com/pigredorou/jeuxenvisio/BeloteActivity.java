@@ -1,21 +1,16 @@
 package com.pigredorou.jeuxenvisio;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.HistoriquePlis;
@@ -33,8 +28,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,7 +35,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 
-public class BeloteActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class BeloteActivity extends JeuEnVisioActivity implements View.OnTouchListener {
 
     // Constantes
     // Tableaux des resssources
@@ -74,28 +67,19 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     private static final String urlTourSuivant = MainActivity.url + "tourSuivant.php?partie=";
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
-    private String mPseudo; // Pseudo du joueur
     private int mAdmin; // Pseudo du joueur
     private String mJoueurQuiAPris; // Pseudo du joueur qui a décidé de l'atout
     private String mJoueurQuiRemporteLePli; // Pseudo du joueur qui a remporté le pli
     private String mAtoutChoisi; // Atout de la partie
     private int mEstCeMonTourDeChoisir = 0; // 0:non, 1:premier tour, 2:2ème tour
-    private int mIdSalon;
-    private int mIdPartie;
     private int mNumeroPli=0;
     private int[] scorePartie = {0,0};
-    private ArrayList<Carte> mListeCartesMainJoueur;
     private ArrayList<Pli> mListeCartesPliEnCours;
     private ArrayList<Joueur> mListeJoueurs;
     // Elements de la vue
     private LinearLayout mTable;
     private ImageView mCarteActive;
     private TextView mTitrePli;
-    private TextView mHeureRefresh;
-    // Auto resfresh
-    private Button mBoutonRefreshAuto;
-    private Boolean mRefreshAuto;
-    Thread t;
     // Gestion du double clic
     int mClickCount = 0;
     int mLastViewID = 0;
@@ -108,28 +92,10 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Masque le bar de titre de l'activité
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        // Bloque la mise en veille
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
         setContentView(R.layout.activity_belote);
 
-        // Recupère les paramètres
-        TextView tvPseudo = findViewById(R.id.pseudo);
-        TextView tvNomSalon = findViewById(R.id.nom_salon);
-        final Intent intent = getIntent();
-        mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
-        String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        mIdSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
-        mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
-        tvPseudo.setText(mPseudo);
-        tvNomSalon.setText(nomSalon);
-        // Bouton retour
-        ImageView boutonRetour = findViewById(R.id.bouton_retour);
-        boutonRetour.setOnClickListener(this);
-        boutonRetour.setImageResource(R.drawable.bouton_quitter);
+        super.onCreate(savedInstanceState);
 
         // ChoixAtout
         Button boutonPasser = findViewById(R.id.bouton_passer);
@@ -147,10 +113,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         mTitrePli = findViewById(R.id.titre_pli);
         mTitrePli.setOnClickListener(this);
         mTable = findViewById(R.id.table);
-
-        mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
-        mBoutonRefreshAuto.setOnClickListener(this);
-        mHeureRefresh = findViewById(R.id.heure_refresh);
 
         // Tour suivant
         mBoutonTourSuivant = findViewById(R.id.bouton_tour_suivant);
@@ -200,7 +162,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateTextView();
                                     // Mise à jour complète
                                     new TacheGetInfoBelote().execute(urlBelote + mIdPartie + "&joueur=" + mPseudo);
                                 }
@@ -215,41 +176,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
             t.start();
             debug("start refresh");
         }
-        mRefreshAuto = true;
-    }
-
-    private void stopRefreshAuto() {
-        t.interrupt();
-        mRefreshAuto = false;
-    }
-
-    private void updateTextView() {
-        java.util.Date noteTS = Calendar.getInstance().getTime();
-
-        String time = "hh:mm:ss"; // 12:00:00
-        mHeureRefresh.setText(DateFormat.format(time, noteTS));
-
-        //String date = "dd MMMMM yyyy"; // 01 January 2013
-        //titre.setText(DateFormat.format(date, noteTS));
-    }
-
-    @Override
-    protected void onPause() {
-        // Stop refresh auto
-        stopRefreshAuto();
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        stopRefreshAuto();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopRefreshAuto();
-        super.onDestroy();
     }
 
     @Override
@@ -261,16 +187,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bouton_refresh:
-                if (mRefreshAuto) {
-                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.blanc));
-                    stopRefreshAuto();
-                } else {
-                    mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.noir));
-                    startRefreshAuto();
-                }
-                break;
-
             case R.id.bouton_retour:
                 finish();
                 break;
@@ -740,18 +656,14 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
         return idImageCarte;
     }
 
-    private void debug(String message) {
-        Log.d("PGR", message);
-    }
+    void parseXML(Document doc) {
 
-    private void parseXML(Document doc) {
-
-        Element element=doc.getDocumentElement();
+        Element element = doc.getDocumentElement();
         element.normalize();
 
         // Cartes que le joueur a en main
-        mListeCartesMainJoueur = parseNoeudsCarte(doc, "Cartes");
-        afficheCartes(mListeCartesMainJoueur);
+        ArrayList<Carte> listeCartesMainJoueur = parseNoeudsCarte(doc, "Cartes");
+        afficheCartes(listeCartesMainJoueur);
 
         // Joueurs
         mListeJoueurs = parseNoeudsJoueur(doc);
@@ -938,34 +850,6 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private ArrayList<Carte> parseNoeudsCarte(Document doc, String nomNoeud) {
-        Node NoeudCartes = getNoeudUnique(doc, nomNoeud);
-
-        String couleur="";
-        int valeur=0;
-        ArrayList<Carte> listeCartes = new ArrayList<>();
-
-        for (int i=0; i<NoeudCartes.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
-            Node noeudCarte = NoeudCartes.getChildNodes().item(i);
-            Log.d("PGR-XML-Carte",noeudCarte.getNodeName());
-            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
-                Log.d("PGR-XML-Carte", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
-                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "couleur" :
-                        couleur = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "valeur" :
-                        valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-            Carte carte = new Carte(couleur, valeur);
-            listeCartes.add(carte);
-        }
-
-        return listeCartes;
-    }
-
     private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
         Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
@@ -1119,6 +1003,9 @@ public class BeloteActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(Document doc) {
+            // Ecran de chargement
+            findViewById(R.id.chargement).setVisibility(View.GONE);
+            // Lecture des informations du jeu
             parseXML(doc);
             super.onPostExecute(doc);
         }

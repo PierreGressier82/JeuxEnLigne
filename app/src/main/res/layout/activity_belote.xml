@@ -63,6 +63,30 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/chargement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/barreDeChargement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/texteChargement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Chargement"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="50sp" />
+
+    </LinearLayout>
+
     <HorizontalScrollView
         android:id="@+id/scrollView_cartes"
         android:layout_width="match_parent"
@@ -493,16 +517,6 @@
                     android:layout_weight="0.33"
                     android:gravity="center"
                     android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/bouton_refresh"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/refresh"
-                        android:textColor="@color/gris"
-                        android:visibility="invisible"
-                        android:textColorHint="@color/blanc" />
 
                     <TextView
                         android:id="@+id/heure_refresh"

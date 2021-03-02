@@ -94,9 +94,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.24 : Ajout des salons et des joueurs de chaque dans les préférences
      * 3.0.25 : Implémentation majority (parse XML)
      * 3.0.26 : Implémentation classe de jeu générique
+     * 3.0.27 : Migration topTen via la classe JeuEnVisioActivity
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.26";
+    private static final String mNumVersion = "3.0.27";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

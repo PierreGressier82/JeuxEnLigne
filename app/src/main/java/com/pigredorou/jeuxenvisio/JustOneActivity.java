@@ -1,7 +1,6 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -10,11 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pigredorou.jeuxenvisio.objets.Carte;
+import com.pigredorou.jeuxenvisio.objets.TopTen;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
+import java.util.ArrayList;
 
 public class JustOneActivity extends JeuEnVisioActivity {
 
@@ -23,14 +24,6 @@ public class JustOneActivity extends JeuEnVisioActivity {
     public static final String urlTopTenDevoilCarte = MainActivity.url + "TopTenDevoileCarte.php?partie=";
     // Tableaux des resssources
     static final int[] imagesCartes = {0, R.drawable.topten_1, R.drawable.topten_2, R.drawable.topten_3, R.drawable.topten_4, R.drawable.topten_5, R.drawable.topten_6, R.drawable.topten_7, R.drawable.topten_8, R.drawable.topten_9, R.drawable.topten_10};
-    // Variables globales
-    private int mValeurMaCarte;
-    private boolean mCarteDevoilee;
-    private int mNbLicorne;
-    private int mNbCaca;
-    private int mNbCartes;
-    private int mNumeroManche;
-    private int mValeurCarteTapis;
     // Eléments graphiques
     TextView mTexteNbLicorne;
     TextView mTexteNbCaca;
@@ -103,29 +96,29 @@ public class JustOneActivity extends JeuEnVisioActivity {
         super.parseXML(doc);
 
         // Tapis
-        parseNoeudTapis(doc);
-        afficheTapis();
+        TopTen topten = parseNoeudTapis(doc);
+        afficheTapis(topten);
 
         // Ma carte
-        parseNoeudCarte(doc);
-        afficheMaCarte();
+        ArrayList<Carte> listeCartes = parseNoeudsCarte(doc, "Cartes");
+        afficheMaCarte(listeCartes);
     }
 
-    void afficheTapis() {
-        String texteManche = "Manche " + mNumeroManche + "/5";
-        String texteNbCarte = mNbCartes + " carte(s) sur " + mListeJoueurs.size();
-        mTexteNbLicorne.setText(String.valueOf(mNbLicorne));
-        mTexteNbCaca.setText(String.valueOf(mNbCaca));
+    void afficheTapis(TopTen topten) {
+        String texteManche = "Manche " + topten.getManche() + "/5";
+        String texteNbCarte = topten.getNbCartesSurTapis() + " carte(s) sur " + mListeJoueurs.size();
+        mTexteNbLicorne.setText(String.valueOf(topten.getNbLicorne()));
+        mTexteNbCaca.setText(String.valueOf(topten.getNbCaca()));
         mTexteManche.setText(texteManche);
         mTexteNbCartes.setText(texteNbCarte);
-        if (mValeurCarteTapis == 0)
+        if (topten.getNumeroCarte() == 0)
             mImageCarteTapis.setVisibility(View.INVISIBLE);
         else {
-            mImageCarteTapis.setImageResource(imagesCartes[mValeurCarteTapis]);
+            mImageCarteTapis.setImageResource(imagesCartes[topten.getNumeroCarte()]);
             mImageCarteTapis.setVisibility(View.VISIBLE);
         }
 
-        if (mNbCaca == 8) {
+        if (topten.getNbCaca() == 8) {
             Animation animation = new AlphaAnimation(1, 0);
             animation.setDuration(500);
             animation.setInterpolator(new LinearInterpolator()); //do not alter
@@ -138,10 +131,24 @@ public class JustOneActivity extends JeuEnVisioActivity {
             activeBouton(mBoutonMancheSuivante);
         } else
             mTextePerdu.setVisibility(View.INVISIBLE);
+
+        if (topten.getNbCartesSurTapis() == mListeJoueurs.size())
+            activeBouton(mBoutonMancheSuivante);
+        else
+            desactiveBouton(mBoutonMancheSuivante);
     }
 
-    void afficheMaCarte() {
-        mImageMaCarte.setImageResource(imagesCartes[mValeurMaCarte]);
+    void afficheMaCarte(ArrayList<Carte> listeCartes) {
+        int valeurCarte = 0;
+        boolean carteDevoilee = false;
+
+        // Dans TopTen, on a qu'une seule carte en main
+        if (listeCartes != null && listeCartes.size() > 0) {
+            valeurCarte = listeCartes.get(0).getValeur();
+            carteDevoilee = listeCartes.get(0).isPose();
+        }
+
+        mImageMaCarte.setImageResource(imagesCartes[valeurCarte]);
 
         // Affiche le bouton manche suivante uniquement pour les joueurs admin
         if (mAdmin)
@@ -150,66 +157,10 @@ public class JustOneActivity extends JeuEnVisioActivity {
             mBoutonMancheSuivante.setVisibility(View.GONE);
 
         // Désactive le bouton "dévoiler ma carte" si la carte a déjà été jouée
-        if (mCarteDevoilee)
+        if (carteDevoilee)
             desactiveBouton(mBoutonDevoiler);
         else
             activeBouton(mBoutonDevoiler);
 
-        if (mNbCartes == mListeJoueurs.size())
-            activeBouton(mBoutonMancheSuivante);
-        else
-            desactiveBouton(mBoutonMancheSuivante);
-    }
-
-    // TODO : déplacer les fonctions parse dans la classe JeuEnVisio
-    void parseNoeudCarte(Document doc) {
-        Node noeudCarte = getNoeudUnique(doc, "Carte");
-
-        mValeurMaCarte = 0;
-
-        for (int i = 0; i < noeudCarte.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud carte
-            Log.d("PGR-XML-Carte", noeudCarte.getAttributes().item(i).getNodeName() + "_" + noeudCarte.getAttributes().item(i).getNodeValue());
-            switch (noeudCarte.getAttributes().item(i).getNodeName()) {
-                case "numero":
-                    if (!noeudCarte.getAttributes().item(i).getNodeValue().isEmpty())
-                        mValeurMaCarte = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
-                    break;
-                case "pose":
-                    if (!noeudCarte.getAttributes().item(i).getNodeValue().isEmpty()) {
-                        int ordrePose = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
-                        mCarteDevoilee = ordrePose != 0;
-                    } else
-                        mCarteDevoilee = false;
-                    break;
-            }
-        }
-    }
-
-    void parseNoeudTapis(Document doc) {
-        Node noeudTapis = getNoeudUnique(doc, "Tapis");
-
-        mValeurCarteTapis = 0;
-        for (int i = 0; i < noeudTapis.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud tapis
-            Log.d("PGR-XML-Tapis", noeudTapis.getAttributes().item(i).getNodeName() + "_" + noeudTapis.getAttributes().item(i).getNodeValue());
-            if (noeudTapis.getAttributes().item(i).getNodeValue().isEmpty())
-                continue;
-            switch (noeudTapis.getAttributes().item(i).getNodeName()) {
-                case "licorne":
-                    mNbLicorne = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
-                    break;
-                case "caca":
-                    mNbCaca = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
-                    break;
-                case "manche":
-                    mNumeroManche = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
-                    break;
-                case "numero":
-                    mValeurCarteTapis = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
-                    break;
-                case "nbCartes":
-                    mNbCartes = Integer.parseInt(noeudTapis.getAttributes().item(i).getNodeValue());
-                    break;
-            }
-        }
     }
 }
