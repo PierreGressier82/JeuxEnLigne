@@ -62,6 +62,7 @@
     <string name="topten">TopTen</string>
     <string name="devoiler_ma_carte">DEVOILER MA CARTE</string>
     <string name="manche_suivante">Manche suivante</string>
+    <string name="tour_suivant">Tour suivant</string>
     <string name="perdu">PERDU</string>
     <string name="une_nouvelle_version_est_disponible">Une nouvelle version est disponible <u>ici</u></string>
     <string name="majority">Majority</string>
@@ -69,4 +70,5 @@
     <string name="passer_au_tour_suivant">Passer au tour suivant</string>
     <string name="timeline">Timeline</string>
     <string name="majorit">Majorité</string>
+    <string name="elimine">Eliminé(e)</string>
 </resources>

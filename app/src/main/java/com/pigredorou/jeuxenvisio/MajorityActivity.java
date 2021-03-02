@@ -1,65 +1,41 @@
 package com.pigredorou.jeuxenvisio;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Mot;
+import com.pigredorou.jeuxenvisio.objets.Vote;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
-
-public class MajorityActivity extends AppCompatActivity implements View.OnClickListener {
+public class MajorityActivity extends JeuEnVisioActivity {
 
     // Variables globales
-    private String mPseudo;
-    private int mIdJoueur;
-    private int mIdPartie;
     private int mIdMot;
-    private int mMethodeSelection;
     private int mValeurVote;
-    private int mMonScore;
     private int mNbMotsTrouves;
-    private int mNbVote;
-    private int mNbVoteAttendu;
-    private boolean mAdmin;
+    private int mValeurVoteMax;
+    private boolean mSuisElimine;
     // Variables statiques
+    private final static String urlJeu = MainActivity.url + "majority.php?partie=";
+    private final static String urlVote = MainActivity.url + "vote.php?partie=";
+    private final static String urlSuivant = MainActivity.url + "initMajority.php?partie=";
     private final static int VOTE_CARTE_A = 1;
     private final static int VOTE_CARTE_B = 2;
     private final static int VOTE_CARTE_C = 3;
     private final static int VOTE_CARTE_MAJORITE = 4;
-    private final static String urlMajority = MainActivity.url + "majority.php?partie=";
-    private final static String urlVote = MainActivity.url + "vote.php?partie=";
-    private static final int[] tableIdRessourcesMots = {R.id.mot_principal, R.id.mot_1, R.id.mot_2, R.id.mot_3};
-    private static final int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
-    private static final int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
+    private final static int[] tableIdRessourcesMots = {0, R.id.mot_1, R.id.mot_2, R.id.mot_3, R.id.mot_principal};
+    private final static int[] tableIdRessourcesCarteVote = {0, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c, R.id.carte_vote_majority};
+    private final static int[] tableIdRessourcesTexteVote = {0, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c, R.id.resultat_vote_majority};
     // Elements graphique
-    private Button mBoutonValider;
     private Button mBoutonMancheTourSuivant;
     private ImageView mCarteVoteA;
     private ImageView mCarteVoteB;
@@ -69,38 +45,13 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     private TextView mResultatVoteB;
     private TextView mResultatVoteC;
     private TextView mResultatVoteMajority;
-    // Refresh auto
-    private Thread t;
-    private boolean mMajTerminee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Masque le bar de titre de l'activité
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        // Bloque la mise en veille
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
         setContentView(R.layout.activity_majority);
 
-        // Chargement
-        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
-
-        // Recupère les paramètres
-        TextView tvPseudo = findViewById(R.id.pseudo);
-        TextView tvNomSalon = findViewById(R.id.nom_salon);
-        final Intent intent = getIntent();
-        mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
-        String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
-        mIdJoueur = intent.getIntExtra(MainActivity.VALEUR_ID_JOUEUR, 0);
-        mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
-        tvPseudo.setText(mPseudo);
-        tvNomSalon.setText(nomSalon);
-
-        // Bouton retour
-        ImageView boutonRetour = findViewById(R.id.bouton_retour);
-        boutonRetour.setOnClickListener(this);
+        super.onCreate(savedInstanceState);
 
         // Cartes pour le vote
         chargeCartesVote();
@@ -110,9 +61,9 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         desactiveBouton(mBoutonMancheTourSuivant);
 
         // Refresh info jeu
-        mMajTerminee = true;
-        startRefreshAuto();
+        startRefreshAuto(urlJeu);
 
+        mSuisElimine = false;
         // TODO : en fin de partie afficher le tableau des scores
     }
 
@@ -145,32 +96,9 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    protected void onPause() {
-        // Stop refresh auto
-        stopRefreshAuto();
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        stopRefreshAuto();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopRefreshAuto();
-        super.onDestroy();
-    }
-
-    @Override
     protected void onResume() {
-        startRefreshAuto();
+        startRefreshAuto(urlJeu);
         super.onResume();
-    }
-
-    private void stopRefreshAuto() {
-        t.interrupt();
     }
 
     @Override
@@ -194,24 +122,20 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
                     desactiveBouton(mBoutonValider);
                     new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mIdMot);
                 }
-                startRefreshAuto();
+                startRefreshAuto(urlJeu);
                 break;
 
             case "bouton_suivant":
-                // TODO : Gestion tour ou manche suivante
+                if (mBoutonMancheTourSuivant.getText().toString().equals(getResources().getString(R.string.tour_suivant))) {
+                    // TODO : attributer les points si ex-equos avec le vote majoritaire
+                    new MainActivity.TacheURLSansRetour().execute(urlSuivant + mIdPartie + "&tour=oui");
+                } else if (mBoutonMancheTourSuivant.getText().toString().equals(getResources().getString(R.string.manche_suivante))) {
+                    // TODO : attributer les points aux joueurs majoritaires
+                    new MainActivity.TacheURLSansRetour().execute(urlSuivant + mIdPartie + "&manche=oui");
+                }
                 break;
         }
 
-    }
-
-    private void activeBouton(Button bouton) {
-        bouton.setTextColor(getResources().getColor(R.color.blanc));
-        bouton.setOnClickListener(this);
-    }
-
-    private void desactiveBouton(Button bouton) {
-        bouton.setTextColor(getResources().getColor(R.color.noir));
-        bouton.setOnClickListener(null);
     }
 
     private void selectionneCarteVote(String tag) {
@@ -224,67 +148,29 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
             case "carte_vote_a":
                 mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_A;
-                mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[1]).getTag().toString());
                 break;
             case "carte_vote_b":
                 mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_B;
-                mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[2]).getTag().toString());
                 break;
             case "carte_vote_c":
                 mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_C;
-                mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[3]).getTag().toString());
                 break;
             case "carte_vote_majority":
                 mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_MAJORITE;
-                mIdMot = 0;
                 break;
         }
+        mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[mValeurVote]).getTag().toString());
     }
 
-    private void startRefreshAuto() {
-        if (t == null || !t.isAlive()) {
-            t = new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        while (!isInterrupted()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    if (mMajTerminee) {
-                                        mMajTerminee = false;
-                                        // Mise à jour complète
-                                        new TacheGetInfoMajority().execute(urlMajority + mIdPartie);
-                                    }
-                                }
-                            });
-                            Thread.sleep(1000);
-                        }
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            };
-
-            t.start();
-        }
-    }
-
-
-    private void parseXML(Document doc) {
-        findViewById(R.id.chargement).setVisibility(View.GONE);
-
+    void parseXML(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
 
-        // Joueurs
-        ArrayList<Joueur> listeJoueurs = parseNoeudsJoueur(doc);
-        mAdmin = suisJeAdmin(mPseudo, listeJoueurs);
-        afficheScore(listeJoueurs);
+        super.parseXML(doc);
+        afficheScore(mListeJoueurs);
 
         // Bouton tour ou manche suivant que pour les joueurs admin
         if (mAdmin)
@@ -297,51 +183,71 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         afficheMots(listeMots);
 
         // Votes
-        activeCarteVote();
-        masqueResultats();
-        Integer[] listeVotes = parseNoeudsVotes(doc);
+        ArrayList<Vote> listeVotes = parseNoeudsVotes(doc);
         afficheVotes(listeVotes);
     }
 
-    private void afficheScore(ArrayList<Joueur> listeJoueurs) {
-        String textScore;
+    private void afficheVotes(ArrayList<Vote> listeVotes) {
+        int nbVoteAttendu = listeVotes.size();
+        Integer[] nbVoteParCarte = {0, 0, 0, 0, 0};
+        mSuisElimine = true;
+        int nbVote = 0;
 
-        mMonScore = getScoreJoueurId(listeJoueurs);
-        textScore = getResources().getString(R.string.score_quipe) + " : " + mMonScore;
-        TextView tv = findViewById(R.id.score);
-        tv.setText(textScore);
-    }
+        // Reset l'affichage des votes
+        activeToutesLesCartesVotes();
+        masqueResultats();
 
-    private int getScoreJoueurId(ArrayList<Joueur> listeJoueurs) {
-        int score = 0;
-        for (int i = 0; i < listeJoueurs.size(); i++) {
-            if (listeJoueurs.get(i).getId() == mIdJoueur) {
-                score = listeJoueurs.get(i).getScore();
-                break;
+        for (int i = 0; i < listeVotes.size(); i++) {
+            // Le vote a déjà était enregistré
+            if (listeVotes.get(i).getLettre() > 0) {
+                nbVoteParCarte[listeVotes.get(i).getLettre()]++;
+                nbVote++;
+                // Si j'ai déjà voté pour ce tour, désactive le bouton
+                if (mIdJoueur == listeVotes.get(i).getIdJoueur()) {
+                    mSuisElimine = false;
+                    desactiveBouton(mBoutonValider);
+                    desactiveCartesVote();
+                    mValeurVote = listeVotes.get(i).getLettre();
+                    selectionneCarteVoteParLettre(mValeurVote);
+                }
             }
+
         }
 
-        return score;
-    }
-
-    private void afficheVotes(Integer[] listeVotes) {
+        // Mise à jour du nombre de vote
         TextView tv = findViewById(R.id.nb_vote_joueurs);
-        String texteVote = mNbVote + " vote(s) sur " + mNbVoteAttendu;
+        String texteVote = nbVote + " vote(s) sur " + nbVoteAttendu;
         tv.setText(texteVote);
 
         // Affichage des résultats du vote
-        if (mNbVote == mNbVoteAttendu) {
-            afficheResultatsVote(listeVotes);
+        if (nbVote == nbVoteAttendu) {
+            afficheResultatsVote(nbVoteParCarte);
+
+            // TODO : si vote majoritaire == carte étoiles -> Attribuer les points -> Est-ce via le php tour/manche suivante ?
+
+            if (mValeurVoteMax > 2) // Tour suivant
+                mBoutonMancheTourSuivant.setText(getResources().getString(R.string.tour_suivant));
+            else // Manche suivante
+                mBoutonMancheTourSuivant.setText(getResources().getString(R.string.manche_suivante));
             activeBouton(mBoutonMancheTourSuivant);
         }
+
+        // Si je suis éliminé, désactive le vote
+        if (mSuisElimine) {
+            desactiveBouton(mBoutonValider);
+            desactiveCartesVote();
+            mBoutonValider.setText(getResources().getString(R.string.elimine));
+            mBoutonValider.setTextColor(getResources().getColor(R.color.rouge));
+        } else
+            mBoutonValider.setText(getResources().getString(R.string.valider));
+
     }
 
-    private void activeCarteVote() {
-        // Détermine les cartes ayant le vote max
-        for (int value : tableIdRessourcesCarteVote) {
-            findViewById(value).setAlpha(1);
-            findViewById(value).setBackgroundResource(R.drawable.fond_carte_blanc);
-            findViewById(value).setOnClickListener(this);
+    private void activeToutesLesCartesVotes() {
+        for (int i = 1; i < tableIdRessourcesCarteVote.length; i++) {
+            findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
+            findViewById(tableIdRessourcesCarteVote[i]).setBackgroundResource(R.drawable.fond_carte_blanc);
+            findViewById(tableIdRessourcesCarteVote[i]).setOnClickListener(this);
         }
     }
 
@@ -352,19 +258,18 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         mResultatVoteMajority.setVisibility(View.GONE);
     }
 
-    private void afficheResultatsVote(Integer[] listeVotes) {
-        determineVoteMajoritaire(listeVotes);
+    private void afficheResultatsVote(Integer[] nbVotesParCarte) {
+        determineVoteMajoritaire(nbVotesParCarte);
 
-        mResultatVoteMajority.setText(texteVote(listeVotes[0]));
-        mResultatVoteA.setText(texteVote(listeVotes[1]));
-        mResultatVoteB.setText(texteVote(listeVotes[2]));
-        mResultatVoteC.setText(texteVote(listeVotes[3]));
+        mResultatVoteA.setText(texteVote(nbVotesParCarte[VOTE_CARTE_A]));
+        mResultatVoteB.setText(texteVote(nbVotesParCarte[VOTE_CARTE_B]));
+        mResultatVoteC.setText(texteVote(nbVotesParCarte[VOTE_CARTE_C]));
+        mResultatVoteMajority.setText(texteVote(nbVotesParCarte[VOTE_CARTE_MAJORITE]));
 
-        // TODO : afficher joueur éliminé
-        mResultatVoteMajority.setVisibility(View.VISIBLE);
         mResultatVoteA.setVisibility(View.VISIBLE);
         mResultatVoteB.setVisibility(View.VISIBLE);
         mResultatVoteC.setVisibility(View.VISIBLE);
+        mResultatVoteMajority.setVisibility(View.VISIBLE);
     }
 
     private String texteVote(Integer listeVote) {
@@ -377,20 +282,23 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         return texte;
     }
 
-    private void determineVoteMajoritaire(Integer[] listeVotes) {
-        int voteMax = 0;
+    private void determineVoteMajoritaire(Integer[] nbVotesParCarte) {
+        mValeurVoteMax = 0;
         // Détermine le vote max
-        for (Integer listeVote : listeVotes) {
-            if (listeVote > voteMax)
-                voteMax = listeVote;
+        for (Integer listeVote : nbVotesParCarte) {
+            if (listeVote > mValeurVoteMax)
+                mValeurVoteMax = listeVote;
         }
 
         // Détermine les cartes ayant le vote max
-        for (int i = 0; i < listeVotes.length; i++) {
-            if (listeVotes[i] == voteMax) {
+        for (int i = 1; i < nbVotesParCarte.length; i++) {
+            if (nbVotesParCarte[i] == mValeurVoteMax) {
                 findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
                 findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.vert_clair_transparent));
             } else {
+                // Si j'ai fait un choix non majoritaire -> Je suis éliminé
+                if (mValeurVote == i)
+                    mSuisElimine = true;
                 findViewById(tableIdRessourcesCarteVote[i]).setAlpha((float) 0.5);
                 findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.noir_transparent));
             }
@@ -400,7 +308,7 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
     private void afficheMots(ArrayList<Mot> listeMots) {
         TextView tv = findViewById(R.id.nb_mot_trouves);
         tv.setText(String.valueOf(mNbMotsTrouves));
-        for (int i = 0; i < listeMots.size(); i++) {
+        for (int i = 1; i < listeMots.size(); i++) {
             tv = findViewById(tableIdRessourcesMots[i]);
             tv.setText(listeMots.get(i).getMot());
             tv.setTag(String.valueOf(listeMots.get(i).getIdMot()));
@@ -441,50 +349,6 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
         return listeMots;
     }
 
-    private Integer[] parseNoeudsVotes(Document doc) {
-        Node noeudVotes = getNoeudUnique(doc, "Votes");
-
-        int id_joueur = 0;
-        int id_mot = 0;
-        int lettre;
-        Integer[] listeVotes = {0, 0, 0, 0};
-        mNbVote = 0;
-        mNbVoteAttendu = 0;
-
-        for (int i = 0; i < noeudVotes.getChildNodes().getLength(); i++) { // Parcours toutes les votes
-            Node noeudVote = noeudVotes.getChildNodes().item(i);
-            Log.d("PGR-XML-Vote", noeudVote.getNodeName());
-            for (int j = 0; j < noeudVote.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud vote
-                Log.d("PGR-XML-Vote", noeudVote.getAttributes().item(j).getNodeName() + "_" + noeudVote.getAttributes().item(j).getNodeValue());
-                switch (noeudVote.getAttributes().item(j).getNodeName()) {
-                    case "id_joueur":
-                        id_joueur = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
-                        mNbVoteAttendu++;
-                        break;
-                    case "id_mot":
-                        id_mot = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "lettre":
-                        if (noeudVote.getAttributes().item(j).getNodeValue().isEmpty())
-                            lettre = -1;
-                        else {
-                            mNbVote++;
-                            lettre = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
-                            listeVotes[lettre]++;
-                            if (mIdJoueur == id_joueur) {
-                                desactiveBouton(mBoutonValider);
-                                desactiveCartesVote();
-                                selectionneCarteVoteParLettre(lettre);
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-
-        return listeVotes;
-    }
-
     private void selectionneCarteVoteParLettre(int lettre) {
         mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_blanc);
         mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_blanc);
@@ -493,40 +357,4 @@ public class MajorityActivity extends AppCompatActivity implements View.OnClickL
 
         findViewById(tableIdRessourcesCarteVote[lettre]).setBackgroundResource(R.drawable.fond_carte_vert);
     }
-
-    /**
-     * Classe qui permet de récupérer en base toutes les informations du jeu Majority
-     * -> Retourne l'ensemble des informations à afficher au joueur sous forme XML
-     */
-    private class TacheGetInfoMajority extends AsyncTask<String, Void, Document> {
-
-        @Override
-        protected Document doInBackground(String... strings) {
-            URL url;
-            Document doc = null;
-            try {
-                // l'URL est en paramètre donc toujours 1 seul paramètre
-                url = new URL(strings[0]);
-                // Lecture du flux
-                InputStream is = url.openStream();
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                doc = dBuilder.parse(is);
-            } catch (IOException | ParserConfigurationException | SAXException e) {
-                e.printStackTrace();
-            }
-
-            return doc;
-        }
-
-        @Override
-        protected void onPostExecute(Document doc) {
-            mMajTerminee = true;
-            if (doc != null) {
-                parseXML(doc);
-            }
-            super.onPostExecute(doc);
-        }
-    }
-
 }

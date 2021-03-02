@@ -33,8 +33,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
-
 public class BeloteActivity extends JeuEnVisioActivity implements View.OnTouchListener {
 
     // Constantes
@@ -666,7 +664,7 @@ public class BeloteActivity extends JeuEnVisioActivity implements View.OnTouchLi
         afficheCartes(listeCartesMainJoueur);
 
         // Joueurs
-        mListeJoueurs = parseNoeudsJoueur(doc);
+        mListeJoueurs = parseNoeudsJoueurEtEquipe(doc);
         affichePseudos(mListeJoueurs);
 
         // Pli en cours
@@ -850,14 +848,14 @@ public class BeloteActivity extends JeuEnVisioActivity implements View.OnTouchLi
 
     }
 
-    private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
+    private ArrayList<Joueur> parseNoeudsJoueurEtEquipe(Document doc) {
         Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
-        String pseudo="";
-        String equipe="";
-        int nbJoueurQuiPassent=0;
-        int maPostion=-1;
-        boolean estCeLe2EmeTour=false;
+        String pseudo = "";
+        String equipe = "";
+        int nbJoueurQuiPassent = 0;
+        int maPostion = -1;
+        boolean estCeLe2EmeTour = false;
         mAtoutChoisi = "";
         mJoueurQuiAPris = "";
         TextView tv = findViewById(R.id.pseudo_joueur_qui_a_pris);
