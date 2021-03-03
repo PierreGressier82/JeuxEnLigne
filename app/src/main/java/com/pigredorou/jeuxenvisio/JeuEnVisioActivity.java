@@ -108,7 +108,8 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     }
 
     void stopRefreshAuto() {
-        t.interrupt();
+        if (t != null)
+            t.interrupt();
     }
 
     @Override
