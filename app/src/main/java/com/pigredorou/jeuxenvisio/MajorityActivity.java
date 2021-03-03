@@ -1,10 +1,12 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.pigredorou.jeuxenvisio.objets.Mot;
@@ -24,6 +26,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private int mNbMotsTrouves;
     private int mNbJoueursMajoritaires;
     private boolean mSuisElimine;
+    // Sablier
+    private CountDownTimer mCompteurARebours;
     // Variables statiques
     private final static String urlJeu = MainActivity.url + "majority.php?partie=";
     private final static String urlVote = MainActivity.url + "vote.php?partie=";
@@ -33,6 +37,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private final static int VOTE_CARTE_A = 1;
     private final static int VOTE_CARTE_B = 2;
     private final static int VOTE_CARTE_C = 3;
+    private final int TEMPS_SABLIER = 30;
     private final static int[] tableIdRessourcesMots = {R.id.mot_principal, R.id.mot_1, R.id.mot_2, R.id.mot_3};
     private final static int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
     private final static int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
@@ -46,6 +51,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private TextView mResultatVoteB;
     private TextView mResultatVoteC;
     private TextView mResultatVoteMajority;
+    private TextView mTempsRestant;
+    private ProgressBar mSablier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +68,39 @@ public class MajorityActivity extends JeuEnVisioActivity {
         desactiveBouton(mBoutonValider);
         desactiveBouton(mBoutonMancheTourSuivant);
 
+        // Sablier
+        mTempsRestant = findViewById(R.id.temps_restant);
+        mSablier = findViewById(R.id.sablier);
+
         // Refresh info jeu
         startRefreshAuto(urlJeu);
 
         mSuisElimine = false;
         // TODO : en fin de partie afficher le tableau des scores
+    }
+
+    private void startChrono() {
+        // On lance le sablier s'il n'est pas déjà lancé
+        if (mCompteurARebours == null) {
+            //mCompteurARebours.cancel();
+            mSablier.setVisibility(View.VISIBLE);
+            mTempsRestant.setVisibility(View.VISIBLE);
+            mSablier.setIndeterminate(false);
+            mSablier.setMax(TEMPS_SABLIER);
+            mSablier.setProgress(TEMPS_SABLIER);
+
+            mCompteurARebours = new CountDownTimer(TEMPS_SABLIER * 1000, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    String texte = String.valueOf(millisUntilFinished / 1000);
+                    mTempsRestant.setText(texte);
+                    mSablier.setProgress((int) (millisUntilFinished / 1000));
+                }
+
+                public void onFinish() {
+                    mTempsRestant.setText(getResources().getString(R.string.temps_ecoule));
+                }
+            }.start();
+        }
     }
 
     private void chargeBoutons() {
@@ -121,6 +156,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
                 if (mValeurVote > 0) {
                     desactiveBouton(mBoutonValider);
                     new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mIdMot);
+                    // Arrête le sablier
+                    mCompteurARebours.cancel();
                 }
                 startRefreshAuto(urlJeu);
                 break;
@@ -193,6 +230,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
         mSuisElimine = true;
         mValeurVote = -1;
         int nbVote = 0;
+        boolean startChrono = true;
 
         // Reset l'affichage des votes
         activeToutesLesCartesVotes();
@@ -206,6 +244,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
                 // Si j'ai déjà voté pour ce tour, désactive le bouton
                 if (mIdJoueur == listeVotes.get(i).getIdJoueur()) {
                     desactiveBouton(mBoutonValider);
+                    startChrono = false;
+                    mCompteurARebours = null;
                     desactiveCartesVote();
                     mValeurVote = listeVotes.get(i).getLettre();
                     selectionneCarteVoteParLettre(mValeurVote);
@@ -225,7 +265,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
         if (nbVote == nbVoteAttendu) {
             afficheResultatsVote(nbVoteParCarte);
 
-            // TODO : si vote majoritaire == carte étoiles -> Attribuer les points -> Est-ce via le php tour/manche suivante ?
+            // TODO : si vote majoritaire == carte étoiles -> Attribuer les points -> via le php tour/manche suivante
 
             if (mNbJoueursMajoritaires > 2) // Si au moins 3 joueurs sont encore en jeu -> Tour suivant
                 mBoutonMancheTourSuivant.setText(getResources().getString(R.string.tour_suivant));
@@ -240,9 +280,11 @@ public class MajorityActivity extends JeuEnVisioActivity {
             desactiveCartesVote();
             mBoutonValider.setText(getResources().getString(R.string.elimine));
             mBoutonValider.setTextColor(getResources().getColor(R.color.rouge));
-        } else
+        } else {
             mBoutonValider.setText(getResources().getString(R.string.valider));
-
+            if (startChrono)
+                startChrono();
+        }
     }
 
     private void activeToutesLesCartesVotes() {

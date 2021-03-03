@@ -228,9 +228,9 @@
         <ImageView
             android:id="@+id/carte_a"
             android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
             android:layout_weight=".2"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
@@ -246,9 +246,9 @@
         <ImageView
             android:id="@+id/carte_b"
             android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
             android:layout_weight=".2"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
@@ -264,9 +264,9 @@
         <ImageView
             android:id="@+id/carte_c"
             android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
             android:layout_weight=".2"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
@@ -593,6 +593,24 @@
         android:textAlignment="center"
         android:textColor="@color/blanc"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/temps_restant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/blanc"
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:id="@+id/sablier"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="30"
+        android:progress="30"
+        android:scrollbarSize="10dp" />
 
     <Button
         android:id="@+id/bouton_valider"

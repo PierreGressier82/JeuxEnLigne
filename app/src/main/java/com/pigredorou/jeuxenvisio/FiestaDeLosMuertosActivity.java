@@ -140,7 +140,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             tv.setOnClickListener(this);
         }
 
-        // Compte à rebourd
+        // Sablier
         mTempsRestant = findViewById(R.id.temps_restant);
         mSablier = findViewById(R.id.sablier);
 

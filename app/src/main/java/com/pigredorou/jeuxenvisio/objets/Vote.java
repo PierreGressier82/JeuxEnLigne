@@ -1,9 +1,9 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Vote {
-    private int mIdJoueur;
-    private int mIdMot;
-    private int mLettre;
+    private final int mIdJoueur;
+    private final int mIdMot;
+    private final int mLettre;
 
     public Vote(int idJoueur, int idMot, int lettre) {
         mIdJoueur = idJoueur;

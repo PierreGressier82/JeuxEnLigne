@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int JUSTONE_ACTIVITY_REQUEST_CODE = 19;
     public static final int mSelectionDoucleClic = 1;
     public static final int mSelectionDragAndDrop = 2;
-    public static final int mSelectionDragAndDropLongTouch = 3;
+    //public static final int mSelectionDragAndDropLongTouch = 3;
     private static final int mIdTheCrew = 1;
     private static final int mIdFiestaDeLosMuertos = 2;
     private static final int mIdLeRoiDesNains = 3;
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mEtapeChargement;
     private final int mNbTentativeMax = 15;
     private boolean mChargementOK = false;
-    private String mMessageErreur;
+    //private String mMessageErreur;
     private TextView mTexteChargement;
     private TextView mTexteNouvelleVersion;
     private String mNumeroVersionDispo;
@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mIdJeu; // Id du jeu (en BDD)
     private int mIndexSalon; // Index du salon (numéro de la liste)
     private int mIdJoueur; // Index du salon (numéro de la liste)
-    private String mNomSalon;
     private String mPseudo;
     private boolean mSalonChoisi = false;
     private boolean mJeuChoisi = false;
@@ -216,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPreferences = getSharedPreferences(KEY_PREFERENCES, MODE_PRIVATE);
         mIdSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
         mIdJoueur = mPreferences.getInt(VALEUR_ID_JOUEUR, 0);
-        mNomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
+        //String nomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -664,10 +663,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        // Sauvegarde le pseudo
-        String nom_salon = "";
-        nom_salon = mListeSalons.get(mIndexSalon).getNom();
         // Sauvegarde des préférences
+        String nom_salon = mListeSalons.get(mIndexSalon).getNom();
         mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
         mPreferences.edit().putInt(VALEUR_ID_SALON, mIdSalon).apply();
         mPreferences.edit().putString(VALEUR_NOM_SALON, nom_salon).apply();
@@ -1116,7 +1113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 doc = dBuilder.parse(is);
             } catch (IOException | ParserConfigurationException | SAXException e) {
                 e.printStackTrace();
-                mMessageErreur = e.getMessage();
+                //mMessageErreur = e.getMessage();
                 mChargementOK = false;
             }
 
@@ -1138,18 +1135,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         else
                             findViewById(R.id.bloc_salons).setVisibility(View.GONE);
                         break;
-                    case "Version":
-                        parseXMLVersion(doc);
-                        chargementEtapeSuivante();
-                        break;
                     case "Joueurs":
                         mListeJoueurs = parseNoeudsJoueur(doc);
                         afficheJoueurs(mListeJoueurs);
+                        mEtapeChargement = 1;
                         chargementEtapeSuivante();
                         break;
                     case "Jeux":
                         mListeJeux = parseXMLJeux(doc);
                         afficheJeux(mListeJeux);
+                        mEtapeChargement = 2;
+                        chargementEtapeSuivante();
+                        break;
+                    case "Version":
+                        parseXMLVersion(doc);
+                        mEtapeChargement = 3;
                         chargementEtapeSuivante();
                         break;
                 }
@@ -1159,10 +1159,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void chargementEtapeSuivante() {
-        mEtapeChargement++;
+        String texte = "Etape " + mEtapeChargement;
         TextView tv = findViewById(R.id.etapeChargement);
-        tv.setText("Etape " + mEtapeChargement);
-
+        tv.setText(texte);
     }
 
     /**
