@@ -1,8 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/sable"
+    android:orientation="vertical"
     tools:context=".JustOneActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/entete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/bouton_retour"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/retour_l_accueil"
+            android:src="@drawable/bouton_quitter"
+            android:tag="bouton_retour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nom_salon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/app_name"
+            android:textAlignment="textEnd"
+            android:textColor="@color/blanc"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@id/bouton_retour"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/titre_jeu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/just_one"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/bouton_retour"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/pseudo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/pseudo"
+            android:textAlignment="textEnd"
+            android:textColor="@color/blanc"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/chargement"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/texteChargement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Chargement"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="50sp" />
+
+        <ProgressBar
+            android:id="@+id/barreDeChargement"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/noir_transparent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="250sp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/fond_carte_blanc"
+            android:padding="10sp"
+            android:src="@drawable/just_one_carte_mots"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/mot_1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:layout_marginTop="15dp"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/noir"
+                android:textSize="15sp"
+                android:text="@string/Chargement" />
+
+            <TextView
+                android:id="@+id/mot_2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/noir"
+                android:textSize="15sp"
+                android:text="@string/Chargement" />
+
+            <TextView
+                android:id="@+id/mot_3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.2"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/noir"
+                android:textSize="15sp"
+                android:text="@string/Chargement" />
+
+            <TextView
+                android:id="@+id/mot_4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.2"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/noir"
+                android:textSize="15sp"
+                android:text="@string/Chargement" />
+
+            <TextView
+                android:id="@+id/mot_5"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.2"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/noir"
+                android:textSize="15sp"
+                android:text="@string/Chargement" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/zone_saisie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/just_one_chevalet"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:tag="zone_saisie"
+        android:hint="@string/ecrit_un_mot"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/noir"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/nb_vote_joueurs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/Chargement"
+        android:textAlignment="center"
+        android:textColor="@color/blanc"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/bouton_valider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/noir_transparent"
+        android:tag="bouton_valider"
+        android:text="@string/valider"
+        android:textColor="@color/blanc" />
+
+    <Button
+        android:id="@+id/bouton_manche_suivante"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/noir_transparent"
+        android:tag="bouton_suivant"
+        android:text="@string/manche_suivante"
+        android:textColor="@color/blanc"
+        android:visibility="gone" />
+</LinearLayout>

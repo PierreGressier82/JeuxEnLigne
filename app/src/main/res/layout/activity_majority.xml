@@ -103,9 +103,9 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_weight=".33"
             android:adjustViewBounds="true"
             android:background="@drawable/fond_carte_blanc"
             android:padding="5dp"
@@ -132,15 +132,19 @@
                 android:id="@+id/mot_principal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/pseudo"
-                android:textAlignment="center"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginBottom="5dp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:maxLines="1"
+                android:tag="0"
+                android:text="@string/Chargement"
+                android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@color/noir"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:tag="0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -167,14 +171,14 @@
             android:id="@+id/score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
+            android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:textSize="20sp"
-            android:textColor="@color/blanc"
+            android:layout_weight=".33"
+            android:padding="5dp"
             android:text="@string/score_quipe"
-            android:layout_gravity="center"
-            android:padding="5dp" />
+            android:textColor="@color/blanc"
+            android:textSize="20sp" />
 
 
     </LinearLayout>
@@ -308,15 +312,15 @@
                 android:id="@+id/mot_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:maxLines="1"
+                android:layout_marginBottom="5dp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center"
-                android:text="@string/pseudo"
-                android:textAllCaps="true"
+                android:maxLines="1"
+                android:text="@string/Chargement"
                 android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/noir"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -349,15 +353,15 @@
                 android:id="@+id/mot_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:maxLines="1"
+                android:layout_marginBottom="5dp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center"
-                android:text="@string/pseudo"
-                android:textAllCaps="true"
+                android:maxLines="1"
+                android:text="@string/Chargement"
                 android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/noir"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -390,15 +394,15 @@
                 android:id="@+id/mot_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:maxLines="1"
+                android:layout_marginBottom="5dp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center"
-                android:text="@string/pseudo"
-                android:textAllCaps="true"
+                android:maxLines="1"
+                android:text="@string/Chargement"
                 android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/noir"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -425,10 +429,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <ImageView
@@ -440,35 +444,35 @@
                 android:padding="5dp"
                 android:src="@drawable/majority_carte_vote_a"
                 android:tag="carte_vote_a"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/resultat_vote_a"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:textColor="@color/blanc"
                 android:background="@color/noir_transparent"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/_1"
+                android:textColor="@color/blanc"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <ImageView
@@ -480,35 +484,35 @@
                 android:padding="5dp"
                 android:src="@drawable/majority_carte_vote_b"
                 android:tag="carte_vote_b"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/resultat_vote_b"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:textColor="@color/blanc"
                 android:background="@color/vert_clair_transparent"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/_1"
+                android:textColor="@color/blanc"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <ImageView
@@ -520,35 +524,35 @@
                 android:padding="5dp"
                 android:src="@drawable/majority_carte_vote_c"
                 android:tag="carte_vote_c"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/resultat_vote_c"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:textColor="@color/blanc"
                 android:background="@color/vert_clair_transparent"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/_1"
+                android:textColor="@color/blanc"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_weight=".25"
-            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <ImageView
@@ -560,26 +564,26 @@
                 android:padding="5dp"
                 android:src="@drawable/majority_carte_etoiles"
                 android:tag="carte_vote_majority"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/resultat_vote_majority"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:textColor="@color/blanc"
                 android:background="@color/vert_clair_transparent"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/_3"
+                android:textColor="@color/blanc"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
