@@ -1001,10 +1001,12 @@ public class BeloteActivity extends JeuEnVisioActivity implements View.OnTouchLi
 
         @Override
         protected void onPostExecute(Document doc) {
-            // Ecran de chargement
-            findViewById(R.id.chargement).setVisibility(View.GONE);
             // Lecture des informations du jeu
-            parseXML(doc);
+            if (doc != null) {
+                // Ecran de chargement
+                findViewById(R.id.chargement).setVisibility(View.GONE);
+                parseXML(doc);
+            }
             super.onPostExecute(doc);
         }
     }

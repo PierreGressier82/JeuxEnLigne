@@ -22,19 +22,20 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private int mIdMot;
     private int mValeurVote;
     private int mNbMotsTrouves;
-    private int mValeurVoteMax;
+    private int mNbJoueursMajoritaires;
     private boolean mSuisElimine;
     // Variables statiques
     private final static String urlJeu = MainActivity.url + "majority.php?partie=";
     private final static String urlVote = MainActivity.url + "vote.php?partie=";
     private final static String urlSuivant = MainActivity.url + "initMajority.php?partie=";
+    private final static int VOTE_NON_REALISE = -1;
+    private final static int VOTE_CARTE_MAJORITE = 0;
     private final static int VOTE_CARTE_A = 1;
     private final static int VOTE_CARTE_B = 2;
     private final static int VOTE_CARTE_C = 3;
-    private final static int VOTE_CARTE_MAJORITE = 4;
-    private final static int[] tableIdRessourcesMots = {0, R.id.mot_1, R.id.mot_2, R.id.mot_3, R.id.mot_principal};
-    private final static int[] tableIdRessourcesCarteVote = {0, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c, R.id.carte_vote_majority};
-    private final static int[] tableIdRessourcesTexteVote = {0, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c, R.id.resultat_vote_majority};
+    private final static int[] tableIdRessourcesMots = {R.id.mot_principal, R.id.mot_1, R.id.mot_2, R.id.mot_3};
+    private final static int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
+    private final static int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
     // Elements graphique
     private Button mBoutonMancheTourSuivant;
     private ImageView mCarteVoteA;
@@ -70,7 +71,6 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private void chargeBoutons() {
         mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonMancheTourSuivant = findViewById(R.id.bouton_tour_manchant_suivante);
-        mValeurVote = 0;
     }
 
     private void chargeCartesVote() {
@@ -145,6 +145,10 @@ public class MajorityActivity extends JeuEnVisioActivity {
         mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_blanc);
 
         switch (tag) {
+            case "carte_vote_majority":
+                mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_vert);
+                mValeurVote = VOTE_CARTE_MAJORITE;
+                break;
             case "carte_vote_a":
                 mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_A;
@@ -156,10 +160,6 @@ public class MajorityActivity extends JeuEnVisioActivity {
             case "carte_vote_c":
                 mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_C;
-                break;
-            case "carte_vote_majority":
-                mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_vert);
-                mValeurVote = VOTE_CARTE_MAJORITE;
                 break;
         }
         mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[mValeurVote]).getTag().toString());
@@ -189,8 +189,9 @@ public class MajorityActivity extends JeuEnVisioActivity {
 
     private void afficheVotes(ArrayList<Vote> listeVotes) {
         int nbVoteAttendu = listeVotes.size();
-        Integer[] nbVoteParCarte = {0, 0, 0, 0, 0};
+        Integer[] nbVoteParCarte = {0, 0, 0, 0};
         mSuisElimine = true;
+        mValeurVote = -1;
         int nbVote = 0;
 
         // Reset l'affichage des votes
@@ -199,19 +200,20 @@ public class MajorityActivity extends JeuEnVisioActivity {
 
         for (int i = 0; i < listeVotes.size(); i++) {
             // Le vote a déjà était enregistré
-            if (listeVotes.get(i).getLettre() > 0) {
+            if (listeVotes.get(i).getLettre() != VOTE_NON_REALISE) {
                 nbVoteParCarte[listeVotes.get(i).getLettre()]++;
                 nbVote++;
                 // Si j'ai déjà voté pour ce tour, désactive le bouton
                 if (mIdJoueur == listeVotes.get(i).getIdJoueur()) {
-                    mSuisElimine = false;
                     desactiveBouton(mBoutonValider);
                     desactiveCartesVote();
                     mValeurVote = listeVotes.get(i).getLettre();
                     selectionneCarteVoteParLettre(mValeurVote);
                 }
             }
-
+            // Si je suis présent dans la liste des votes, je suis encore en jeu
+            if (mIdJoueur == listeVotes.get(i).getIdJoueur())
+                mSuisElimine = false;
         }
 
         // Mise à jour du nombre de vote
@@ -225,7 +227,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
 
             // TODO : si vote majoritaire == carte étoiles -> Attribuer les points -> Est-ce via le php tour/manche suivante ?
 
-            if (mValeurVoteMax > 2) // Tour suivant
+            if (mNbJoueursMajoritaires > 2) // Si au moins 3 joueurs sont encore en jeu -> Tour suivant
                 mBoutonMancheTourSuivant.setText(getResources().getString(R.string.tour_suivant));
             else // Manche suivante
                 mBoutonMancheTourSuivant.setText(getResources().getString(R.string.manche_suivante));
@@ -244,10 +246,10 @@ public class MajorityActivity extends JeuEnVisioActivity {
     }
 
     private void activeToutesLesCartesVotes() {
-        for (int i = 1; i < tableIdRessourcesCarteVote.length; i++) {
-            findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
-            findViewById(tableIdRessourcesCarteVote[i]).setBackgroundResource(R.drawable.fond_carte_blanc);
-            findViewById(tableIdRessourcesCarteVote[i]).setOnClickListener(this);
+        for (int value : tableIdRessourcesCarteVote) {
+            findViewById(value).setAlpha(1);
+            findViewById(value).setBackgroundResource(R.drawable.fond_carte_blanc);
+            findViewById(value).setOnClickListener(this);
         }
     }
 
@@ -261,15 +263,15 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private void afficheResultatsVote(Integer[] nbVotesParCarte) {
         determineVoteMajoritaire(nbVotesParCarte);
 
+        mResultatVoteMajority.setText(texteVote(nbVotesParCarte[VOTE_CARTE_MAJORITE]));
         mResultatVoteA.setText(texteVote(nbVotesParCarte[VOTE_CARTE_A]));
         mResultatVoteB.setText(texteVote(nbVotesParCarte[VOTE_CARTE_B]));
         mResultatVoteC.setText(texteVote(nbVotesParCarte[VOTE_CARTE_C]));
-        mResultatVoteMajority.setText(texteVote(nbVotesParCarte[VOTE_CARTE_MAJORITE]));
 
+        mResultatVoteMajority.setVisibility(View.VISIBLE);
         mResultatVoteA.setVisibility(View.VISIBLE);
         mResultatVoteB.setVisibility(View.VISIBLE);
         mResultatVoteC.setVisibility(View.VISIBLE);
-        mResultatVoteMajority.setVisibility(View.VISIBLE);
     }
 
     private String texteVote(Integer listeVote) {
@@ -283,16 +285,19 @@ public class MajorityActivity extends JeuEnVisioActivity {
     }
 
     private void determineVoteMajoritaire(Integer[] nbVotesParCarte) {
-        mValeurVoteMax = 0;
+        int valeurVoteMax = 0;
+        mNbJoueursMajoritaires = 0;
         // Détermine le vote max
         for (Integer listeVote : nbVotesParCarte) {
-            if (listeVote > mValeurVoteMax)
-                mValeurVoteMax = listeVote;
+            if (listeVote > valeurVoteMax)
+                valeurVoteMax = listeVote;
         }
 
         // Détermine les cartes ayant le vote max
-        for (int i = 1; i < nbVotesParCarte.length; i++) {
-            if (nbVotesParCarte[i] == mValeurVoteMax) {
+        for (int i = 0; i < nbVotesParCarte.length; i++) {
+            if (nbVotesParCarte[i] == valeurVoteMax) {
+                if (i > VOTE_CARTE_MAJORITE) // On ne prend pas le résultat du vote "carte étoiles"
+                    mNbJoueursMajoritaires += valeurVoteMax; // Si 2 votes sont majoritaires, il faut les cumuler.
                 findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
                 findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.vert_clair_transparent));
             } else {
@@ -308,7 +313,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private void afficheMots(ArrayList<Mot> listeMots) {
         TextView tv = findViewById(R.id.nb_mot_trouves);
         tv.setText(String.valueOf(mNbMotsTrouves));
-        for (int i = 1; i < listeMots.size(); i++) {
+        for (int i = 0; i < listeMots.size(); i++) {
             tv = findViewById(tableIdRessourcesMots[i]);
             tv.setText(listeMots.get(i).getMot());
             tv.setTag(String.valueOf(listeMots.get(i).getIdMot()));

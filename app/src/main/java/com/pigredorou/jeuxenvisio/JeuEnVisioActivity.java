@@ -261,14 +261,14 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     ArrayList<Vote> parseNoeudsVotes(Document doc) {
         Node noeudVotes = getNoeudUnique(doc, "Votes");
 
-        int id_joueur = 0;
-        int id_mot = 0;
-        int lettre = 0;
         ArrayList<Vote> listeVotes = new ArrayList<>();
 
         for (int i = 0; i < noeudVotes.getChildNodes().getLength(); i++) { // Parcours toutes les votes
             Node noeudVote = noeudVotes.getChildNodes().item(i);
             Log.d("PGR-XML-Vote", noeudVote.getNodeName());
+            int id_joueur = 0;
+            int id_mot = 0;
+            int lettre = -1;
             for (int j = 0; j < noeudVote.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud vote
                 Log.d("PGR-XML-Vote", noeudVote.getAttributes().item(j).getNodeName() + "_" + noeudVote.getAttributes().item(j).getNodeValue());
                 if (noeudVote.getAttributes().item(j).getNodeValue().isEmpty())
