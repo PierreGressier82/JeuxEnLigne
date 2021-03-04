@@ -97,9 +97,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.27 : Migration topTen via la classe JeuEnVisioActivity
      * 3.0.28 : Migration majority la classe JeuEnVisioActivity + implémentation résultats vote + tour/manche suivant
      * 3.0.29 : Début mise en forme Just One
+     * 3.0.30 : Améliorations mise en page (accueil, timeline et just one)
+     * 3.1.00 : Majority terminée (v1)
      */
     // Variables statiques
-    private static final String mNumVersion = "3.0.29";
+    private static final String mNumVersion = "3.1.00";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

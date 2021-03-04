@@ -98,6 +98,7 @@
         android:layout_height="250sp">
 
         <ImageView
+            android:id="@+id/carte_mots"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
@@ -128,9 +129,8 @@
                 android:textAlignment="center"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/noir"
+                android:textColor="@color/gris"
                 android:textSize="15sp"
-                android:background="@color/noir_transparent"
                 android:text="@string/Chargement" />
 
             <TextView
@@ -142,7 +142,7 @@
                 android:textAlignment="center"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/noir"
+                android:textColor="@color/rouge"
                 android:textSize="15sp"
                 android:text="@string/Chargement" />
 
@@ -155,7 +155,7 @@
                 android:textAlignment="center"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/noir"
+                android:textColor="@color/gris"
                 android:textSize="15sp"
                 android:text="@string/Chargement" />
 
@@ -168,7 +168,7 @@
                 android:textAlignment="center"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/noir"
+                android:textColor="@color/gris"
                 android:textSize="15sp"
                 android:text="@string/Chargement" />
 
@@ -181,7 +181,7 @@
                 android:textAlignment="center"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/noir"
+                android:textColor="@color/gris"
                 android:textSize="15sp"
                 android:text="@string/Chargement" />
         </LinearLayout>

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
+import com.pigredorou.jeuxenvisio.objets.Mot;
 import com.pigredorou.jeuxenvisio.objets.TopTen;
 import com.pigredorou.jeuxenvisio.objets.Vote;
 
@@ -43,8 +44,9 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     int mMonScore;
     boolean mAdmin;
     ArrayList<Joueur> mListeJoueurs;
+    ArrayList<Mot> mListeMots;
+    ArrayList<Vote> mListeVotes;
     // Variables statiques
-    final static String urlJeu = MainActivity.url + "jeu.php?partie=";
     final static String urlMAJ = MainActivity.url + "majJeu.php?partie=";
     // Elements graphique
     Button mBoutonValider;
@@ -259,6 +261,38 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         return new TopTen(licorne, caca, manche, numero, nbCartes);
     }
 
+    private ArrayList<Mot> parseNoeudsMots(Document doc) {
+        Node noeudMots = getNoeudUnique(doc, "Mots");
+
+        int idMot = 0;
+        String mot = "";
+        int lettre = 0;
+        ArrayList<Mot> listeMots = new ArrayList<>();
+
+        for (int i = 0; i < noeudMots.getChildNodes().getLength(); i++) { // Parcours toutes les mots
+            Node noeudMot = noeudMots.getChildNodes().item(i);
+            Log.d("PGR-XML-Mot", noeudMot.getNodeName());
+            for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud mot
+                Log.d("PGR-XML-Mot", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
+                switch (noeudMot.getAttributes().item(j).getNodeName()) {
+                    case "id_mot":
+                        idMot = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "mot":
+                        mot = noeudMot.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "lettre":
+                        lettre = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                        break;
+                }
+            }
+            Mot monMot = new Mot(idMot, mot, lettre);
+            listeMots.add(monMot);
+        }
+
+        return listeMots;
+    }
+
     ArrayList<Vote> parseNoeudsVotes(Document doc) {
         Node noeudVotes = getNoeudUnique(doc, "Votes");
 
@@ -338,7 +372,11 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         mListeJoueurs = parseNoeudsJoueur(doc);
         mAdmin = suisJeAdmin(mPseudo, mListeJoueurs);
 
+        // Liste des mots du jeu
+        mListeMots = parseNoeudsMots(doc);
 
+        // Liste des votes
+        mListeVotes = parseNoeudsVotes(doc);
     }
 
     void afficheScore(ArrayList<Joueur> listeJoueurs) {

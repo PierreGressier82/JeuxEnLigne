@@ -26,19 +26,20 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private int mNbMotsTrouves;
     private int mNbJoueursMajoritaires;
     private boolean mSuisElimine;
+    private final boolean[] mListeVoteMajoritaire = {false, false, false, false};
     // Sablier
     private CountDownTimer mCompteurARebours;
     // Variables statiques
     private final static String urlJeu = MainActivity.url + "majority.php?partie=";
     private final static String urlVote = MainActivity.url + "vote.php?partie=";
     private final static String urlSuivant = MainActivity.url + "initMajority.php?partie=";
+    private final static String urlMAJScore = MainActivity.url + "majScore.php?partie=";
     private final static int VOTE_NON_REALISE = -1;
     private final static int VOTE_CARTE_MAJORITE = 0;
     private final static int VOTE_CARTE_A = 1;
     private final static int VOTE_CARTE_B = 2;
     private final static int VOTE_CARTE_C = 3;
     private final int TEMPS_SABLIER = 30;
-    private final int NB_POINTS_VICTOIRE = 20;
     private final static int[] tableIdRessourcesMots = {R.id.mot_principal, R.id.mot_1, R.id.mot_2, R.id.mot_3};
     private final static int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
     private final static int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
@@ -165,15 +166,38 @@ public class MajorityActivity extends JeuEnVisioActivity {
 
             case "bouton_suivant":
                 if (mBoutonMancheTourSuivant.getText().toString().equals(getResources().getString(R.string.tour_suivant))) {
-                    // TODO : attributer les points si ex-equos avec le vote majoritaire
+                    attribuePoints(false);
                     new MainActivity.TacheURLSansRetour().execute(urlSuivant + mIdPartie + "&tour=oui");
                 } else if (mBoutonMancheTourSuivant.getText().toString().equals(getResources().getString(R.string.manche_suivante))) {
-                    // TODO : attributer les points aux joueurs majoritaires
+                    attribuePoints(true);
                     new MainActivity.TacheURLSansRetour().execute(urlSuivant + mIdPartie + "&manche=oui");
                 }
+                desactiveBouton(mBoutonMancheTourSuivant);
                 break;
         }
 
+    }
+
+    private void attribuePoints(boolean finDeManche) {
+        // Récupère les joueurs qui ont fait un vote majoritaire (carte étoiles)
+        for (int i = 0; i < mListeVotes.size(); i++) {
+            // Est-ce que le vote est majoritaire ?
+            int lettre = mListeVotes.get(i).getLettre();
+            int nbPoints = 0;
+            // Attribue les points aux joueurs avec le vote sur une lettre majoritaire
+            if (mListeVoteMajoritaire[lettre]) {
+                if (lettre == VOTE_CARTE_MAJORITE) {
+                    nbPoints = mNbMotsTrouves;
+                } else if (finDeManche) {
+                    nbPoints = mNbMotsTrouves + 1;
+                }
+
+                if (nbPoints > 0) {
+                    int idJoueur = mListeVotes.get(i).getIdJoueur();
+                    new MainActivity.TacheURLSansRetour().execute(urlMAJScore + mIdPartie + "&joueur=" + idJoueur + "&score=" + nbPoints);
+                }
+            }
+        }
     }
 
     private void selectionneCarteVote(String tag) {
@@ -209,20 +233,61 @@ public class MajorityActivity extends JeuEnVisioActivity {
 
         super.parseXML(doc);
         afficheScore(mListeJoueurs);
-
         // Bouton tour ou manche suivant que pour les joueurs admin
         if (mAdmin)
             findViewById(R.id.bouton_tour_manchant_suivante).setVisibility(View.VISIBLE);
         else
             findViewById(R.id.bouton_tour_manchant_suivante).setVisibility(View.GONE);
 
+        // Spécifique Majority
+        parseNoeudMajority(doc);
+
         // Mots
-        ArrayList<Mot> listeMots = parseNoeudsMots(doc);
-        afficheMots(listeMots);
+        afficheMots(mListeMots);
 
         // Votes
-        ArrayList<Vote> listeVotes = parseNoeudsVotes(doc);
-        afficheVotes(listeVotes);
+        afficheVotes(mListeVotes);
+
+        verifieSiVictoire();
+    }
+
+    private void parseNoeudMajority(Document doc) {
+        Node noeudMajority = getNoeudUnique(doc, "Majority");
+
+        //int manche=0;
+
+        for (int i = 0; i < noeudMajority.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud majority
+            Log.d("PGR-XML-Majority", noeudMajority.getAttributes().item(i).getNodeName() + "_" + noeudMajority.getAttributes().item(i).getNodeValue());
+            if (noeudMajority.getAttributes().item(i).getNodeValue().isEmpty())
+                continue;
+            switch (noeudMajority.getAttributes().item(i).getNodeName()) {
+                case "manche":
+                    //manche = Integer.parseInt(noeudMajority.getAttributes().item(i).getNodeValue());
+                    break;
+                case "nbMots":
+                    mNbMotsTrouves = Integer.parseInt(noeudMajority.getAttributes().item(i).getNodeValue());
+                    break;
+            }
+        }
+    }
+
+    private void verifieSiVictoire() {
+        boolean unJoueurAGagne = false;
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            int NB_POINTS_VICTOIRE = 20;
+            if (mListeJoueurs.get(i).getScore() >= NB_POINTS_VICTOIRE) {
+                unJoueurAGagne = true;
+                break;
+            }
+        }
+
+        if (unJoueurAGagne) {
+            TextView tv = findViewById(R.id.nb_vote_joueurs);
+            tv.setText(R.string.partie_termine);
+            if (mCompteurARebours != null)
+                mCompteurARebours.cancel();
+        }
+        // TODO : afficher les scores
     }
 
     private void afficheVotes(ArrayList<Vote> listeVotes) {
@@ -265,8 +330,6 @@ public class MajorityActivity extends JeuEnVisioActivity {
         // Affichage des résultats du vote
         if (nbVote == nbVoteAttendu) {
             afficheResultatsVote(nbVoteParCarte);
-
-            // TODO : si vote majoritaire == carte étoiles -> Attribuer les points -> via le php tour/manche suivante
 
             if (mNbJoueursMajoritaires > 2) // Si au moins 3 joueurs sont encore en jeu -> Tour suivant
                 mBoutonMancheTourSuivant.setText(getResources().getString(R.string.tour_suivant));
@@ -339,11 +402,13 @@ public class MajorityActivity extends JeuEnVisioActivity {
         // Détermine les cartes ayant le vote max
         for (int i = 0; i < nbVotesParCarte.length; i++) {
             if (nbVotesParCarte[i] == valeurVoteMax) {
+                mListeVoteMajoritaire[i] = true;
                 if (i > VOTE_CARTE_MAJORITE) // On ne prend pas le résultat du vote "carte étoiles"
                     mNbJoueursMajoritaires += valeurVoteMax; // Si 2 votes sont majoritaires, il faut les cumuler.
                 findViewById(tableIdRessourcesCarteVote[i]).setAlpha(1);
                 findViewById(tableIdRessourcesTexteVote[i]).setBackgroundColor(getResources().getColor(R.color.vert_clair_transparent));
             } else {
+                mListeVoteMajoritaire[i] = false;
                 // Si j'ai fait un choix non majoritaire -> Je suis éliminé
                 if (mValeurVote == i)
                     mSuisElimine = true;
@@ -361,40 +426,6 @@ public class MajorityActivity extends JeuEnVisioActivity {
             tv.setText(listeMots.get(i).getMot());
             tv.setTag(String.valueOf(listeMots.get(i).getIdMot()));
         }
-    }
-
-    private ArrayList<Mot> parseNoeudsMots(Document doc) {
-        Node noeudMots = getNoeudUnique(doc, "Mots");
-
-        int idMot = 0;
-        String mot = "";
-        int lettre = 0;
-        ArrayList<Mot> listeMots = new ArrayList<>();
-
-        if (!noeudMots.getAttributes().item(0).getNodeValue().isEmpty())
-            mNbMotsTrouves = Integer.parseInt(noeudMots.getAttributes().item(0).getNodeValue());
-        for (int i = 0; i < noeudMots.getChildNodes().getLength(); i++) { // Parcours toutes les mots
-            Node noeudMot = noeudMots.getChildNodes().item(i);
-            Log.d("PGR-XML-Mot", noeudMot.getNodeName());
-            for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud mot
-                Log.d("PGR-XML-Mot", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
-                switch (noeudMot.getAttributes().item(j).getNodeName()) {
-                    case "id_mot":
-                        idMot = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "mot":
-                        mot = noeudMot.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "lettre":
-                        lettre = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-            Mot monMot = new Mot(idMot, mot, lettre);
-            listeMots.add(monMot);
-        }
-
-        return listeMots;
     }
 
     private void selectionneCarteVoteParLettre(int lettre) {

@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -76,6 +75,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         // Création de liste liste des salons
         new TacheGetXML().execute(urlGetSalons);
     }
+
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -255,7 +255,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 listPref.setEntries(listePseudo);
                 listPref.setEntryValues(listeIdJoueur);
                 // TODO : charger les joueurs non actif => trouver comment faire !
-                Collections.addAll(result, listePseudo);
+                //Collections.addAll(result, listePseudo);
                 listPref.setDefaultValue(result);
                 listPref.setOnPreferenceChangeListener(this);
                 prefSalons.addPreference(listPref);

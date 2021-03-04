@@ -1,6 +1,7 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.os.Bundle;
+import android.view.View;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,6 +21,7 @@ public class TimelineActivity extends JeuEnVisioActivity {
         super.onCreate(savedInstanceState);
 
         // TODO : ajouter les éléments de timeline
+        findViewById(R.id.chargement).setVisibility(View.GONE); // TODO : a retier quand la lecture XML sera faite
     }
 
     public void parseXML(Document doc) {
