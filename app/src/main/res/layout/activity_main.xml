@@ -29,10 +29,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/titre_jeu"
+            android:id="@+id/pseudo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/the_crew"
+            android:text="@string/pseudo"
             android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"

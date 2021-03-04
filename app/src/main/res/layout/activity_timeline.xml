@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jaune"
+    android:background="@drawable/fond_ecran_timeline"
     android:orientation="vertical"
     tools:context=".TimelineActivity">
 
@@ -65,12 +65,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/noir_transparent" />
+
     <LinearLayout
         android:id="@+id/chargement"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/texteChargement"
@@ -86,5 +93,252 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/scrollView_cartes_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:id="@+id/tableau_cartes_table"
+                android:tag="tableau_cartes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal">
+
+                <ImageView
+                    android:id="@+id/drop_0"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_table_1"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/drop_1"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_table_2"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/drop_2"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_table_3"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/drop_3"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_table_4"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/drop_4"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_table_5"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_table_6"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_table_7"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/noir_transparent" />
+
+    <HorizontalScrollView
+        android:id="@+id/scrollView_cartes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:id="@+id/tableau_cartes"
+                android:tag="tableau_cartes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal">
+
+                <ImageView
+                    android:id="@+id/carte_1"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_2"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_3"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_4"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/carreau_valet"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/carte_5"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_6"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_7"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_8"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_9"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/carte_10"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:src="@drawable/fusee_1"
+                    android:visibility="gone" />
+
+            </TableRow>
+        </TableLayout>
+    </HorizontalScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/noir_transparent" />
 
 </LinearLayout>

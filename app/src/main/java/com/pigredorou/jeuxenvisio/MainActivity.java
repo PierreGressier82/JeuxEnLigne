@@ -212,6 +212,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Charge le layout
         setContentView(R.layout.activity_main);
 
+        // Affiche le message de chargement
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+        mTexteChargement = findViewById(R.id.texteChargement);
+
         // On recupère les préférences du joueur
         mPreferences = getSharedPreferences(KEY_PREFERENCES, MODE_PRIVATE);
         mIdSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
@@ -226,13 +230,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView version1 = findViewById(R.id.version);
         String version = version1.getText() + " " + mNumVersion;
         version1.setText(version);
-        // Entête
+        // Bouton quitter
         ImageView boutonQuitter = findViewById(R.id.bouton_quitter);
         boutonQuitter.setOnClickListener(this);
-
-        // Affiche le message de chargement
-        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
-        mTexteChargement = findViewById(R.id.texteChargement);
+        // Pseudo
+        TextView tvPseudo = findViewById(R.id.pseudo);
+        tvPseudo.setText(mPseudo);
 
         // Nouvelle version
         mTexteNouvelleVersion = findViewById(R.id.newVersion);
@@ -481,6 +484,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         findViewById(R.id.tableau_jeux).setVisibility(View.VISIBLE);
                         // Valide le joueur en base
                         new TacheURLSansRetour().execute(urlValideJoueur + mPseudo);
+                        // Met à jour le titre
+                        TextView tvPseudo = findViewById(R.id.pseudo);
+                        tvPseudo.setText(mPseudo);
                     }
             }
 
@@ -518,7 +524,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.jeu_10:
                 afficheJeux(mListeJeux);
                 ImageView iv = findViewById(v.getId());
-                TextView titre = findViewById(R.id.titre_jeu);
                 // Sélectionne le jeu
                 iv.setBackgroundColor(getResources().getColor(R.color.grisTransparent));
                 // TODO : mettre "jeu_x" avec l'ID du jeu en tag pour le retrouver via le tag
@@ -531,8 +536,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 if (mListeJeux != null) {
-                    // Met à jour le titre
-                    titre.setText(mListeJeux.get(index).getNom());
                     // Sauvegarde le contexte
                     mIdJeu = mListeJeux.get(index).getId();
                     mJeuChoisi = true;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sable"
+    android:background="@drawable/fond_ecran_just_one"
     android:orientation="vertical"
     tools:context=".JustOneActivity">
 
@@ -12,7 +12,8 @@
         android:id="@+id/entete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:paddingTop="5dp"
+        android:background="@drawable/just_one_arc_en_ciel"
         android:orientation="horizontal">
 
         <ImageView
@@ -89,7 +90,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:background="@color/noir_transparent" />
 
@@ -130,6 +130,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/noir"
                 android:textSize="15sp"
+                android:background="@color/noir_transparent"
                 android:text="@string/Chargement" />
 
             <TextView

@@ -38,6 +38,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private final static int VOTE_CARTE_B = 2;
     private final static int VOTE_CARTE_C = 3;
     private final int TEMPS_SABLIER = 30;
+    private final int NB_POINTS_VICTOIRE = 20;
     private final static int[] tableIdRessourcesMots = {R.id.mot_principal, R.id.mot_1, R.id.mot_2, R.id.mot_3};
     private final static int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
     private final static int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
