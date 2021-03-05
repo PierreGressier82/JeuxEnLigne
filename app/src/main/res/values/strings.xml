@@ -74,4 +74,5 @@
     <string name="temps_ecoule">Temps écoulé</string>
     <string name="just_one">Just One</string>
     <string name="partie_termine">Partie terminée</string>
+    <string name="d_tail_de_la_carte">Détail de la carte :</string>
 </resources>

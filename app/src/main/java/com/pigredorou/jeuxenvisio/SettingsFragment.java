@@ -21,6 +21,7 @@ import com.pigredorou.jeuxenvisio.objets.Salon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -35,7 +36,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import static com.pigredorou.jeuxenvisio.MainActivity.url;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
@@ -153,6 +153,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             Toast.makeText(getContext(), "OPC pref" + preference.getKey(), Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    static Node getNoeudUnique(Document doc, String nomDuNoeud) {
+        NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
+        Node noeud = null;
+        if (listeNoeudsMission.getLength() > 0) {
+            noeud = listeNoeudsMission.item(0);
+        }
+
+        return noeud;
     }
 
     public static ArrayList<Salon> parseXMLSalonsJeu(Document doc) {

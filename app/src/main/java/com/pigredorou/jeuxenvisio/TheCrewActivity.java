@@ -1,16 +1,13 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.content.ClipData;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -23,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Dimension;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.pigredorou.jeuxenvisio.objets.Carte;
@@ -42,18 +38,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
-
-public class TheCrewActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, View.OnDragListener {
+public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongClickListener, View.OnTouchListener, View.OnDragListener {
 
     // Constantes
     // Tableaux des resssources
@@ -83,11 +73,7 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     Thread t;
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
-    private String mPseudo; // Pseudo du joueur
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
-    private int mIdPartie;
-    private int mMethodeSelection;
-    private boolean mAdmin = false; // Suis-je admin ?
     private boolean mCommunicationFaite = false;
     private boolean mCommunicationAChoisir = false;
     private boolean mDetresseUtilise = false;
@@ -99,7 +85,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout mTable;
     private ImageView mCarteActive;
     private TextView mTitrePli;
-    private TextView mHeureRefresh;
     private TextView mObjectifCommun;
     // Detresse
     private ImageView mImageDetresse;
@@ -137,33 +122,14 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
     private int mLastViewID = 0;
     private long mStartTimeClick;
     private long mDurationClick;
-    // Drag & drop
-    private View vueDepartDrag = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Masque le bar de titre de l'activité
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        // Bloque la mise en veille
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
         setContentView(R.layout.activity_the_crew);
 
-        // Chargement
-        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+        super.onCreate(savedInstanceState);
 
-        // Recupère les paramètres
-        TextView tvPseudo = findViewById(R.id.pseudo);
-        TextView tvNomSalon = findViewById(R.id.nom_salon);
-        final Intent intent = getIntent();
-        mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
-        String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        int idSalon = intent.getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
-        mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
-        mMethodeSelection = intent.getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
-        tvPseudo.setText(mPseudo);
-        tvNomSalon.setText(nomSalon);
         // Bouton retour
         ImageView boutonRetour = findViewById(R.id.bouton_retour);
         boutonRetour.setOnClickListener(this);
@@ -191,9 +157,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
         // Refresh auto
         startRefreshAuto();
-        mBoutonRefreshAuto = findViewById(R.id.bouton_refresh);
-        mBoutonRefreshAuto.setOnClickListener(this);
-        mHeureRefresh = findViewById(R.id.heure_refresh);
         // TODO : Signal de détresse : Choix d'une carte pour la passer à son voisin (change le pseudo du joueur avec un tag pour retirer du joueur mais mettre en attente la carte
     }
 
@@ -338,7 +301,6 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
 
                                     if (mMajTerminee) {
                                         mMajTerminee = false;
-                                        updateTextView();
                                         // Mise à jour complète
                                         debug("refresh MAJ");
                                         new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
@@ -365,43 +327,9 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         mRefreshAuto = true;
     }
 
-    private void stopRefreshAuto() {
-        t.interrupt();
-        mRefreshAuto = false;
-    }
-
-    private void updateTextView() {
-        java.util.Date noteTS = Calendar.getInstance().getTime();
-
-        String time = "hh:mm:ss"; // 12:00:00
-        mHeureRefresh.setText(DateFormat.format(time, noteTS));
-
-        //String date = "dd MMMMM yyyy"; // 01 January 2013
-        //titre.setText(DateFormat.format(date, noteTS));
-    }
-
-    @Override
-    protected void onPause() {
-        // Stop refresh auto
-        stopRefreshAuto();
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        stopRefreshAuto();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopRefreshAuto();
-        super.onDestroy();
-    }
-
     @Override
     protected void onResume() {
-        startRefreshAuto();
+        startRefreshAuto(urlTheCrew);
         super.onResume();
     }
 
@@ -1042,24 +970,19 @@ public class TheCrewActivity extends AppCompatActivity implements View.OnClickLi
         return idCouleur;
     }
 
-    private void debug(String message) {
-        Log.d("PGR", message);
-    }
-
-    private void parseXML(Document doc) {
-
+    void parseXML(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
+
+        super.parseXML(doc);
 
         // Cartes que le joueur a en main
         ArrayList<Carte> listeCartesMainJoueur = parseNoeudsCarte(doc);
         afficheCartes(listeCartesMainJoueur);
 
         // Joueurs
-        ArrayList<Joueur> listeJoueurs = parseNoeudsJoueur(doc);
-        mAdmin = suisJeAdmin(mPseudo, listeJoueurs);
         getCommandant(doc);
-        affichePseudos(listeJoueurs);
+        affichePseudos(mListeJoueurs);
 
         // Pli en cours
         ArrayList<Pli> listeCartesPliEnCours = parseNoeudsPli(doc, "Pli");

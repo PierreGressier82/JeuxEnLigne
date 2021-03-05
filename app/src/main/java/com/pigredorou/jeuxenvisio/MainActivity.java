@@ -30,6 +30,7 @@ import com.pigredorou.jeuxenvisio.objets.Salon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
@@ -42,10 +43,6 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseNoeudsJoueur;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.parseXMLSalons;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,9 +97,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.0.30 : Améliorations mise en page (accueil, timeline et just one)
      * 3.1.00 : Majority terminée (v1)
      * 3.1.01 : Timeline -> Mise en page
+     * 3.1.02 : Migration vers classe générique de tous les jeux (The Crew + Fiesta + Roi) + Suppression classe outils
      */
     // Variables statiques
-    private static final String mNumVersion = "3.1.01";
+    private static final String mNumVersion = "3.1.02";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -975,6 +973,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public static ArrayList<Salon> parseXMLSalons(Document doc) {
+        Element element = doc.getDocumentElement();
+        element.normalize();
+
+        ArrayList<Salon> listeSalons = new ArrayList<>();
+
+        Node noeudSalons = getNoeudUnique(doc, "Salons");
+        int idSalon = 0;
+        int idPartie = 0;
+        int numMission = 0;
+        String nomSalon = "";
+        for (int i = 0; i < noeudSalons.getChildNodes().getLength(); i++) { // Parcours toutes les salons
+            Node noeudSalon = noeudSalons.getChildNodes().item(i);
+            Log.d("PGR-XML-Salon", noeudSalon.getNodeName());
+            for (int j = 0; j < noeudSalon.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud salon
+                Log.d("PGR-XML-Salon", noeudSalon.getAttributes().item(j).getNodeName() + "_" + noeudSalon.getAttributes().item(j).getNodeValue());
+                if (noeudSalon.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
+                switch (noeudSalon.getAttributes().item(j).getNodeName()) {
+                    case "id_salon":
+                        idSalon = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "nom":
+                        nomSalon = noeudSalon.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "id_partie":
+                        idPartie = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "num_mission":
+                        numMission = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                }
+            }
+            Salon salon = new Salon(idSalon, nomSalon, idPartie, numMission);
+            listeSalons.add(salon);
+        }
+
+        return listeSalons;
+    }
+
+    static Node getNoeudUnique(Document doc, String nomDuNoeud) {
+        NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
+        Node noeud = null;
+        if (listeNoeudsMission.getLength() > 0) {
+            noeud = listeNoeudsMission.item(0);
+        }
+
+        return noeud;
+    }
+
     private ArrayList<Jeu> parseXMLJeux(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
@@ -1163,6 +1211,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             super.onPostExecute(doc);
         }
+    }
+
+    static ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
+        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
+
+        String pseudo = "";
+        int admin = 0;
+        int nv = 0;
+        int id = 0;
+        int score = 0;
+        int actif = 0;
+        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
+
+        for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
+            Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
+            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
+                Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
+                if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
+                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
+                    case "id":
+                        id = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "pseudo":
+                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "admin":
+                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "new":
+                        nv = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "score":
+                        score = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
+                }
+            }
+            Joueur joueur = new Joueur(id, pseudo, score, admin, nv, actif);
+            listeJoueurs.add(joueur);
+        }
+
+        return listeJoueurs;
     }
 
     private void chargementEtapeSuivante() {

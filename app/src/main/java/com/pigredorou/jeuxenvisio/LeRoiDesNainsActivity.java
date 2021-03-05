@@ -7,34 +7,20 @@ import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.Objects;
-
-public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, View.OnDragListener {
+public class LeRoiDesNainsActivity extends JeuEnVisioActivity implements View.OnLongClickListener, View.OnTouchListener, View.OnDragListener {
 
     View vueDepart = null;
     View vueArrivee = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Masque le bar de titre de l'activité
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        // Bloque la mise en veille
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
         setContentView(R.layout.activity_le_roi_des_nains);
 
-        // Bouton retour
-        ImageView boutonRetour = findViewById(R.id.bouton_retour);
-        boutonRetour.setOnClickListener(this);
-        boutonRetour.setImageResource(R.drawable.bouton_quitter);
+        super.onCreate(savedInstanceState);
 
         // TEST DRAG & DROP
         findViewById(R.id.table_carte_image_joueur1).setOnTouchListener(this);
@@ -44,15 +30,14 @@ public class LeRoiDesNainsActivity extends AppCompatActivity implements View.OnC
         findViewById(R.id.table_carte_image_joueur5).setOnTouchListener(this);
         findViewById(R.id.source).setOnDragListener(this);
         findViewById(R.id.cible).setOnDragListener(this);
+
+        // TODO : A retirer
+        findViewById(R.id.chargement).setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getTag().toString()) {
-            case "bouton_retour":
-                finish();
-                break;
-        }
+        super.onClick(v);
     }
 
 

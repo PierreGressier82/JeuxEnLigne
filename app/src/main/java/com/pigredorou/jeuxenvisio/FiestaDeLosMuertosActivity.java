@@ -1,14 +1,12 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -17,11 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.pigredorou.jeuxenvisio.objets.Crane;
-import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Personnage;
 import com.pigredorou.jeuxenvisio.objets.TourDeJeuCrane;
 
@@ -34,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,9 +40,8 @@ import static com.pigredorou.jeuxenvisio.R.drawable;
 import static com.pigredorou.jeuxenvisio.R.id;
 import static com.pigredorou.jeuxenvisio.R.layout;
 import static com.pigredorou.jeuxenvisio.R.string;
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.getNoeudUnique;
 
-public class FiestaDeLosMuertosActivity extends AppCompatActivity implements View.OnClickListener {
+public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
 
     // URLs des actions en base
     private static final String urlFiesta = MainActivity.url + "fiesta.php?partie=";
@@ -58,7 +52,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private TextView mContextePersonnage;
     // Refresh auto
     private Thread t;
-    // Variables globales
+    // Variables statiques
     private static final int[] mListeIdPersonnage = {id.personnage1, id.personnage2, id.personnage3, id.personnage4, id.personnage5, id.personnage6, id.personnage7, id.personnage8};
     private static final int[] mListeIdPersoArdoise = {id.nom_ardoise_1, id.nom_ardoise_2, id.nom_ardoise_3, id.nom_ardoise_4, id.nom_ardoise_5, id.nom_ardoise_6, id.nom_ardoise_7, id.nom_ardoise_8};
     private static final int[] mListeIdMotArdoise = {id.mot_ardoise_1, id.mot_ardoise_2, id.mot_ardoise_3, id.mot_ardoise_4, id.mot_ardoise_5, id.mot_ardoise_6, id.mot_ardoise_7, id.mot_ardoise_8};
@@ -69,55 +63,33 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     private static final int[] mListeIdZoneSaisieResultat = {id.zone_saisie1, id.zone_saisie2, id.zone_saisie3, id.zone_saisie4, id.zone_saisie5, id.zone_saisie6, id.zone_saisie7, id.zone_saisie8};
     private static final int[] mListeImageCranesOuvert = {drawable.fiesta_crane_ouvert, drawable.fiesta_crane_ouvert_1, drawable.fiesta_crane_ouvert_2, drawable.fiesta_crane_ouvert_3, drawable.fiesta_crane_ouvert_4, drawable.fiesta_crane_ouvert_5, drawable.fiesta_crane_ouvert_6, drawable.fiesta_crane_ouvert_7};
     private static final String[] mListePhasesJeu = {"Mots", "Déduction", "Apaiser les morts"};
-    private String mPseudo;
+    private final int VALEUR_MAX_SABLIER = 30;
+    // Variables globales
     private String mMot;
     private String mPersonnageSelectionne;
     private TextView mNomPersonnage;
     private EditText mZoneSaisie;
-    private Button mBoutonValider;
     private Button mBoutonInitialiser;
-    private ArrayList<Joueur> mListeJoueurs;
     private ArrayList<Personnage> mListePersonnages;
     private ArrayList<Personnage> mListeDeMesDeductions;
     private ArrayList<Crane> mListeCranes;
     private ArrayList<TourDeJeuCrane> mListeTourDeJeu;
     private int[] mNbBonnesReponsesDeduction;
-    private int mIdPartie;
     private int mTourDeJeu;
     private int mNbJoueurValides;
-    private int mIdPerso;
     private int mNbJoueurPhaseDeduction;
     private int mPhaseEnCours;
     private boolean mMotValide;
     private TextView mTempsRestant;
     private ProgressBar mSablier;
     private CountDownTimer mCompteurARebours;
-    private int mValeurProgression = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Masque le bar de titre de l'activité
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        // Bloque la mise en veille
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Affiche la vue
         setContentView(layout.activity_fiesta_de_los_muertos);
 
-        // Recupère les paramètres
-        TextView tvPseudo = findViewById(id.pseudo);
-        TextView tvNomSalon = findViewById(id.nom_salon);
-        final Intent intent = getIntent();
-        mPseudo = intent.getStringExtra(MainActivity.VALEUR_PSEUDO);
-        String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
-        mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
-        tvPseudo.setText(mPseudo);
-        tvNomSalon.setText(nomSalon);
-
-        // Entête
-        ImageView boutonRetour = findViewById(id.bouton_retour);
-        boutonRetour.setOnClickListener(this);
-        boutonRetour.setImageResource(drawable.bouton_quitter);
+        super.onCreate(savedInstanceState);
 
         // Crane
         mImageCrane = findViewById(id.image_crane);
@@ -145,7 +117,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         mSablier = findViewById(R.id.sablier);
 
         // Refresh auto
-        startRefreshAuto();
+        startRefreshAuto(urlFiesta);
         startChrono();
     }
 
@@ -186,7 +158,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
                 mPersonnageSelectionne = tv.getTag().toString();
                 for (int i = 0; i < mListePersonnages.size(); i++) {
                     if (mListePersonnages.get(i).getNom().equals(mPersonnageSelectionne))
-                        mIdPerso = mListePersonnages.get(i).getId();
+                        mIdJoueur = mListePersonnages.get(i).getId();
                 }
                 break;
 
@@ -200,7 +172,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             case id.nom_ardoise_8:
                 tv = findViewById(v.getId());
                 tv.setText(mPersonnageSelectionne);
-                tv.setTag(String.valueOf(mIdPerso));
+                tv.setTag(String.valueOf(mIdJoueur));
                 majSelectionPerso(false);
                 if (mTourDeJeu == 4)
                     activeBoutonValider(aiJeToutesLesReponsesPhaseDeduction());
@@ -240,13 +212,13 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         mSablier.setVisibility(View.VISIBLE);
         mTempsRestant.setVisibility(View.VISIBLE);
         mSablier.setIndeterminate(false);
-        mSablier.setMax(mValeurProgression);
-        mSablier.setProgress(mValeurProgression);
+        mSablier.setMax(VALEUR_MAX_SABLIER);
+        mSablier.setProgress(VALEUR_MAX_SABLIER);
 
         if (mCompteurARebours != null)
             mCompteurARebours.cancel();
 
-        mCompteurARebours = new CountDownTimer(mValeurProgression * 1000, 1000) {
+        mCompteurARebours = new CountDownTimer(VALEUR_MAX_SABLIER * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 String texte = String.valueOf(millisUntilFinished / 1000);
                 mTempsRestant.setText(texte);
@@ -254,7 +226,7 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
             }
 
             public void onFinish() {
-                mTempsRestant.setText("Temps écoulé");
+                mTempsRestant.setText(string.temps_ecoule);
             }
         }.start();
 
@@ -309,73 +281,18 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
     }
 
 
-    private void startRefreshAuto() {
-        if (t == null || !t.isAlive()) {
-            t = new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        while (!isInterrupted()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // Mise à jour complète
-                                    new TacheGetInfoFiesta().execute(urlFiesta + mIdPartie + "&joueur=" + mPseudo);
-                                }
-                            });
-                            Thread.sleep(2000);
-                        }
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            };
-
-            t.start();
-            debug();
-        }
-    }
-
-    private void stopRefreshAuto() {
-        t.interrupt();
-    }
-
-    @Override
-    protected void onPause() {
-        // Stop refresh auto
-        stopRefreshAuto();
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        stopRefreshAuto();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopRefreshAuto();
-        super.onDestroy();
-    }
-
     @Override
     protected void onResume() {
-        startRefreshAuto();
+        startRefreshAuto(urlFiesta);
         super.onResume();
     }
 
-    private void debug() {
-        Log.d("PGR", "start refresh");
-    }
-
-    private void parseXML(Document doc) {
+    void parseXML(Document doc) {
 
         Element element = doc.getDocumentElement();
         element.normalize();
 
-        // Joueurs
-        mListeJoueurs = parseNoeudsJoueur(doc);
+        super.parseXML(doc);
 
         // Personnages
         mListePersonnages = parseNoeudsPersonnage(doc);
@@ -725,38 +642,6 @@ public class FiestaDeLosMuertosActivity extends AppCompatActivity implements Vie
         }
 
         return listePersonnages;
-    }
-
-    private ArrayList<Joueur> parseNoeudsJoueur(Document doc) {
-        Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
-
-        String pseudo = "";
-        String equipe = "";
-        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
-
-        for (int i = 0; i < NoeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les cartes
-            int admin = 0;
-            int scoreEquipe = 0;
-            Node noeudCarte = NoeudJoueurs.getChildNodes().item(i);
-            Log.d("PGR-XML-Joueur", noeudCarte.getNodeName());
-            for (int j = 0; j < noeudCarte.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud carte
-                Log.d("PGR-XML-Joueur", noeudCarte.getAttributes().item(j).getNodeName() + "_" + noeudCarte.getAttributes().item(j).getNodeValue());
-                if (noeudCarte.getAttributes().item(j).getNodeValue().isEmpty())
-                    continue;
-                switch (noeudCarte.getAttributes().item(j).getNodeName()) {
-                    case "pseudo":
-                        pseudo = noeudCarte.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "admin":
-                        admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
-                        break;
-                }
-            }
-            Joueur joueur = new Joueur(pseudo, equipe, scoreEquipe, admin);
-            listeJoueurs.add(joueur);
-        }
-
-        return listeJoueurs;
     }
 
     private Crane parseNoeudsMonCrane(Document doc) {

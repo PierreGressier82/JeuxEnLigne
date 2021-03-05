@@ -33,8 +33,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import static com.pigredorou.jeuxenvisio.outils.outilsXML.suisJeAdmin;
-
 public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Variables globales
@@ -42,6 +40,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     int mIdJoueur;
     int mIdPartie;
     int mMonScore;
+    int mMethodeSelection;
     boolean mAdmin;
     ArrayList<Joueur> mListeJoueurs;
     ArrayList<Mot> mListeMots;
@@ -73,6 +72,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         String nomSalon = intent.getStringExtra(MainActivity.VALEUR_NOM_SALON);
         mIdPartie = intent.getIntExtra(MainActivity.VALEUR_ID_PARTIE, 1);
         mIdJoueur = intent.getIntExtra(MainActivity.VALEUR_ID_JOUEUR, 0);
+        mMethodeSelection = getIntent().getIntExtra(MainActivity.VALEUR_METHODE_SELECTION, MainActivity.mSelectionDragAndDrop);
 
         // Affiche le contexte de l'entête
         tvPseudo.setText(mPseudo);
@@ -261,7 +261,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         return new TopTen(licorne, caca, manche, numero, nbCartes);
     }
 
-    private ArrayList<Mot> parseNoeudsMots(Document doc) {
+    ArrayList<Mot> parseNoeudsMots(Document doc) {
         Node noeudMots = getNoeudUnique(doc, "Mots");
 
         int idMot = 0;
@@ -361,6 +361,19 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         }
 
         return listeCartes;
+    }
+
+    static boolean suisJeAdmin(String pseudo, ArrayList<Joueur> listeJoueurs) {
+        boolean suisAdmin = false;
+
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            // Suis-je admin ?
+            if (pseudo.equals(listeJoueurs.get(i).getNomJoueur()) && listeJoueurs.get(i).getAdmin() == 1) {
+                suisAdmin = true;
+                break;
+            }
+        }
+        return suisAdmin;
     }
 
     void parseXML(Document doc) {

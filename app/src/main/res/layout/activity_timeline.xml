@@ -12,8 +12,9 @@
         android:id="@+id/entete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:paddingTop="5dp"
         android:layout_marginBottom="10dp"
+        android:background="@color/noir_transparent"
         android:orientation="horizontal">
 
         <ImageView
@@ -64,13 +65,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/noir_transparent" />
 
     <LinearLayout
         android:id="@+id/chargement"
@@ -140,7 +134,9 @@
                         android:layout_marginEnd="5dp"
                         android:layout_marginBottom="24sp"
                         android:background="@color/noir_transparent"
-                        android:text="-300 000"
+                        android:text="-100 000 000"
+                        android:autoSizeTextType="uniform"
+                        android:maxLines="1"
                         android:textAlignment="center"
                         android:textColor="@color/blanc"
                         android:textSize="15sp"
@@ -278,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/noir_transparent"
-                    android:text="-300 000"
+                    android:text="-300 000 000"
                     android:textAlignment="center"
                     android:textColor="@color/blanc"
                     android:textSize="15sp" />
@@ -392,6 +388,16 @@
         android:background="@color/noir_transparent" />
 
     <TextView
+        android:id="@+id/titre_zoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/d_tail_de_la_carte"
+        android:textAlignment="textStart"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/zoom_text_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -404,4 +410,31 @@
         android:textAllCaps="true"
         android:textSize="30sp" />
 
+    <TextView
+        android:id="@+id/zoom_complement_image"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/fond_carte_blanc"
+        android:maxLines="2"
+        android:text="@string/Chargement"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/zoom_annee_image"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/fond_carte_blanc"
+        android:maxLines="2"
+        android:text="@string/Chargement"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="30sp" />
 </LinearLayout>
