@@ -1,8 +1,8 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Carte {
-    private String mCouleur;
-    private int mValeur;
+    private final String mCouleur;
+    private final int mValeur;
     private boolean mPose;
 
     public Carte(String couleur, int valeur, boolean pose) {

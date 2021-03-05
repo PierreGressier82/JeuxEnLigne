@@ -1,9 +1,9 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Pli {
-    private String mNomJoueur;
     private Carte mCarte;
-    private String mCommunication;
+    private final String mNomJoueur;
+    private final String mCommunication;
 
     public Pli(String nomJoueur, Carte carte, String communication) {
         mNomJoueur = nomJoueur;

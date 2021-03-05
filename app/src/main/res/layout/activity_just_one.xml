@@ -93,99 +93,149 @@
         android:layout_marginBottom="10dp"
         android:background="@color/noir_transparent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="250sp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/carte_mots"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="10sp"
-            android:src="@drawable/just_one_carte_mots"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="250sp"
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:id="@+id/carte_mots"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="10sp"
+                android:src="@drawable/just_one_carte_mots"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/mot_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_marginTop="15dp"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gris"
+                    android:textSize="15sp"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/mot_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/rouge"
+                    android:textSize="15sp"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/mot_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.2"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gris"
+                    android:textSize="15sp"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/mot_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.2"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gris"
+                    android:textSize="15sp"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/mot_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.2"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/gris"
+                    android:textSize="15sp"
+                    android:text="@string/Chargement" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/bloc_votes"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_weight="0.5"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/just_one_carte_logo"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/mot_1"
+            <ImageView
+                android:id="@+id/vote_1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:layout_marginTop="15dp"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@color/gris"
-                android:textSize="15sp"
-                android:text="@string/Chargement" />
+                android:layout_weight="0.2" />
 
-            <TextView
-                android:id="@+id/mot_2"
+            <ImageView
+                android:id="@+id/vote_2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:layout_marginTop="10dp"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@color/rouge"
-                android:textSize="15sp"
-                android:text="@string/Chargement" />
+                android:layout_weight="0.2" />
 
-            <TextView
-                android:id="@+id/mot_3"
+            <ImageView
+                android:id="@+id/vote_3"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.2"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@color/gris"
-                android:textSize="15sp"
-                android:text="@string/Chargement" />
+                android:layout_weight="0.2" />
 
-            <TextView
-                android:id="@+id/mot_4"
+            <ImageView
+                android:id="@+id/vote_4"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.2"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@color/gris"
-                android:textSize="15sp"
-                android:text="@string/Chargement" />
+                android:layout_weight="0.2" />
 
-            <TextView
-                android:id="@+id/mot_5"
+            <ImageView
+                android:id="@+id/vote_5"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.2"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@color/gris"
-                android:textSize="15sp"
-                android:text="@string/Chargement" />
+                android:layout_weight="0.2" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/zone_saisie"
