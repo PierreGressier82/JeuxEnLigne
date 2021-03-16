@@ -98,9 +98,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.00 : Majority terminée (v1)
      * 3.1.01 : Timeline -> Mise en page
      * 3.1.02 : Migration vers classe générique de tous les jeux (The Crew + Fiesta + Roi) + Suppression classe outils
+     * 3.1.03 : Correctif à chaud
+     * 3.1.04 : Correctif Majority + début implémentation timeline
      */
     // Variables statiques
-    private static final String mNumVersion = "3.1.02";
+    private static final String mNumVersion = "3.1.04";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

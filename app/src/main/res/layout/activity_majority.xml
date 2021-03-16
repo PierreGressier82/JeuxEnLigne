@@ -12,7 +12,8 @@
         android:id="@+id/entete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/noir_transparent"
         android:orientation="horizontal">
 
         <ImageView
@@ -87,13 +88,6 @@
             android:textSize="50sp" />
 
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/noir_transparent" />
 
     <LinearLayout
         android:layout_width="match_parent"

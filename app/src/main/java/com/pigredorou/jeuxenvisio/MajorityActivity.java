@@ -155,12 +155,10 @@ public class MajorityActivity extends JeuEnVisioActivity {
                 break;
 
             case "bouton_valider":
-                if (mValeurVote > 0) {
-                    desactiveBouton(mBoutonValider);
-                    new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mIdMot);
-                    // Arrête le sablier
-                    mCompteurARebours.cancel();
-                }
+                desactiveBouton(mBoutonValider);
+                new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mIdMot);
+                // Arrête le sablier
+                mCompteurARebours.cancel();
                 startRefreshAuto(urlJeu);
                 break;
 
@@ -243,9 +241,11 @@ public class MajorityActivity extends JeuEnVisioActivity {
         parseNoeudMajority(doc);
 
         // Mots
+        mListeMots = parseNoeudsMots(doc);
         afficheMots(mListeMots);
 
-        // Votes
+        // Liste des votes
+        mListeVotes = parseNoeudsVotes(doc);
         afficheVotes(mListeVotes);
 
         verifieSiVictoire();

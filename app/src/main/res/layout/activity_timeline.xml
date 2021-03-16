@@ -145,7 +145,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
-                    android:id="@+id/drop_1"
+                    android:id="@+id/drop_2"
                     android:layout_width="10dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -157,7 +157,7 @@
                     android:layout_height="120dp">
 
                     <ImageView
-                        android:id="@+id/carte_table_2"
+                        android:id="@+id/carte_table_3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -175,50 +175,13 @@
                         android:layout_marginBottom="24sp"
                         android:background="@color/noir_transparent"
                         android:text="-300 000"
+                        android:autoSizeTextType="uniform"
                         android:textAlignment="center"
                         android:textColor="@color/blanc"
                         android:textSize="15sp"
-                        app:layout_constraintBottom_toBottomOf="@id/carte_table_2" />
+                        app:layout_constraintBottom_toBottomOf="@id/carte_table_3" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <ImageView
-                    android:id="@+id/drop_2"
-                    android:layout_width="10dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/carte"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/carte_table_3"
-                    android:layout_width="80dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/fond_carte_blanc"
-                    android:contentDescription="@string/carte"
-                    android:padding="5dp"
-                    android:src="@drawable/timeline_1879"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/drop_3"
-                    android:layout_width="10dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/carte"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/carte_table_4"
-                    android:layout_width="80dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/fond_carte_blanc"
-                    android:contentDescription="@string/carte"
-                    android:padding="5dp"
-                    android:src="@drawable/timeline_1879"
-                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/drop_4"
@@ -228,72 +191,165 @@
                     android:contentDescription="@string/carte"
                     android:visibility="visible" />
 
-                <ImageView
-                    android:id="@+id/carte_table_5"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="80dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/carte"
-                    android:src="@drawable/timeline_1879"
-                    android:visibility="gone" />
+                    android:layout_height="120dp">
+
+                    <ImageView
+                        android:id="@+id/carte_table_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/fond_carte_blanc"
+                        android:contentDescription="@string/carte"
+                        android:padding="5dp"
+                        android:src="@drawable/timeline_1879"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="24sp"
+                        android:background="@color/noir_transparent"
+                        android:text="1578"
+                        android:autoSizeTextType="uniform"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/carte_table_5" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
-                    android:id="@+id/carte_table_6"
-                    android:layout_width="80dp"
+                    android:id="@+id/drop_6"
+                    android:layout_width="10dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/fond_carte_blanc"
                     android:contentDescription="@string/carte"
-                    android:padding="5dp"
-                    android:src="@drawable/timeline_1879"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="80dp"
+                    android:layout_height="120dp">
+
+                    <ImageView
+                        android:id="@+id/carte_table_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/fond_carte_blanc"
+                        android:contentDescription="@string/carte"
+                        android:padding="5dp"
+                        android:src="@drawable/timeline_1879"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="24sp"
+                        android:background="@color/noir_transparent"
+                        android:text="1578"
+                        android:autoSizeTextType="uniform"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/carte_table_7" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <ImageView
-                    android:id="@+id/carte_table_7"
-                    android:layout_width="80dp"
+                    android:id="@+id/drop_8"
+                    android:layout_width="10dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/fond_carte_blanc"
                     android:contentDescription="@string/carte"
-                    android:padding="5dp"
-                    android:src="@drawable/timeline_1879"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="80dp"
+                    android:layout_height="120dp">
+
+                    <ImageView
+                        android:id="@+id/carte_table_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/fond_carte_blanc"
+                        android:contentDescription="@string/carte"
+                        android:padding="5dp"
+                        android:src="@drawable/timeline_1879"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="24sp"
+                        android:background="@color/noir_transparent"
+                        android:text="1578"
+                        android:autoSizeTextType="uniform"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/carte_table_9" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/drop_10"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="80dp"
+                    android:layout_height="120dp">
+
+                    <ImageView
+                        android:id="@+id/carte_table_11"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/fond_carte_blanc"
+                        android:contentDescription="@string/carte"
+                        android:padding="5dp"
+                        android:src="@drawable/timeline_1879"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="24sp"
+                        android:background="@color/noir_transparent"
+                        android:text="1578"
+                        android:autoSizeTextType="uniform"
+                        android:textAlignment="center"
+                        android:textColor="@color/blanc"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/carte_table_11" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/drop_12"
+                    android:layout_width="10dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
+                    android:visibility="visible" />
 
             </TableRow>
 
-            <TableRow
-                android:id="@+id/tableau_date_table"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="fill_horizontal"
-                android:tag="tableau_cartes">
-
-                <TextView />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/noir_transparent"
-                    android:text="-300 000 000"
-                    android:textAlignment="center"
-                    android:textColor="@color/blanc"
-                    android:textSize="15sp" />
-
-                <TextView />
-
-                <TextView />
-
-                <TextView />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/noir_transparent"
-                    android:text="-300 000"
-                    android:textAlignment="center"
-                    android:textColor="@color/blanc"
-                    android:textSize="15sp" />
-            </TableRow>
         </TableLayout>
     </HorizontalScrollView>
 

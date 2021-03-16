@@ -269,26 +269,27 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         int lettre = 0;
         ArrayList<Mot> listeMots = new ArrayList<>();
 
-        for (int i = 0; i < noeudMots.getChildNodes().getLength(); i++) { // Parcours toutes les mots
-            Node noeudMot = noeudMots.getChildNodes().item(i);
-            Log.d("PGR-XML-Mot", noeudMot.getNodeName());
-            for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud mot
-                Log.d("PGR-XML-Mot", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
-                switch (noeudMot.getAttributes().item(j).getNodeName()) {
-                    case "id_mot":
-                        idMot = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "mot":
-                        mot = noeudMot.getAttributes().item(j).getNodeValue();
-                        break;
-                    case "lettre":
-                        lettre = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
-                        break;
+        if (noeudMots != null)
+            for (int i = 0; i < noeudMots.getChildNodes().getLength(); i++) { // Parcours toutes les mots
+                Node noeudMot = noeudMots.getChildNodes().item(i);
+                Log.d("PGR-XML-Mot", noeudMot.getNodeName());
+                for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud mot
+                    Log.d("PGR-XML-Mot", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
+                    switch (noeudMot.getAttributes().item(j).getNodeName()) {
+                        case "id_mot":
+                            idMot = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "mot":
+                            mot = noeudMot.getAttributes().item(j).getNodeValue();
+                            break;
+                        case "lettre":
+                            lettre = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                    }
                 }
+                Mot monMot = new Mot(idMot, mot, lettre);
+                listeMots.add(monMot);
             }
-            Mot monMot = new Mot(idMot, mot, lettre);
-            listeMots.add(monMot);
-        }
 
         return listeMots;
     }
@@ -298,31 +299,32 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
 
         ArrayList<Vote> listeVotes = new ArrayList<>();
 
-        for (int i = 0; i < noeudVotes.getChildNodes().getLength(); i++) { // Parcours toutes les votes
-            Node noeudVote = noeudVotes.getChildNodes().item(i);
-            Log.d("PGR-XML-Vote", noeudVote.getNodeName());
-            int id_joueur = 0;
-            int id_mot = 0;
-            int lettre = -1;
-            for (int j = 0; j < noeudVote.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud vote
-                Log.d("PGR-XML-Vote", noeudVote.getAttributes().item(j).getNodeName() + "_" + noeudVote.getAttributes().item(j).getNodeValue());
-                if (noeudVote.getAttributes().item(j).getNodeValue().isEmpty())
-                    continue;
-                switch (noeudVote.getAttributes().item(j).getNodeName()) {
-                    case "id_joueur":
-                        id_joueur = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "id_mot":
-                        id_mot = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
-                        break;
-                    case "lettre":
-                        lettre = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
-                        break;
+        if (noeudVotes != null)
+            for (int i = 0; i < noeudVotes.getChildNodes().getLength(); i++) { // Parcours toutes les votes
+                Node noeudVote = noeudVotes.getChildNodes().item(i);
+                Log.d("PGR-XML-Vote", noeudVote.getNodeName());
+                int id_joueur = 0;
+                int id_mot = 0;
+                int lettre = -1;
+                for (int j = 0; j < noeudVote.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud vote
+                    Log.d("PGR-XML-Vote", noeudVote.getAttributes().item(j).getNodeName() + "_" + noeudVote.getAttributes().item(j).getNodeValue());
+                    if (noeudVote.getAttributes().item(j).getNodeValue().isEmpty())
+                        continue;
+                    switch (noeudVote.getAttributes().item(j).getNodeName()) {
+                        case "id_joueur":
+                            id_joueur = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "id_mot":
+                            id_mot = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "lettre":
+                            lettre = Integer.parseInt(noeudVote.getAttributes().item(j).getNodeValue());
+                            break;
+                    }
                 }
+                Vote vote = new Vote(id_joueur, id_mot, lettre);
+                listeVotes.add(vote);
             }
-            Vote vote = new Vote(id_joueur, id_mot, lettre);
-            listeVotes.add(vote);
-        }
 
         return listeVotes;
     }
@@ -386,10 +388,10 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         mAdmin = suisJeAdmin(mPseudo, mListeJoueurs);
 
         // Liste des mots du jeu
-        mListeMots = parseNoeudsMots(doc);
+        //mListeMots = parseNoeudsMots(doc);
 
         // Liste des votes
-        mListeVotes = parseNoeudsVotes(doc);
+        //mListeVotes = parseNoeudsVotes(doc);
     }
 
     void afficheScore(ArrayList<Joueur> listeJoueurs) {
