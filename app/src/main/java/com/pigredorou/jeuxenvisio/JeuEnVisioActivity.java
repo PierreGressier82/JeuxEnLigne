@@ -116,19 +116,20 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch (v.getTag().toString()) {
-            case "bouton_retour":
-                stopRefreshAuto();
-                finish();
-                break;
+        if (v != null) {
+            switch (v.getTag().toString()) {
+                case "bouton_retour":
+                    stopRefreshAuto();
+                    finish();
+                    break;
 
-            case "bouton_valider":
-                //startRefreshAuto(urlJeu); -> A reprendre dans la classe fille
-                desactiveBouton(mBoutonValider);
-                new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
-                break;
+                case "bouton_valider":
+                    //startRefreshAuto(urlJeu); -> A reprendre dans la classe fille
+                    desactiveBouton(mBoutonValider);
+                    new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
+                    break;
+            }
         }
-
     }
 
     void debug(String message) {

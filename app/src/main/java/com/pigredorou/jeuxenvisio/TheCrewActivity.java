@@ -1164,7 +1164,7 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
                 Log.d("PGR-OnDrag", "ACTION_DRAG_EXITED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
                 v.setBackground(normalShape);
                 break;
-            case DragEvent.ACTION_DROP: // Evenement qui informe du laché dans une vue en écoute (N'est pas appeler si le drop est fait en dehors)
+            case DragEvent.ACTION_DROP: // Evenement qui informe du laché dans une vue en écoute (N'est pas appelé si le drop est fait en dehors)
                 Log.d("PGR-OnDrag", "ACTION_DROP " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
 
                 if (v.getTag() != null) {
