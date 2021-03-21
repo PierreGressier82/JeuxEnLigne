@@ -395,7 +395,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         //mListeVotes = parseNoeudsVotes(doc);
     }
 
-    void afficheScore(ArrayList<Joueur> listeJoueurs) {
+    void afficheMonScore(ArrayList<Joueur> listeJoueurs) {
         String textScore;
 
         mMonScore = getScoreJoueurId(listeJoueurs);

@@ -1,6 +1,6 @@
 package com.pigredorou.jeuxenvisio.objets;
 
-public class Joueur {
+public class Joueur implements Comparable<Joueur> {
 
     private int mId;
     private String mNomJoueur;
@@ -64,5 +64,10 @@ public class Joueur {
 
     public int getId() {
         return mId;
+    }
+
+    @Override
+    public int compareTo(Joueur joueur) {
+        return (joueur.mScore - this.mScore);
     }
 }

@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/barreDeChargement"
@@ -90,537 +90,928 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/majority"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <ImageView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight=".33"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_interrogation" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight=".33"
                 android:adjustViewBounds="true"
                 android:background="@drawable/fond_carte_blanc"
                 android:padding="5dp"
-                android:src="@drawable/majority_carte_mot"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:src="@drawable/majority_carte_interrogation" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".33"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_mot"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/mot_principal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:tag="0"
+                    android:text="@string/Chargement"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.516" />
+
+                <TextView
+                    android:id="@+id/nb_mot_trouves"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="13dp"
+                    android:text="@string/_1"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/noir"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/mot_principal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="5dp"
-                android:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:maxLines="1"
-                android:tag="0"
-                android:text="@string/Chargement"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/noir"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.516" />
+                android:id="@+id/score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight=".33"
+                android:padding="5dp"
+                android:text="@string/score_quipe"
+                android:textColor="@color/blanc"
+                android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/nb_mot_trouves"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="13dp"
-                android:text="@string/_1"
-                android:textAlignment="textEnd"
-                android:textColor="@color/noir"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/noir_transparent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".05" />
+
+            <ImageView
+                android:id="@+id/carte_a"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_a"
+                android:tag="carte_a" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".1" />
+
+            <ImageView
+                android:id="@+id/carte_b"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_b"
+                android:tag="carte_b" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".1" />
+
+            <ImageView
+                android:id="@+id/carte_c"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_weight=".2"
+                android:adjustViewBounds="true"
+                android:background="@drawable/fond_carte_blanc"
+                android:padding="5dp"
+                android:src="@drawable/majority_carte_c"
+                android:tag="carte_c" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".05" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight=".33"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/image_mot_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_mot"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/mot_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/Chargement"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight=".33"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/image_mot_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_mot"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/mot_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/Chargement"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight=".33">
+
+                <ImageView
+                    android:id="@+id/image_mot_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_mot"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/mot_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/Chargement"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/image_mot_3"
+                    app:layout_constraintStart_toStartOf="@id/image_mot_3"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="UnusedAttribute" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/noir_transparent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight=".25"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte_vote_a"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_vote_a"
+                    android:tag="carte_vote_a"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/resultat_vote_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/noir_transparent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/_1"
+                    android:textColor="@color/blanc"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight=".25"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte_vote_b"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_vote_b"
+                    android:tag="carte_vote_b"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/resultat_vote_b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/vert_clair_transparent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/_1"
+                    android:textColor="@color/blanc"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight=".25"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte_vote_c"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_vote_c"
+                    android:tag="carte_vote_c"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/resultat_vote_c"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/vert_clair_transparent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/_1"
+                    android:textColor="@color/blanc"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight=".25"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/carte_vote_majority"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/majority_carte_etoiles"
+                    android:tag="carte_vote_majority"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/resultat_vote_majority"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/vert_clair_transparent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/_3"
+                    android:textColor="@color/blanc"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/score"
-            android:layout_width="0dp"
+            android:id="@+id/nb_vote_joueurs"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight=".33"
-            android:padding="5dp"
-            android:text="@string/score_quipe"
+            android:layout_marginTop="10dp"
+            android:text="@string/Chargement"
+            android:textAlignment="center"
             android:textColor="@color/blanc"
             android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/temps_restant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="15sp" />
+
+        <ProgressBar
+            android:id="@+id/sablier"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="30"
+            android:progress="30"
+            android:scrollbarSize="10dp" />
+
+        <Button
+            android:id="@+id/bouton_valider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/noir_transparent"
+            android:tag="bouton_valider"
+            android:text="@string/valider"
+            android:textColor="@color/blanc" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/classement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:visibility="gone">
 
-        <ImageView
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".33" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/scores"
+            android:textAlignment="center"
+            android:textColor="@color/blanc"
+            android:textSize="30sp" />
 
-        <ImageView
-            android:layout_width="0dp"
+        <TableLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_weight=".33"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_interrogation" />
+            android:layout_gravity="center">
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33" />
+            <TableRow
+                android:id="@+id/score_ligne_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_1"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_2"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_3"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_4"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_5"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_6"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_7"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_8"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_9"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_10"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/score_ligne_11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/tour_blanc">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/_11"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_pseudo_11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/Chargement"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blanc"
+                    android:textSize="20sp" />
+            </TableRow>
+        </TableLayout>
 
 
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/noir_transparent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".05" />
-
-        <ImageView
-            android:id="@+id/carte_a"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_weight=".2"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_a"
-            android:tag="carte_a" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".1" />
-
-        <ImageView
-            android:id="@+id/carte_b"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_weight=".2"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_b"
-            android:tag="carte_b" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".1" />
-
-        <ImageView
-            android:id="@+id/carte_c"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_weight=".2"
-            android:adjustViewBounds="true"
-            android:background="@drawable/fond_carte_blanc"
-            android:padding="5dp"
-            android:src="@drawable/majority_carte_c"
-            android:tag="carte_c" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".05" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight=".33"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/image_mot_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_mot"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/mot_1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="5dp"
-                android:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@string/Chargement"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/noir"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight=".33"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/image_mot_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_mot"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/mot_2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="5dp"
-                android:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@string/Chargement"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/noir"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight=".33">
-
-            <ImageView
-                android:id="@+id/image_mot_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_mot"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/mot_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="5dp"
-                android:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@string/Chargement"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/noir"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/image_mot_3"
-                app:layout_constraintStart_toStartOf="@id/image_mot_3"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="UnusedAttribute" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/noir_transparent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight=".25"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/carte_vote_a"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_vote_a"
-                android:tag="carte_vote_a"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/resultat_vote_a"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@color/noir_transparent"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/_1"
-                android:textColor="@color/blanc"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight=".25"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/carte_vote_b"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_vote_b"
-                android:tag="carte_vote_b"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/resultat_vote_b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@color/vert_clair_transparent"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/_1"
-                android:textColor="@color/blanc"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight=".25"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/carte_vote_c"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_vote_c"
-                android:tag="carte_vote_c"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/resultat_vote_c"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@color/vert_clair_transparent"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/_1"
-                android:textColor="@color/blanc"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight=".25"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/carte_vote_majority"
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/fond_carte_blanc"
-                android:padding="5dp"
-                android:src="@drawable/majority_carte_etoiles"
-                android:tag="carte_vote_majority"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/resultat_vote_majority"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@color/vert_clair_transparent"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/_3"
-                android:textColor="@color/blanc"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/nb_vote_joueurs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/Chargement"
-        android:textAlignment="center"
-        android:textColor="@color/blanc"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/temps_restant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="@color/blanc"
-        android:textSize="15sp" />
-
-    <ProgressBar
-        android:id="@+id/sablier"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="false"
-        android:max="30"
-        android:progress="30"
-        android:scrollbarSize="10dp" />
-
-    <Button
-        android:id="@+id/bouton_valider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:background="@color/noir_transparent"
-        android:tag="bouton_valider"
-        android:text="@string/valider"
-        android:textColor="@color/blanc" />
 
     <Button
         android:id="@+id/bouton_tour_manchant_suivante"

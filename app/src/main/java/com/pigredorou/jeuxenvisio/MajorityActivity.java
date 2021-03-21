@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.pigredorou.jeuxenvisio.objets.Mot;
@@ -17,6 +19,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MajorityActivity extends JeuEnVisioActivity {
 
@@ -41,6 +44,9 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private final static int VOTE_CARTE_C = 3;
     private final int TEMPS_SABLIER = 30;
     private final static int[] tableIdRessourcesMots = {R.id.mot_principal, R.id.mot_1, R.id.mot_2, R.id.mot_3};
+    private final static int[] tableIdRessourcesLigneScore = {R.id.score_ligne_1, R.id.score_ligne_2, R.id.score_ligne_3, R.id.score_ligne_4, R.id.score_ligne_5, R.id.score_ligne_6, R.id.score_ligne_7, R.id.score_ligne_8, R.id.score_ligne_9, R.id.score_ligne_10, R.id.score_ligne_11};
+    private final static int[] tableIdRessourcesPseudoScore = {R.id.score_pseudo_1, R.id.score_pseudo_2, R.id.score_pseudo_3, R.id.score_pseudo_4, R.id.score_pseudo_5, R.id.score_pseudo_6, R.id.score_pseudo_7, R.id.score_pseudo_8, R.id.score_pseudo_9, R.id.score_pseudo_10, R.id.score_pseudo_11};
+    private final static int[] tableIdRessourcesScore = {R.id.score_1, R.id.score_2, R.id.score_3, R.id.score_4, R.id.score_5, R.id.score_6, R.id.score_7, R.id.score_8, R.id.score_9, R.id.score_10, R.id.score_11};
     private final static int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
     private final static int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
     // Elements graphique
@@ -55,6 +61,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private TextView mResultatVoteMajority;
     private TextView mTempsRestant;
     private ProgressBar mSablier;
+    private LinearLayout mMajority;
+    private LinearLayout mClassement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,11 @@ public class MajorityActivity extends JeuEnVisioActivity {
         desactiveBouton(mBoutonValider);
         desactiveBouton(mBoutonMancheTourSuivant);
 
+        // Eléments du jeu
+        mMajority = findViewById(R.id.majority);
+        mClassement = findViewById(R.id.classement);
+        afficheJeu();
+
         // Sablier
         mTempsRestant = findViewById(R.id.temps_restant);
         mSablier = findViewById(R.id.sablier);
@@ -78,7 +91,6 @@ public class MajorityActivity extends JeuEnVisioActivity {
         startRefreshAuto(urlJeu);
 
         mSuisElimine = false;
-        // TODO : en fin de partie afficher le tableau des scores
     }
 
     private void startChrono() {
@@ -225,12 +237,37 @@ public class MajorityActivity extends JeuEnVisioActivity {
         mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[mValeurVote]).getTag().toString());
     }
 
+    void afficheClassement() {
+        mMajority.setVisibility(View.GONE);
+
+        Collections.sort(mListeJoueurs);
+
+        for (int i = 0; i < tableIdRessourcesLigneScore.length; i++) {
+            if (i < mListeJoueurs.size()) {
+                TableRow tr = findViewById(tableIdRessourcesLigneScore[i]);
+                if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo))
+                    tr.setBackgroundResource(R.drawable.tour_blanc_fond_vert_transparent);
+                else
+                    tr.setBackgroundResource(R.drawable.tour_blanc);
+                tr.setVisibility(View.VISIBLE);
+                TextView tv = findViewById(tableIdRessourcesPseudoScore[i]);
+                tv.setText(mListeJoueurs.get(i).getNomJoueur());
+                tv = findViewById(tableIdRessourcesScore[i]);
+                tv.setText(String.valueOf(mListeJoueurs.get(i).getScore()));
+            } else
+                findViewById(tableIdRessourcesLigneScore[i]).setVisibility(View.GONE);
+        }
+
+        mClassement.setVisibility(View.VISIBLE);
+
+    }
+
     void parseXML(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
 
         super.parseXML(doc);
-        afficheScore(mListeJoueurs);
+        afficheMonScore(mListeJoueurs);
         // Bouton tour ou manche suivant que pour les joueurs admin
         if (mAdmin)
             findViewById(R.id.bouton_tour_manchant_suivante).setVisibility(View.VISIBLE);
@@ -286,15 +323,22 @@ public class MajorityActivity extends JeuEnVisioActivity {
             tv.setText(R.string.partie_termine);
             if (mCompteurARebours != null)
                 mCompteurARebours.cancel();
-        }
-        // TODO : afficher les scores
+            afficheClassement();
+        } else
+            afficheJeu();
+
+    }
+
+    private void afficheJeu() {
+        mMajority.setVisibility(View.VISIBLE);
+        mClassement.setVisibility(View.GONE);
     }
 
     private void afficheVotes(ArrayList<Vote> listeVotes) {
         int nbVoteAttendu = listeVotes.size();
         Integer[] nbVoteParCarte = {0, 0, 0, 0};
         mSuisElimine = true;
-        mValeurVote = -1;
+        mValeurVote = VOTE_NON_REALISE;
         int nbVote = 0;
         boolean startChrono = true;
 

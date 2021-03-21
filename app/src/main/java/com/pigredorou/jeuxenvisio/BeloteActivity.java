@@ -681,7 +681,7 @@ public class BeloteActivity extends JeuEnVisioActivity implements View.OnTouchLi
 
         // Score
         parseNoeudsEquipeFromDoc(doc);
-        //afficheScore();
+        //afficheMonScore();
     }
 
     private void parseNoeudsEquipeFromDoc(Document doc) {

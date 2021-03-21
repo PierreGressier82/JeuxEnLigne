@@ -83,7 +83,7 @@ public class TimelineActivity extends JeuEnVisioActivity implements View.OnDragL
                 break;
             case DragEvent.ACTION_DROP: // Evenement qui informe du laché dans une vue en écoute
                 Log.d("PGR-OnDrag", "ACTION_DROP " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
-                // TODO : gestion du drop
+                // TODO : gestion du drop : appel pour enregistrer la position
                 break;
             case DragEvent.ACTION_DRAG_ENDED: // Evement qui informe de la fin du drag (se produit pour toutes les vues en écoute)
                 Log.d("PGR-OnDrag", "ACTION_DRAG_ENDED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
