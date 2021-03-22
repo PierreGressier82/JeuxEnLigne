@@ -55,6 +55,10 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private ImageView mCarteVoteB;
     private ImageView mCarteVoteC;
     private ImageView mCarteVoteMajority;
+    private ImageView mImageMot1;
+    private ImageView mImageMot2;
+    private ImageView mImageMot3;
+    private ImageView mImageMotPrincipal;
     private TextView mResultatVoteA;
     private TextView mResultatVoteB;
     private TextView mResultatVoteC;
@@ -127,10 +131,18 @@ public class MajorityActivity extends JeuEnVisioActivity {
         mCarteVoteB = findViewById(R.id.carte_vote_b);
         mCarteVoteC = findViewById(R.id.carte_vote_c);
         mCarteVoteMajority = findViewById(R.id.carte_vote_majority);
+        mImageMot1 = findViewById(R.id.image_mot_1);
+        mImageMot2 = findViewById(R.id.image_mot_2);
+        mImageMot3 = findViewById(R.id.image_mot_3);
+        mImageMotPrincipal = findViewById(R.id.image_mot_principal);
         mCarteVoteA.setOnClickListener(this);
         mCarteVoteB.setOnClickListener(this);
         mCarteVoteC.setOnClickListener(this);
         mCarteVoteMajority.setOnClickListener(this);
+        mImageMot1.setOnClickListener(this);
+        mImageMot2.setOnClickListener(this);
+        mImageMot3.setOnClickListener(this);
+        mImageMotPrincipal.setOnClickListener(this);
         mResultatVoteA = findViewById(R.id.resultat_vote_a);
         mResultatVoteB = findViewById(R.id.resultat_vote_b);
         mResultatVoteC = findViewById(R.id.resultat_vote_c);
@@ -142,6 +154,10 @@ public class MajorityActivity extends JeuEnVisioActivity {
         mCarteVoteB.setOnClickListener(null);
         mCarteVoteC.setOnClickListener(null);
         mCarteVoteMajority.setOnClickListener(null);
+        mImageMot1.setOnClickListener(null);
+        mImageMot2.setOnClickListener(null);
+        mImageMot3.setOnClickListener(null);
+        mImageMotPrincipal.setOnClickListener(null);
     }
 
     @Override
@@ -211,26 +227,27 @@ public class MajorityActivity extends JeuEnVisioActivity {
     }
 
     private void selectionneCarteVote(String tag) {
-        mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_blanc);
-        mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_blanc);
-        mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_blanc);
-        mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_blanc);
+        RASSelectionImages();
 
         switch (tag) {
             case "carte_vote_majority":
                 mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_vert);
+                mImageMotPrincipal.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_MAJORITE;
                 break;
             case "carte_vote_a":
                 mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_vert);
+                mImageMot1.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_A;
                 break;
             case "carte_vote_b":
                 mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_vert);
+                mImageMot2.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_B;
                 break;
             case "carte_vote_c":
                 mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_vert);
+                mImageMot3.setBackgroundResource(R.drawable.fond_carte_vert);
                 mValeurVote = VOTE_CARTE_C;
                 break;
         }
@@ -473,11 +490,19 @@ public class MajorityActivity extends JeuEnVisioActivity {
     }
 
     private void selectionneCarteVoteParLettre(int lettre) {
+        RASSelectionImages();
+
+        findViewById(tableIdRessourcesCarteVote[lettre]).setBackgroundResource(R.drawable.fond_carte_vert);
+    }
+
+    private void RASSelectionImages() {
         mCarteVoteA.setBackgroundResource(R.drawable.fond_carte_blanc);
         mCarteVoteB.setBackgroundResource(R.drawable.fond_carte_blanc);
         mCarteVoteC.setBackgroundResource(R.drawable.fond_carte_blanc);
         mCarteVoteMajority.setBackgroundResource(R.drawable.fond_carte_blanc);
-
-        findViewById(tableIdRessourcesCarteVote[lettre]).setBackgroundResource(R.drawable.fond_carte_vert);
+        mImageMot1.setBackgroundResource(R.drawable.fond_carte_blanc);
+        mImageMot2.setBackgroundResource(R.drawable.fond_carte_blanc);
+        mImageMot3.setBackgroundResource(R.drawable.fond_carte_blanc);
+        mImageMotPrincipal.setBackgroundResource(R.drawable.fond_carte_blanc);
     }
 }

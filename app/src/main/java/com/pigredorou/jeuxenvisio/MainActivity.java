@@ -101,9 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.03 : Correctif à chaud
      * 3.1.04 : Correctif Majority + début implémentation timeline
      * 3.1.05 : Majority ajout du classement en fin de partie
+     * 3.1.06 : Majority ajout sélection via mots
      */
     // Variables statiques
-    private static final String mNumVersion = "3.1.05";
+    private static final String mNumVersion = "3.1.06";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

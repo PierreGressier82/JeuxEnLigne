@@ -119,6 +119,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/image_mot_principal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".33"
@@ -126,6 +127,7 @@
                     android:background="@drawable/fond_carte_blanc"
                     android:padding="5dp"
                     android:src="@drawable/majority_carte_mot"
+                    android:tag="carte_vote_majority"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -271,6 +273,7 @@
 
                 <ImageView
                     android:id="@+id/image_mot_1"
+                    android:tag="carte_vote_a"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
@@ -312,6 +315,7 @@
 
                 <ImageView
                     android:id="@+id/image_mot_2"
+                    android:tag="carte_vote_b"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
@@ -353,6 +357,7 @@
 
                 <ImageView
                     android:id="@+id/image_mot_3"
+                    android:tag="carte_vote_c"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
