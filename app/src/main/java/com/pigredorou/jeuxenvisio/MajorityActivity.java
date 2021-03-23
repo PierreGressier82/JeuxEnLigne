@@ -47,6 +47,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private final static int[] tableIdRessourcesLigneScore = {R.id.score_ligne_1, R.id.score_ligne_2, R.id.score_ligne_3, R.id.score_ligne_4, R.id.score_ligne_5, R.id.score_ligne_6, R.id.score_ligne_7, R.id.score_ligne_8, R.id.score_ligne_9, R.id.score_ligne_10, R.id.score_ligne_11};
     private final static int[] tableIdRessourcesPseudoScore = {R.id.score_pseudo_1, R.id.score_pseudo_2, R.id.score_pseudo_3, R.id.score_pseudo_4, R.id.score_pseudo_5, R.id.score_pseudo_6, R.id.score_pseudo_7, R.id.score_pseudo_8, R.id.score_pseudo_9, R.id.score_pseudo_10, R.id.score_pseudo_11};
     private final static int[] tableIdRessourcesScore = {R.id.score_1, R.id.score_2, R.id.score_3, R.id.score_4, R.id.score_5, R.id.score_6, R.id.score_7, R.id.score_8, R.id.score_9, R.id.score_10, R.id.score_11};
+    private final static int[] tableIdRessourcesPositionScore = {R.id.score_position_1, R.id.score_position_2, R.id.score_position_3, R.id.score_position_4, R.id.score_position_5, R.id.score_position_6, R.id.score_position_7, R.id.score_position_8, R.id.score_position_9, R.id.score_position_10, R.id.score_position_11};
     private final static int[] tableIdRessourcesCarteVote = {R.id.carte_vote_majority, R.id.carte_vote_a, R.id.carte_vote_b, R.id.carte_vote_c};
     private final static int[] tableIdRessourcesTexteVote = {R.id.resultat_vote_majority, R.id.resultat_vote_a, R.id.resultat_vote_b, R.id.resultat_vote_c};
     // Elements graphique
@@ -197,6 +198,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
                 } else if (mBoutonMancheTourSuivant.getText().toString().equals(getResources().getString(R.string.manche_suivante))) {
                     attribuePoints(true);
                     new MainActivity.TacheURLSansRetour().execute(urlSuivant + mIdPartie + "&manche=oui");
+                } else if (mBoutonMancheTourSuivant.getText().toString().equals(getResources().getString(R.string.partie_suivante))) {
+                    new MainActivity.TacheURLSansRetour().execute(urlSuivant + mIdPartie);
                 }
                 desactiveBouton(mBoutonMancheTourSuivant);
                 break;
@@ -254,10 +257,12 @@ public class MajorityActivity extends JeuEnVisioActivity {
         mIdMot = Integer.parseInt(findViewById(tableIdRessourcesMots[mValeurVote]).getTag().toString());
     }
 
-    void afficheClassement() {
+    private void afficheClassement() {
         mMajority.setVisibility(View.GONE);
 
         Collections.sort(mListeJoueurs);
+
+        int scorePrec = 0;
 
         for (int i = 0; i < tableIdRessourcesLigneScore.length; i++) {
             if (i < mListeJoueurs.size()) {
@@ -271,6 +276,17 @@ public class MajorityActivity extends JeuEnVisioActivity {
                 tv.setText(mListeJoueurs.get(i).getNomJoueur());
                 tv = findViewById(tableIdRessourcesScore[i]);
                 tv.setText(String.valueOf(mListeJoueurs.get(i).getScore()));
+                // Gestion des positions ex-aequos
+                if (scorePrec == mListeJoueurs.get(i).getScore() && i > 0) {
+                    tv = findViewById(tableIdRessourcesPositionScore[i - 1]);
+                    String positionPrec = tv.getText().toString();
+                    tv = findViewById(tableIdRessourcesPositionScore[i]);
+                    tv.setText(positionPrec);
+                } else {
+                    tv = findViewById(tableIdRessourcesPositionScore[i]);
+                    tv.setText(String.valueOf(i + 1));
+                }
+                scorePrec = mListeJoueurs.get(i).getScore();
             } else
                 findViewById(tableIdRessourcesLigneScore[i]).setVisibility(View.GONE);
         }
@@ -341,6 +357,8 @@ public class MajorityActivity extends JeuEnVisioActivity {
             if (mCompteurARebours != null)
                 mCompteurARebours.cancel();
             afficheClassement();
+            mBoutonMancheTourSuivant.setText(getResources().getString(R.string.partie_suivante));
+            activeBouton(mBoutonMancheTourSuivant);
         } else
             afficheJeu();
 
@@ -415,6 +433,11 @@ public class MajorityActivity extends JeuEnVisioActivity {
     private void activeToutesLesCartesVotes() {
         for (int value : tableIdRessourcesCarteVote) {
             findViewById(value).setAlpha(1);
+            findViewById(value).setBackgroundResource(R.drawable.fond_carte_blanc);
+            findViewById(value).setOnClickListener(this);
+        }
+
+        for (int value : tableIdRessourcesTexteVote) {
             findViewById(value).setBackgroundResource(R.drawable.fond_carte_blanc);
             findViewById(value).setOnClickListener(this);
         }

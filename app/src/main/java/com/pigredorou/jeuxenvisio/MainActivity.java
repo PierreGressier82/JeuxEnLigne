@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.03 : Correctif à chaud
      * 3.1.04 : Correctif Majority + début implémentation timeline
      * 3.1.05 : Majority ajout du classement en fin de partie
-     * 3.1.06 : Majority ajout sélection via mots
+     * 3.1.06 : Majority ajout sélection via mots + bouton partie suivante + Gestion des ex-aequos dans le classement
      */
     // Variables statiques
     private static final String mNumVersion = "3.1.06";
@@ -270,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.bloc_joueurs).setVisibility(View.VISIBLE);
             findViewById(R.id.bloc_salons).setVisibility(View.GONE);
             findViewById(R.id.tableau_jeux).setVisibility(View.GONE);
-            Toast.makeText(this, "Il faut sélectionner un pseudo !", Toast.LENGTH_SHORT).show();
         } else {
             if (mIdJoueur == 0)
                 mIdJoueur = getIdJoueurFromPseudo(mListeJoueurs);

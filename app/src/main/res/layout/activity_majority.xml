@@ -637,6 +637,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -672,6 +673,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -707,6 +709,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -742,6 +745,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -777,6 +781,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -812,6 +817,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -847,6 +853,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -882,6 +889,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -917,6 +925,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -952,6 +961,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -987,6 +997,7 @@
                 android:background="@drawable/tour_blanc">
 
                 <TextView
+                    android:id="@+id/score_position_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
