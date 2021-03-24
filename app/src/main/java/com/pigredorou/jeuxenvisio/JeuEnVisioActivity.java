@@ -351,8 +351,8 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
                         valeur = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
                     case "pose":
-                        if (!noeudCarte.getAttributes().item(i).getNodeValue().isEmpty()) {
-                            int ordrePose = Integer.parseInt(noeudCarte.getAttributes().item(i).getNodeValue());
+                        if (!noeudCarte.getAttributes().item(j).getNodeValue().isEmpty()) {
+                            int ordrePose = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                             cartePosee = ordrePose != 0;
                         } else
                             cartePosee = false;

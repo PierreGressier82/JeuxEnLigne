@@ -156,7 +156,7 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
         chargeVuesTaches();
 
         // Refresh auto
-        startRefreshAuto();
+        startRefreshAuto(urlTheCrew);
         // TODO : Signal de détresse : Choix d'une carte pour la passer à son voisin (change le pseudo du joueur avec un tag pour retirer du joueur mais mettre en attente la carte
     }
 
@@ -319,14 +319,6 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
         mRefreshAuto = true;
     }
 
-    private void startRefreshAuto() {
-        // Mise à jour complète
-        mMajTerminee = false;
-        new TacheGetInfoTheCrew().execute(urlTheCrew + mIdPartie + "&joueur=" + mPseudo);
-        startRefreshAutoWithDelai();
-        mRefreshAuto = true;
-    }
-
     @Override
     protected void onResume() {
         startRefreshAuto(urlTheCrew);
@@ -400,7 +392,7 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
                             stopRefreshAuto();
                         } else {
                             mBoutonRefreshAuto.setTextColor(getResources().getColor(R.color.gris));
-                            startRefreshAuto();
+                            startRefreshAuto(urlTheCrew);
                         }
                         break;
                     case "titre_pli":
@@ -580,7 +572,7 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
                     // Attribue la tâche
                     clicTacheAAttribuer(v);
                     // Relance le refresh car l'action est validée
-                    startRefreshAuto();
+                    startRefreshAuto(urlTheCrew);
                 } else {
                     time = System.currentTimeMillis();
 
@@ -1190,7 +1182,7 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
                 Log.d("PGR-OnDrag", "ACTION_DRAG_ENDED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
                 v.setBackground(normalShape);
                 stopOnDragListener();
-                startRefreshAuto();
+                startRefreshAuto(urlTheCrew);
                 break;
         }
         return true;

@@ -102,9 +102,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.04 : Correctif Majority + début implémentation timeline
      * 3.1.05 : Majority ajout du classement en fin de partie
      * 3.1.06 : Majority ajout sélection via mots + bouton partie suivante + Gestion des ex-aequos dans le classement
+     * 3.1.07 : Corrections bugs : TheCrew double mise à jour auto - TopTen dévoiler la carte
      */
     // Variables statiques
-    private static final String mNumVersion = "3.1.06";
+    private static final String mNumVersion = "3.1.07";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
