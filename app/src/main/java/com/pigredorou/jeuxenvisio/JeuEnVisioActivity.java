@@ -176,7 +176,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    static Node getNoeudUnique(Document doc, String nomDuNoeud) {
+    public static Node getNoeudUnique(Document doc, String nomDuNoeud) {
         NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
         Node noeud = null;
         if (listeNoeudsMission.getLength() > 0) {

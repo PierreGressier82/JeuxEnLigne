@@ -30,7 +30,6 @@ import com.pigredorou.jeuxenvisio.objets.Salon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
@@ -43,6 +42,8 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import static com.pigredorou.jeuxenvisio.JeuEnVisioActivity.getNoeudUnique;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     public static final int TIMELINE_ACTIVITY_REQUEST_CODE = 18;
     public static final int JUSTONE_ACTIVITY_REQUEST_CODE = 19;
+    public static final int ADMINISTRATION_REQUEST_CODE = 50;
     public static final int mSelectionDoucleClic = 1;
     public static final int mSelectionDragAndDrop = 2;
     //public static final int mSelectionDragAndDropLongTouch = 3;
@@ -205,6 +207,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Autres options
     private Button mBoutonEchangeCarte;
     private Button mBoutonEchangeJeu;
+    // Administration
+    private Button mBoutonAdministration;
 
     // Listes
     private SharedPreferences mPreferences;
@@ -242,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Pseudo
         TextView tvPseudo = findViewById(R.id.pseudo);
         tvPseudo.setText(mPseudo);
+        tvPseudo.setOnClickListener(this);
 
         // Nouvelle version
         mTexteNouvelleVersion = findViewById(R.id.newVersion);
@@ -379,6 +384,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Autre option
         chargementAutreOptions();
+
+        // Administration
+        mBoutonAdministration = findViewById(R.id.administration);
+        mBoutonAdministration.setOnClickListener(this);
+        mBoutonAdministration.setVisibility(View.GONE);
     }
 
     private void chargementAutreOptions() {
@@ -472,6 +482,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     new TacheURLSansRetour().execute(urlDistribueCartes + mIdPartie + "&typeCarte=" + typeCarte + "&nbCarteParJoueur=" + nbCarteParJoueur + "&belote=" + belote);
                     Toast.makeText(this, "Distribution terminée", Toast.LENGTH_SHORT).show();
+                    break;
+
+                // Met à jour la liste des jeux via clic sur le pseudo
+                case "pseudo":
+                    new TacheGetXML().execute(urlGetJeux + mPseudo);
+                    break;
+
+                // Lance l'activité qui sert pour administrer
+                case "administration":
+                    // Lance l'activité du jeu demandé avec les paramètres
+                    Intent administrationActivity = new Intent(MainActivity.this, AdministrationActivity.class);
+                    startActivityForResult(administrationActivity, ADMINISTRATION_REQUEST_CODE);
                     break;
 
                 default:
@@ -765,7 +787,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Affiche l'ID du salon en blanc (et les autres en noir)
-     *
      * @param indexSalon : index de position du salon dans la liste
      */
     private void afficheSalonEnBlanc(int indexSalon) {
@@ -808,6 +829,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBoutonMissionSuivante.setVisibility(View.GONE);
             mBoutonEchangeCarte.setVisibility(View.GONE);
             mBoutonEchangeJeu.setVisibility(View.GONE);
+            mBoutonAdministration.setVisibility(View.VISIBLE);
 
             switch (mIdJeu) {
                 case mIdTheCrew:
@@ -851,6 +873,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBoutonMissionSuivante.setVisibility(View.GONE);
             mBoutonEchangeCarte.setVisibility(View.GONE);
             mBoutonEchangeJeu.setVisibility(View.GONE);
+            mBoutonAdministration.setVisibility(View.GONE);
         }
 
     }
@@ -1015,16 +1038,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         return listeSalons;
-    }
-
-    static Node getNoeudUnique(Document doc, String nomDuNoeud) {
-        NodeList listeNoeudsMission = doc.getElementsByTagName(nomDuNoeud);
-        Node noeud = null;
-        if (listeNoeudsMission.getLength() > 0) {
-            noeud = listeNoeudsMission.item(0);
-        }
-
-        return noeud;
     }
 
     private ArrayList<Jeu> parseXMLJeux(Document doc) {

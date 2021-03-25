@@ -53,7 +53,6 @@
     <string name="url">URL de la base</string>
     <string name="Administration">Administration</string>
     <string name="gambit7">Gambit 7</string>
-
     <string name="title_activity_settings">Paramètres</string>
     <string name="messages_header">Messages</string>
     <string name="question">Question</string>
@@ -83,4 +82,5 @@
     <string name="_10">10</string>
     <string name="_11">11</string>
     <string name="partie_suivante">Partie suivante</string>
+    <string name="action_settings">Settings</string>
 </resources>

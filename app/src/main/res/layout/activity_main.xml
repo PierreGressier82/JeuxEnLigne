@@ -17,6 +17,19 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/pseudo"
+            android:tag="pseudo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pseudo"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/gris"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/bouton_quitter"
             android:tag="bouton_quitter"
@@ -26,18 +39,6 @@
             android:contentDescription="@string/retour_l_accueil"
             android:src="@drawable/bouton_quitter"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/pseudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/pseudo"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/gris"
-            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -69,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/texteChargement"
@@ -109,7 +110,8 @@
     <HorizontalScrollView
         android:id="@+id/scrollView_jeux"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <TableRow
             android:id="@+id/tableau_jeux"
@@ -213,7 +215,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/bloc_joueurs"
@@ -269,7 +272,8 @@
         android:id="@+id/bloc_salons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="match_parent"
@@ -791,6 +795,21 @@
                     android:textColor="@color/blanc"
                     android:textSize="20sp" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/administration"
+                android:tag="administration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/noir_transparent"
+                android:padding="5dp"
+                android:text="@string/Administration"
+                android:textColor="@color/blanc"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

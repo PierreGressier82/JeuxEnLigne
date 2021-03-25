@@ -106,6 +106,7 @@
 
                 <ImageView
                     android:id="@+id/drop_0"
+                    android:tag="drop_0"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -148,12 +149,13 @@
 
                 <ImageView
                     android:id="@+id/drop_2"
+                    android:tag="drop_2"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/carte"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:contentDescription="@string/carte"
                     android:visibility="visible" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -189,6 +191,7 @@
 
                 <ImageView
                     android:id="@+id/drop_4"
+                    android:tag="drop_4"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -230,6 +233,7 @@
 
                 <ImageView
                     android:id="@+id/drop_6"
+                    android:tag="drop_6"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -272,6 +276,7 @@
 
                 <ImageView
                     android:id="@+id/drop_8"
+                    android:tag="drop_8"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -313,6 +318,7 @@
 
                 <ImageView
                     android:id="@+id/drop_10"
+                    android:tag="drop_10"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -354,6 +360,7 @@
 
                 <ImageView
                     android:id="@+id/drop_12"
+                    android:tag="drop_12"
                     android:layout_width="20dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"

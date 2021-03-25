@@ -76,10 +76,18 @@ public class TimelineActivity extends JeuEnVisioActivity implements View.OnDragL
             case DragEvent.ACTION_DRAG_ENTERED:
                 Log.d("PGR-OnDrag", "ACTION_DRAG_ENTERED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
                 v.setBackground(enterShape);
+                if (v.getTag() != null && v.getTag().toString().startsWith("drop_")) {
+                    ImageView iv = findViewById(v.getId());
+                    iv.getLayoutParams().width = 160;
+                }
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
                 Log.d("PGR-OnDrag", "ACTION_DRAG_EXITED " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
                 v.setBackground(normalShape);
+                if (v.getTag() != null && v.getTag().toString().startsWith("drop_")) {
+                    ImageView iv = findViewById(v.getId());
+                    iv.getLayoutParams().width = 80;
+                }
                 break;
             case DragEvent.ACTION_DROP: // Evenement qui informe du laché dans une vue en écoute
                 Log.d("PGR-OnDrag", "ACTION_DROP " + v.getId() + " " + R.id.tableau_cartes + " " + R.id.tableau_table);
