@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -28,7 +29,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import static com.pigredorou.jeuxenvisio.JeuEnVisioActivity.getNoeudUnique;
 import static com.pigredorou.jeuxenvisio.MainActivity.url;
 
-public class AdministrationActivity extends AppCompatActivity {
+public class AdministrationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String urlGetSalons = url + "getAllSalons.php";
     private ArrayList<Salon> mListeSalons;
@@ -39,10 +40,23 @@ public class AdministrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administration);
 
+        // Ecran de chargement
+        mChargement = findViewById(R.id.chargement);
+        mChargement.setVisibility(View.VISIBLE);
+
+        // Bouton retour
+        chargeBoutonRetour();
+
         new TacheGetSalonsDeJeu().execute(urlGetSalons);
     }
 
-    void parseXML(Document doc) {
+    private void chargeBoutonRetour() {
+        ImageView boutonRetour = findViewById(R.id.bouton_retour);
+        boutonRetour.setOnClickListener(this);
+    }
+
+
+    private void parseXML(Document doc) {
         // Masque l'écran de chargement
         findViewById(R.id.chargement).setVisibility(View.GONE);
 
@@ -110,6 +124,20 @@ public class AdministrationActivity extends AppCompatActivity {
         }
 
         return listeSalons;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v != null) {
+            switch (v.getTag().toString()) {
+                case "bouton_retour":
+                    finish();
+                    break;
+
+                case "bouton_valider":
+                    break;
+            }
+        }
     }
 
     private class TacheGetSalonsDeJeu extends AsyncTask<String, Void, Document> {
