@@ -4,7 +4,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,23 +28,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import static androidx.annotation.Dimension.SP;
 import static com.pigredorou.jeuxenvisio.JeuEnVisioActivity.getNoeudUnique;
 import static com.pigredorou.jeuxenvisio.MainActivity.url;
 
 public class AdministrationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String urlGetSalons = url + "getAllSalons.php";
-    private ArrayList<Salon> mListeSalons;
     private ConstraintLayout mChargement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Masque le bar de titre de l'activité
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
         setContentView(R.layout.activity_administration);
 
         // Ecran de chargement
@@ -57,11 +68,85 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
 
     private void parseXML(Document doc) {
+        ArrayList<Salon> mListeSalons;
+
         // Masque l'écran de chargement
         findViewById(R.id.chargement).setVisibility(View.GONE);
 
         // Liste des salons de jeu (avec les joueurs)
         mListeSalons = parseXMLSalonsJeu(doc);
+        afficheSalons(mListeSalons);
+    }
+
+    private void afficheSalons(ArrayList<Salon> listeSalons) {
+        LinearLayout ll = findViewById(R.id.listeSalons);
+
+        for (int i = 0; i < listeSalons.size(); i++) {
+            ajouteNomSalon(ll, listeSalons.get(i).getNom());
+            ajouteJoueursEtJeux(ll, listeSalons.get(i).getListeJoueurs(), listeSalons.get(i).getId());
+        }
+    }
+
+    private void ajouteJoueursEtJeux(LinearLayout ll, ArrayList<Joueur> listeJoueurs, int indexSalon) {
+        LinearLayout blocJoueursEtJeux = new LinearLayout(this);
+        LinearLayout.LayoutParams paramsLL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        blocJoueursEtJeux.setLayoutParams(paramsLL);
+
+        TableLayout tableauJoueurs = new TableLayout(this);
+        TableLayout.LayoutParams paramsTL = new TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 0.5);
+        tableauJoueurs.setLayoutParams(paramsTL);
+        ajouteJoueurs(tableauJoueurs, listeJoueurs, indexSalon);
+        blocJoueursEtJeux.addView(tableauJoueurs);
+
+        TableLayout tableauJeux = new TableLayout(this);
+        tableauJeux.setLayoutParams(paramsTL);
+        //ajouteJoueurs(tableauJeux, listeJoueurs);
+        blocJoueursEtJeux.addView(tableauJeux);
+        ll.addView(blocJoueursEtJeux);
+    }
+
+    private void ajouteJoueurs(TableLayout tl, ArrayList<Joueur> listeJoueurs, int indexSalon) {
+        String tag = "salon_" + indexSalon;
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            TableRow ligneJoueur = new TableRow(this);
+            TableRow.LayoutParams paramsTR = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ligneJoueur.setLayoutParams(paramsTR);
+            // Actif ?
+            CheckBox joueurActif = new CheckBox(this);
+            joueurActif.setChecked(listeJoueurs.get(i).getActif() != 0);
+            joueurActif.setTextColor(getResources().getColor(R.color.blanc));
+            joueurActif.setOnClickListener(this);
+            joueurActif.setTag(tag);
+            ligneJoueur.addView(joueurActif);
+            // Nom joueur
+            TextView nomJoueur = new TextView(this);
+            TableRow.LayoutParams paramsTV = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ligneJoueur.setLayoutParams(paramsTV);
+            nomJoueur.setText(listeJoueurs.get(i).getNomJoueur());
+            nomJoueur.setTextColor(getResources().getColor(R.color.blanc));
+            nomJoueur.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            nomJoueur.setTextSize(SP, 20);
+            nomJoueur.setTag(tag);
+            ligneJoueur.addView(nomJoueur);
+            // Ajout de la ligne au tabeau
+            tl.addView(ligneJoueur);
+        }
+    }
+
+    private void ajouteNomSalon(LinearLayout ll, String nom) {
+        TextView nomSalon = new TextView(this);
+        nomSalon.setText(nom);
+        nomSalon.setTextColor(getResources().getColor(R.color.blanc));
+        nomSalon.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        nomSalon.setTextSize(SP, 30);
+        nomSalon.setBackgroundColor(getResources().getColor(R.color.noir_transparent));
+        nomSalon.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(10, 30, 10, 0);
+        nomSalon.setLayoutParams(params);
+
+        ll.addView(nomSalon);
     }
 
     public static ArrayList<Salon> parseXMLSalonsJeu(Document doc) {
@@ -136,6 +221,11 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
                 case "bouton_valider":
                     break;
+
+                default:
+                    if (v.getTag().toString().startsWith("salon_")) {
+                        Toast.makeText(this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
+                    }
             }
         }
     }
