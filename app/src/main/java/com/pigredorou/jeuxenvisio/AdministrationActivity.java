@@ -41,6 +41,7 @@ import static com.pigredorou.jeuxenvisio.MainActivity.url;
 public class AdministrationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String urlGetSalons = url + "getAllSalons.php";
+    private static final String urlMAJActif = url + "majActif.php?salon=";
     private ConstraintLayout mChargement;
 
     @Override
@@ -116,7 +117,8 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
             joueurActif.setChecked(listeJoueurs.get(i).getActif() != 0);
             joueurActif.setTextColor(getResources().getColor(R.color.blanc));
             joueurActif.setOnClickListener(this);
-            joueurActif.setTag(tag);
+            joueurActif.setTag(tag + "_" + listeJoueurs.get(i).getId());
+            joueurActif.setId(View.generateViewId());
             ligneJoueur.addView(joueurActif);
             // Nom joueur
             TextView nomJoueur = new TextView(this);
@@ -126,7 +128,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
             nomJoueur.setTextColor(getResources().getColor(R.color.blanc));
             nomJoueur.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
             nomJoueur.setTextSize(SP, 20);
-            nomJoueur.setTag(tag);
+            nomJoueur.setTag(tag + "_" + listeJoueurs.get(i).getId());
             ligneJoueur.addView(nomJoueur);
             // Ajout de la ligne au tabeau
             tl.addView(ligneJoueur);
@@ -224,6 +226,12 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
                 default:
                     if (v.getTag().toString().startsWith("salon_")) {
+                        int actif = 0;
+                        String[] tag = v.getTag().toString().split("_");
+                        CheckBox cb = findViewById(v.getId());
+                        if (cb.isChecked())
+                            actif = 1;
+                        new MainActivity.TacheURLSansRetour().execute(urlMAJActif + tag[1] + "&joueur=" + tag[2] + "&actif=" + actif);
                         Toast.makeText(this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
                     }
             }
