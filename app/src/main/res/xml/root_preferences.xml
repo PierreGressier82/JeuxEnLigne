@@ -8,7 +8,8 @@
             app:entryValues="@array/selelections_values"
             app:key="@string/selection"
             app:icon="@drawable/icone_selectionner"
-            app:title="Méthode de sélection" />
+            app:title="Méthode de sélection"
+            app:isPreferenceVisible="false" />
 
         <EditTextPreference
             app:dependency="admin"

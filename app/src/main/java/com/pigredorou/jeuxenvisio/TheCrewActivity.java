@@ -70,7 +70,6 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
     private static final String urlTheCrew = MainActivity.url + "theCrew.php?partie=";
     private static final int MAX_DURATION_CLICK = 500;
     private static final int MAX_DURATION_DOUBLE_CLICK = 2000;
-    Thread t;
     // Variables globales
     private String[] mListePseudo; // Liste des pseudos des joueurs
     private String mCommandant; // Pseudo du commandant de la partie (fusée 4)
@@ -294,7 +293,7 @@ public class TheCrewActivity extends JeuEnVisioActivity implements View.OnLongCl
                 public void run() {
                     try {
                         while (!isInterrupted()) {
-                            Thread.sleep(1000);
+                            Thread.sleep(2000);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

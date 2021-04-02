@@ -73,7 +73,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Objects.requireNonNull(findPreference("pseudo")).setOnPreferenceClickListener(this);
 
         // Création de liste liste des salons
-        new TacheGetXML().execute(urlGetSalons);
+        //new TacheGetXML().execute(urlGetSalons);
     }
 
 

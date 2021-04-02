@@ -1,11 +1,16 @@
 package com.pigredorou.jeuxenvisio;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -42,6 +47,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
     private static final String urlGetSalons = url + "getAllSalons.php";
     private static final String urlMAJActif = url + "majActif.php?salon=";
+    private static final String urlCreeJoueur = url + "creeJoueur.php?salon=";
     private ConstraintLayout mChargement;
 
     @Override
@@ -83,7 +89,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         LinearLayout ll = findViewById(R.id.listeSalons);
 
         for (int i = 0; i < listeSalons.size(); i++) {
-            ajouteNomSalon(ll, listeSalons.get(i).getNom());
+            ajouteNomSalon(ll, listeSalons.get(i));
             ajouteJoueursEtJeux(ll, listeSalons.get(i).getListeJoueurs(), listeSalons.get(i).getId());
         }
     }
@@ -107,7 +113,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
     }
 
     private void ajouteJoueurs(TableLayout tl, ArrayList<Joueur> listeJoueurs, int indexSalon) {
-        String tag = "salon_" + indexSalon;
+        String tag = "joueur_" + indexSalon;
         for (int i = 0; i < listeJoueurs.size(); i++) {
             TableRow ligneJoueur = new TableRow(this);
             TableRow.LayoutParams paramsTR = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -135,14 +141,16 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void ajouteNomSalon(LinearLayout ll, String nom) {
+    private void ajouteNomSalon(LinearLayout ll, Salon salon) {
         TextView nomSalon = new TextView(this);
-        nomSalon.setText(nom);
+        nomSalon.setText(salon.getNom());
         nomSalon.setTextColor(getResources().getColor(R.color.blanc));
         nomSalon.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         nomSalon.setTextSize(SP, 30);
         nomSalon.setBackgroundColor(getResources().getColor(R.color.noir_transparent));
         nomSalon.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        nomSalon.setTag("salon_" + salon.getId());
+        nomSalon.setOnClickListener(this);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(10, 30, 10, 0);
@@ -225,7 +233,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
                     break;
 
                 default:
-                    if (v.getTag().toString().startsWith("salon_")) {
+                    if (v.getTag().toString().startsWith("joueur_")) {
                         int actif = 0;
                         String[] tag = v.getTag().toString().split("_");
                         CheckBox cb = findViewById(v.getId());
@@ -234,8 +242,45 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
                         new MainActivity.TacheURLSansRetour().execute(urlMAJActif + tag[1] + "&joueur=" + tag[2] + "&actif=" + actif);
                         Toast.makeText(this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
                     }
+                    if (v.getTag().toString().startsWith("salon_")) {
+                        String[] tag = v.getTag().toString().split("_");
+                        lireEtAjouterJoueur(tag[1]);
+                        Toast.makeText(this, "Joueur créé", Toast.LENGTH_SHORT).show();
+                    }
             }
         }
+    }
+
+    private void lireEtAjouterJoueur(final String salon) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        // Oblige a appuyer sur OK
+        //builder.setCancelable(false);
+        // Affichage du score final
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setTitle("Créer un nouveau joueur");
+        builder.setMessage("\nPseudo : ");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                new MainActivity.TacheURLSansRetour().execute(urlCreeJoueur + salon + "&joueur=" + input.getText().toString());
+
+                // Termine l'activité correctement
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     private class TacheGetSalonsDeJeu extends AsyncTask<String, Void, Document> {
