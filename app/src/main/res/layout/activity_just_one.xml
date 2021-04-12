@@ -93,9 +93,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bloc_carte_liste_mots"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -234,6 +236,68 @@
                 android:layout_weight="0.2" />
         </LinearLayout>
 
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/choix_numero_texte"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/choisi_un_num_ro"
+        android:textSize="20sp"
+        android:textAlignment="textStart"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/choix_numero_chiffres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="@string/_1"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="@string/_2"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="@string/_3"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="@string/_4"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:text="@string/_5"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <EditText
