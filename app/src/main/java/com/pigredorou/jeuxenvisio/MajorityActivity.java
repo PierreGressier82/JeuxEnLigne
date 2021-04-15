@@ -311,7 +311,7 @@ public class MajorityActivity extends JeuEnVisioActivity {
         parseNoeudMajority(doc);
 
         // Mots
-        mListeMots = parseNoeudsMots(doc);
+        mListeMots = parseNoeudsMots(doc, "Mots");
         afficheMots(mListeMots);
 
         // Liste des votes

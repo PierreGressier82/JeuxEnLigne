@@ -46,7 +46,7 @@
     <string name="personnage">Personnage</string>
     <string name="ecrit_un_mot">Ecrit un mot</string>
     <string name="mot">Mot</string>
-    <string name="initialiser">Partie suivante</string>
+    <string name="initialiser">Initialiser</string>
     <string name="drag_drop"><![CDATA[Drag & drop]]></string>
     <string name="double_clic">Double clic</string>
     <string name="ajout">Ajout</string>

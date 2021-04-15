@@ -42,6 +42,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     int mMonScore;
     int mMethodeSelection;
     boolean mAdmin;
+    int mNumeroMotChoisi;
     ArrayList<Joueur> mListeJoueurs;
     ArrayList<Mot> mListeMots;
     ArrayList<Vote> mListeVotes;
@@ -213,6 +214,9 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
                     case "admin":
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
+                    case "actif":
+                        actif = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
+                        break;
                     case "new":
                         nv = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
@@ -262,16 +266,23 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         return new TopTen(licorne, caca, manche, numero, nbCartes);
     }
 
-    ArrayList<Mot> parseNoeudsMots(Document doc) {
-        Node noeudMots = getNoeudUnique(doc, "Mots");
+    ArrayList<Mot> parseNoeudsMots(Document doc, String nomNoeud) {
+        Node noeudMots = getNoeudUnique(doc, nomNoeud);
+        mNumeroMotChoisi = 0;
 
         int idMot = 0;
         String mot = "";
         int lettre = 0;
+        boolean elimine = false;
         ArrayList<Mot> listeMots = new ArrayList<>();
 
+        for (int i = 0; i < noeudMots.getAttributes().getLength(); i++) { // Parcours tous les attributs du noeud parent
+            if ("numero".equals(noeudMots.getAttributes().item(i).getNodeName()) && !noeudMots.getAttributes().item(i).getNodeValue().isEmpty())
+                mNumeroMotChoisi = Integer.parseInt(noeudMots.getAttributes().item(i).getNodeValue());
+        }
+
         if (noeudMots != null)
-            for (int i = 0; i < noeudMots.getChildNodes().getLength(); i++) { // Parcours toutes les mots
+            for (int i = 0; i < noeudMots.getChildNodes().getLength(); i++) { // Parcours tous les mots
                 Node noeudMot = noeudMots.getChildNodes().item(i);
                 Log.d("PGR-XML-Mot", noeudMot.getNodeName());
                 for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud mot
@@ -286,9 +297,13 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
                         case "lettre":
                             lettre = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
                             break;
+                        case "elimine":
+                            if (Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue()) == 1)
+                                elimine = true;
+                            break;
                     }
                 }
-                Mot monMot = new Mot(idMot, mot, lettre);
+                Mot monMot = new Mot(idMot, mot, lettre, elimine);
                 listeMots.add(monMot);
             }
 
@@ -377,6 +392,19 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
             }
         }
         return suisAdmin;
+    }
+
+    static boolean suisJeActif(String pseudo, ArrayList<Joueur> listeJoueurs) {
+        boolean suisActif = false;
+
+        for (int i = 0; i < listeJoueurs.size(); i++) {
+            // Suis-je admin ?
+            if (pseudo.equals(listeJoueurs.get(i).getNomJoueur()) && listeJoueurs.get(i).getActif() == 1) {
+                suisActif = true;
+                break;
+            }
+        }
+        return suisActif;
     }
 
     void parseXML(Document doc) {

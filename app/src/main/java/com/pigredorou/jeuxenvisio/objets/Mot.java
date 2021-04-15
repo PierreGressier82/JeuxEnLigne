@@ -1,16 +1,18 @@
 package com.pigredorou.jeuxenvisio.objets;
 
 public class Mot {
-    private int idMot;
-    private String mot;
-    private int nbPoint;
-    private int lettre;
+    private final int idMot;
+    private final String mot;
+    private final int nbPoint;
+    private final int lettre;
+    private final boolean elimine;
 
-    public Mot(int idMot, String mot, int lettre) {
+    public Mot(int idMot, String mot, int lettre, boolean elimine) {
         this.idMot = idMot;
         this.mot = mot;
         this.nbPoint = 1;
         this.lettre = lettre;
+        this.elimine = elimine;
     }
 
     public int getIdMot() {
@@ -27,5 +29,9 @@ public class Mot {
 
     public int getLettre() {
         return lettre;
+    }
+
+    public boolean isElimine() {
+        return elimine;
     }
 }

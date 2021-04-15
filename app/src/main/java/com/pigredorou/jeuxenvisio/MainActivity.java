@@ -106,9 +106,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.07 : Corrections bugs : TheCrew double mise à jour auto - TopTen dévoiler la carte
      * 3.1.08 : Début implémentation administration
      * 3.1.09 : Correctif The Crew + implémentation administration
+     * 3.1.10 : Implémentation JustOne en cours
      */
     // Variables statiques
-    private static final String mNumVersion = "3.1.09";
+    private static final String mNumVersion = "3.1.10";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String urlInitFiesta = url + "initFiesta.php?partie=";
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
     public static final String urlInitMajority = url + "initMajority.php?partie=";
+    public static final String urlInitJustOne = url + "initJustOne.php?partie=";
     public static final String urlNewJoueur = url + "newJoueur.php?joueur=";
     public static final String urlMajAdmin = url + "majAdminJoueur.php?joueur=";
     public static final String KEY_PREFERENCES = "MesPreferences";
@@ -443,6 +445,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // Remise à zéro de la dernière distribution
                 case "boutonRAZ":
+                    // Si 1 seul jeu ou un 1 seul salon, on le sélectionne automatiquement
+                    selectionAuto();
                     switch (mIdJeu) {
                         case mIdTheCrew:
                         case mIdBelote:
@@ -459,6 +463,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         case mIdMajority:
                             new TacheURLSansRetour().execute(urlInitMajority + mIdPartie);
+                            Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
+                            break;
+                        case mIdJustOne:
+                            new TacheURLSansRetour().execute(urlInitJustOne + mIdPartie);
                             Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -836,6 +844,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (mIdJeu) {
                 case mIdTheCrew:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
+                    mBoutonRAZ.setText(R.string.raz_distribution);
                     mBoutonDistribueCartes.setVisibility(View.VISIBLE);
                     mBoutonDistribueTache.setVisibility(View.VISIBLE);
                     mBoutonOptionTacheAjout.setVisibility(View.VISIBLE);
@@ -848,12 +857,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case mIdBelote:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
+                    mBoutonRAZ.setText(R.string.raz_distribution);
                     mBoutonDistribueCartes.setVisibility(View.VISIBLE);
                     break;
                 case mIdTopTen:
                 case mIdFiestaDeLosMuertos:
                 case mIdMajority:
+                case mIdJustOne:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
+                    mBoutonRAZ.setText(R.string.initialiser);
                     mBoutonDistribueCartes.setVisibility(View.GONE);
                     break;
                 case mIdLeRoiDesNains:
