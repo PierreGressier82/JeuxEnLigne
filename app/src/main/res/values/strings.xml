@@ -60,6 +60,7 @@
     <string name="question_1_7">Question 1/7</string>
     <string name="topten">TopTen</string>
     <string name="devoiler_ma_carte">DEVOILER MA CARTE</string>
+    <string name="devoiler_les_mots">Dévoiler les mots</string>
     <string name="manche_suivante">Manche suivante</string>
     <string name="tour_suivant">Tour suivant</string>
     <string name="perdu">PERDU</string>
@@ -84,4 +85,8 @@
     <string name="partie_suivante">Partie suivante</string>
     <string name="action_settings">Settings</string>
     <string name="choisi_un_num_ro"><u>Choisi un numéro :</u></string>
+    <string name="bonne_reponse">Bonne réponse</string>
+    <string name="echec">Mauvaise réponse</string>
+    <string name="score">Score </string>
+    <string name="tour">Tour </string>
 </resources>

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Mot;
+import com.pigredorou.jeuxenvisio.objets.Reponse;
 import com.pigredorou.jeuxenvisio.objets.TopTen;
 import com.pigredorou.jeuxenvisio.objets.Vote;
 
@@ -42,9 +43,11 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     int mMonScore;
     int mMethodeSelection;
     boolean mAdmin;
+    boolean mJeSuisLeJoueurActif = false;
     int mNumeroMotChoisi;
     ArrayList<Joueur> mListeJoueurs;
     ArrayList<Mot> mListeMots;
+    ArrayList<Reponse> mListeMotsReponses;
     ArrayList<Vote> mListeVotes;
     // Variables statiques
     final static String urlMAJ = MainActivity.url + "majJeu.php?partie=";
@@ -126,8 +129,8 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
 
                 case "bouton_valider":
                     //startRefreshAuto(urlJeu); -> A reprendre dans la classe fille
-                    desactiveBouton(mBoutonValider);
-                    new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
+                    //desactiveBouton(mBoutonValider);
+                    //new MainActivity.TacheURLSansRetour().execute(urlMAJ + mIdPartie + "&joueur=" + mIdJoueur);
                     break;
             }
         }
@@ -308,6 +311,39 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
             }
 
         return listeMots;
+    }
+
+    ArrayList<Reponse> parseNoeudsReponses(Document doc) {
+        Node noeudReponses = getNoeudUnique(doc, "Reponses");
+
+        int idJoueur = 0;
+        String mot = "";
+        int elimine = 0;
+        ArrayList<Reponse> listeReponses = new ArrayList<>();
+
+        if (noeudReponses != null)
+            for (int i = 0; i < noeudReponses.getChildNodes().getLength(); i++) { // Parcours toutes les réponses
+                Node noeudMot = noeudReponses.getChildNodes().item(i);
+                Log.d("PGR-XML-Reponse", noeudMot.getNodeName());
+                for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud mot
+                    Log.d("PGR-XML-Reponse", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
+                    switch (noeudMot.getAttributes().item(j).getNodeName()) {
+                        case "id_joueur":
+                            idJoueur = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "mot":
+                            mot = noeudMot.getAttributes().item(j).getNodeValue();
+                            break;
+                        case "elimine":
+                            elimine = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                    }
+                }
+                Reponse reponse = new Reponse(idJoueur, mot, elimine);
+                listeReponses.add(reponse);
+            }
+
+        return listeReponses;
     }
 
     ArrayList<Vote> parseNoeudsVotes(Document doc) {

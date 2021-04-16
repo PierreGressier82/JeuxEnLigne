@@ -22,6 +22,7 @@ public class JustOneActivity extends JeuEnVisioActivity {
     public static final String urlJeu = MainActivity.url + "justOne.php?partie=";
     public static final String urlMancheSuivante = MainActivity.url + "justOneMancheSuivante.php?partie=";
     public static final String urlVote = MainActivity.url + "vote.php?partie=";
+    public static final String urlReponse = MainActivity.url + "enregistreReponse.php?partie=";
     // Tableaux des resssources
     static final int[] tableIdRessourcesMots = {R.id.mot_1, R.id.mot_2, R.id.mot_3, R.id.mot_4, R.id.mot_5};
     static final int[] tableIdRessourcesChoixNumero = {R.id.choix_1, R.id.choix_2, R.id.choix_3, R.id.choix_4, R.id.choix_5};
@@ -29,13 +30,13 @@ public class JustOneActivity extends JeuEnVisioActivity {
     private Button mBoutonMancheSuivante;
     private TextView mNbVoteJoueurs;
     private TextView mTitreChoixNumero;
+    private TextView mTexteScore;
+    private TextView mTexteTour;
     private LinearLayout mChoixNumero;
+    private LinearLayout mblocValidationReponse;
     private ConstraintLayout mBlocCarteListeMots;
     private EditText mZoneSaisie;
     // Variables globales
-    private boolean mSuisActif = false;
-    private ArrayList<Mot> mListeMotsReponses;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class JustOneActivity extends JeuEnVisioActivity {
 
     @Override
     protected void onResume() {
-        //startRefreshAuto(urlJeu);
+        startRefreshAuto(urlJeu);
         super.onResume();
     }
 
@@ -63,11 +64,10 @@ public class JustOneActivity extends JeuEnVisioActivity {
 
         switch (v.getTag().toString()) {
             case "bouton_valider":
-                // TODO : enregistrer le mot
-                break;
-            case "bouton_manche_suivante":
-                desactiveBouton(mBoutonMancheSuivante);
-                new MainActivity.TacheURLSansRetour().execute(urlMancheSuivante + mIdPartie);
+                if (!mZoneSaisie.getText().toString().isEmpty()) {
+                    desactiveBouton(mBoutonValider);
+                    new MainActivity.TacheURLSansRetour().execute(urlReponse + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + mZoneSaisie.getText().toString());
+                }
                 break;
             case "choix_1":
             case "choix_2":
@@ -76,7 +76,24 @@ public class JustOneActivity extends JeuEnVisioActivity {
             case "choix_5":
                 clickNumero(v.getId(), v.getTag().toString());
                 break;
+            case "bouton_reussite":
+                reponseJoueurActif("action=reussite");
+                // TODO : utilise table score +1 (id_joueur à 0), tour +1
+                break;
+            case "bouton_echec":
+                reponseJoueurActif("action=echec");
+                // TODO : ne change pas le score, mais tour +2
+                break;
+            case "bouton_passer":
+                reponseJoueurActif("action=passer");
+                // TODO : ne change pas le score, tour +1
+                break;
         }
+    }
+
+    private void reponseJoueurActif(String action) {
+        mblocValidationReponse.setVisibility(View.GONE);
+        new MainActivity.TacheURLSansRetour().execute(urlMancheSuivante + mIdPartie + action);
     }
 
     private void clickNumero(int id, String tag) {
@@ -108,15 +125,25 @@ public class JustOneActivity extends JeuEnVisioActivity {
         for (int value : tableIdRessourcesChoixNumero) {
             findViewById(value).setOnClickListener(this);
         }
+        // Libellés valeur jeu
+        mTexteScore = findViewById(R.id.score);
+        mTexteTour = findViewById(R.id.tour);
         // Zone de saisie
         mZoneSaisie = findViewById(R.id.zone_saisie);
         // Votes
         mNbVoteJoueurs = findViewById(R.id.nb_vote_joueurs);
         // Boutons
+        mblocValidationReponse = findViewById(R.id.bloc_validation_reponse);
         mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonMancheSuivante = findViewById(R.id.bouton_manche_suivante);
+        Button boutonEchec = findViewById(R.id.bouton_echec);
+        Button boutonReussite = findViewById(R.id.bouton_reussite);
+        Button boutonPasser = findViewById(R.id.bouton_passer);
         mBoutonValider.setOnClickListener(this);
         mBoutonMancheSuivante.setOnClickListener(this);
+        boutonEchec.setOnClickListener(this);
+        boutonReussite.setOnClickListener(this);
+        boutonPasser.setOnClickListener(this);
     }
 
     void parseXML(Document doc) {
@@ -126,57 +153,92 @@ public class JustOneActivity extends JeuEnVisioActivity {
         super.parseXML(doc);
 
         // Suis-je le joueur actif ?
-        mSuisActif = suisJeActif(mPseudo, mListeJoueurs);
+        mJeSuisLeJoueurActif = suisJeActif(mPseudo, mListeJoueurs);
 
         // Mots
         mListeMots = parseNoeudsMots(doc, "Carte");
         afficheElements();
 
-        if (mNumeroMotChoisi != 0) {
-            activeBouton(mBoutonValider);
-            masqueMotNonChoisi();
-        } else {
-            desactiveBouton(mBoutonValider);
-            // TODO faire l'affichage du numéro en vert -> même action que sur clic
-        }
+        if (mJeSuisLeJoueurActif && mNumeroMotChoisi != 0)
+            afficheReponseChoisi();
 
         // Reponses
-        mListeMotsReponses = parseNoeudsMots(doc, "Reponses");
-        afficheNbReponses();
+        mListeMotsReponses = parseNoeudsReponses(doc);
+        afficheReponses();
+        // Tous les joueurs ont données une réponse
+        if (mListeMotsReponses.size() == mListeJoueurs.size() - 1) {
+            afficheToutesLesReponses();
+
+        }
+    }
+
+    private void afficheReponseChoisi() {
+        resetFondNumero();
+        TextView tv = findViewById(tableIdRessourcesChoixNumero[mNumeroMotChoisi - 1]);
+        tv.setBackgroundColor(getResources().getColor(R.color.vert_clair_transparent));
+    }
+
+    private void afficheToutesLesReponses() {
+        // Masque la zone de saisie
+        mZoneSaisie.setVisibility(View.GONE);
+        mZoneSaisie.setText("");
+        mNbVoteJoueurs.setVisibility(View.GONE);
+        mBoutonValider.setText(getResources().getString(R.string.devoiler_les_mots));
+
+        boolean tousLesMotsSontValides = true;
+        for (int i = 0; i < mListeMotsReponses.size(); i++) {
+            if (mListeMotsReponses.get(i).getElimine() == -1) {
+                tousLesMotsSontValides = false;
+            }
+            // TODO : gérer l'affichage des réponses en dynamique
+        }
+
+        if (tousLesMotsSontValides)
+            desactiveBouton(mBoutonValider);
+        else
+            activeBouton(mBoutonValider);
+
+        // Pour le joueur actif, affiche les mots restants et active l'enregistrement de sa réponse
+        if (mJeSuisLeJoueurActif && tousLesMotsSontValides)
+            mblocValidationReponse.setVisibility(View.VISIBLE);
     }
 
     private void afficheElements() {
-        if (mSuisActif) {
+        if (mJeSuisLeJoueurActif) {
             mBlocCarteListeMots.setVisibility(View.INVISIBLE);
             mZoneSaisie.setVisibility(View.GONE);
             mChoixNumero.setVisibility(View.VISIBLE);
             mTitreChoixNumero.setVisibility(View.VISIBLE);
+            mblocValidationReponse.setVisibility(View.GONE);
+            mBoutonValider.setVisibility(View.GONE);
         } else {
             mBlocCarteListeMots.setVisibility(View.VISIBLE);
             mZoneSaisie.setVisibility(View.VISIBLE);
             mChoixNumero.setVisibility(View.GONE);
             mTitreChoixNumero.setVisibility(View.GONE);
+            mblocValidationReponse.setVisibility(View.GONE);
+            mBoutonValider.setVisibility(View.VISIBLE);
             afficheMots(mListeMots);
         }
 
-        if (mAdmin)
-            mBoutonMancheSuivante.setVisibility(View.VISIBLE);
-        else
-            mBoutonMancheSuivante.setVisibility(View.GONE);
+        mBoutonMancheSuivante.setVisibility(View.GONE);
+        mNbVoteJoueurs.setVisibility(View.VISIBLE);
+        mBoutonValider.setText(getResources().getString(R.string.valider));
+        mZoneSaisie.setEnabled(true);
     }
 
-    private void afficheNbReponses() {
-        String texteNbVotes = "Nombre de réponses : " + mListeMotsReponses.size() + "/" + String.valueOf(mListeJoueurs.size() - 1);
+    private void afficheReponses() {
+        String texteNbVotes = "Nombre de réponses : " + mListeMotsReponses.size() + "/" + (mListeJoueurs.size() - 1);
         mNbVoteJoueurs.setText(texteNbVotes);
 
-        if ((mListeJoueurs.size() - 1) == mListeMotsReponses.size())
-            activeBouton(mBoutonMancheSuivante);
-        else
-            desactiveBouton(mBoutonMancheSuivante);
-    }
-
-    private void masqueMotNonChoisi() {
-        // TODO
+        for (int i = 0; i < mListeMotsReponses.size(); i++) {
+            if (mListeMotsReponses.get(i).getIdJoueur() == mIdJoueur) {
+                mZoneSaisie.setEnabled(false);
+                mZoneSaisie.setText(mListeMotsReponses.get(i).getReponse());
+                desactiveBouton(mBoutonValider);
+                break;
+            }
+        }
     }
 
     private void afficheMots(ArrayList<Mot> listeMots) {

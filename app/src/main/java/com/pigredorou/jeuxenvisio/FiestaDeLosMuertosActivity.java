@@ -129,7 +129,7 @@ public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
                 break;
             case id.bouton_valider:
                 if (mMotValide) {
-                    new MainActivity.TacheURLSansRetour().execute(urlDeduction + mIdPartie + "&joueur=" + mPseudo + "&reponse=" + getAssociatioCranePersonnage());
+                    new MainActivity.TacheURLSansRetour().execute(urlDeduction + mIdPartie + "&joueur=" + mPseudo + "&reponse=" + getAssociationCranePersonnage());
                     desactiveArdoise();
                 }
                 else {
@@ -239,7 +239,7 @@ public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
         }
     }
 
-    private String getAssociatioCranePersonnage() {
+    private String getAssociationCranePersonnage() {
         StringBuilder retour = new StringBuilder();
         for (int index = 0; index < mListeIdPersoArdoise.length; index++) {
             TextView tv = findViewById(mListeIdPersoArdoise[index]);
