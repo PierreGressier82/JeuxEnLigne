@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String urlMajAdmin = url + "majAdminJoueur.php?joueur=";
     public static final String KEY_PREFERENCES = "MesPreferences";
     public static final String VALEUR_PSEUDO = "Pseudo";
+    public static final String VALEUR_ADMIN = "Admin";
     public static final String VALEUR_ID_SALON = "idSalon";
     public static final String VALEUR_ID_PARTIE = "idPartie";
     public static final String VALEUR_ID_JOUEUR = "idJoueur";
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mIdJeu; // Id du jeu (en BDD)
     private int mIndexSalon; // Index du salon (numéro de la liste)
     private int mIdJoueur; // Index du salon (numéro de la liste)
+    private int mAdmin; // Suis-je admin ?
     private String mPseudo;
     private boolean mSalonChoisi = false;
     private boolean mJeuChoisi = false;
@@ -234,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPreferences = getSharedPreferences(KEY_PREFERENCES, MODE_PRIVATE);
         mIdSalon = mPreferences.getInt(VALEUR_ID_SALON, 1);
         mIdJoueur = mPreferences.getInt(VALEUR_ID_JOUEUR, 0);
+        mAdmin = mPreferences.getInt(VALEUR_ADMIN, 0);
         mPseudo = mPreferences.getString(VALEUR_PSEUDO, "");
         //String nomSalon = mPreferences.getString(VALEUR_NOM_SALON, "");
 
@@ -393,6 +396,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBoutonAdministration = findViewById(R.id.administration);
         mBoutonAdministration.setOnClickListener(this);
         mBoutonAdministration.setVisibility(View.GONE);
+        afficheOptionAdmin();
     }
 
     private void chargementAutreOptions() {
@@ -516,6 +520,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Sauvegarde le joueur
                         mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
                         mPreferences.edit().putInt(VALEUR_ID_JOUEUR, mIdJoueur).apply();
+                        mPreferences.edit().putInt(VALEUR_ADMIN, mAdmin).apply();
                         // Masque les joueurs, affiche les jeux
                         findViewById(R.id.bloc_joueurs).setVisibility(View.GONE);
                         findViewById(R.id.tableau_jeux).setVisibility(View.VISIBLE);
@@ -707,6 +712,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Sauvegarde des préférences
         String nom_salon = mListeSalons.get(mIndexSalon).getNom();
         mPreferences.edit().putString(VALEUR_PSEUDO, mPseudo).apply();
+        mPreferences.edit().putInt(VALEUR_ADMIN, mAdmin).apply();
         mPreferences.edit().putInt(VALEUR_ID_SALON, mIdSalon).apply();
         mPreferences.edit().putString(VALEUR_NOM_SALON, nom_salon).apply();
 
@@ -820,17 +826,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void afficheOptionAdmin() {
-        int indexJoueur = -1;
-
         // Récupère l'index du joueur
-        for (int i = 0; i < mListeJoueurs.size(); i++) {
-            if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
-                indexJoueur = i;
-                break;
+        if (mListeJoueurs != null)
+            for (int i = 0; i < mListeJoueurs.size(); i++) {
+                if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
+                    mAdmin = mListeJoueurs.get(i).getAdmin();
+                    break;
+                }
             }
-        }
 
-        if (indexJoueur != -1 && mListeJoueurs.get(indexJoueur).getAdmin() == 1) {
+        if (mAdmin == 1) {
             mBoutonDistribueTache.setVisibility(View.GONE);
             mBoutonOptionTacheAjout.setVisibility(View.GONE);
             mLigneNbTaches.setVisibility(View.GONE);
@@ -889,7 +894,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mBoutonEchangeJeu.setVisibility(View.GONE);
             mBoutonAdministration.setVisibility(View.GONE);
         }
-
     }
 
     private void afficheJoueurs(ArrayList<Joueur> listeJoueurs) {

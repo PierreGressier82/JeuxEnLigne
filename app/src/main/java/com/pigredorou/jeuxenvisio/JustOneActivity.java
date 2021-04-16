@@ -21,6 +21,7 @@ public class JustOneActivity extends JeuEnVisioActivity {
     // URLs des actions en base
     public static final String urlJeu = MainActivity.url + "justOne.php?partie=";
     public static final String urlMancheSuivante = MainActivity.url + "justOneMancheSuivante.php?partie=";
+    public static final String urlVote = MainActivity.url + "vote.php?partie=";
     // Tableaux des resssources
     static final int[] tableIdRessourcesMots = {R.id.mot_1, R.id.mot_2, R.id.mot_3, R.id.mot_4, R.id.mot_5};
     static final int[] tableIdRessourcesChoixNumero = {R.id.choix_1, R.id.choix_2, R.id.choix_3, R.id.choix_4, R.id.choix_5};
@@ -68,6 +69,33 @@ public class JustOneActivity extends JeuEnVisioActivity {
                 desactiveBouton(mBoutonMancheSuivante);
                 new MainActivity.TacheURLSansRetour().execute(urlMancheSuivante + mIdPartie);
                 break;
+            case "choix_1":
+            case "choix_2":
+            case "choix_3":
+            case "choix_4":
+            case "choix_5":
+                clickNumero(v.getId(), v.getTag().toString());
+                break;
+        }
+    }
+
+    private void clickNumero(int id, String tag) {
+        resetFondNumero();
+
+        TextView tv2 = findViewById(id);
+        tv2.setBackgroundColor(getResources().getColor(R.color.vert_clair_transparent));
+
+        String[] numero = tag.split("_");
+        new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + numero[1]);
+    }
+
+    private void resetFondNumero() {
+        for (int value : tableIdRessourcesChoixNumero) {
+            TextView tv = findViewById(value);
+            // Enlève la couleur du fond
+            tv.setBackgroundColor(0);
+            // Désactive le bouton
+            tv.setOnClickListener(null);
         }
     }
 
@@ -85,7 +113,9 @@ public class JustOneActivity extends JeuEnVisioActivity {
         // Votes
         mNbVoteJoueurs = findViewById(R.id.nb_vote_joueurs);
         // Boutons
+        mBoutonValider = findViewById(R.id.bouton_valider);
         mBoutonMancheSuivante = findViewById(R.id.bouton_manche_suivante);
+        mBoutonValider.setOnClickListener(this);
         mBoutonMancheSuivante.setOnClickListener(this);
     }
 
@@ -105,8 +135,10 @@ public class JustOneActivity extends JeuEnVisioActivity {
         if (mNumeroMotChoisi != 0) {
             activeBouton(mBoutonValider);
             masqueMotNonChoisi();
-        } else
+        } else {
             desactiveBouton(mBoutonValider);
+            // TODO faire l'affichage du numéro en vert -> même action que sur clic
+        }
 
         // Reponses
         mListeMotsReponses = parseNoeudsMots(doc, "Reponses");
@@ -152,7 +184,10 @@ public class JustOneActivity extends JeuEnVisioActivity {
             TextView tv = findViewById(tableIdRessourcesMots[i]);
             tv.setText(listeMots.get(i).getMot());
             tv.setTag(String.valueOf(listeMots.get(i).getIdMot()));
+            if (mNumeroMotChoisi - 1 == i)
+                tv.setTextColor(getResources().getColor(R.color.noir));
+            else
+                tv.setTextColor(getResources().getColor(R.color.grisTransparent));
         }
     }
-
 }
