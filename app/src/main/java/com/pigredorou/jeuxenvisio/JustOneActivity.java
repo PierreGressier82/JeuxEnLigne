@@ -184,7 +184,7 @@ public class JustOneActivity extends JeuEnVisioActivity {
             TextView tv = findViewById(tableIdRessourcesMots[i]);
             tv.setText(listeMots.get(i).getMot());
             tv.setTag(String.valueOf(listeMots.get(i).getIdMot()));
-            if (mNumeroMotChoisi - 1 == i)
+            if (mNumeroMotChoisi == 0 || mNumeroMotChoisi - 1 == i)
                 tv.setTextColor(getResources().getColor(R.color.noir));
             else
                 tv.setTextColor(getResources().getColor(R.color.grisTransparent));
