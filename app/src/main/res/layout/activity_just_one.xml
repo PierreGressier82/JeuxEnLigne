@@ -356,6 +356,198 @@
         android:textColor="@color/noir_transparent"
         android:textSize="20sp" />
 
+    <ScrollView
+        android:id="@+id/bloc_reponses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reponse_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/reponse_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reponse_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/reponse_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reponse_5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/reponse_6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reponse_7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/reponse_8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reponse_9"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/reponse_10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/reponse_11"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+
+                <TextView
+                    android:id="@+id/reponse_12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/noir"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:text="@string/Chargement" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
     <Button
         android:id="@+id/bouton_valider"
         android:layout_width="match_parent"

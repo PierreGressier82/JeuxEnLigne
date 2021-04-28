@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute"
         tools:targetApi="m">
-        <activity android:name=".AdministrationActivity"></activity>
+        <activity android:name=".WhaaatActivity"></activity>
+        <activity android:name=".AdministrationActivity" />
         <activity android:name=".JeuEnVisioActivity" />
         <activity
             android:name=".SettingsActivity"

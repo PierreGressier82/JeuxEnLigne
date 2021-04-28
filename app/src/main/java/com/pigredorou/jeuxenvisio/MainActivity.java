@@ -107,9 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.08 : Début implémentation administration
      * 3.1.09 : Correctif The Crew + implémentation administration
      * 3.1.10 : Implémentation JustOne en cours
+     * 3.2.00 : JustOne V1
      */
     // Variables statiques
-    private static final String mNumVersion = "3.1.10";
+    private static final String mNumVersion = "3.2.00";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int MAJORITY_ACTIVITY_REQUEST_CODE = 17;
     public static final int TIMELINE_ACTIVITY_REQUEST_CODE = 18;
     public static final int JUSTONE_ACTIVITY_REQUEST_CODE = 19;
+    public static final int WHAAAT_ACTIVITY_REQUEST_CODE = 20;
     public static final int ADMINISTRATION_REQUEST_CODE = 50;
     public static final int mSelectionDoucleClic = 1;
     public static final int mSelectionDragAndDrop = 2;
@@ -164,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int mIdMajority = 7;
     private static final int mIdTimeLine = 8;
     private static final int mIdJustOne = 9;
+    private static final int mIdWhaaat = 10;
 
     // Chargement de l'application
     private Thread t;
