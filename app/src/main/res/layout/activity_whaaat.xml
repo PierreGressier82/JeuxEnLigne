@@ -301,6 +301,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/objet_1_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/croix_rouge"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="objet_1"
+            app:layout_constraintTop_toTopOf="objet_1" />
+
+        <ImageView
             android:id="@+id/objet_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -313,6 +323,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/objet_2_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toEndOf="@id/objet_1"
+            app:layout_constraintTop_toTopOf="objet_2" />
+
+        <ImageView
             android:id="@+id/objet_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -323,6 +343,16 @@
             app:layout_constraintStart_toEndOf="@id/objet_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/objet_3_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toEndOf="@id/objet_2"
+            app:layout_constraintTop_toTopOf="objet_3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -345,6 +375,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/objet_4_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/objet_5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -357,6 +397,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/objet_5_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toEndOf="@id/objet_4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/objet_6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -366,6 +416,16 @@
             android:padding="5dp"
             app:layout_constraintStart_toEndOf="@id/objet_5"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/objet_6_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toEndOf="@id/objet_5"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -389,6 +449,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/objet_7_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/objet_8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -401,6 +471,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/objet_8_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toEndOf="@id/objet_7"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/objet_9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -410,6 +490,16 @@
             android:padding="5dp"
             app:layout_constraintStart_toEndOf="@id/objet_8"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/objet_9_choix"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/tick_vert"
+            android:adjustViewBounds="false"
+            android:padding="10dp"
+            app:layout_constraintStart_toEndOf="@id/objet_8"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
