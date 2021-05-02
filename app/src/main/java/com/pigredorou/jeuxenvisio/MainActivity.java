@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String urlInitTopTen = url + "initTopTen.php?partie=";
     public static final String urlInitMajority = url + "initMajority.php?partie=";
     public static final String urlInitJustOne = url + "initJustOne.php?partie=";
+    public static final String urlInitWhaaat = url + "initWhaaat.php?partie=";
     public static final String urlNewJoueur = url + "newJoueur.php?joueur=";
     public static final String urlMajAdmin = url + "majAdminJoueur.php?joueur=";
     public static final String KEY_PREFERENCES = "MesPreferences";
@@ -476,6 +477,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             new TacheURLSansRetour().execute(urlInitJustOne + mIdPartie);
                             Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
                             break;
+                        case mIdWhaaat:
+                            new TacheURLSansRetour().execute(urlInitWhaaat + mIdPartie);
+                            Toast.makeText(this, "Partie initialisée", Toast.LENGTH_SHORT).show();
+                            break;
                     }
                     break;
 
@@ -759,6 +764,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JeuActivity = new Intent(MainActivity.this, JustOneActivity.class);
                 REQUEST_CODE = JUSTONE_ACTIVITY_REQUEST_CODE;
                 break;
+            case mIdWhaaat:
+                JeuActivity = new Intent(MainActivity.this, WhaaatActivity.class);
+                REQUEST_CODE = WHAAAT_ACTIVITY_REQUEST_CODE;
+                break;
         }
         // Lance l'activité du jeu demandé avec les paramètres
         JeuActivity.putExtra(VALEUR_PSEUDO, mPseudo);
@@ -872,6 +881,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case mIdFiestaDeLosMuertos:
                 case mIdMajority:
                 case mIdJustOne:
+                case mIdWhaaat:
                     mBoutonRAZ.setVisibility(View.VISIBLE);
                     mBoutonRAZ.setText(R.string.initialiser);
                     mBoutonDistribueCartes.setVisibility(View.GONE);
