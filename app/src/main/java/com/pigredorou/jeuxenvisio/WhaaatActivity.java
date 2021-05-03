@@ -44,6 +44,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         if (v != null && v.getTag() != null) {
             if (v.getTag().toString().startsWith("objet_")) {
+                // TODO : ne pas permettre plus de 3 indices
                 String tag[] = v.getTag().toString().split("_");
                 int position = Integer.parseInt(tag[1]);
                 choixOjets[position] = (choixOjets[position] + 1) % 3;
