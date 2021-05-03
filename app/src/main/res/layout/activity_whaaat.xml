@@ -290,6 +290,7 @@
 
         <ImageView
             android:id="@+id/objet_1"
+            android:tag="objet_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -301,17 +302,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_1_choix"
+            android:id="@+id/choix_objet_1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/croix_rouge"
             android:adjustViewBounds="false"
             android:padding="10dp"
-            app:layout_constraintStart_toStartOf="objet_1"
-            app:layout_constraintTop_toTopOf="objet_1" />
+            app:layout_constraintStart_toStartOf="@id/objet_1"
+            app:layout_constraintTop_toTopOf="@id/objet_1" />
 
         <ImageView
             android:id="@+id/objet_2"
+            android:tag="objet_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -323,17 +325,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_2_choix"
+            android:id="@+id/choix_objet_2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
             android:adjustViewBounds="false"
             android:padding="10dp"
             app:layout_constraintStart_toEndOf="@id/objet_1"
-            app:layout_constraintTop_toTopOf="objet_2" />
+            app:layout_constraintTop_toTopOf="@id/objet_2" />
 
         <ImageView
             android:id="@+id/objet_3"
+            android:tag="objet_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -345,14 +348,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_3_choix"
+            android:id="@+id/choix_objet_3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
             android:adjustViewBounds="false"
             android:padding="10dp"
             app:layout_constraintStart_toEndOf="@id/objet_2"
-            app:layout_constraintTop_toTopOf="objet_3" />
+            app:layout_constraintTop_toTopOf="@id/objet_3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -364,6 +367,7 @@
 
         <ImageView
             android:id="@+id/objet_4"
+            android:tag="objet_4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -375,7 +379,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_4_choix"
+            android:id="@+id/choix_objet_4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
@@ -386,6 +390,7 @@
 
         <ImageView
             android:id="@+id/objet_5"
+            android:tag="objet_5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -397,7 +402,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_5_choix"
+            android:id="@+id/choix_objet_5"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
@@ -408,6 +413,7 @@
 
         <ImageView
             android:id="@+id/objet_6"
+            android:tag="objet_6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -419,7 +425,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_6_choix"
+            android:id="@+id/choix_objet_6"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
@@ -438,6 +444,7 @@
 
         <ImageView
             android:id="@+id/objet_7"
+            android:tag="objet_7"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -449,7 +456,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_7_choix"
+            android:id="@+id/choix_objet_7"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
@@ -460,6 +467,7 @@
 
         <ImageView
             android:id="@+id/objet_8"
+            android:tag="objet_8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -471,7 +479,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_8_choix"
+            android:id="@+id/choix_objet_8"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"
@@ -482,6 +490,7 @@
 
         <ImageView
             android:id="@+id/objet_9"
+            android:tag="objet_9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
@@ -493,7 +502,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/objet_9_choix"
+            android:id="@+id/choix_objet_9"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/tick_vert"

@@ -1,16 +1,23 @@
 package com.pigredorou.jeuxenvisio;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WhaaatActivity extends JeuEnVisioActivity {
 
-    static final int[] tableIdTexteSituation = {R.id.texte_situation_1, R.id.texte_situation_2, R.id.texte_situation_3, R.id.texte_situation_4, R.id.texte_situation_5, R.id.texte_situation_6};
-    static final int[] tableIdObjetChoix = {R.id.objet_1, R.id.objet_2, R.id.objet_3, R.id.objet_4, R.id.objet_5, R.id.objet_6, R.id.objet_7, R.id.objet_8, R.id.objet_9};
-    static final int[] tableIdObjet = {R.id.objet_1_choix, R.id.objet_2_choix, R.id.objet_3_choix, R.id.objet_4_choix, R.id.objet_5_choix, R.id.objet_6_choix, R.id.objet_7_choix, R.id.objet_8_choix, R.id.objet_9_choix};
+    private static final int[] tableIdTexteSituation = {R.id.texte_situation_1, R.id.texte_situation_2, R.id.texte_situation_3, R.id.texte_situation_4, R.id.texte_situation_5, R.id.texte_situation_6};
+    private static final int[] tableIdObjet = {R.id.objet_1, R.id.objet_2, R.id.objet_3, R.id.objet_4, R.id.objet_5, R.id.objet_6, R.id.objet_7, R.id.objet_8, R.id.objet_9};
+    private static final int[] tableIdObjetChoix = {R.id.choix_objet_1, R.id.choix_objet_2, R.id.choix_objet_3, R.id.choix_objet_4, R.id.choix_objet_5, R.id.choix_objet_6, R.id.choix_objet_7, R.id.choix_objet_8, R.id.choix_objet_9};
     // Eléments graphiques
     private TextView mScoreBleu;
     private TextView mScoreJaune;
+    // Varaibles globales
+    private int[] choixOjets = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Permet de stocket l'état du choix
+    private static final int CHOIX_AUCUN = 0;
+    private static final int CHOIX_UTILE = 1;
+    private static final int CHOIX_INUTILE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +25,47 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         super.onCreate(savedInstanceState);
 
+        chargeElementsWhaaat();
+        afficheChoix();
 
+        // TODO : a retirer après lecture du XML
+        findViewById(R.id.chargement).setVisibility(View.GONE);
     }
 
+    private void chargeElementsWhaaat() {
+        for (int value : tableIdObjet) {
+            findViewById(value).setOnClickListener(this);
+        }
+    }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+
+        if (v != null && v.getTag() != null) {
+            if (v.getTag().toString().startsWith("objet_")) {
+                String tag[] = v.getTag().toString().split("_");
+                int position = Integer.parseInt(tag[1]);
+                choixOjets[position] = (choixOjets[position] + 1) % 3;
+                afficheChoix();
+            }
+        }
+    }
+
+    private void afficheChoix() {
+        for (int i = 0; i < tableIdObjetChoix.length; i++) {
+            ImageView iv = findViewById(tableIdObjetChoix[i]);
+            switch (choixOjets[i + 1]) {
+                case 0:
+                    iv.setImageResource(0);
+                    break;
+                case 1:
+                    iv.setImageResource(R.drawable.tick_vert);
+                    break;
+                case 2:
+                    iv.setImageResource(R.drawable.croix_rouge);
+                    break;
+            }
+        }
+    }
 }

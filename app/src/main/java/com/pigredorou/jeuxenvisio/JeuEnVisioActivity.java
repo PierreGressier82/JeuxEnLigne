@@ -120,7 +120,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v != null) {
+        if (v != null && v.getTag() != null) {
             switch (v.getTag().toString()) {
                 case "bouton_retour":
                     stopRefreshAuto();
