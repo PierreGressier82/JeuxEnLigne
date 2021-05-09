@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WhaaatActivity extends JeuEnVisioActivity {
 
@@ -47,10 +48,31 @@ public class WhaaatActivity extends JeuEnVisioActivity {
                 // TODO : ne pas permettre plus de 3 indices
                 String tag[] = v.getTag().toString().split("_");
                 int position = Integer.parseInt(tag[1]);
-                choixOjets[position] = (choixOjets[position] + 1) % 3;
-                afficheChoix();
+                if (indicesAutorise(position))
+                    afficheChoix();
+                else
+                    Toast.makeText(this, "Déjà 3 indices !", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private boolean indicesAutorise(int position) {
+        int nbIndices = 1;
+        boolean indiceDejaUtilise = false;
+        boolean indiceAutorise = true;
+        for (int i = 0; i < choixOjets.length; i++) {
+            if (choixOjets[i] != 0) {
+                nbIndices++;
+                if (i == position)
+                    indiceDejaUtilise = true;
+            }
+        }
+        if (nbIndices < 4 || indiceDejaUtilise)
+            choixOjets[position] = (choixOjets[position] + 1) % 3;
+        else
+            indiceAutorise = false;
+
+        return indiceAutorise;
     }
 
     private void afficheChoix() {
