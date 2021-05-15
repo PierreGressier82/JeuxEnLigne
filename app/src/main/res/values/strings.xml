@@ -91,4 +91,7 @@
     <string name="tour">Tour </string>
     <string name="Whaaat">Whaaat ?</string>
     <string name="exemple_whaaat">Une soirée romantique aux chandelles</string>
+    <string name="choisi_une_equipe">Choisi une équipe :</string>
+    <string name="bleu">bleu</string>
+    <string name="jaune">jaune</string>
 </resources>

@@ -86,6 +86,134 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/choix_equipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/choisi_une_equipe"
+            android:textAlignment="textStart"
+            android:textColor="@color/blanc"
+            android:textSize="40sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/choix_equipe_bleu"
+                android:tag="choix_equipe_bleu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/cadre_blanc_fond_bleu"
+                android:text="@string/bleu"
+                android:textAlignment="center"
+                android:textColor="@color/blanc"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/choix_equipe_jaune"
+                android:tag="choix_equipe_jaune"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/cadre_blanc_fond_jaune"
+                android:text="@string/jaune"
+                android:textAlignment="center"
+                android:textColor="@color/blanc"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/equipe_bleu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/pseudo"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/equipe_jaune"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/pseudo"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/pseudo"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/pseudo"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/pseudo"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -99,8 +227,8 @@
                 android:id="@+id/situations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bleu"
                 android:layout_gravity="center"
+                android:background="@color/bleu"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -108,186 +236,188 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:layout_constraintWidth_percent="0.47"
-                    android:src="@drawable/whaaat_carte_jaune"
-                    android:padding="5dp"
-                    android:background="@drawable/fond_carte_blanc"
                     android:adjustViewBounds="true"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:contentDescription="@string/Chargement"
+                    android:padding="5dp"
+                    android:src="@drawable/whaaat_carte_jaune"
                     app:layout_constraintEnd_toStartOf="@+id/carte_situation_2"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.47" />
 
                 <ImageView
                     android:id="@+id/carte_situation_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:layout_constraintWidth_percent="0.47"
-                    android:src="@drawable/whaaat_carte_orange"
-                    android:padding="5dp"
-                    android:background="@drawable/fond_carte_blanc"
                     android:adjustViewBounds="true"
-                    app:layout_constraintStart_toEndOf="@id/carte_situation_1"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:contentDescription="@string/Chargement"
+                    android:padding="5dp"
+                    android:src="@drawable/whaaat_carte_orange"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toEndOf="@id/carte_situation_1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.47" />
 
                 <TextView
                     android:id="@+id/texte_situation_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.44"
-                    android:textAlignment="center"
-                    android:maxLines="4"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/exemple_whaaat"
-                    android:textColor="@color/blanc"
                     android:background="@color/noir_transparent"
-                    app:layout_constraintStart_toStartOf="@id/carte_situation_1"
-                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_1"
+                    android:maxLines="4"
+                    android:text="@string/exemple_whaaat"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/carte_situation_1"
-                    app:layout_constraintTop_toTopOf="@+id/carte_situation_1" />
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_1"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_1"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_1"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <TextView
                     android:id="@+id/texte_situation_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.44"
-                    android:textAlignment="center"
-                    android:maxLines="4"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/exemple_whaaat"
-                    android:textColor="@color/blanc"
                     android:background="@color/noir_transparent"
-                    app:layout_constraintStart_toStartOf="@id/carte_situation_2"
-                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_2"
+                    android:maxLines="4"
+                    android:text="@string/exemple_whaaat"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/carte_situation_2"
-                    app:layout_constraintTop_toTopOf="@+id/carte_situation_2" />
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_2"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_2"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_2"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <ImageView
                     android:id="@+id/carte_situation_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:layout_constraintWidth_percent="0.47"
-                    android:src="@drawable/whaaat_carte_rose"
-                    android:padding="5dp"
-                    android:background="@drawable/fond_carte_blanc"
                     android:adjustViewBounds="true"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/whaaat_carte_rose"
                     app:layout_constraintEnd_toStartOf="@+id/carte_situation_4"
-                    app:layout_constraintTop_toBottomOf="@+id/carte_situation_1" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/carte_situation_1"
+                    app:layout_constraintWidth_percent="0.47" />
 
                 <ImageView
                     android:id="@+id/carte_situation_4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:layout_constraintWidth_percent="0.47"
-                    android:src="@drawable/whaaat_carte_bleu"
-                    android:padding="5dp"
-                    android:background="@drawable/fond_carte_blanc"
                     android:adjustViewBounds="true"
-                    app:layout_constraintStart_toEndOf="@id/carte_situation_3"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/whaaat_carte_bleu"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/carte_situation_2" />
+                    app:layout_constraintStart_toEndOf="@id/carte_situation_3"
+                    app:layout_constraintTop_toBottomOf="@id/carte_situation_2"
+                    app:layout_constraintWidth_percent="0.47" />
 
                 <TextView
                     android:id="@+id/texte_situation_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.44"
-                    android:textAlignment="center"
-                    android:maxLines="4"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/exemple_whaaat"
-                    android:textColor="@color/blanc"
                     android:background="@color/noir_transparent"
-                    app:layout_constraintStart_toStartOf="@id/carte_situation_3"
-                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_3"
+                    android:maxLines="4"
+                    android:text="@string/exemple_whaaat"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/carte_situation_3"
-                    app:layout_constraintTop_toTopOf="@+id/carte_situation_3" />
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_3"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_3"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_3"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <TextView
                     android:id="@+id/texte_situation_4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.44"
-                    android:textAlignment="center"
-                    android:maxLines="4"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/exemple_whaaat"
-                    android:textColor="@color/blanc"
                     android:background="@color/noir_transparent"
-                    app:layout_constraintStart_toStartOf="@id/carte_situation_4"
-                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_4"
+                    android:maxLines="4"
+                    android:text="@string/exemple_whaaat"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/carte_situation_4"
-                    app:layout_constraintTop_toTopOf="@+id/carte_situation_4" />
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_4"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_4"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_4"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <ImageView
                     android:id="@+id/carte_situation_5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:layout_constraintWidth_percent="0.47"
-                    android:src="@drawable/whaaat_carte_vert"
-                    android:padding="5dp"
-                    android:background="@drawable/fond_carte_blanc"
                     android:adjustViewBounds="true"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/whaaat_carte_vert"
                     app:layout_constraintEnd_toStartOf="@id/carte_situation_6"
-                    app:layout_constraintTop_toBottomOf="@id/carte_situation_3" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/carte_situation_3"
+                    app:layout_constraintWidth_percent="0.47" />
 
                 <ImageView
                     android:id="@+id/carte_situation_6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:layout_constraintWidth_percent="0.47"
-                    android:src="@drawable/whaaat_carte_orange_fonce"
-                    android:padding="5dp"
-                    android:background="@drawable/fond_carte_blanc"
                     android:adjustViewBounds="true"
-                    app:layout_constraintStart_toEndOf="@id/carte_situation_5"
+                    android:background="@drawable/fond_carte_blanc"
+                    android:padding="5dp"
+                    android:src="@drawable/whaaat_carte_orange_fonce"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/carte_situation_4" />
+                    app:layout_constraintStart_toEndOf="@id/carte_situation_5"
+                    app:layout_constraintTop_toBottomOf="@id/carte_situation_4"
+                    app:layout_constraintWidth_percent="0.47" />
 
                 <TextView
                     android:id="@+id/texte_situation_5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.44"
-                    android:textAlignment="center"
-                    android:maxLines="4"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/exemple_whaaat"
-                    android:textColor="@color/blanc"
                     android:background="@color/noir_transparent"
-                    app:layout_constraintStart_toStartOf="@id/carte_situation_5"
-                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_5"
+                    android:maxLines="4"
+                    android:text="@string/exemple_whaaat"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/carte_situation_5"
-                    app:layout_constraintTop_toTopOf="@+id/carte_situation_5" />
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_5"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_5"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_5"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <TextView
                     android:id="@+id/texte_situation_6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.44"
-                    android:textAlignment="center"
-                    android:maxLines="4"
-                    android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/exemple_whaaat"
-                    android:textColor="@color/blanc"
                     android:background="@color/noir_transparent"
-                    app:layout_constraintStart_toStartOf="@id/carte_situation_6"
-                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_6"
+                    android:maxLines="4"
+                    android:text="@string/exemple_whaaat"
+                    android:textAlignment="center"
+                    android:textColor="@color/blanc"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/carte_situation_6"
-                    app:layout_constraintTop_toTopOf="@+id/carte_situation_6" />
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_6"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_6"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_6"
+                    app:layout_constraintWidth_percent="0.44" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -299,70 +429,70 @@
 
                 <ImageView
                     android:id="@+id/objet_1"
-                    android:tag="objet_1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_1"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:src="@drawable/whaaat_objet_1"
+                    android:tag="objet_1"
                     app:layout_constraintEnd_toStartOf="@+id/objet_2"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/croix_rouge"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/croix_rouge"
                     app:layout_constraintStart_toStartOf="@id/objet_1"
                     app:layout_constraintTop_toTopOf="@id/objet_1" />
 
                 <ImageView
                     android:id="@+id/objet_2"
-                    android:tag="objet_2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_2"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toEndOf="@id/objet_1"
+                    android:src="@drawable/whaaat_objet_2"
+                    android:tag="objet_2"
                     app:layout_constraintEnd_toStartOf="@id/objet_3"
+                    app:layout_constraintStart_toEndOf="@id/objet_1"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toEndOf="@id/objet_1"
                     app:layout_constraintTop_toTopOf="@id/objet_2" />
 
                 <ImageView
                     android:id="@+id/objet_3"
-                    android:tag="objet_3"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_3"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toEndOf="@id/objet_2"
+                    android:src="@drawable/whaaat_objet_3"
+                    android:tag="objet_3"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/objet_2"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_3"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toEndOf="@id/objet_2"
                     app:layout_constraintTop_toTopOf="@id/objet_3" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -376,70 +506,70 @@
 
                 <ImageView
                     android:id="@+id/objet_4"
-                    android:tag="objet_4"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_4"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:src="@drawable/whaaat_objet_4"
+                    android:tag="objet_4"
                     app:layout_constraintEnd_toStartOf="@+id/objet_5"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_4"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/objet_5"
-                    android:tag="objet_5"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_5"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toEndOf="@id/objet_4"
+                    android:src="@drawable/whaaat_objet_5"
+                    android:tag="objet_5"
                     app:layout_constraintEnd_toStartOf="@id/objet_6"
+                    app:layout_constraintStart_toEndOf="@id/objet_4"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_5"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toEndOf="@id/objet_4"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/objet_6"
-                    android:tag="objet_6"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_6"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toEndOf="@id/objet_5"
+                    android:src="@drawable/whaaat_objet_6"
+                    android:tag="objet_6"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/objet_5"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_6"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toEndOf="@id/objet_5"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -453,70 +583,70 @@
 
                 <ImageView
                     android:id="@+id/objet_7"
-                    android:tag="objet_7"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_7"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:src="@drawable/whaaat_objet_7"
+                    android:tag="objet_7"
                     app:layout_constraintEnd_toStartOf="@+id/objet_8"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_7"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/objet_8"
-                    android:tag="objet_8"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_8"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toEndOf="@id/objet_7"
+                    android:src="@drawable/whaaat_objet_8"
+                    android:tag="objet_8"
                     app:layout_constraintEnd_toStartOf="@id/objet_9"
+                    app:layout_constraintStart_toEndOf="@id/objet_7"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_8"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toEndOf="@id/objet_7"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/objet_9"
-                    android:tag="objet_9"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
-                    android:src="@drawable/whaaat_objet_4"
                     android:adjustViewBounds="true"
                     android:padding="5dp"
-                    app:layout_constraintStart_toEndOf="@id/objet_8"
+                    android:src="@drawable/whaaat_objet_4"
+                    android:tag="objet_9"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/objet_8"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/choix_objet_9"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/tick_vert"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
+                    android:src="@drawable/tick_vert"
                     app:layout_constraintStart_toEndOf="@id/objet_8"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -530,25 +660,25 @@
                     android:id="@+id/score_bleu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
                     android:layout_marginStart="5dp"
+                    android:layout_weight="0.5"
                     android:background="@drawable/cadre_blanc_fond_bleu"
+                    android:text="@string/score_quipe"
                     android:textAlignment="center"
                     android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:text="@string/score_quipe" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/score_jaune"
                     android:layout_width="0dp"
-                    android:textAlignment="center"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/cadre_blanc_fond_jaune"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:layout_marginEnd="5dp"
                     android:layout_weight="0.5"
-                    android:text="@string/score_quipe" />
+                    android:background="@drawable/cadre_blanc_fond_jaune"
+                    android:text="@string/score_quipe"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <Button

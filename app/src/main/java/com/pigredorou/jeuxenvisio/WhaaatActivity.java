@@ -19,6 +19,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     private static final int CHOIX_AUCUN = 0;
     private static final int CHOIX_UTILE = 1;
     private static final int CHOIX_INUTILE = 2;
+    private final static String urlJeu = MainActivity.url + "whaaat.php?partie=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,12 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         for (int value : tableIdObjet) {
             findViewById(value).setOnClickListener(this);
         }
+
+        findViewById(R.id.choix_equipe_bleu).setOnClickListener(this);
+        findViewById(R.id.choix_equipe_jaune).setOnClickListener(this);
+
+        mScoreBleu = findViewById(R.id.score_bleu);
+        mScoreJaune = findViewById(R.id.score_jaune);
     }
 
     @Override
@@ -45,13 +52,15 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         if (v != null && v.getTag() != null) {
             if (v.getTag().toString().startsWith("objet_")) {
-                // TODO : ne pas permettre plus de 3 indices
                 String tag[] = v.getTag().toString().split("_");
                 int position = Integer.parseInt(tag[1]);
                 if (indicesAutorise(position))
                     afficheChoix();
                 else
                     Toast.makeText(this, "Déjà 3 indices !", Toast.LENGTH_SHORT).show();
+            } else if (v.getTag().toString().startsWith("choix_equipe_")) {
+                Toast.makeText(this, "Bientôt dispo", Toast.LENGTH_SHORT).show();
+                // TODO : enregistrer l'équipe du joueur
             }
         }
     }
