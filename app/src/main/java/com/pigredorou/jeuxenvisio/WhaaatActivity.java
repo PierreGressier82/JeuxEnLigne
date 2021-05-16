@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Dimension;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,13 +30,18 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     private static final int CHOIX_UTILE = 1;
     private static final int CHOIX_INUTILE = 2;
     private static final int ACTIF_SELECTIONNE = 2;
-    private static final String EQUIPE_BLEU = "bleu";
-    private static final String EQUIPE_JAUNE = "jaune";
+    private static final String EQUIPE_BLEU = "Bleu";
+    private static final String EQUIPE_JAUNE = "Jaune";
     private static final String urlJeu = MainActivity.url + "whaaat.php?partie=";
+    private static final String urlEquipe = MainActivity.url + "selectionneEquipe.php?partie=";
+    private int mIdJoueurActif;
+    private String mCouleurEquipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_whaaat);
+        findViewById(R.id.chargement).setVisibility(View.VISIBLE);
+        findViewById(R.id.choix_equipe).setVisibility(View.VISIBLE);
 
         super.onCreate(savedInstanceState);
 
@@ -42,10 +50,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         // Refresh info jeu
         startRefreshAuto(urlJeu);
-
-        // TODO : a retirer après lecture du XML
-        //findViewById(R.id.chargement).setVisibility(View.GONE);
-        findViewById(R.id.choix_equipe).setVisibility(View.GONE);
     }
 
     private void chargeElementsWhaaat() {
@@ -53,8 +57,8 @@ public class WhaaatActivity extends JeuEnVisioActivity {
             findViewById(value).setOnClickListener(this);
         }
 
-        findViewById(R.id.choix_equipe_bleu).setOnClickListener(this);
-        findViewById(R.id.choix_equipe_jaune).setOnClickListener(this);
+        findViewById(R.id.choix_equipe_Bleu).setOnClickListener(this);
+        findViewById(R.id.choix_equipe_Jaune).setOnClickListener(this);
 
         mScoreBleu = findViewById(R.id.score_bleu);
         mScoreJaune = findViewById(R.id.score_jaune);
@@ -73,8 +77,16 @@ public class WhaaatActivity extends JeuEnVisioActivity {
                 else
                     Toast.makeText(this, "Déjà 3 indices !", Toast.LENGTH_SHORT).show();
             } else if (v.getTag().toString().startsWith("choix_equipe_")) {
-                Toast.makeText(this, "Bientôt dispo", Toast.LENGTH_SHORT).show();
-                // TODO : enregistrer l'équipe du joueur
+                String equipe = v.getTag().toString().split("_")[2];
+                int valeurEquipe = 3;
+
+                if (equipe.equals(EQUIPE_JAUNE)) {
+                    valeurEquipe = 4;
+                    mCouleurEquipe = EQUIPE_JAUNE;
+                } else
+                    mCouleurEquipe = EQUIPE_BLEU;
+
+                new MainActivity.TacheURLSansRetour().execute(urlEquipe + mIdPartie + "&joueur=" + mIdJoueur + "&equipe=" + valeurEquipe);
             }
         }
     }
@@ -123,7 +135,22 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         parseNoeudWhaaat(doc);
 
-        // TODO : parse équipe -> Ai-je choisi une équipe ?
+        afficheJoueurs();
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo) && !mListeJoueurs.get(i).getNomEquipe().isEmpty())
+                findViewById(R.id.choix_equipe).setVisibility(View.GONE);
+        }
+
+        LinearLayout blocJeu = findViewById(R.id.bloc_jeu);
+        switch (mCouleurEquipe) {
+            case EQUIPE_BLEU:
+                blocJeu.setBackgroundColor(getResources().getColor(R.color.bleu));
+                break;
+            case EQUIPE_JAUNE:
+                blocJeu.setBackgroundColor(getResources().getColor(R.color.jaune_clair));
+                break;
+        }
+
 
         mListeSituations = parseNoeudsSituations(doc);
         afficheSituations();
@@ -132,6 +159,44 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         afficheObjets();
 
 
+    }
+
+    private void afficheJoueurs() {
+        LinearLayout equipeBleu = findViewById(R.id.equipe_bleu);
+        LinearLayout equipeJaune = findViewById(R.id.equipe_jaune);
+
+        equipeBleu.removeAllViewsInLayout();
+        equipeJaune.removeAllViewsInLayout();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, (float) 0.5);
+        params.setMargins(0, 0, 0, 0);
+
+        equipeBleu.setLayoutParams(params);
+        equipeJaune.setLayoutParams(params);
+
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            if (mListeJoueurs.get(i).getActif() == 1)
+                mIdJoueurActif = mListeJoueurs.get(i).getId();
+            if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo))
+                mCouleurEquipe = mListeJoueurs.get(i).getNomEquipe();
+
+            LinearLayout.LayoutParams paramsTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
+            paramsTV.setMargins(10, 0, 0, 0);
+
+            TextView tv = new TextView(this);
+            tv.setLayoutParams(paramsTV);
+            tv.setText(mListeJoueurs.get(i).getNomJoueur());
+            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tv.setTextColor(getResources().getColor(R.color.blanc));
+            tv.setTextSize(25, Dimension.SP);
+            switch (mListeJoueurs.get(i).getNomEquipe()) {
+                case EQUIPE_BLEU:
+                    equipeBleu.addView(tv, paramsTV);
+                    break;
+                case EQUIPE_JAUNE:
+                    equipeJaune.addView(tv, paramsTV);
+                    break;
+            }
+        }
     }
 
     private void afficheObjets() {
