@@ -15,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.pigredorou.jeuxenvisio.objets.Carte;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Mot;
+import com.pigredorou.jeuxenvisio.objets.Objet;
 import com.pigredorou.jeuxenvisio.objets.Reponse;
+import com.pigredorou.jeuxenvisio.objets.Situation;
 import com.pigredorou.jeuxenvisio.objets.TopTen;
 import com.pigredorou.jeuxenvisio.objets.Vote;
 
@@ -47,6 +49,8 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     int mNumeroMotChoisi;
     ArrayList<Joueur> mListeJoueurs;
     ArrayList<Mot> mListeMots;
+    ArrayList<Situation> mListeSituations;
+    ArrayList<Objet> mListeObjets;
     ArrayList<Reponse> mListeMotsReponses;
     ArrayList<Vote> mListeVotes;
     // Variables statiques
@@ -194,6 +198,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         Node NoeudJoueurs = getNoeudUnique(doc, "Joueurs");
 
         String pseudo = "";
+        String equipe = "";
         int admin = 0;
         int nv = 0;
         int id = 0;
@@ -217,6 +222,9 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
                     case "admin":
                         admin = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
+                    case "equipe":
+                        equipe = noeudCarte.getAttributes().item(j).getNodeValue();
+                        break;
                     case "actif":
                         actif = Integer.parseInt(noeudCarte.getAttributes().item(j).getNodeValue());
                         break;
@@ -228,7 +236,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
                         break;
                 }
             }
-            Joueur joueur = new Joueur(id, pseudo, score, admin, nv, actif);
+            Joueur joueur = new Joueur(id, pseudo, equipe, score, admin, nv, actif);
             listeJoueurs.add(joueur);
         }
 
@@ -311,6 +319,73 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
             }
 
         return listeMots;
+    }
+
+    ArrayList<Situation> parseNoeudsSituations(Document doc) {
+        Node noeudSituations = getNoeudUnique(doc, "Situations");
+        mNumeroMotChoisi = 0;
+
+        int idMot = 0;
+        String situation = "";
+        int idCouleur = 0;
+        int actif = 0;
+        ArrayList<Situation> ListeSituations = new ArrayList<>();
+
+        if (noeudSituations != null)
+            for (int i = 0; i < noeudSituations.getChildNodes().getLength(); i++) { // Parcours toutes les situations
+                Node noeudMot = noeudSituations.getChildNodes().item(i);
+                Log.d("PGR-XML-Situation", noeudMot.getNodeName());
+                for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud situation
+                    Log.d("PGR-XML-Situation", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
+                    switch (noeudMot.getAttributes().item(j).getNodeName()) {
+                        case "id_mot":
+                            idMot = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "situation":
+                            situation = noeudMot.getAttributes().item(j).getNodeValue();
+                            break;
+                        case "id_couleur":
+                            idCouleur = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "actif":
+                            actif = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                    }
+                }
+                Situation maSituation = new Situation(idMot, situation, idCouleur, actif);
+                ListeSituations.add(maSituation);
+            }
+
+        return ListeSituations;
+    }
+
+    ArrayList<Objet> parseNoeudsObjets(Document doc) {
+        Node noeudObjets = getNoeudUnique(doc, "Objets");
+
+        int id = 0;
+        int actif = 0;
+        ArrayList<Objet> ListeObjets = new ArrayList<>();
+
+        if (noeudObjets != null)
+            for (int i = 0; i < noeudObjets.getChildNodes().getLength(); i++) { // Parcours toutes les situations
+                Node noeudMot = noeudObjets.getChildNodes().item(i);
+                Log.d("PGR-XML-Objet", noeudMot.getNodeName());
+                for (int j = 0; j < noeudMot.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud situation
+                    Log.d("PGR-XML-Objet", noeudMot.getAttributes().item(j).getNodeName() + "_" + noeudMot.getAttributes().item(j).getNodeValue());
+                    switch (noeudMot.getAttributes().item(j).getNodeName()) {
+                        case "id_objet":
+                            id = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "actif":
+                            actif = Integer.parseInt(noeudMot.getAttributes().item(j).getNodeValue());
+                            break;
+                    }
+                }
+                Objet monObjet = new Objet(id, actif);
+                ListeObjets.add(monObjet);
+            }
+
+        return ListeObjets;
     }
 
     ArrayList<Reponse> parseNoeudsReponses(Document doc) {
