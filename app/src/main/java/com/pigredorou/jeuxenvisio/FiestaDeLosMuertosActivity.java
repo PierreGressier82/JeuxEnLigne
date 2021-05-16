@@ -380,6 +380,7 @@ public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
                 chaineMots += " <- " + mListeTourDeJeu.get(i + (2 * mListeJoueurs.size())).getMot();
                 chaineMots += " <- " + mListeTourDeJeu.get(i + mListeJoueurs.size()).getMot();
                 chaineMots += " <- " + mListeTourDeJeu.get(i).getMot();
+                chaineMots += " <--- " + mListePersonnages.get(i).getNom().toUpperCase();
                 tv.setText(chaineMots);
             } else
                 tv.setText("");

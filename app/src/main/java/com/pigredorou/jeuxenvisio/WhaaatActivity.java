@@ -139,7 +139,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
             ImageView iv = findViewById(tableIdObjet[i]);
             int idObjet = mListeObjets.get(i).getId();
             // TODO : terminer de recadrer les images
-            if (idObjet > 127)
+            if (idObjet > 126)
                 idObjet = 0;
             iv.setImageResource(tableIdImageObjets[idObjet]);
             // TODO : ajouter les info des objets
