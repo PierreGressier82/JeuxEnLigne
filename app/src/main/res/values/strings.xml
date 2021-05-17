@@ -94,4 +94,5 @@
     <string name="choisi_une_equipe">Choisi une équipe :</string>
     <string name="bleu">bleu</string>
     <string name="jaune">jaune</string>
+    <string name="mauvaise_reponse">Mauvaise réponse</string>
 </resources>

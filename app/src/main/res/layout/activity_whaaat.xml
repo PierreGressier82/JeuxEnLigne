@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bloc_jeu"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bloc_jeu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bleu"
@@ -110,7 +110,6 @@
 
             <TextView
                 android:id="@+id/choix_equipe_Bleu"
-                android:tag="choix_equipe_Bleu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -118,6 +117,7 @@
                 android:layout_marginBottom="15dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/cadre_blanc_fond_bleu"
+                android:tag="choix_equipe_Bleu"
                 android:text="@string/bleu"
                 android:textAlignment="center"
                 android:textColor="@color/blanc"
@@ -126,7 +126,6 @@
 
             <TextView
                 android:id="@+id/choix_equipe_Jaune"
-                android:tag="choix_equipe_Jaune"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -134,6 +133,7 @@
                 android:layout_marginBottom="15dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/cadre_blanc_fond_jaune"
+                android:tag="choix_equipe_Jaune"
                 android:text="@string/jaune"
                 android:textAlignment="center"
                 android:textColor="@color/blanc"
@@ -681,14 +681,43 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/boutons_reponses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/bouton_bonne_reponse"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/noir_transparent"
+                    android:tag="bouton_reponse_bonne"
+                    android:text="@string/bonne_reponse"
+                    android:textColor="@color/vert_clair" />
+
+                <Button
+                    android:id="@+id/bouton_mauvaise_reponse"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/noir_transparent"
+                    android:tag="bouton_reponse_mauvaise"
+                    android:text="@string/mauvaise_reponse"
+                    android:textColor="@color/rouge" />
+            </LinearLayout>
+
             <Button
-                android:id="@+id/bouton_valider"
+                android:id="@+id/bouton_partie_suivante"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@color/noir_transparent"
-                android:tag="bouton_valider"
-                android:text="@string/valider"
+                android:tag="bouton_partie_suivante"
+                android:text="@string/partie_suivante"
                 android:textColor="@color/blanc" />
         </LinearLayout>
     </ScrollView>

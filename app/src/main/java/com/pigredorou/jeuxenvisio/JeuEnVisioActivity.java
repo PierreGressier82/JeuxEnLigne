@@ -238,6 +238,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
             }
             Joueur joueur = new Joueur(id, pseudo, equipe, score, admin, nv, actif);
             listeJoueurs.add(joueur);
+            equipe = "";
         }
 
         return listeJoueurs;
