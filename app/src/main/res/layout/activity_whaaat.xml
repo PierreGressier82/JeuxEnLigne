@@ -664,9 +664,9 @@
                     android:layout_weight="0.5"
                     android:background="@drawable/cadre_blanc_fond_bleu"
                     android:text="@string/score_quipe"
+                    android:textColor="@color/blanc"
                     android:textAlignment="center"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/score_jaune"
@@ -676,9 +676,9 @@
                     android:layout_weight="0.5"
                     android:background="@drawable/cadre_blanc_fond_jaune"
                     android:text="@string/score_quipe"
+                    android:textColor="@color/blanc"
                     android:textAlignment="center"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout

@@ -696,23 +696,54 @@ public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
                 cranesReponses.setVisibility(View.GONE);
                 TextView mJoueurPrec = findViewById(id.joueur_precedent);
                 TextView mJoueurSuiv = findViewById(id.joueur_suivant);
-                for (int i = 0; i < mListeJoueurs.size(); i++) {
-                    if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
-                        String textePrec;
-                        String texteSuiv;
-                        if (i != 0)
-                            textePrec = "  ->\n" + mListeJoueurs.get(i - 1).getNomJoueur() + "\n  ->";
-                        else
-                            textePrec = "  ->\n" + mListeJoueurs.get(mListeJoueurs.size() - 1).getNomJoueur() + "\n  ->";
-                        mJoueurPrec.setText(textePrec);
+                //for (int i = 0; i < mListeJoueurs.size(); i++) {
+                //    if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
+                //        String textePrec;
+                //        String texteSuiv;
+                //        if (i != 0)
+                //            textePrec = "  ->\n" + mListeJoueurs.get(i - 1).getNomJoueur() + "\n  ->";
+                //        else
+                //            textePrec = "  ->\n" + mListeJoueurs.get(mListeJoueurs.size() - 1).getNomJoueur() + "\n  ->";
+                //        mJoueurPrec.setText(textePrec);
+//
+                //        if (i != mListeJoueurs.size() - 1)
+                //            texteSuiv = "->  \n" + mListeJoueurs.get(i + 1).getNomJoueur() + "\n->  ";
+                //        else
+                //            texteSuiv = "->  \n" + mListeJoueurs.get(0).getNomJoueur() + "\n->  ";
+                //        mJoueurSuiv.setText(texteSuiv);
+                //    }
+                //}
 
-                        if (i != mListeJoueurs.size() - 1)
-                            texteSuiv = "->  \n" + mListeJoueurs.get(i + 1).getNomJoueur() + "\n->  ";
-                        else
-                            texteSuiv = "->  \n" + mListeJoueurs.get(0).getNomJoueur() + "\n->  ";
-                        mJoueurSuiv.setText(texteSuiv);
+                // Gestion dynamique mode aléatoire des joueurs suivants et précédents
+                // 1. Quel est mon numéro de crane au tour 1 ?
+                // 2. Quel est le joueur qui a ce crane au tour 2 ? -> joueur suivant
+                // 3. Quel est mon numéro de crane au tour 2 ?
+                // 4. Quel est le joueur qui a ce crane au tour 1 ? -> joueur précédent
+                int numCrane1 = 0;
+                int numCrane2 = 0;
+                String textePrec = "";
+                String texteSuiv = "";
+                for (int i = 0; i < mListeTourDeJeu.size(); i++) {
+                    if (mListeTourDeJeu.get(i).getPseudo().equals(mPseudo)) {
+                        if (mListeTourDeJeu.get(i).getTourDeJeu() == 1)
+                            numCrane1 = mListeTourDeJeu.get(i).getCrane().getId();
+                        if (mListeTourDeJeu.get(i).getTourDeJeu() == 2)
+                            numCrane2 = mListeTourDeJeu.get(i).getCrane().getId();
+                    }
+                    if (mListeTourDeJeu.get(i).getTourDeJeu() == 2 && mListeTourDeJeu.get(i).getCrane().getId() == numCrane1) {
+                        texteSuiv = "->  \n" + mListeTourDeJeu.get(i).getPseudo() + "\n->  ";
+                    }
+                    if (mListeTourDeJeu.get(i).getTourDeJeu() == 3)
+                        break;
+                }
+                for (int i = 0; i < mListeTourDeJeu.size(); i++) {
+                    if (mListeTourDeJeu.get(i).getTourDeJeu() == 1 && mListeTourDeJeu.get(i).getCrane().getId() == numCrane2) {
+                        textePrec = "->  \n" + mListeTourDeJeu.get(i).getPseudo() + "\n->  ";
+                        break;
                     }
                 }
+                mJoueurPrec.setText(textePrec);
+                mJoueurSuiv.setText(texteSuiv);
 
                 if (!contexte.isEmpty())
                     contexte = "(" + contexte + ")";

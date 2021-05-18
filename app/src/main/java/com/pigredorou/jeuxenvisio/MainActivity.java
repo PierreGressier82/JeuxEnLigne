@@ -108,9 +108,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.1.09 : Correctif The Crew + implémentation administration
      * 3.1.10 : Implémentation JustOne en cours
      * 3.2.00 : JustOne V1
+     * 3.2.01 : Fiesta de los muertos - Ajout nom perso en phase réponses + gestion aléatoire des joueurs précédents et suivants
      */
     // Variables statiques
-    private static final String mNumVersion = "3.2.00";
+    private static final String mNumVersion = "3.2.01";
     public static final String url = "http://julie.et.pierre.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";

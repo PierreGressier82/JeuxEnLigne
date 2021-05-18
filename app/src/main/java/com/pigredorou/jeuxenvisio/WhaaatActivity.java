@@ -25,8 +25,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     // Eléments graphiques
     private TextView mTexteScoreBleu;
     private TextView mTexteScoreJaune;
-    private Button mBoutonBonneReponse;
-    private Button mBoutonMauvaiseReponse;
     private Button mBoutonPartieSuivante;
     // Varaibles globales
     private int[] choixOjets = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Permet de stocket l'état du choix
@@ -64,11 +62,9 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         mTexteScoreBleu = findViewById(R.id.score_bleu);
         mTexteScoreJaune = findViewById(R.id.score_jaune);
-        mBoutonBonneReponse = findViewById(R.id.bouton_bonne_reponse);
-        mBoutonMauvaiseReponse = findViewById(R.id.bouton_mauvaise_reponse);
-        mBoutonBonneReponse.setOnClickListener(this);
-        mBoutonMauvaiseReponse.setOnClickListener(this);
-        mBoutonPartieSuivante = findViewById(R.id.bouton_manche_suivante);
+        findViewById(R.id.bouton_bonne_reponse).setOnClickListener(this);
+        findViewById(R.id.bouton_mauvaise_reponse).setOnClickListener(this);
+        mBoutonPartieSuivante = findViewById(R.id.bouton_partie_suivante);
         mBoutonPartieSuivante.setOnClickListener(this);
     }
 
@@ -284,5 +280,10 @@ public class WhaaatActivity extends JeuEnVisioActivity {
                     break;
             }
         }
+
+        TextView tv = findViewById(R.id.score_bleu);
+        tv.setText(String.valueOf(scoreBleu));
+        tv = findViewById(R.id.score_jaune);
+        tv.setText(String.valueOf(scoreJaune));
     }
 }
