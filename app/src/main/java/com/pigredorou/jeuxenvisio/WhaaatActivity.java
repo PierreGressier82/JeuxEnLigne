@@ -39,6 +39,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     private static final String urlJeu = MainActivity.url + "whaaat.php?partie=";
     private static final String urlEquipe = MainActivity.url + "selectionneEquipe.php?partie=";
     private static final String urlMAJIncideObjet = MainActivity.url + "majIndice.php?partie=";
+    private static final String urlMAJScore = MainActivity.url + "majScoreEquipe?score=";
     private int mIdJoueurActif;
     private String mCouleurEquipe;
     private int mScoreBleu;
@@ -77,36 +78,92 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
         if (v != null && v.getTag() != null) {
             if (v.getTag().toString().startsWith("objet_")) {
-                String tag[] = v.getTag().toString().split("_");
-                int position = Integer.parseInt(tag[1]);
-                int idObjet = Integer.parseInt(tag[2]);
-                if (indicesAutorise(position)) {
-                    afficheChoix();
-                    int actif = choixOjets[position] + 1;
-                    new MainActivity.TacheURLSansRetour().execute(urlMAJIncideObjet + mIdPartie + "&actif=" + actif + "&objet=" + idObjet);
-                } else
-                    Toast.makeText(this, "Déjà 3 indices !", Toast.LENGTH_SHORT).show();
+                clickObjet(v.getTag().toString());
             } else if (v.getTag().toString().startsWith("choix_equipe_")) {
-                String equipe = v.getTag().toString().split("_")[2];
-                int valeurEquipe = 3;
-
-                if (equipe.equals(EQUIPE_JAUNE)) {
-                    valeurEquipe = 4;
-                    mCouleurEquipe = EQUIPE_JAUNE;
-                } else
-                    mCouleurEquipe = EQUIPE_BLEU;
-
-                new MainActivity.TacheURLSansRetour().execute(urlEquipe + mIdPartie + "&joueur=" + mIdJoueur + "&equipe=" + valeurEquipe);
+                clickEquipe(v.getTag().toString());
             } else if (v.getTag().toString().startsWith("bouton_reponse_")) {
-                // TODO enregistrer la bonne ou la mauvaise réponse
-                // Si bonne 1 à 3 points (selon nombre d'incide)
-                // Si mauvaise 1 points pour l'équipe adverse
-                // TODO : TODO passer au tour de jeu suivant
+                clickReponse(v.getTag().toString());
             } else if (v.getTag().toString().equals("bouton_partie_suivante")) {
                 // TODO passer à la partie suivante
+                new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitWhaaat + mIdPartie + "&partieSuivante=oui");
             }
 
         }
+    }
+
+    private void clickReponse(String tag) {
+        // Si bonne 1 à 3 points (selon nombre d'indice)
+        // Si mauvaise 1 point pour l'équipe adverse
+        String reponse = tag.split("_")[2];
+        int equipe = 0;
+        int nbIndice = 0;
+        for (int choixOjet : choixOjets) {
+            if (choixOjet != 0) {
+                nbIndice++;
+            }
+        }
+        int score = 0;
+        switch (reponse) {
+            case "bonne":
+                switch (nbIndice) {
+                    case 1:
+                        score = 3;
+                        break;
+                    case 2:
+                        score = 2;
+                        break;
+                    case 3:
+                        score = 1;
+                        break;
+                }
+                switch (mCouleurEquipe) {
+                    case EQUIPE_BLEU:
+                        equipe = 3;
+                        break;
+                    case EQUIPE_JAUNE:
+                        equipe = 4;
+                        break;
+                }
+                break;
+            case "mauvaise":
+                score = 1;
+                switch (mCouleurEquipe) {
+                    case EQUIPE_BLEU:
+                        equipe = 4;
+                        break;
+                    case EQUIPE_JAUNE:
+                        equipe = 3;
+                        break;
+                }
+                break;
+        }
+        new MainActivity.TacheURLSansRetour().execute(urlMAJScore + score + "&equipe=" + equipe);
+        new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitWhaaat + mIdPartie + "&tour=next");
+    }
+
+    private void clickEquipe(String tag) {
+        String equipe = tag.split("_")[2];
+        int valeurEquipe = 3;
+
+        if (equipe.equals(EQUIPE_JAUNE)) {
+            valeurEquipe = 4;
+            mCouleurEquipe = EQUIPE_JAUNE;
+        } else
+            mCouleurEquipe = EQUIPE_BLEU;
+
+        new MainActivity.TacheURLSansRetour().execute(urlEquipe + mIdPartie + "&joueur=" + mIdJoueur + "&equipe=" + valeurEquipe);
+    }
+
+    private void clickObjet(String tagTexte) {
+        String tag[] = tagTexte.split("_");
+        int position = Integer.parseInt(tag[1]);
+        int idObjet = Integer.parseInt(tag[2]);
+        if (indicesAutorise(position)) {
+            afficheChoix();
+            int actif = choixOjets[position] + 1;
+            new MainActivity.TacheURLSansRetour().execute(urlMAJIncideObjet + mIdPartie + "&actif=" + actif + "&objet=" + idObjet);
+        } else
+            Toast.makeText(this, "Déjà 3 indices !", Toast.LENGTH_SHORT).show();
     }
 
     private boolean indicesAutorise(int position) {
