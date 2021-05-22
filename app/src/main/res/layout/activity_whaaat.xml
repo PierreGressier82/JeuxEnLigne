@@ -233,6 +233,7 @@
 
                 <ImageView
                     android:id="@+id/carte_situation_1"
+                    android:tag="carte_situation_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -248,6 +249,7 @@
 
                 <ImageView
                     android:id="@+id/carte_situation_2"
+                    android:tag="carte_situation_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -260,6 +262,36 @@
                     app:layout_constraintStart_toEndOf="@id/carte_situation_1"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.47" />
+
+                <TextView
+                    android:id="@+id/vote_situation_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/noir_transparent"
+                    android:maxLines="1"
+                    android:text="@string/pseudo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_1"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_1"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_1"
+                    app:layout_constraintWidth_percent="0.44" />
+
+                <TextView
+                    android:id="@+id/vote_situation_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/noir_transparent"
+                    android:maxLines="1"
+                    android:text="@string/pseudo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_2"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_2"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_2"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <TextView
                     android:id="@+id/texte_situation_1"
@@ -296,7 +328,36 @@
                     app:layout_constraintWidth_percent="0.44" />
 
                 <ImageView
+                    android:id="@+id/devoiler_situation_1"
+                    android:tag="devoiler_situation_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/main_selection"
+                    android:baselineAlignBottom="true"
+                    app:layout_constraintTop_toBottomOf="@+id/texte_situation_1"
+                    app:layout_constraintBottom_toBottomOf="@+id/carte_situation_1"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_1"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <ImageView
+                    android:id="@+id/devoiler_situation_2"
+                    android:tag="devoiler_situation_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/main_selection"
+                    android:baselineAlignBottom="true"
+                    app:layout_constraintTop_toBottomOf="@+id/texte_situation_2"
+                    app:layout_constraintBottom_toBottomOf="@+id/carte_situation_2"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_2"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <ImageView
                     android:id="@+id/carte_situation_3"
+                    android:tag="carte_situation_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -311,6 +372,7 @@
 
                 <ImageView
                     android:id="@+id/carte_situation_4"
+                    android:tag="carte_situation_4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -322,6 +384,36 @@
                     app:layout_constraintStart_toEndOf="@id/carte_situation_3"
                     app:layout_constraintTop_toBottomOf="@id/carte_situation_2"
                     app:layout_constraintWidth_percent="0.47" />
+
+                <TextView
+                    android:id="@+id/vote_situation_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/noir_transparent"
+                    android:maxLines="1"
+                    android:text="@string/pseudo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_3"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_3"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_3"
+                    app:layout_constraintWidth_percent="0.44" />
+
+                <TextView
+                    android:id="@+id/vote_situation_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/noir_transparent"
+                    android:maxLines="1"
+                    android:text="@string/pseudo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_4"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_4"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_4"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <TextView
                     android:id="@+id/texte_situation_3"
@@ -358,7 +450,36 @@
                     app:layout_constraintWidth_percent="0.44" />
 
                 <ImageView
+                    android:id="@+id/devoiler_situation_3"
+                    android:tag="devoiler_situation_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/main_selection"
+                    android:baselineAlignBottom="true"
+                    app:layout_constraintTop_toBottomOf="@+id/texte_situation_3"
+                    app:layout_constraintBottom_toBottomOf="@+id/carte_situation_3"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_3"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <ImageView
+                    android:id="@+id/devoiler_situation_4"
+                    android:tag="devoiler_situation_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/main_selection"
+                    android:baselineAlignBottom="true"
+                    app:layout_constraintTop_toBottomOf="@+id/texte_situation_4"
+                    app:layout_constraintBottom_toBottomOf="@+id/carte_situation_4"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_4"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <ImageView
                     android:id="@+id/carte_situation_5"
+                    android:tag="carte_situation_5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -373,6 +494,7 @@
 
                 <ImageView
                     android:id="@+id/carte_situation_6"
+                    android:tag="carte_situation_6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -384,6 +506,36 @@
                     app:layout_constraintStart_toEndOf="@id/carte_situation_5"
                     app:layout_constraintTop_toBottomOf="@id/carte_situation_4"
                     app:layout_constraintWidth_percent="0.47" />
+
+                <TextView
+                    android:id="@+id/vote_situation_5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/noir_transparent"
+                    android:maxLines="1"
+                    android:text="@string/pseudo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_5"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_5"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_5"
+                    app:layout_constraintWidth_percent="0.44" />
+
+                <TextView
+                    android:id="@+id/vote_situation_6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/noir_transparent"
+                    android:maxLines="1"
+                    android:text="@string/pseudo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blanc"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_6"
+                    app:layout_constraintStart_toStartOf="@id/carte_situation_6"
+                    app:layout_constraintTop_toTopOf="@+id/carte_situation_6"
+                    app:layout_constraintWidth_percent="0.44" />
 
                 <TextView
                     android:id="@+id/texte_situation_5"
@@ -418,7 +570,77 @@
                     app:layout_constraintStart_toStartOf="@id/carte_situation_6"
                     app:layout_constraintTop_toTopOf="@+id/carte_situation_6"
                     app:layout_constraintWidth_percent="0.44" />
+
+                <ImageView
+                    android:id="@+id/devoiler_situation_5"
+                    android:tag="devoiler_situation_5"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/main_selection"
+                    android:baselineAlignBottom="true"
+                    app:layout_constraintTop_toBottomOf="@+id/texte_situation_5"
+                    app:layout_constraintBottom_toBottomOf="@+id/carte_situation_5"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_5"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <ImageView
+                    android:id="@+id/devoiler_situation_6"
+                    android:tag="devoiler_situation_6"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/main_selection"
+                    android:baselineAlignBottom="true"
+                    app:layout_constraintTop_toBottomOf="@+id/texte_situation_6"
+                    app:layout_constraintBottom_toBottomOf="@+id/carte_situation_6"
+                    app:layout_constraintEnd_toEndOf="@+id/carte_situation_6"
+                    app:layout_constraintWidth_percent="0.05" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/score_bleu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.2"
+                    android:background="@drawable/cadre_blanc_fond_bleu"
+                    android:text="@string/score_quipe"
+                    android:textColor="@color/blanc"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/joueur_actif"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:background="@color/blanc"
+                    android:text="@string/pseudo"
+                    android:textColor="@color/noir"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/score_jaune"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.2"
+                    android:background="@drawable/cadre_blanc_fond_jaune"
+                    android:text="@string/score_quipe"
+                    android:textColor="@color/blanc"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/objects_ligne_1"
@@ -650,36 +872,6 @@
                     app:layout_constraintStart_toEndOf="@id/objet_8"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/score_bleu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/cadre_blanc_fond_bleu"
-                    android:text="@string/score_quipe"
-                    android:textColor="@color/blanc"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/score_jaune"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/cadre_blanc_fond_jaune"
-                    android:text="@string/score_quipe"
-                    android:textColor="@color/blanc"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/boutons_reponses"
