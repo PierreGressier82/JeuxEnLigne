@@ -42,6 +42,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import static androidx.annotation.Dimension.SP;
 import static com.pigredorou.jeuxenvisio.JeuEnVisioActivity.getNoeudUnique;
 import static com.pigredorou.jeuxenvisio.MainActivity.url;
+import static com.pigredorou.jeuxenvisio.MainActivity.urlGetJoueurs;
 
 public class AdministrationActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -66,6 +67,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         chargeBoutonRetour();
 
         new TacheGetSalonsDeJeu().execute(urlGetSalons);
+        new TacheGetSalonsDeJeu().execute(urlGetJoueurs);
     }
 
     private void chargeBoutonRetour() {
@@ -74,7 +76,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
     }
 
 
-    private void parseXML(Document doc) {
+    private void parseXML_SJ(Document doc) {
         ArrayList<Salon> mListeSalons;
 
         // Masque l'écran de chargement
@@ -83,6 +85,62 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         // Liste des salons de jeu (avec les joueurs)
         mListeSalons = parseXMLSalonsJeu(doc);
         afficheSalons(mListeSalons);
+    }
+
+    private void parseXML_J(Document doc) {
+        ArrayList<Joueur> mListeJoueurs;
+        // Liste des joueurs (pour activer ou non le joueur comme nouveau joueur)
+        mListeJoueurs = parseXMLJoueurs(doc);
+        afficheJoueur(mListeJoueurs);
+    }
+
+    private ArrayList<Joueur> parseXMLJoueurs(Document doc) {
+        Element element = doc.getDocumentElement();
+        element.normalize();
+
+        ArrayList<Joueur> listeJoueurs = new ArrayList<>();
+
+        Node noeudJoueurs = getNoeudUnique(doc, "Joueurs");
+        int idJoueur = 0;
+        String nomJoueur = "";
+        int admin = 0;
+        int newJ = 0;
+        for (int i = 0; i < noeudJoueurs.getChildNodes().getLength(); i++) { // Parcours toutes les salons
+            Node noeudSalon = noeudJoueurs.getChildNodes().item(i);
+            Log.d("PGR-XML-Joueur", noeudSalon.getNodeName());
+            for (int j = 0; j < noeudSalon.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud salon
+                Log.d("PGR-XML-Joueur", noeudSalon.getAttributes().item(j).getNodeName() + "_" + noeudSalon.getAttributes().item(j).getNodeValue());
+                if (noeudSalon.getAttributes().item(j).getNodeValue().isEmpty())
+                    continue;
+                switch (noeudSalon.getAttributes().item(j).getNodeName()) {
+                    case "id":
+                        idJoueur = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "pseudo":
+                        nomJoueur = noeudSalon.getAttributes().item(j).getNodeValue();
+                        break;
+                    case "admin":
+                        admin = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                    case "new":
+                        newJ = Integer.parseInt(noeudSalon.getAttributes().item(j).getNodeValue());
+                        break;
+                }
+            }
+            Joueur joueur = new Joueur(idJoueur, nomJoueur, 0, admin, newJ, 0);
+            listeJoueurs.add(joueur);
+        }
+
+        return listeJoueurs;
+    }
+
+    private void afficheJoueur(ArrayList<Joueur> mListeJoueurs) {
+        LinearLayout ll = findViewById(R.id.listeJoueurs);
+
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            ajouteTitre(ll, "LISTE DES JOUEURS");
+            ajouteJoueursEtJeux(ll, mListeJoueurs, mListeJoueurs.get(i).getId());
+        }
     }
 
     private void afficheSalons(ArrayList<Salon> listeSalons) {
@@ -150,7 +208,6 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         nomSalon.setBackgroundColor(getResources().getColor(R.color.noir_transparent));
         nomSalon.setGravity(View.TEXT_ALIGNMENT_CENTER);
         nomSalon.setTag("salon_" + salon.getId());
-        nomSalon.setOnClickListener(this);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(10, 30, 10, 0);
@@ -159,7 +216,24 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         ll.addView(nomSalon);
     }
 
-    public static ArrayList<Salon> parseXMLSalonsJeu(Document doc) {
+    private void ajouteTitre(LinearLayout ll, String titre) {
+        TextView nomTitre = new TextView(this);
+        nomTitre.setText(titre);
+        nomTitre.setTextColor(getResources().getColor(R.color.blanc));
+        nomTitre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        nomTitre.setTextSize(SP, 30);
+        nomTitre.setBackgroundColor(getResources().getColor(R.color.noir_transparent));
+        nomTitre.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        nomTitre.setOnClickListener(this);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(10, 30, 10, 0);
+        nomTitre.setLayoutParams(params);
+
+        ll.addView(nomTitre);
+    }
+
+    private static ArrayList<Salon> parseXMLSalonsJeu(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
 
@@ -308,7 +382,38 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         protected void onPostExecute(Document doc) {
             if (doc != null) {
                 mChargement.setVisibility(View.GONE);
-                parseXML(doc);
+                parseXML_SJ(doc);
+            }
+            super.onPostExecute(doc);
+        }
+    }
+
+    private class TacheGetJoueurs extends AsyncTask<String, Void, Document> {
+
+        @Override
+        protected Document doInBackground(String... strings) {
+            URL url;
+            Document doc = null;
+            try {
+                // l'URL est en paramètre donc toujours 1 seul paramètre
+                url = new URL(strings[0]);
+                // Lecture du flux
+                InputStream is = url.openStream();
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                doc = dBuilder.parse(is);
+            } catch (IOException | ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+            }
+
+            return doc;
+        }
+
+        @Override
+        protected void onPostExecute(Document doc) {
+            if (doc != null) {
+                mChargement.setVisibility(View.GONE);
+                parseXML_J(doc);
             }
             super.onPostExecute(doc);
         }

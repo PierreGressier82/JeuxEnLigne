@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     private static final String urlEquipe = MainActivity.url + "selectionneEquipe.php?partie=";
     private static final String urlMAJIncideObjet = MainActivity.url + "majIndice.php?partie=";
     private static final String urlMAJScore = MainActivity.url + "majScoreEquipe?score=";
-    private static final String urlVoteSituation = MainActivity.url + "vote.php?partie=";
     // Eléments graphiques
     private TextView mTexteScoreBleu;
     private TextView mTexteScoreJaune;
@@ -81,6 +81,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         }
         for (int value : tableIdDevoilerSituation) {
             findViewById(value).setVisibility(View.GONE);
+            findViewById(value).setOnClickListener(this);
         }
 
         // Scores
@@ -108,11 +109,26 @@ public class WhaaatActivity extends JeuEnVisioActivity {
                 clickEquipe(v.getTag().toString());
             } else if (v.getTag().toString().startsWith("bouton_reponse_")) {
                 clickReponse(v.getTag().toString());
+            } else if (v.getTag().toString().startsWith("carte_situation")) {
+                clickVoteSituation(v.getTag().toString());
+            } else if (v.getTag().toString().startsWith("devoiler_situation")) {
+                clickDevoilerSituation(v.getTag().toString());
             } else if (v.getTag().toString().equals("bouton_partie_suivante")) {
                 new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitWhaaat + mIdPartie + "&partieSuivante=oui");
             }
 
         }
+    }
+
+    private void clickDevoilerSituation(String tag) {
+        // TODO : selon le cas faire un clic sur bonne ou mauvaise réponse
+        clickReponse(tag);
+    }
+
+    private void clickVoteSituation(String tag) {
+        // TODO : si vite déjà actif, le retirer
+        int idMot = Integer.parseInt(tag.split("_")[2]);
+        new MainActivity.TacheURLSansRetour().execute(JustOneActivity.urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + idMot);
     }
 
     private void clickReponse(String tag) {
@@ -241,9 +257,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         gestionContexte();
 
         // TODO : afficher les votes de joueurs de l'équipe
-        // TODO : Affiche le joeuur actif et la couleur de son équipe
         // TODO : permettre à un joeuur ed l'équipe actif de voter
-        // TODO : enregistrer le vote du joueur
         // TODO : corriger le bug du passage au tour suivant
         // TODO : permettre aux joueurs de l'équipe active de dévoiler une situation
 
@@ -275,6 +289,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     }
 
     private void afficheEquipe() {
+        // Affiche la sélection de l'équipe si elle n'est pas encore choisie
         for (int i = 0; i < mListeJoueurs.size(); i++) {
             if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
                 if (mListeJoueurs.get(i).getNomEquipe().isEmpty())
@@ -284,6 +299,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
             }
         }
 
+        // Met le fond de l'écran à la couleur de l'équipe
         LinearLayout blocJeu = findViewById(R.id.bloc_jeu);
         switch (mCouleurEquipe) {
             case EQUIPE_BLEU:
@@ -319,15 +335,17 @@ public class WhaaatActivity extends JeuEnVisioActivity {
             if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo))
                 mCouleurEquipe = mListeJoueurs.get(i).getNomEquipe();
 
-            LinearLayout.LayoutParams paramsTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0);
+            TableRow.LayoutParams paramsTV = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0);
             paramsTV.setMargins(10, 0, 0, 0);
 
+            // Element
             TextView tv = new TextView(this);
+            paramsTV.setMargins(20, 30, 0, 0);
             tv.setLayoutParams(paramsTV);
             tv.setText(mListeJoueurs.get(i).getNomJoueur());
             tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tv.setTextSize(Dimension.SP, 25);
             tv.setTextColor(getResources().getColor(R.color.blanc));
-            tv.setTextSize(25, Dimension.SP);
             switch (mListeJoueurs.get(i).getNomEquipe()) {
                 case EQUIPE_BLEU:
                     equipeBleu.addView(tv, paramsTV);
@@ -338,15 +356,49 @@ public class WhaaatActivity extends JeuEnVisioActivity {
             }
         }
 
-        // Affiche l'équipe active et le joueur
-        String texteActif = mCouleurEquipeActive + " (" + mPseudoActif + ")";
-        mJoueurActif.setText(texteActif);
+        // Affiche le pseudo du joeur actif dans la couleur de son équipe
+        switch (mCouleurEquipeActive) {
+            case EQUIPE_BLEU:
+                mJoueurActif.setTextColor(getResources().getColor(R.color.bleu));
+                break;
+            case EQUIPE_JAUNE:
+                mJoueurActif.setTextColor(getResources().getColor(R.color.jaune_clair));
+                break;
+        }
+        mJoueurActif.setText(mPseudoActif);
+
+        // Si c'est mon équipe qui joue mais que je ne suis pas le joueur actif, je peux "voter" pour des situations
+        if (mCouleurEquipeActive.equals(mCouleurEquipe) && mIdJoueurActif != mIdJoueur) {
+            activeVote(true);
+            activeDevoiler(true);
+        } else {
+            activeVote(false);
+            activeDevoiler(false);
+        }
 
         // Si la partie est terminée, l'admin peut passer à la partie suivante
         if (mAdmin && (mScoreBleu >= 10 || mScoreJaune >= 10))
             mBoutonPartieSuivante.setVisibility(View.VISIBLE);
         else
             mBoutonPartieSuivante.setVisibility(View.GONE);
+    }
+
+    private void activeVote(boolean actif) {
+        for (int value : tableIdCarteSituation) {
+            if (actif)
+                findViewById(value).setOnClickListener(this);
+            else
+                findViewById(value).setOnClickListener(null);
+        }
+    }
+
+    private void activeDevoiler(boolean actif) {
+        for (int value : tableIdDevoilerSituation) {
+            if (actif)
+                findViewById(value).setVisibility(View.VISIBLE);
+            else
+                findViewById(value).setVisibility(View.GONE);
+        }
     }
 
     private void afficheObjets() {
