@@ -23,7 +23,6 @@ public class JustOneActivity extends JeuEnVisioActivity {
     // URLs des actions en base
     public static final String urlJeu = MainActivity.url + "justOne.php?partie=";
     public static final String urlMancheSuivante = MainActivity.url + "justOneMancheSuivante.php?partie=";
-    public static final String urlVote = MainActivity.url + "vote.php?partie=";
     public static final String urlReponse = MainActivity.url + "enregistreReponse.php?partie=";
     public static final String urlDevoile = MainActivity.url + "justeOneDevoile.php?partie=";
     // Tableaux des resssources

@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.2.01 : Fiesta de los muertos - Ajout nom perso en phase réponses + gestion aléatoire des joueurs précédents et suivants
      * 3.3.00 : Whaaat v1
      * 3.3.01 : Fiesta de los muertos - Correction nom perso en phase réponses + Whaaat - Ajout du joueur actif
+     * 3.3.02 : Whaaat v2 - Permet à l'équipe active de voter, affichier les vote et de dévoiler la réponse en autonomie + Affichage joueur+équipe active
      */
     // Variables statiques
     private static final String mNumVersion = "3.3.01";

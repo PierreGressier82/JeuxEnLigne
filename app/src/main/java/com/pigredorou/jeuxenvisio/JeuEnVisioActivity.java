@@ -55,6 +55,7 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
     ArrayList<Vote> mListeVotes;
     // Variables statiques
     final static String urlMAJ = MainActivity.url + "majJeu.php?partie=";
+    final static String urlVote = MainActivity.url + "vote.php?partie=";
     // Elements graphique
     Button mBoutonValider;
     // Refresh auto
@@ -566,6 +567,18 @@ public class JeuEnVisioActivity extends AppCompatActivity implements View.OnClic
         }
 
         return id;
+    }
+
+    String getPseudoFromIdJoueur(int id) {
+        String pseudo = "";
+        for (int i = 0; i < mListeJoueurs.size(); i++) {
+            if (mListeJoueurs.get(i).getId() == id) {
+                pseudo = mListeJoueurs.get(i).getNomJoueur();
+                break;
+            }
+        }
+
+        return pseudo;
     }
 
     /**
