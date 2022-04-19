@@ -874,35 +874,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/boutons_reponses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/bouton_bonne_reponse"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/noir_transparent"
-                    android:tag="bouton_reponse_bonne"
-                    android:text="@string/bonne_reponse"
-                    android:textColor="@color/vert_clair" />
-
-                <Button
-                    android:id="@+id/bouton_mauvaise_reponse"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/noir_transparent"
-                    android:tag="bouton_reponse_mauvaise"
-                    android:text="@string/mauvaise_reponse"
-                    android:textColor="@color/rouge" />
-            </LinearLayout>
-
             <Button
                 android:id="@+id/bouton_partie_suivante"
                 android:layout_width="match_parent"

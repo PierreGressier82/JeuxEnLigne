@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.pigredorou.jeuxenvisio.objets.Jeu;
 import com.pigredorou.jeuxenvisio.objets.Joueur;
 import com.pigredorou.jeuxenvisio.objets.Salon;
 
@@ -42,7 +43,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import static androidx.annotation.Dimension.SP;
 import static com.pigredorou.jeuxenvisio.JeuEnVisioActivity.getNoeudUnique;
 import static com.pigredorou.jeuxenvisio.MainActivity.url;
-import static com.pigredorou.jeuxenvisio.MainActivity.urlGetJoueurs;
 
 public class AdministrationActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -67,7 +67,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         chargeBoutonRetour();
 
         new TacheGetSalonsDeJeu().execute(urlGetSalons);
-        new TacheGetSalonsDeJeu().execute(urlGetJoueurs);
+        //new TacheGetSalonsDeJeu().execute(urlGetJoueurs);
     }
 
     private void chargeBoutonRetour() {
@@ -135,12 +135,12 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
     }
 
     private void afficheJoueur(ArrayList<Joueur> mListeJoueurs) {
-        LinearLayout ll = findViewById(R.id.listeJoueurs);
+        //LinearLayout ll = findViewById(R.id.listeJoueurs);
 
-        for (int i = 0; i < mListeJoueurs.size(); i++) {
-            ajouteTitre(ll, "LISTE DES JOUEURS");
-            ajouteJoueursEtJeux(ll, mListeJoueurs, mListeJoueurs.get(i).getId());
-        }
+        //for (int i = 0; i < mListeJoueurs.size(); i++) {
+        //    ajouteTitre(ll, "LISTE DES JOUEURS");
+        //    ajouteJoueursEtJeux(ll, mListeJoueurs, mListeJoueurs.get(i).getId());
+        //}
     }
 
     private void afficheSalons(ArrayList<Salon> listeSalons) {
@@ -148,11 +148,11 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
         for (int i = 0; i < listeSalons.size(); i++) {
             ajouteNomSalon(ll, listeSalons.get(i));
-            ajouteJoueursEtJeux(ll, listeSalons.get(i).getListeJoueurs(), listeSalons.get(i).getId());
+            ajouteJoueursEtJeux(ll, listeSalons.get(i).getListeJoueurs(), listeSalons.get(i).getListeJeux(), listeSalons.get(i).getId());
         }
     }
 
-    private void ajouteJoueursEtJeux(LinearLayout ll, ArrayList<Joueur> listeJoueurs, int indexSalon) {
+    private void ajouteJoueursEtJeux(LinearLayout ll, ArrayList<Joueur> listeJoueurs, ArrayList<Jeu> listeJeux, int indexSalon) {
         LinearLayout blocJoueursEtJeux = new LinearLayout(this);
         LinearLayout.LayoutParams paramsLL = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         blocJoueursEtJeux.setLayoutParams(paramsLL);
@@ -165,7 +165,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
         TableLayout tableauJeux = new TableLayout(this);
         tableauJeux.setLayoutParams(paramsTL);
-        //ajouteJoueurs(tableauJeux, listeJoueurs);
+        ajouteJeux(tableauJeux, listeJeux, indexSalon);
         blocJoueursEtJeux.addView(tableauJeux);
         ll.addView(blocJoueursEtJeux);
     }
@@ -193,6 +193,35 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
             nomJoueur.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
             nomJoueur.setTextSize(SP, 20);
             nomJoueur.setTag(tag + "_" + listeJoueurs.get(i).getId());
+            ligneJoueur.addView(nomJoueur);
+            // Ajout de la ligne au tabeau
+            tl.addView(ligneJoueur);
+        }
+    }
+
+    private void ajouteJeux(TableLayout tl, ArrayList<Jeu> listeJeux, int indexSalon) {
+        String tag = "jeu_" + indexSalon;
+        for (int i = 0; i < listeJeux.size(); i++) {
+            TableRow ligneJoueur = new TableRow(this);
+            TableRow.LayoutParams paramsTR = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ligneJoueur.setLayoutParams(paramsTR);
+            // Actif ?
+            CheckBox joueurActif = new CheckBox(this);
+            //joueurActif.setChecked(listeJeux.get(i).getActif() != 0);
+            joueurActif.setTextColor(getResources().getColor(R.color.blanc));
+            joueurActif.setOnClickListener(this);
+            joueurActif.setTag(tag + "_" + listeJeux.get(i).getId());
+            joueurActif.setId(View.generateViewId());
+            ligneJoueur.addView(joueurActif);
+            // Nom joueur
+            TextView nomJoueur = new TextView(this);
+            TableRow.LayoutParams paramsTV = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ligneJoueur.setLayoutParams(paramsTV);
+            nomJoueur.setText(listeJeux.get(i).getNom());
+            nomJoueur.setTextColor(getResources().getColor(R.color.blanc));
+            nomJoueur.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            nomJoueur.setTextSize(SP, 20);
+            nomJoueur.setTag(tag + "_" + listeJeux.get(i).getId());
             ligneJoueur.addView(nomJoueur);
             // Ajout de la ligne au tabeau
             tl.addView(ligneJoueur);
@@ -288,8 +317,9 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
                 Joueur joueur = new Joueur(idJoueur, pseudo, 0, admin, 0, actif);
                 listeJoueurs.add(joueur);
             }
-            Salon salon = new Salon(idSalon, nomSalon, listeJoueurs);
-            listeSalons.add(salon);
+            // TODO : terminer la création du salon
+            //Salon salon = new Salon(idSalon, nomSalon, listeJoueurs, listeJeux);
+            //listeSalons.add(salon);
         }
 
         return listeSalons;

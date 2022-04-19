@@ -45,7 +45,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     private TextView mTexteScoreJaune;
     private TextView mJoueurActif;
     private Button mBoutonPartieSuivante;
-    private LinearLayout mBlocBoutonsReponses;
     // Varaibles globales
     private final int[] choixOjets = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Permet de stocket l'état du choix
     private final int[] idSituations = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Permet de stocket l'ID du mot des situations
@@ -55,6 +54,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     private String mCouleurEquipeActive;
     private int mScoreBleu;
     private int mScoreJaune;
+    private int mIdMotBonneReponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +92,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         mCouleurEquipeActive = "";
 
         // Bontons
-        mBlocBoutonsReponses = findViewById(R.id.boutons_reponses);
-        findViewById(R.id.bouton_bonne_reponse).setOnClickListener(this);
-        findViewById(R.id.bouton_mauvaise_reponse).setOnClickListener(this);
         mBoutonPartieSuivante = findViewById(R.id.bouton_partie_suivante);
         mBoutonPartieSuivante.setOnClickListener(this);
     }
@@ -108,8 +105,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
                 clickObjet(v.getTag().toString());
             } else if (v.getTag().toString().startsWith("choix_equipe_")) {
                 clickEquipe(v.getTag().toString());
-            } else if (v.getTag().toString().startsWith("bouton_reponse_")) {
-                clickReponse(v.getTag().toString());
             } else if (v.getTag().toString().startsWith("carte_situation_")) {
                 clickVoteSituation(v.getTag().toString());
             } else if (v.getTag().toString().startsWith("devoiler_situation_")) {
@@ -122,22 +117,11 @@ public class WhaaatActivity extends JeuEnVisioActivity {
     }
 
     private void clickDevoilerSituation(String tag) {
-        // TODO : selon le cas faire un clic sur bonne ou mauvaise réponse
-        clickReponse(tag);
-    }
+        int idreponse = Integer.parseInt(tag.split("_")[2]);
+        boolean reponse = (idreponse == mIdMotBonneReponse);
 
-    private void clickVoteSituation(String tag) {
-        // TODO : si vote déjà actif, le retirer
-        int idMot = Integer.parseInt(tag.split("_")[2]);
-        new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + idMot + "&mode=add");
-    }
-
-    private void clickReponse(String tag) {
-        // Masque les boutons
-        mBlocBoutonsReponses.setVisibility(View.GONE);
         // Si bonne 1 à 3 points (selon nombre d'indice)
         // Si mauvaise 1 point pour l'équipe adverse
-        String reponse = tag.split("_")[2];
         int equipe = 0;
         int nbIndice = 0;
         for (int choixOjet : choixOjets) {
@@ -146,42 +130,47 @@ public class WhaaatActivity extends JeuEnVisioActivity {
             }
         }
         int score = 0;
-        switch (reponse) {
-            case "bonne":
-                switch (nbIndice) {
-                    case 1:
-                        score = 3;
-                        break;
-                    case 2:
-                        score = 2;
-                        break;
-                    case 3:
-                        score = 1;
-                        break;
-                }
-                switch (mCouleurEquipe) {
-                    case EQUIPE_BLEU:
-                        equipe = ID_EQUIPE_BLEU;
-                        break;
-                    case EQUIPE_JAUNE:
-                        equipe = ID_EQUIPE_JAUNE;
-                        break;
-                }
-                break;
-            case "mauvaise":
-                score = 1;
-                switch (mCouleurEquipe) {
-                    case EQUIPE_BLEU:
-                        equipe = ID_EQUIPE_JAUNE;
-                        break;
-                    case EQUIPE_JAUNE:
-                        equipe = ID_EQUIPE_BLEU;
-                        break;
-                }
-                break;
+        if (reponse) {
+            switch (nbIndice) {
+                case 1:
+                    score = 3;
+                    break;
+                case 2:
+                    score = 2;
+                    break;
+                case 3:
+                    score = 1;
+                    break;
+            }
+            switch (mCouleurEquipe) {
+                case EQUIPE_BLEU:
+                    equipe = ID_EQUIPE_BLEU;
+                    break;
+                case EQUIPE_JAUNE:
+                    equipe = ID_EQUIPE_JAUNE;
+                    break;
+            }
+        } else {
+            score = 1;
+            switch (mCouleurEquipe) {
+                case EQUIPE_BLEU:
+                    equipe = ID_EQUIPE_JAUNE;
+                    break;
+                case EQUIPE_JAUNE:
+                    equipe = ID_EQUIPE_BLEU;
+                    break;
+            }
         }
         new MainActivity.TacheURLSansRetour().execute(urlMAJScore + score + "&equipe=" + equipe);
         new MainActivity.TacheURLSansRetour().execute(MainActivity.urlInitWhaaat + mIdPartie + "&tour=1");
+    }
+
+    private void clickVoteSituation(String tag) {
+        int idMot = Integer.parseInt(tag.split("_")[2]);
+        new MainActivity.TacheURLSansRetour().execute(urlVote + mIdPartie + "&joueur=" + mIdJoueur + "&mot=" + idMot + "&mode=add");
+    }
+
+    private void clickReponse(boolean reponse) {
     }
 
     private void clickEquipe(String tag) {
@@ -257,11 +246,6 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         afficheEquipe();
         gestionContexte();
 
-        // TODO : afficher les votes de joueurs de l'équipe
-        // TODO : permettre à un joeuur ed l'équipe actif de voter
-        // TODO : corriger le bug du passage au tour suivant
-        // TODO : permettre aux joueurs de l'équipe active de dévoiler une situation
-
         mListeSituations = parseNoeudsSituations(doc);
         afficheSituations();
 
@@ -271,6 +255,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         mListeVotes = parseNoeudsVotes(doc);
         afficheVotes();
 
+        // TODO : afficher les équipes des joueurs en bas
     }
 
     private void afficheVotes() {
@@ -317,14 +302,10 @@ public class WhaaatActivity extends JeuEnVisioActivity {
         for (int value : tableIdObjet) {
             // Si je suis le joueur actif
             // - Permet de sélectionner des indices
-            // - Affiche les boutons pour valider la réponse (et passer au tour de jeu suivant)
-            if (mIdJoueurActif == mIdJoueur) {
+            if (mIdJoueurActif == mIdJoueur)
                 findViewById(value).setOnClickListener(this);
-                mBlocBoutonsReponses.setVisibility(View.VISIBLE);
-            } else {
+            else
                 findViewById(value).setOnClickListener(null);
-                mBlocBoutonsReponses.setVisibility(View.GONE);
-            }
         }
 
         // Vide la liste des indices si je ne suis pas le joueur actif
@@ -480,6 +461,7 @@ public class WhaaatActivity extends JeuEnVisioActivity {
 
             if (mListeSituations.get(i).getActif() == ACTIF_SELECTIONNE && mIdJoueurActif == mIdJoueur) {
                 tv.setBackgroundColor(getResources().getColor(R.color.vert_clair));
+                mIdMotBonneReponse = mListeSituations.get(i).getIdMot();
             } else {
                 tv.setBackgroundColor(getResources().getColor(R.color.noir_transparent));
             }

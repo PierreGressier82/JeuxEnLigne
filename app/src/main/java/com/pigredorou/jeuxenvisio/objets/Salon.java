@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class Salon {
     private int mId;
-    private String mNom;
+    private final String mNom;
     private int mIdPartie;
     private int mNumMission;
     private ArrayList<Joueur> mListeJoueurs;
+    private ArrayList<Jeu> mListeJeux;
 
     public Salon(int id, String nom, int idPartie, int numMission) {
         mId = id;
@@ -16,10 +17,11 @@ public class Salon {
         mNumMission = numMission;
     }
 
-    public Salon(int id, String nom, ArrayList<Joueur> listeJoueurs) {
+    public Salon(int id, String nom, ArrayList<Joueur> listeJoueurs, ArrayList<Jeu> listeJeux) {
         mId = id;
         mNom = nom;
         mListeJoueurs = listeJoueurs;
+        mListeJeux = listeJeux;
     }
 
     public int getNumMission() {
@@ -46,7 +48,7 @@ public class Salon {
         return mListeJoueurs;
     }
 
-    public void setListeJoueurs(ArrayList<Joueur> listeJoueurs) {
-        mListeJoueurs = listeJoueurs;
+    public ArrayList<Jeu> getListeJeux() {
+        return mListeJeux;
     }
 }

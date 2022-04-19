@@ -696,6 +696,7 @@ public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
                 cranesReponses.setVisibility(View.GONE);
                 TextView mJoueurPrec = findViewById(id.joueur_precedent);
                 TextView mJoueurSuiv = findViewById(id.joueur_suivant);
+                // Ancien mode d'affichage par ordre alphabétique des pseudos des joueurs
                 //for (int i = 0; i < mListeJoueurs.size(); i++) {
                 //    if (mListeJoueurs.get(i).getNomJoueur().equals(mPseudo)) {
                 //        String textePrec;
@@ -705,7 +706,6 @@ public class FiestaDeLosMuertosActivity extends JeuEnVisioActivity {
                 //        else
                 //            textePrec = "  ->\n" + mListeJoueurs.get(mListeJoueurs.size() - 1).getNomJoueur() + "\n  ->";
                 //        mJoueurPrec.setText(textePrec);
-//
                 //        if (i != mListeJoueurs.size() - 1)
                 //            texteSuiv = "->  \n" + mListeJoueurs.get(i + 1).getNomJoueur() + "\n->  ";
                 //        else

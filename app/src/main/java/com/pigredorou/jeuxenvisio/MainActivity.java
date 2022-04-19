@@ -112,10 +112,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 3.3.00 : Whaaat v1
      * 3.3.01 : Fiesta de los muertos - Correction nom perso en phase réponses + Whaaat - Ajout du joueur actif
      * 3.3.02 : Whaaat v2 - Permet à l'équipe active de voter, affichier les vote et de dévoiler la réponse en autonomie + Affichage joueur+équipe active
+     * 4.0.00 alpha : migration vers pigredorou sans gestion du multi salon
      */
     // Variables statiques
-    private static final String mNumVersion = "3.3.01";
-    public static final String url = "http://julie.et.pierre.free.fr/Salon/";
+    private static final String mNumVersion = "4.0.00";
+    public static final String url = "http://pigredorou.free.fr/Salon/";
     public static final String urlGetVersion = url + "getVersion.php";
     public static final String urlGetJoueurs = url + "getJoueurs.php";
     public static final String urlValideJoueur = url + "valideJoueur.php?joueur=";
