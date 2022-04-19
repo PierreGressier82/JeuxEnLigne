@@ -220,8 +220,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 Joueur joueur = new Joueur(idJoueur, pseudo, 0, admin, 0, actif);
                 listeJoueurs.add(joueur);
             }
-            Salon salon = new Salon(idSalon, nomSalon, listeJoueurs, listeJeux);
-            listeSalons.add(salon);
+            //Salon salon = new Salon(idSalon, nomSalon, listeJoueurs, listeJeux);
+            //listeSalons.add(salon);
         }
 
         return listeSalons;

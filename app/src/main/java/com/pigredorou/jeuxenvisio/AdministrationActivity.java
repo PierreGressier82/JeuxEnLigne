@@ -46,7 +46,7 @@ import static com.pigredorou.jeuxenvisio.MainActivity.url;
 
 public class AdministrationActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String urlGetSalons = url + "getAllSalons.php";
+    private static final String urlGetSalons = url + "getSalon.php?salon=";
     private static final String urlMAJActif = url + "majActif.php?salon=";
     private static final String urlCreeJoueur = url + "creeJoueur.php?salon=";
     private ConstraintLayout mChargement;
@@ -59,6 +59,9 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
         setContentView(R.layout.activity_administration);
 
+        // Recupère l'id du salon de jeu
+        int mIdSalon = getIntent().getIntExtra(MainActivity.VALEUR_ID_SALON, 1);
+
         // Ecran de chargement
         mChargement = findViewById(R.id.chargement);
         mChargement.setVisibility(View.VISIBLE);
@@ -66,8 +69,7 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         // Bouton retour
         chargeBoutonRetour();
 
-        new TacheGetSalonsDeJeu().execute(urlGetSalons);
-        //new TacheGetSalonsDeJeu().execute(urlGetJoueurs);
+        new TacheGetSalonsDeJeu().execute(urlGetSalons + mIdSalon);
     }
 
     private void chargeBoutonRetour() {
@@ -77,14 +79,14 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
 
 
     private void parseXML_SJ(Document doc) {
-        ArrayList<Salon> mListeSalons;
+        Salon mSalonDeJeu;
 
         // Masque l'écran de chargement
         findViewById(R.id.chargement).setVisibility(View.GONE);
 
         // Liste des salons de jeu (avec les joueurs)
-        mListeSalons = parseXMLSalonsJeu(doc);
-        afficheSalons(mListeSalons);
+        mSalonDeJeu = parseXMLSalonJeu(doc);
+        afficheSalons(mSalonDeJeu);
     }
 
     private void parseXML_J(Document doc) {
@@ -143,13 +145,10 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         //}
     }
 
-    private void afficheSalons(ArrayList<Salon> listeSalons) {
+    private void afficheSalons(Salon salonDeJeux) {
         LinearLayout ll = findViewById(R.id.listeSalons);
 
-        for (int i = 0; i < listeSalons.size(); i++) {
-            ajouteNomSalon(ll, listeSalons.get(i));
-            ajouteJoueursEtJeux(ll, listeSalons.get(i).getListeJoueurs(), listeSalons.get(i).getListeJeux(), listeSalons.get(i).getId());
-        }
+        ajouteJoueursEtJeux(ll, salonDeJeux.getListeJoueurs(), salonDeJeux.getListeJeux(), salonDeJeux.getId());
     }
 
     private void ajouteJoueursEtJeux(LinearLayout ll, ArrayList<Joueur> listeJoueurs, ArrayList<Jeu> listeJeux, int indexSalon) {
@@ -262,13 +261,13 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
         ll.addView(nomTitre);
     }
 
-    private static ArrayList<Salon> parseXMLSalonsJeu(Document doc) {
+    private static Salon parseXMLSalonJeu(Document doc) {
         Element element = doc.getDocumentElement();
         element.normalize();
 
-        ArrayList<Salon> listeSalons = new ArrayList<>();
+        Salon salonDeJeu = null;
 
-        Node noeudSalons = getNoeudUnique(doc, "Salons");
+        Node noeudSalons = getNoeudUnique(doc, "Salon");
         int idSalon = 0;
         String nomSalon = "";
         for (int i = 0; i < noeudSalons.getChildNodes().getLength(); i++) { // Parcours toutes les salons
@@ -317,12 +316,38 @@ public class AdministrationActivity extends AppCompatActivity implements View.On
                 Joueur joueur = new Joueur(idJoueur, pseudo, 0, admin, 0, actif);
                 listeJoueurs.add(joueur);
             }
+
+            ArrayList<Jeu> listeJeux = new ArrayList<>();
+            for (int k = 0; k < noeudSalon.getChildNodes().getLength(); k++) { // Parcours toutes les jeux du salon
+                Node noeudJeu = noeudSalon.getChildNodes().item(k);
+                int idJeu = 0;
+                String nomJeu = "";
+                int actif = 0;
+                int admin = 0;
+                for (int j = 0; j < noeudJeu.getAttributes().getLength(); j++) { // Parcours tous les attributs du noeud joueur
+                    Log.d("PGR-XML-Jeu", noeudJeu.getAttributes().item(j).getNodeName() + "_" + noeudJeu.getAttributes().item(j).getNodeValue());
+                    if (noeudJeu.getAttributes().item(j).getNodeValue().isEmpty())
+                        continue;
+                    switch (noeudJeu.getAttributes().item(j).getNodeName()) {
+                        case "id_jeu":
+                            idJeu = Integer.parseInt(noeudJeu.getAttributes().item(j).getNodeValue());
+                            break;
+                        case "nom":
+                            nomJeu = noeudJeu.getAttributes().item(j).getNodeValue();
+                            break;
+                        case "actif":
+                            actif = Integer.parseInt(noeudJeu.getAttributes().item(j).getNodeValue());
+                            break;
+                    }
+                }
+                Jeu jeu = new Jeu(idJeu, nomJeu, actif);
+                listeJeux.add(jeu);
+            }
             // TODO : terminer la création du salon
-            //Salon salon = new Salon(idSalon, nomSalon, listeJoueurs, listeJeux);
-            //listeSalons.add(salon);
+            salonDeJeu = new Salon(idSalon, nomSalon, listeJoueurs, listeJeux);
         }
 
-        return listeSalons;
+        return salonDeJeu;
     }
 
     @Override
